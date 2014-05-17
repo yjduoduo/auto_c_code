@@ -146,7 +146,11 @@ void autoCCode::show_InBtn(void)
 void autoCCode::on_indb_btn_clicked(void)
 {
     str_print(on_indb_btn_clicked);
+    QString select_text = ui->codeshow_textEdit->textCursor().selectedText();
+    ui_dialog->content_textEdit_dia->setText(select_text);
+
     InDb_Dialog->exec();
+
 }
 
 void autoCCode::on_outdb_btn_clicked(void)

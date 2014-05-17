@@ -30,3 +30,5 @@ FORMS    += autoccode.ui \
 INCLUDEPATH +=\
 ./sqlite-3080403
 
+RC_FILE = autoapp.rc
+
