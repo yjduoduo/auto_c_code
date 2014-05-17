@@ -6,7 +6,7 @@
 #define RELEASE_VERSION
 #endif
 
-const char version_autoccode[]="v1.0";
+const char version_autoccode[]="v1.0.3";
 
 
 

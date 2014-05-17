@@ -46,7 +46,8 @@ void autoCCode::pushButtonSet(void)
                      this,SLOT(on_cancel_btn_dia_clicked()));
 
 
-
+    QObject::connect(this->ui->about_btn,SIGNAL(clicked()),
+                     this,SLOT(aboutVersion()));
 
 }
 
@@ -240,15 +241,6 @@ void autoCCode::on_ok_btn_dia_clicked(void)
     b.creatable(&insertcontent);
     b.inserttable(&insertcontent);
 
-    //    b.creatable();
-    //    b.inserttable();
-
-
-
-
-
-
-
     InDb_Dialog->close();
 }
 
@@ -256,4 +248,13 @@ void autoCCode::on_cancel_btn_dia_clicked(void)
 {
     self_print(on_cancel_btn_dia_clicked);
     InDb_Dialog->close();
+}
+void autoCCode::aboutVersion(void)
+{
+    QMessageBox::information(NULL, str_china(版本), GetVersion(),NULL,NULL);
+    return;
+}
+QString autoCCode::GetVersion(void)
+{
+    return str_china(自动生成代码)+"\n"+version_autoccode;
 }

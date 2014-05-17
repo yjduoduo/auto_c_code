@@ -34,6 +34,7 @@ private slots:
 
     void on_outdb_btn_clicked(void);
 
+    void aboutVersion(void);
 public slots:
 
     void on_ok_btn_dia_clicked(void);
@@ -52,7 +53,7 @@ private:
     void show_InBtn(void);
 
     LanguageType getLanguageType(QString &type);
-
+    QString GetVersion(void);
 private:
 
     Ui::autoCCode *ui;
