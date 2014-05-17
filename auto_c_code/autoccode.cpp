@@ -1,6 +1,7 @@
 #include "autoccode.h"
 #include "ui_autoccode.h"
 #include "ui_PushDbdialog.h"
+#include "ui_dialog_selectdb.h"
 #include <QtGui>
 #include "prefix_string.h"
 #include <stdio.h>
@@ -27,6 +28,8 @@ autoCCode::autoCCode(QWidget *parent) :
     ui->setupUi(this);
     InDb_Dialog = new QDialog(this);
     ui_dialog->setupUi(InDb_Dialog);
+
+    ui_dialog_selectdb = new Dialog_selectDb(this);
 
     pushButtonSet();
     textEditSet();
@@ -101,6 +104,7 @@ void autoCCode::on_db_comboBox_activated(const QString &arg1)
 void autoCCode::on_choseCodeDB_btn_clicked(void)
 {
     self_print(on_choseCodeDB_btn_clicked);
+    ui_dialog_selectdb->show();
 
 }
 //Éú³É´úÂë¿â

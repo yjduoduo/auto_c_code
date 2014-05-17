@@ -14,17 +14,20 @@ SOURCES += main.cpp\
         autoccode.cpp \
     sqlite-3080403/sqlite3.c \
     prefix_string.cpp \
-    gencodedatabase.cpp
+    gencodedatabase.cpp \
+    dialog_selectdb.cpp
 
 HEADERS  += autoccode.h \
     sqlite-3080403/sqlite3ext.h \
     sqlite-3080403/sqlite3.h \
     prefix_string.h \
     version.h \
-    gencodedatabase.h
+    gencodedatabase.h \
+    dialog_selectdb.h
 
 FORMS    += autoccode.ui \
-    PushDbdialog.ui
+    PushDbdialog.ui \
+    dialog_selectdb.ui
 
 
 INCLUDEPATH +=\

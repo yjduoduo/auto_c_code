@@ -1,0 +1,12 @@
+INPUT(
+./release/main.o
+./release/autoccode.o
+./release/sqlite3.o
+./release/prefix_string.o
+./release/gencodedatabase.o
+./release/slectdb_dialog.o
+./release/dialog_selectdb.o
+./release/moc_autoccode.o
+./release/moc_slectdb_dialog.o
+./release/moc_dialog_selectdb.o
+);

@@ -5,12 +5,14 @@
 #include "prefix_string.h"
 #include <QDialog>
 #include "gencodedatabase.h"
-
+#include "dialog_selectdb.h"
 
 namespace Ui {
 class autoCCode;
 class Dialog;
+class Dialog_selectDb;
 }
+
 
 class autoCCode : public QWidget
 {
@@ -18,6 +20,7 @@ class autoCCode : public QWidget
     
 public:
     QDialog *InDb_Dialog;
+    Dialog_selectDb *ui_dialog_selectdb;
     explicit autoCCode(QWidget *parent = 0);
     ~autoCCode();
 
@@ -59,10 +62,7 @@ private:
     Ui::autoCCode *ui;
     Ui::Dialog *ui_dialog;
 
-
-
 };
-
 
 
 #endif // AUTOCCODE_H
