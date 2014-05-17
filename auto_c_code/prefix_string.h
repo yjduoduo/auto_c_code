@@ -23,6 +23,15 @@
 
 
 
+#ifndef RELEASE_VERSION
+//声明变量并打印
+#define str_print(Var) \
+    EXPORT_SYMBOL(Var)\
+    qDebug()<<FUNCDEBUG(Var);
+#else
+#define str_print(Var)   ;
+#endif
+
 
 
 

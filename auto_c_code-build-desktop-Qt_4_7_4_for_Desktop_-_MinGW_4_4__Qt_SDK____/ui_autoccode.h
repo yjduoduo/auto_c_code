@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Sat May 17 11:48:06 2014
+** Created: Sat May 17 13:45:38 2014
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -20,6 +20,7 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
@@ -36,11 +37,17 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QLabel *get_listlabel;
     QComboBox *db_comboBox;
+    QPushButton *choseCodeDB_btn;
     QTextEdit *codeshow_textEdit;
+    QVBoxLayout *verticalLayout_3;
+    QSpacerItem *verticalSpacer_2;
+    QPushButton *outdb_btn;
+    QPushButton *indb_btn;
+    QSpacerItem *verticalSpacer_3;
     QHBoxLayout *horizontalLayout_4;
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_5;
-    QPushButton *tocode_btn;
+    QPushButton *gencode_btn;
     QPushButton *save_btn;
     QPushButton *close_btn;
     QTextEdit *genshow_textEdit;
@@ -77,6 +84,11 @@ public:
 
         horizontalLayout_2->addWidget(db_comboBox);
 
+        choseCodeDB_btn = new QPushButton(autoCCode);
+        choseCodeDB_btn->setObjectName(QString::fromUtf8("choseCodeDB_btn"));
+
+        horizontalLayout_2->addWidget(choseCodeDB_btn);
+
 
         verticalLayout->addLayout(horizontalLayout_2);
 
@@ -91,6 +103,30 @@ public:
 
         horizontalLayout_3->addLayout(horizontalLayout);
 
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_3->addItem(verticalSpacer_2);
+
+        outdb_btn = new QPushButton(autoCCode);
+        outdb_btn->setObjectName(QString::fromUtf8("outdb_btn"));
+
+        verticalLayout_3->addWidget(outdb_btn);
+
+        indb_btn = new QPushButton(autoCCode);
+        indb_btn->setObjectName(QString::fromUtf8("indb_btn"));
+
+        verticalLayout_3->addWidget(indb_btn);
+
+        verticalSpacer_3 = new QSpacerItem(20, 60, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_3->addItem(verticalSpacer_3);
+
+
+        horizontalLayout_3->addLayout(verticalLayout_3);
+
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setSpacing(6);
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
@@ -100,10 +136,10 @@ public:
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
-        tocode_btn = new QPushButton(autoCCode);
-        tocode_btn->setObjectName(QString::fromUtf8("tocode_btn"));
+        gencode_btn = new QPushButton(autoCCode);
+        gencode_btn->setObjectName(QString::fromUtf8("gencode_btn"));
 
-        horizontalLayout_5->addWidget(tocode_btn);
+        horizontalLayout_5->addWidget(gencode_btn);
 
         save_btn = new QPushButton(autoCCode);
         save_btn->setObjectName(QString::fromUtf8("save_btn"));
@@ -142,7 +178,10 @@ public:
     {
         autoCCode->setWindowTitle(QApplication::translate("autoCCode", "autoCCode", 0, QApplication::UnicodeUTF8));
         get_listlabel->setText(QApplication::translate("autoCCode", "GetList", 0, QApplication::UnicodeUTF8));
-        tocode_btn->setText(QApplication::translate("autoCCode", "To\344\273\243\347\240\201\345\272\223", 0, QApplication::UnicodeUTF8));
+        choseCodeDB_btn->setText(QApplication::translate("autoCCode", "\351\200\211\346\213\251\344\273\243\347\240\201\345\272\223", 0, QApplication::UnicodeUTF8));
+        outdb_btn->setText(QApplication::translate("autoCCode", "\345\207\272\345\272\223", 0, QApplication::UnicodeUTF8));
+        indb_btn->setText(QApplication::translate("autoCCode", "\345\205\245\345\272\223", 0, QApplication::UnicodeUTF8));
+        gencode_btn->setText(QApplication::translate("autoCCode", "\347\224\237\346\210\220\344\273\243\347\240\201\345\272\223", 0, QApplication::UnicodeUTF8));
         save_btn->setText(QApplication::translate("autoCCode", "save", 0, QApplication::UnicodeUTF8));
         close_btn->setText(QApplication::translate("autoCCode", "close", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
