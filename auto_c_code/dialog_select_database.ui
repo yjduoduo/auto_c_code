@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog_selectDb</class>
- <widget class="QDialog" name="Dialog_selectDb">
+ <author/>
+ <comment/>
+ <exportmacro/>
+ <class>Dialog_select_database</class>
+ <widget class="QDialog" name="Dialog_select_database">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -29,42 +31,14 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBox">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>90</y>
-     <width>271</width>
-     <height>101</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>30</y>
-     <width>311</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>幼圆</family>
-     <pointsize>24</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>请选择数据库类型：</string>
-   </property>
-  </widget>
  </widget>
+ <pixmapfunction/>
  <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog_selectDb</receiver>
+   <receiver>Dialog_select_database</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -80,7 +54,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog_selectDb</receiver>
+   <receiver>Dialog_select_database</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

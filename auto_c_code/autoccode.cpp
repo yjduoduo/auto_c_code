@@ -1,7 +1,7 @@
 #include "autoccode.h"
 #include "ui_autoccode.h"
 #include "ui_PushDbdialog.h"
-#include "ui_dialog_selectdb.h"
+#include "ui_dialog_select_database.h"
 #include <QtGui>
 #include "prefix_string.h"
 #include <stdio.h>
@@ -23,13 +23,16 @@
 
 autoCCode::autoCCode(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::autoCCode)
+    ui(new Ui::autoCCode),
+    ui_dialog(new Ui::Dialog),
+    ui_dia_selectdb(new Ui::Dialog_select_database)
 {
     ui->setupUi(this);
     InDb_Dialog = new QDialog(this);
     ui_dialog->setupUi(InDb_Dialog);
 
-    ui_dialog_selectdb = new Dialog_selectDb(this);
+    dialog_selectdb =  new QDialog(this);;
+    ui_dia_selectdb->setupUi(dialog_selectdb);
 
     pushButtonSet();
     textEditSet();
@@ -40,17 +43,19 @@ void autoCCode::pushButtonSet(void)
 {
     self_print(pushButtonSet);
     //btn list
+    //ui
     QObject::connect(ui->close_btn,SIGNAL(clicked()),this,SLOT(close()));
+    QObject::connect(this->ui->about_btn,SIGNAL(clicked()),
+                     this,SLOT(aboutVersion()));
     //    QObject::connect(ui->save_btn,SIGNAL(clicked()),this,SLOT(on_save_btn_clicked()));
     //    QObject::connect(ui->tocode_btn,SIGNAL(clicked()),this,SLOT(on_tocode_btn_clicked()));
+    //ui_dialog
     QObject::connect(this->ui_dialog->ok_btn_dia,SIGNAL(clicked()),
                      this,SLOT(on_ok_btn_dia_clicked()));
     QObject::connect(this->ui_dialog->cancel_btn_dia,SIGNAL(clicked()),
                      this,SLOT(on_cancel_btn_dia_clicked()));
 
-
-    QObject::connect(this->ui->about_btn,SIGNAL(clicked()),
-                     this,SLOT(aboutVersion()));
+    //
 
 }
 
@@ -84,6 +89,11 @@ void autoCCode::addstr_comboBox(void)
        <<str_china(Jave);
 
     ui_dialog->langtype_comboBox->addItems(strlist);
+
+
+
+
+
 }
 
 autoCCode::~autoCCode()
@@ -104,7 +114,7 @@ void autoCCode::on_db_comboBox_activated(const QString &arg1)
 void autoCCode::on_choseCodeDB_btn_clicked(void)
 {
     self_print(on_choseCodeDB_btn_clicked);
-    ui_dialog_selectdb->show();
+    dialog_selectdb->show();
 
 }
 //Éú³É´úÂë¿â

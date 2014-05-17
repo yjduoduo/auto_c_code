@@ -4,9 +4,9 @@ INPUT(
 ./release/sqlite3.o
 ./release/prefix_string.o
 ./release/gencodedatabase.o
-./release/slectdb_dialog.o
-./release/dialog_selectdb.o
+./release/dialog_select_database.o
+./release/dialog_test.o
 ./release/moc_autoccode.o
-./release/moc_slectdb_dialog.o
-./release/moc_dialog_selectdb.o
+./release/moc_dialog_select_database.o
+./release/moc_dialog_test.o
 );

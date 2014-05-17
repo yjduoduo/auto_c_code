@@ -5,24 +5,27 @@
 #include "prefix_string.h"
 #include <QDialog>
 #include "gencodedatabase.h"
-#include "dialog_selectdb.h"
 
 namespace Ui {
 class autoCCode;
 class Dialog;
-class Dialog_selectDb;
+class Dialog_select_database;
 }
-
 
 class autoCCode : public QWidget
 {
     Q_OBJECT
-    
+
 public:
-    QDialog *InDb_Dialog;
-    Dialog_selectDb *ui_dialog_selectdb;
+
     explicit autoCCode(QWidget *parent = 0);
     ~autoCCode();
+
+public:
+    QDialog *InDb_Dialog;
+    QDialog *dialog_selectdb;
+
+
 
 private slots:
     void on_save_btn_clicked();
@@ -57,10 +60,13 @@ private:
 
     LanguageType getLanguageType(QString &type);
     QString GetVersion(void);
+
+
 private:
 
     Ui::autoCCode *ui;
     Ui::Dialog *ui_dialog;
+    Ui::Dialog_select_database *ui_dia_selectdb;
 
 };
 
