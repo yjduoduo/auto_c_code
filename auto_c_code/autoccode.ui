@@ -100,6 +100,13 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="close_btn">
+         <property name="text">
+          <string>close</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
@@ -119,13 +126,6 @@
             <widget class="QPushButton" name="save_btn">
              <property name="text">
               <string>save</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="close_btn">
-             <property name="text">
-              <string>close</string>
              </property>
             </widget>
            </item>

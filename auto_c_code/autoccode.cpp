@@ -256,5 +256,9 @@ void autoCCode::aboutVersion(void)
 }
 QString autoCCode::GetVersion(void)
 {
-    return str_china(自动生成代码)+"\n"+version_autoccode;
+    return str_china(自动生成代码)
+            +"\n"
+            +str_china(by小魏莱)
+            +"\n"
+            +version_autoccode;
 }
