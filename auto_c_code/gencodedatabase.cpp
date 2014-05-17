@@ -1,8 +1,197 @@
 #include "gencodedatabase.h"
 
+#define ARRAY_SIZE(A)  (sizeof(A)/sizeof(A[0]))
+
+#define DB_NAME "all.db"
+
+#define CREATTABLE(A) "CREATE TABLE  "#A \
+    "([ID] INTEGER PRIMARY KEY,"\
+    "[content] varchar(100),[lantype] varchar(100),[keywords] varchar(100),"\
+    "[note] varchar(100),CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
+
+
+
+#ifdef GENCODEDATABASE_H
+codestructSets codesets[]={{languagetype_C_,"c_table",DB_NAME,CREATTABLE(c_table),},
+                           {languagetypeCpp_,"cpp_table",DB_NAME,CREATTABLE(cpp_table),},
+                           {languagetype_Qt_,"qt_table",DB_NAME,CREATTABLE(qt_table),},
+                           {languagetype_Python_,"python_table",DB_NAME,CREATTABLE(python_table),},
+                           {languagetype_Jave_,"java_table",DB_NAME,CREATTABLE(java_table),},
+                          };
+#endif
+
+
+
+
 GenCodeDatabase::GenCodeDatabase()
 {
-    str_print(GenCodeDatabase);
+    self_print(GenCodeDatabase);
+
+}
+codestructSets* GenCodeDatabase::get_table_bytype(LanguageType type)
+{
+    for(int i=0;i<ARRAY_SIZE(codesets);i++)
+        if(type == codesets[i].type)
+            return &codesets[i];
+    return NULL;
+}
+int GenCodeDatabase::opendatabase(const char *databases_name,
+                                  const char *createtableexpress)
+{
+    sqlite3 * db = 0;
+    char * pErrMsg = 0;
+    int ret = 0;
+    // 连接数据库
+    ret = sqlite3_open(databases_name, &db);
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
+        return(1);
+    }
+    printf("connect database success!\n");
+    str_print(createtableexpress);
+
+    ret=sqlite3_exec( db, createtableexpress, 0, 0, &pErrMsg );
+
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "SQL error: %s\n", pErrMsg);
+        sqlite3_free(pErrMsg);
+    }else{
+        printf("SQL create table SUCC!\n");
+    }
+
+
+
+    //关闭数据库，释放内存
+    sqlite3_close(db);
+
+
+
+    return(0);
+}
+int GenCodeDatabase::insertdatabase(const char *databases_name,
+                                  char *inserttableexpress)
+{
+    sqlite3 * db = 0;
+    char * pErrMsg = 0;
+    int ret = 0;
+    // 连接数据库
+    ret = sqlite3_open(databases_name, &db);
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
+        return(1);
+    }
+    printf("connect database success!\n");
+    str_print(inserttableexpress);
+
+    ret=sqlite3_exec( db, inserttableexpress, 0, 0, &pErrMsg );
+
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "SQL error: %s\n", pErrMsg);
+        sqlite3_free(pErrMsg);
+    }else{
+        printf("SQL insert table SUCC!\n");
+    }
+
+
+
+
+    //关闭数据库，释放内存
+    sqlite3_close(db);
+
+
+
+    return(0);
+}
+void GenCodeDatabase::creatable(InsertCon *cont)
+{
+    self_print(creatable);
+    codestructSets *sets = get_table_bytype(cont->languageType);
+    //    self_print(tablename);
+    str_print(sets->talbename);
+    switch(cont->languageType)
+    {
+    case     languagetype_C_:
+        opendatabase(sets->databasename,sets->creat_table_express);
+        break;
+    case    languagetypeCpp_:
+        opendatabase(sets->databasename,sets->creat_table_express);
+        break;
+    case    languagetype_Qt_:
+        opendatabase(sets->databasename,sets->creat_table_express);
+        break;
+    case    languagetype_Python_:
+        opendatabase(sets->databasename,sets->creat_table_express);
+        break;
+    case    languagetype_Jave_:
+        opendatabase(sets->databasename,sets->creat_table_express);
+        break;
+    default:
+        break;
+    }
 
 }
 
+void GenCodeDatabase::inserttable(InsertCon *cont)
+{
+    self_print(creatable);
+    codestructSets *sets = get_table_bytype(cont->languageType);
+    QString langtype = getLanguageStr(cont->languageType);
+
+    QString insertexpress;
+    insertexpress.clear();
+    QString content = cont->content.replace("\'","\'\'");
+    QString keyword =  cont->keyword.replace("\'","\'\'");
+    QString note    =  cont->note.replace("\'","\'\'");
+
+
+    insertexpress = QString("insert into %1([content],[lantype] ,[keywords] ,[note] )  VALUES('%2','%3','%4','%5');")
+                    .arg(sets->talbename).arg(content).arg(langtype).arg(keyword).arg(note);
+
+    str_print(insertexpress);
+
+    fprintf(stderr,"len:%d\n",cont->content.length());
+    fprintf(stderr,"len:%d\n",cont->keyword.length());
+    fprintf(stderr,"len:%d\n",cont->note.length());
+    //    self_print(tablename);
+    str_print(sets->talbename);
+    switch(cont->languageType)
+    {
+    case     languagetype_C_:
+        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
+        break;
+    case    languagetypeCpp_:
+        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
+        break;
+    case    languagetype_Qt_:
+        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
+        break;
+    case    languagetype_Python_:
+        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
+        break;
+    case    languagetype_Jave_:
+        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
+
+        break;
+    default:
+        break;
+    }
+
+}
+QString GenCodeDatabase::getLanguageStr(LanguageType type)
+{
+    switch(type)
+    {
+    case languagetype_C_:
+        return "C";
+    case languagetype_Qt_:
+        return "Qt";
+    case languagetype_Python_:
+        return "Python";
+    case languagetype_Jave_:
+        return "Jave";
+    case languagetypeCpp_:
+        return "C++";
+    default:
+        return "Err";
+    }
+}

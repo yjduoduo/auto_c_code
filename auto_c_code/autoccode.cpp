@@ -35,7 +35,7 @@ autoCCode::autoCCode(QWidget *parent) :
 
 void autoCCode::pushButtonSet(void)
 {
-    str_print(pushButtonSet);
+    self_print(pushButtonSet);
     //btn list
     QObject::connect(ui->close_btn,SIGNAL(clicked()),this,SLOT(close()));
     //    QObject::connect(ui->save_btn,SIGNAL(clicked()),this,SLOT(on_save_btn_clicked()));
@@ -52,7 +52,7 @@ void autoCCode::pushButtonSet(void)
 
 void autoCCode::textEditSet(void)
 {
-    str_print(textEditSet);
+    self_print(textEditSet);
 
     //    QObject::connect(ui->db_comboBox,SIGNAL(activated(QString)),
     //                     this,SLOT(on_db_comboBox_activated(QString)));
@@ -62,7 +62,7 @@ void autoCCode::textEditSet(void)
 void autoCCode::addstr_comboBox(void)
 {
 
-    str_print(addstr_comboBox);
+    self_print(addstr_comboBox);
     QStringList strlist;
     strlist.clear();
     strlist<<str_china(头文件)
@@ -75,12 +75,11 @@ void autoCCode::addstr_comboBox(void)
     strlist.clear();
     strlist<<str_china(C)
           <<str_china(C++)
-         <<str_china(Python)
-        <<str_china(Jave);
+         <<str_china(Qt)
+        <<str_china(Python)
+       <<str_china(Jave);
 
     ui_dialog->langtype_comboBox->addItems(strlist);
-
-
 }
 
 autoCCode::~autoCCode()
@@ -90,23 +89,23 @@ autoCCode::~autoCCode()
 
 void autoCCode::on_save_btn_clicked()
 {
-    str_print(on_save_btn_clicked);
+    self_print(on_save_btn_clicked);
 }
 
 void autoCCode::on_db_comboBox_activated(const QString &arg1)
 {
-    str_print(on_db_comboBox_activated);
+    self_print(on_db_comboBox_activated);
 }
 //选择数据库
 void autoCCode::on_choseCodeDB_btn_clicked(void)
 {
-    str_print(on_choseCodeDB_btn_clicked);
+    self_print(on_choseCodeDB_btn_clicked);
 
 }
 //生成代码库
 void autoCCode::on_gencode_btn_clicked(void)
 {
-    str_print(on_gencode_btn_clicked);
+    self_print(on_gencode_btn_clicked);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                     "../",
                                                     tr("Images (*.c *.h)"));
@@ -145,7 +144,7 @@ void autoCCode::show_InBtn(void)
 //入库函数
 void autoCCode::on_indb_btn_clicked(void)
 {
-    str_print(on_indb_btn_clicked);
+    self_print(on_indb_btn_clicked);
     QString select_text = ui->codeshow_textEdit->textCursor().selectedText();
     ui_dialog->content_textEdit_dia->setText(select_text);
 
@@ -155,19 +154,106 @@ void autoCCode::on_indb_btn_clicked(void)
 
 void autoCCode::on_outdb_btn_clicked(void)
 {
-    str_print(on_outdb_btn_clicked);
+    self_print(on_outdb_btn_clicked);
 }
 
+LanguageType autoCCode::getLanguageType(QString &type)
+{
+#if 1
+    if(type == "C"){
+        return languagetype_C_;
+    }else if(type == "Qt"){
+        return languagetype_Qt_;
+    }
+    else if(type == "Python"){
+        return languagetype_Python_;
+    }
+    else if(type == "Jave"){
+        return languagetype_Jave_;
+    }else if(type == "C++"){
+        return languagetypeCpp_;
+    }else{
+        return languagetype_Err_;
+    }
+#else //type must be integer
+    switch(type)
+    {
+    case "C":
+        return languagetype_C_;
+    case "Qt":
+        return languagetype_Qt_;
+    case "Python":
+        return languagetype_Python_;
+    case "Jave":
+        return languagetype_Jave_;
+    case "C++":
+        return languagetypeCpp_;
+    default:
+        return languagetype_Err_;
+    }
+#endif
+}
 
+//dialog ok button
 void autoCCode::on_ok_btn_dia_clicked(void)
 {
-    str_print(on_ok_btn_dia_clicked);
+    self_print(on_ok_btn_dia_clicked);
+
+    //获取内容
+    QString content = ui_dialog->content_textEdit_dia->toPlainText();
+    QString lanaugetype = ui_dialog->langtype_comboBox->currentText();
+    QString index_keyword   = ui_dialog->index_textEdit_dia->toPlainText();
+    QString note   = ui_dialog->note_textEdit_dia->toPlainText();
+
+
+
+
+    str_print(content);
+    str_print(lanaugetype);
+    str_print(index_keyword);
+    str_print(note);
+
+
+    if(content.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        return;
+    }
+    if(index_keyword.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        return;
+    }
+    if(note.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        return;
+    }
+
+    InsertCon insertcontent;
+    insertcontent.content = content;
+    insertcontent.languageType = getLanguageType(lanaugetype);
+    insertcontent.keyword   = index_keyword;
+    insertcontent.note      = note;
+
+    GenCodeDatabase b;
+    b.creatable(&insertcontent);
+    b.inserttable(&insertcontent);
+
+    //    b.creatable();
+    //    b.inserttable();
+
+
+
+
+
+
 
     InDb_Dialog->close();
 }
 
 void autoCCode::on_cancel_btn_dia_clicked(void)
 {
-    str_print(on_cancel_btn_dia_clicked);
+    self_print(on_cancel_btn_dia_clicked);
     InDb_Dialog->close();
 }

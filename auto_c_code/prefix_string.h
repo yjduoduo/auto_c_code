@@ -1,6 +1,7 @@
 #ifndef PREFIX_STRING_H
 #define PREFIX_STRING_H
 
+#include "version.h"
 
 
 /* v850 toolchain uses a `_' prefix for all user symbols */
@@ -25,11 +26,14 @@
 
 #ifndef RELEASE_VERSION
 //声明变量并打印
-#define str_print(Var) \
+#define self_print(Var) \
     EXPORT_SYMBOL(Var)\
     qDebug()<<FUNCDEBUG(Var);
+#define str_print(var) \
+    qDebug()<<#var":"<<var;
 #else
-#define str_print(Var)   ;
+#define self_print(Var)   ;
+#define str_print(var)    ;
 #endif
 
 
