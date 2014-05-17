@@ -1,14 +1,11 @@
 #include <QtGui/QApplication>
-#include "autoccode.h"
-#include <QtGui>
-
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    autoCCode w;
+    MainWindow w;
     w.show();
     
-    qDebug()<<"auto c code\n";
     return a.exec();
 }

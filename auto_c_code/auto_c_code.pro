@@ -12,11 +12,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         autoccode.cpp \
-    sqlite-3080403/sqlite3.c
+    sqlite-3080403/sqlite3.c \
+    prefix_string.cpp
 
 HEADERS  += autoccode.h \
     sqlite-3080403/sqlite3ext.h \
-    sqlite-3080403/sqlite3.h
+    sqlite-3080403/sqlite3.h \
+    prefix_string.h \
+    version.h
 
 FORMS    += autoccode.ui
 
