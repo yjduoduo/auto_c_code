@@ -45,6 +45,14 @@
           </layout>
          </item>
          <item>
+          <widget class="QListWidget" name="listWidget_codeview"/>
+         </item>
+         <item>
+          <widget class="QDockWidget" name="dockWidget">
+           <widget class="QWidget" name="dockWidgetContents"/>
+          </widget>
+         </item>
+         <item>
           <widget class="QTextEdit" name="codeshow_textEdit"/>
          </item>
         </layout>
@@ -77,6 +85,13 @@
         <widget class="QPushButton" name="indb_btn">
          <property name="text">
           <string>入库</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="rightclear_btn">
+         <property name="text">
+          <string>右清空</string>
          </property>
         </widget>
        </item>

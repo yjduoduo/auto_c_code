@@ -30,14 +30,14 @@ GenCodeDatabase::GenCodeDatabase()
 }
 codestructSets* GenCodeDatabase::get_table_sets_bytype(LanguageType type)
 {
-    for(int i=0;i<ARRAY_SIZE(codesets);i++)
+    for(unsigned i=0;i<ARRAY_SIZE(codesets);i++)
         if(type == codesets[i].type)
             return &codesets[i];
     return NULL;
 }
 const char * GenCodeDatabase::get_tablename_bytype(LanguageType type)
 {
-    for(int i=0;i<ARRAY_SIZE(codesets);i++)
+    for(unsigned i=0;i<ARRAY_SIZE(codesets);i++)
         if(type == codesets[i].type)
             return codesets[i].talbename;
     return NULL;
@@ -54,7 +54,7 @@ int GenCodeDatabase::opendatabase(const char *databases_name,
         fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
         return(1);
     }
-    printf("connect database success!\n");
+    //    printf("connect database success!\n");
     str_print(createtableexpress);
 
     ret=sqlite3_exec( db, createtableexpress, 0, 0, &pErrMsg );
@@ -63,7 +63,7 @@ int GenCodeDatabase::opendatabase(const char *databases_name,
         fprintf(stderr, "SQL error: %s\n", pErrMsg);
         sqlite3_free(pErrMsg);
     }else{
-        printf("SQL create table SUCC!\n");
+        //        printf("SQL create table SUCC!\n");
     }
 
 
@@ -76,7 +76,7 @@ int GenCodeDatabase::opendatabase(const char *databases_name,
     return(0);
 }
 int GenCodeDatabase::insertdatabase(const char *databases_name,
-                                  char *inserttableexpress)
+                                    char *inserttableexpress)
 {
     sqlite3 * db = 0;
     char * pErrMsg = 0;
@@ -87,7 +87,7 @@ int GenCodeDatabase::insertdatabase(const char *databases_name,
         fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
         return(1);
     }
-    printf("connect database success!\n");
+    //    printf("connect database success!\n");
     str_print(inserttableexpress);
 
     ret=sqlite3_exec( db, inserttableexpress, 0, 0, &pErrMsg );
@@ -96,7 +96,7 @@ int GenCodeDatabase::insertdatabase(const char *databases_name,
         fprintf(stderr, "SQL error: %s\n", pErrMsg);
         sqlite3_free(pErrMsg);
     }else{
-        printf("SQL insert table SUCC!\n");
+        //        printf("SQL insert table SUCC!\n");
     }
 
 
@@ -110,7 +110,11 @@ int GenCodeDatabase::insertdatabase(const char *databases_name,
     return(0);
 }
 int GenCodeDatabase::selectdatabase(const char *databases_name,
-                                  char *selecttableexpress)
+                                    char *selecttableexpress,
+                                    QString &contentstr,
+                                    QStringList &contentlist,
+                                    QStringList &keywords_list,
+                                    QStringList &note_list)
 {
     sqlite3 * db = 0;
     int result;
@@ -125,11 +129,11 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
         fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
         return(1);
     }
-//    str_print(databases_name);
-    printf("connect database success!\n");
+    //    str_print(databases_name);
+    //    printf("connect database success!\n");
 
 
-    fprintf(stdout,"express:%s\n",selecttableexpress);
+    //    fprintf(stdout,"express:%s\n",selecttableexpress);
     result = sqlite3_get_table( db, selecttableexpress, &dbResult, &nRow, &nColumn, &pErrMsg );
     if( SQLITE_OK == result )
     {
@@ -137,17 +141,24 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
 
         index = nColumn; //前面说过 dbResult 前面第一行数据是字段名称，从 nColumn 索引开始才是真正的数据
 
-        printf( "查到%d条记录\n", nRow );
+        //        printf( "查到%d条记录\n", nRow );
         for(  int i = 0; i < nRow ; i++ )
 
         {
             //           printf( "第 %d 条记录\n", i+1 );
             for( int j = 0 ; j < nColumn; j++ )
             {
-                printf( "字段名:%s  ?> 字段值:%s\n",  dbResult[j], dbResult [index] );
+                //                printf( "字段名:%s  ?> 字段值:%s\n",  dbResult[j], dbResult [index] );
+                if(0==j){
+                    contentstr+= QString::fromUtf8(dbResult [index]);
+                    contentlist << QString::fromUtf8(dbResult [index]);
+                }else if(2==j)
+                    keywords_list << QString::fromUtf8(dbResult [index]);
+                else if(3==j)
+                    note_list<< QString::fromUtf8(dbResult [index]);
                 ++index;
             }
-            printf( "-------\n" );
+            //            printf( "-------\n" );
         }
 
     }
@@ -205,13 +216,13 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
 
 
     insertexpress = QString("insert into %1([content],[lantype] ,[keywords] ,[note] )  VALUES('%2','%3','%4','%5');")
-                    .arg(sets->talbename).arg(content).arg(langtype).arg(keyword).arg(note);
+            .arg(sets->talbename).arg(content).arg(langtype).arg(keyword).arg(note);
 
     str_print(insertexpress);
 
-    fprintf(stderr,"len:%d\n",cont->content.length());
-    fprintf(stderr,"len:%d\n",cont->keyword.length());
-    fprintf(stderr,"len:%d\n",cont->note.length());
+    //    fprintf(stderr,"len:%d\n",cont->content.length());
+    //    fprintf(stderr,"len:%d\n",cont->keyword.length());
+    //    fprintf(stderr,"len:%d\n",cont->note.length());
     //    self_print(tablename);
     str_print(sets->talbename);
     switch(cont->languageType)

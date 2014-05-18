@@ -12,6 +12,17 @@ class Dialog;
 class Dialog_select_database;
 }
 
+
+typedef struct
+{
+    QString contentstr;
+    QStringList contentList;
+    QStringList Keyword_list;
+    QStringList note_list;
+}SelectResult;
+
+
+
 class autoCCode : public QWidget,public GenCodeDatabase
 {
     Q_OBJECT
@@ -45,6 +56,10 @@ private slots:
 
     void on_comboBox_selectdb_currentIndexChanged(const QString &arg1);
 
+    void add_to_gen_code_textedit(QListWidgetItem* item);
+
+    void rightClear_textedit(void);
+
 public slots:
 
     void on_ok_btn_dia_clicked(void);
@@ -67,7 +82,7 @@ private:
     QString GetVersion(void);
 
     void comboBoxSet(void);
-
+    void listWidgetSet(void);
 
 private:
 
@@ -75,8 +90,14 @@ private:
     Ui::Dialog *ui_dialog;
     Ui::Dialog_select_database *ui_dia_selectdb;
 
+protected:
+    QString GenCode_str;
 private://QString
     QString selected_langtype;
+
+    SelectResult selectresult;
+
+
 };
 
 

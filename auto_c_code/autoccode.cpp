@@ -37,6 +37,7 @@ autoCCode::autoCCode(QWidget *parent) :
     pushButtonSet();
     textEditSet();
     comboBoxSet();
+    listWidgetSet();
     addstr_comboBox();
 }
 
@@ -56,7 +57,9 @@ void autoCCode::pushButtonSet(void)
     QObject::connect(this->ui_dialog->cancel_btn_dia,SIGNAL(clicked()),
                      this,SLOT(on_cancel_btn_dia_clicked()));
 
-    //
+    //右清空
+    QObject::connect(this->ui->rightclear_btn,SIGNAL(clicked()),
+                     this,SLOT(rightClear_textedit()));
 
 }
 void autoCCode::comboBoxSet(void)
@@ -65,6 +68,7 @@ void autoCCode::comboBoxSet(void)
     QObject::connect(this->ui_dia_selectdb->comboBox_selectdb,SIGNAL(currentIndexChanged(QString)),
                      this,SLOT(on_comboBox_selectdb_currentIndexChanged(QString)));
 }
+
 
 void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
 {
@@ -77,11 +81,27 @@ void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
     if(!sets)
         return;
     //str_print(sets->talbename);
-    QString select_express = QString("select content from %1 where lantype='%2'")
+
+    QString select_express = QString("select content,lantype,keywords,note from %1 where lantype='%2'")
             .arg(sets->talbename)
             .arg(selected_langtype);
 
-    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data());
+
+    selectresult.contentList.clear();
+    selectresult.contentstr.clear();
+    selectresult.Keyword_list.clear();
+    selectresult.note_list.clear();
+    //gencode str clear
+    GenCode_str.clear();
+
+    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+                     selectresult.contentstr,
+                     selectresult.contentList,
+                     selectresult.Keyword_list,
+                     selectresult.note_list);
+
+    ui->codeshow_textEdit->setText(selectresult.contentstr);
+    ui->listWidget_codeview->addItems(selectresult.Keyword_list);
 
     dialog_selectdb->close();
 }
@@ -121,9 +141,6 @@ void autoCCode::addstr_comboBox(void)
     //select db dialog add strlist;
     ui_dia_selectdb->comboBox_selectdb->addItems(strlist);
 
-
-
-
 }
 
 autoCCode::~autoCCode()
@@ -153,7 +170,9 @@ void autoCCode::on_gencode_btn_clicked(void)
     self_print(on_gencode_btn_clicked);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                     "../",
-                                                    tr("Images (*.c *.h)"));
+                                                    tr("Ctype (*.c *.h)"
+                                                       ";;Cpptype(*.cpp *.h)"
+                                                       ";;JavaType(*.java)"));
     qDebug()<<"fileName:"<<fileName;
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -264,6 +283,11 @@ void autoCCode::on_ok_btn_dia_clicked(void)
         QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
         return;
     }
+    if(lanaugetype.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        return;
+    }
     if(index_keyword.isEmpty())
     {
         QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
@@ -305,4 +329,40 @@ QString autoCCode::GetVersion(void)
             +str_china(by小魏莱)
             +"\n"
             +version_autoccode;
+}
+
+void autoCCode::listWidgetSet(void)
+{
+    self_print(listWidget);
+    QObject::connect(ui->listWidget_codeview,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+                     this,SLOT(add_to_gen_code_textedit(QListWidgetItem*)));
+}
+//添加到右边的内容中
+void autoCCode::add_to_gen_code_textedit(QListWidgetItem* item)
+{
+    self_print(add_to_gen_code_textedit);
+    QString str = item->text();
+    unsigned index = 0;
+    for(unsigned i=0;i<selectresult.contentList.size();i++){
+        if(str == selectresult.Keyword_list.at(i))
+            index = i;
+        qDebug()<<"note list:"<<selectresult.note_list.at(i);
+    }
+
+    str_print(str);
+
+    GenCode_str+="\/\/";
+
+    GenCode_str+=selectresult.note_list.at(index);
+    GenCode_str+="\n";
+    GenCode_str+=selectresult.contentList.at(index);
+    GenCode_str+="\n";
+    ui->genshow_textEdit->setText(GenCode_str);
+
+}
+
+void autoCCode::rightClear_textedit(void)
+{
+    GenCode_str.clear();
+    ui->genshow_textEdit->clear();
 }

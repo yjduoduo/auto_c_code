@@ -42,9 +42,13 @@ public:
     void inserttable(InsertCon *cont );
     int opendatabase(const char *databases_name, const char *createtableexpress);
     int insertdatabase(const char *databases_name,
-                                      char *inserttableexpress);
+                       char *inserttableexpress);
     int selectdatabase(const char *databases_name,
-                                      char *selecttableexpress);
+                       char *selecttableexpress,
+                       QString &contentstr,
+                       QStringList &contentlist,
+                       QStringList &keywords_list,
+                       QStringList &note_list);
     QString getLanguageStr(LanguageType type);
 protected:
     codestructSets* get_table_sets_bytype(LanguageType type);
