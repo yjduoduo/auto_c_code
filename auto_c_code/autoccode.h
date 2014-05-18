@@ -12,7 +12,7 @@ class Dialog;
 class Dialog_select_database;
 }
 
-class autoCCode : public QWidget
+class autoCCode : public QWidget,public GenCodeDatabase
 {
     Q_OBJECT
 
@@ -25,6 +25,7 @@ public:
     QDialog *InDb_Dialog;
     QDialog *dialog_selectdb;
 
+    GenCodeDatabase b;
 
 
 private slots:
@@ -41,6 +42,9 @@ private slots:
     void on_outdb_btn_clicked(void);
 
     void aboutVersion(void);
+
+    void on_comboBox_selectdb_currentIndexChanged(const QString &arg1);
+
 public slots:
 
     void on_ok_btn_dia_clicked(void);
@@ -59,7 +63,10 @@ private:
     void show_InBtn(void);
 
     LanguageType getLanguageType(QString &type);
+//    QString getTablename(QString &type);
     QString GetVersion(void);
+
+    void comboBoxSet(void);
 
 
 private:
@@ -68,6 +75,8 @@ private:
     Ui::Dialog *ui_dialog;
     Ui::Dialog_select_database *ui_dia_selectdb;
 
+private://QString
+    QString selected_langtype;
 };
 
 

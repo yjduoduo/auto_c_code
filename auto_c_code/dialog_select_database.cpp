@@ -12,3 +12,4 @@ Dialog_select_database::~Dialog_select_database()
 {
     delete ui;
 }
+

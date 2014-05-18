@@ -43,9 +43,12 @@ public:
     int opendatabase(const char *databases_name, const char *createtableexpress);
     int insertdatabase(const char *databases_name,
                                       char *inserttableexpress);
+    int selectdatabase(const char *databases_name,
+                                      char *selecttableexpress);
     QString getLanguageStr(LanguageType type);
 protected:
-    codestructSets* get_table_bytype(LanguageType type);
+    codestructSets* get_table_sets_bytype(LanguageType type);
+    const char * get_tablename_bytype(LanguageType type);
 };
 
 #endif // GENCODEDATABASE_H

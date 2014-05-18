@@ -28,11 +28,18 @@ GenCodeDatabase::GenCodeDatabase()
     self_print(GenCodeDatabase);
 
 }
-codestructSets* GenCodeDatabase::get_table_bytype(LanguageType type)
+codestructSets* GenCodeDatabase::get_table_sets_bytype(LanguageType type)
 {
     for(int i=0;i<ARRAY_SIZE(codesets);i++)
         if(type == codesets[i].type)
             return &codesets[i];
+    return NULL;
+}
+const char * GenCodeDatabase::get_tablename_bytype(LanguageType type)
+{
+    for(int i=0;i<ARRAY_SIZE(codesets);i++)
+        if(type == codesets[i].type)
+            return codesets[i].talbename;
     return NULL;
 }
 int GenCodeDatabase::opendatabase(const char *databases_name,
@@ -102,10 +109,63 @@ int GenCodeDatabase::insertdatabase(const char *databases_name,
 
     return(0);
 }
+int GenCodeDatabase::selectdatabase(const char *databases_name,
+                                  char *selecttableexpress)
+{
+    sqlite3 * db = 0;
+    int result;
+    char * pErrMsg = 0;
+    int ret = 0;
+    int nRow=0, nColumn;
+    char **dbResult; //是 char ** 类型，两个*号
+    int index;
+    // 连接数据库
+    ret = sqlite3_open(databases_name, &db);
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
+        return(1);
+    }
+//    str_print(databases_name);
+    printf("connect database success!\n");
+
+
+    fprintf(stdout,"express:%s\n",selecttableexpress);
+    result = sqlite3_get_table( db, selecttableexpress, &dbResult, &nRow, &nColumn, &pErrMsg );
+    if( SQLITE_OK == result )
+    {
+        //查询成功
+
+        index = nColumn; //前面说过 dbResult 前面第一行数据是字段名称，从 nColumn 索引开始才是真正的数据
+
+        printf( "查到%d条记录\n", nRow );
+        for(  int i = 0; i < nRow ; i++ )
+
+        {
+            //           printf( "第 %d 条记录\n", i+1 );
+            for( int j = 0 ; j < nColumn; j++ )
+            {
+                printf( "字段名:%s  ?> 字段值:%s\n",  dbResult[j], dbResult [index] );
+                ++index;
+            }
+            printf( "-------\n" );
+        }
+
+    }
+
+    sqlite3_free_table(dbResult);
+    //关闭数据库，释放内存
+    sqlite3_close(db);
+
+
+    return(0);
+}
+
 void GenCodeDatabase::creatable(InsertCon *cont)
 {
     self_print(creatable);
-    codestructSets *sets = get_table_bytype(cont->languageType);
+    codestructSets *sets = get_table_sets_bytype(cont->languageType);
+    if(!sets)
+        return;
     //    self_print(tablename);
     str_print(sets->talbename);
     switch(cont->languageType)
@@ -134,7 +194,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
 void GenCodeDatabase::inserttable(InsertCon *cont)
 {
     self_print(creatable);
-    codestructSets *sets = get_table_bytype(cont->languageType);
+    codestructSets *sets = get_table_sets_bytype(cont->languageType);
     QString langtype = getLanguageStr(cont->languageType);
 
     QString insertexpress;

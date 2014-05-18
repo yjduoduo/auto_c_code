@@ -36,6 +36,7 @@ autoCCode::autoCCode(QWidget *parent) :
 
     pushButtonSet();
     textEditSet();
+    comboBoxSet();
     addstr_comboBox();
 }
 
@@ -57,6 +58,32 @@ void autoCCode::pushButtonSet(void)
 
     //
 
+}
+void autoCCode::comboBoxSet(void)
+{
+    self_print(comboBoxSet);
+    QObject::connect(this->ui_dia_selectdb->comboBox_selectdb,SIGNAL(currentIndexChanged(QString)),
+                     this,SLOT(on_comboBox_selectdb_currentIndexChanged(QString)));
+}
+
+void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
+{
+    self_print(on_comboBox_selectdb_currentIndexChanged);
+    str_print(arg1);
+    selected_langtype = arg1;
+    //str_print(selected_langtype);
+    LanguageType langtype = getLanguageType(selected_langtype);
+    codestructSets* sets = get_table_sets_bytype(langtype);
+    if(!sets)
+        return;
+    //str_print(sets->talbename);
+    QString select_express = QString("select content from %1 where lantype='%2'")
+            .arg(sets->talbename)
+            .arg(selected_langtype);
+
+    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data());
+
+    dialog_selectdb->close();
 }
 
 void autoCCode::textEditSet(void)
@@ -82,14 +109,17 @@ void autoCCode::addstr_comboBox(void)
 
 
     strlist.clear();
-    strlist<<str_china(C)
-          <<str_china(C++)
-         <<str_china(Qt)
-        <<str_china(Python)
-       <<str_china(Jave);
+    strlist<<str_china()
+          <<str_china(C)
+         <<str_china(C++)
+        <<str_china(Qt)
+       <<str_china(Python)
+      <<str_china(Jave);
 
     ui_dialog->langtype_comboBox->addItems(strlist);
 
+    //select db dialog add strlist;
+    ui_dia_selectdb->comboBox_selectdb->addItems(strlist);
 
 
 
@@ -223,10 +253,10 @@ void autoCCode::on_ok_btn_dia_clicked(void)
 
 
 
-    str_print(content);
-    str_print(lanaugetype);
-    str_print(index_keyword);
-    str_print(note);
+    //str_print(content);
+    //str_print(lanaugetype);
+    //str_print(index_keyword);
+    //str_print(note);
 
 
     if(content.isEmpty())
@@ -251,7 +281,7 @@ void autoCCode::on_ok_btn_dia_clicked(void)
     insertcontent.keyword   = index_keyword;
     insertcontent.note      = note;
 
-    GenCodeDatabase b;
+
     b.creatable(&insertcontent);
     b.inserttable(&insertcontent);
 
