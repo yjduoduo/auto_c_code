@@ -101,6 +101,7 @@ void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
                      selectresult.note_list);
 
     ui->codeshow_textEdit->setText(selectresult.contentstr);
+    ui->listWidget_codeview->clear();
     ui->listWidget_codeview->addItems(selectresult.Keyword_list);
 
     dialog_selectdb->close();
@@ -151,6 +152,29 @@ autoCCode::~autoCCode()
 void autoCCode::on_save_btn_clicked()
 {
     self_print(on_save_btn_clicked);
+    QString savefileName = QFileDialog::getSaveFileName(this,
+                                                        tr("Open Files"), "", tr("All Files (*.*)"));
+
+    if (savefileName.isNull())
+    {
+        //fileName是文件名
+        return;
+    }
+    str_print(savefileName);
+
+    QFile file(savefileName);
+    if (!file.open(QIODevice::ReadWrite)) {
+        std::cerr << "Cannot open file for writing: "
+                  << qPrintable(file.errorString()) << std::endl;
+        return;
+    }
+
+    QTextStream out(&file);
+    out << ui->genshow_textEdit->toPlainText();
+
+    file.close();
+
+    //点的是取消    qDebug()<<"fileName:"<<fileName;
 }
 
 void autoCCode::on_db_comboBox_activated(const QString &arg1)
@@ -170,9 +194,12 @@ void autoCCode::on_gencode_btn_clicked(void)
     self_print(on_gencode_btn_clicked);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                     "../",
-                                                    tr("Ctype (*.c *.h)"
-                                                       ";;Cpptype(*.cpp *.h)"
-                                                       ";;JavaType(*.java)"));
+                                                    tr("Ctype (*.c *.C *.cc *.h)"
+                                                       ";;Cpptype(*.cpp *.CPP *.h)"
+                                                       ";;QTtype(*.c *.C *.cpp *.CPP *.ui *.rc *.pro *.h)"
+                                                       ";;Pythontype(*.py *.PY)"
+                                                       ";;JavaType(*.java)"
+                                                       ";;All Files(*.*)"));
     qDebug()<<"fileName:"<<fileName;
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -351,11 +378,12 @@ void autoCCode::add_to_gen_code_textedit(QListWidgetItem* item)
 
     str_print(str);
 
-    GenCode_str+="\/\/";
-
+    GenCode_str+="/*  ";
     GenCode_str+=selectresult.note_list.at(index);
+    GenCode_str+="   */";
     GenCode_str+="\n";
     GenCode_str+=selectresult.contentList.at(index);
+    GenCode_str+="\n";
     GenCode_str+="\n";
     ui->genshow_textEdit->setText(GenCode_str);
 
