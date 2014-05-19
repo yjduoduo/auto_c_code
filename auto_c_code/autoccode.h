@@ -54,6 +54,12 @@ private slots:
 
     void on_ui_comboBox_vartype_currentIndexChanged(const QString &str);
 
+    void on_comboBox_aspect_currentIndexChanged(const QString &str);
+
+    void add_aspect_totable(void);
+
+    void addstr_aspect_comboBox(void);
+
 public slots:
 
     void on_ok_btn_dia_clicked(void);

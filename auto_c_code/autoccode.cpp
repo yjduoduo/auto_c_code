@@ -62,6 +62,9 @@ void autoCCode::pushButtonSet(void)
     QObject::connect(this->ui->rightclear_btn,SIGNAL(clicked()),
                      this,SLOT(rightClear_textedit()));
 
+    //dialog_select_database.ui add_btn
+    QObject::connect(this->ui_dialog->pushButton_add,SIGNAL(clicked()),
+                     this,SLOT(add_aspect_totable()));
 }
 void autoCCode::comboBoxSet(void)
 {
@@ -70,6 +73,8 @@ void autoCCode::comboBoxSet(void)
                      this,SLOT(on_comboBox_selectdb_currentIndexChanged(QString)));
     QObject::connect(this->ui->comboBox_vartype,SIGNAL(currentIndexChanged(QString)),
                      this,SLOT(on_ui_comboBox_vartype_currentIndexChanged(QString)));
+    QObject::connect(this->ui_dia_selectdb->comboBox_aspect,SIGNAL(currentIndexChanged(QString)),
+                     this,SLOT(on_comboBox_aspect_currentIndexChanged(QString)));
 }
 
 
@@ -83,19 +88,30 @@ void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
     sets = get_table_sets_bytype(langtype);
     if(!sets)
         return;
+
+    QString select_express;
+    select_express.clear();
     //str_print(sets->talbename);
-
-    QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
-            .arg(sets->talbename)
-            .arg(selected_langtype);
-
-
+    QString aspect = ui_dialog->comboBox_aspect->currentText();
+    if(aspect.isEmpty())
+    {
+        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
+                .arg(sets->talbename)
+                .arg(selected_langtype);
+    }else{
+        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and aspect_field='%3'")
+                .arg(sets->talbename)
+                .arg(selected_langtype)
+                .arg(aspect);
+    }
     clr_selectresult();
+    str_print(select_express);
     //gencode str clear
     GenCode_str.clear();
 
     b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
-                     selectresult);
+                     selectresult,
+                     ASPECT_NONE);
 
     ui->codeshow_textEdit->setText(selectresult.contentstr);
     ui->listWidget_codeview->clear();
@@ -110,6 +126,27 @@ void autoCCode::textEditSet(void)
 
     //    QObject::connect(ui->db_comboBox,SIGNAL(activated(QString)),
     //                     this,SLOT(on_db_comboBox_activated(QString)));
+
+}
+void autoCCode::addstr_aspect_comboBox(void)
+{
+    LanguageType langtype = languagetype_Aspect_;
+    sets = get_table_sets_bytype(langtype);
+    if(!sets)
+        return;
+    QString select_express = QString("select distinct aspect_field from aspect_table;");
+    clr_selectresult();
+    str_print(select_express);
+    selectresult.aspect_list<<str_china();
+    b.selectdatabase(sets->databasename,
+                     select_express.toUtf8().data(),
+                     selectresult,
+                     ASPECT_HAVE);
+    ui_dia_selectdb->comboBox_aspect->clear();
+    ui_dia_selectdb->comboBox_aspect->addItems(selectresult.aspect_list);
+
+    ui_dialog->comboBox_aspect->clear();
+    ui_dialog->comboBox_aspect->addItems(selectresult.aspect_list);
 
 }
 
@@ -140,6 +177,9 @@ void autoCCode::addstr_comboBox(void)
 
     //select db dialog add strlist;
     ui_dia_selectdb->comboBox_selectdb->addItems(strlist);
+
+    //·¶³ë
+    addstr_aspect_comboBox();
 
 }
 
@@ -294,6 +334,7 @@ void autoCCode::on_ok_btn_dia_clicked(void)
     QString index_keyword   = ui_dialog->index_textEdit_dia->toPlainText();
     QString note   = ui_dialog->note_textEdit_dia->toPlainText();
     QString vartype = ui_dialog->comboBox_vartype->currentText();
+    QString aspect = ui_dialog->comboBox_aspect->currentText();
 
     str_print(vartype);
 
@@ -330,7 +371,10 @@ void autoCCode::on_ok_btn_dia_clicked(void)
             .arg(vartype);
     clr_selectresult();
     str_print(select_express);
-    b.selectdatabase(sets->databasename,select_express.toUtf8().data(),selectresult);
+    b.selectdatabase(sets->databasename,
+                     select_express.toUtf8().data(),
+                     selectresult,
+                     ASPECT_NONE);
 
     if(selectresult.existflag)
     {
@@ -354,6 +398,11 @@ void autoCCode::on_ok_btn_dia_clicked(void)
         QMessageBox::information(NULL, str_china(×¢ÊÍ), str_china(²»ÄÜÎª¿Õ), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
         return;
     }
+//    if(aspect.isEmpty())
+//    {
+//        QMessageBox::information(NULL, str_china(·¶Î§), str_china(²»ÄÜÎª¿Õ), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+//        return;
+//    }
 
     InsertCon insertcontent;
     insertcontent.content = content;
@@ -361,6 +410,7 @@ void autoCCode::on_ok_btn_dia_clicked(void)
     insertcontent.keyword   = index_keyword;
     insertcontent.note      = note;
     insertcontent.vartype   = vartype;
+    insertcontent.aspect    = aspect;
 
 
     b.creatable(&insertcontent);
@@ -432,6 +482,7 @@ void autoCCode::clr_selectresult(void)
     selectresult.note_list.clear();
     selectresult.vartype_list.clear();
     selectresult.existflag = 0;
+    selectresult.aspect_list.clear();
 }
 
 void autoCCode::select_db_by_vartype(QString &select_express)
@@ -442,7 +493,8 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     clr_selectresult();
 
     b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
-                     selectresult);
+                     selectresult,
+                     ASPECT_NONE);
 
     ui->codeshow_textEdit->setText(selectresult.contentstr);
     ui->listWidget_codeview->clear();
@@ -480,11 +532,47 @@ void autoCCode::on_ui_comboBox_vartype_currentIndexChanged(const QString &str)
         select_db_by_vartype(select_express);
     }
     else{
-//        str_print(sets->langtype);
+        //        str_print(sets->langtype);
         QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
                 .arg(sets->talbename)
                 .arg(getLanguageStr(sets->langtype));
         select_db_by_vartype(select_express);
     }
+
+}
+
+void autoCCode::on_comboBox_aspect_currentIndexChanged(const QString &str)
+{
+    self_print(on_comboBox_aspect_currentIndexChanged);
+    str_print(str);
+
+    if(!str.isEmpty())
+    {
+
+    }
+
+}
+void autoCCode::add_aspect_totable(void)
+{
+    QString aspect_str = ui_dialog->lineEdit_add_aspect->text();
+    str_print(aspect_str);
+    if(aspect_str.isEmpty())
+    {
+        return;
+    }
+
+    InsertCon insertcontent;
+//    insertcontent.content = content;
+    insertcontent.languagetype = languagetype_Aspect_;
+    insertcontent.aspect       = aspect_str;
+//    insertcontent.keyword   = index_keyword;
+//    insertcontent.note      = note;
+//    insertcontent.vartype   = vartype;
+
+    b.creatable(&insertcontent);
+    b.inserttable(&insertcontent);
+
+    //·¶³ë
+    addstr_aspect_comboBox();
 
 }

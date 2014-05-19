@@ -11,7 +11,8 @@ enum LanguageType{
     languagetype_Qt_,
     languagetype_Python_,
     languagetype_Jave_,
-    languagetype_Err_
+    languagetype_Aspect_,
+    languagetype_Err_,
 };
 
 typedef struct
@@ -31,6 +32,7 @@ typedef struct
     QString keyword;
     QString note;
     QString vartype;
+    QString aspect;//范围
 }InsertCon;
 
 typedef struct
@@ -40,9 +42,14 @@ typedef struct
     QStringList keyword_list;
     QStringList note_list;
     QStringList vartype_list;
-    int existflag;
+    int existflag;//检测是否存在内容 标志
+    QStringList aspect_list;
 }SelectResult;
 
+enum aspect{
+    ASPECT_HAVE,
+    ASPECT_NONE
+};
 
 
 
@@ -58,7 +65,8 @@ public:
                        char *inserttableexpress);
     int selectdatabase(const char *databases_name,
                        char *selecttableexpress,
-                       SelectResult &selectres);
+                       SelectResult &selectres,
+                       int aspeactflag);
     QString getLanguageStr(LanguageType type);
 protected:
     codestructSets* get_table_sets_bytype(LanguageType type);

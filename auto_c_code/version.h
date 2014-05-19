@@ -2,11 +2,11 @@
 #define VERSION_H
 
 //发布正式版本否
-#if 0
+#if 1
 #define RELEASE_VERSION
 #endif
 
-const char version_autoccode[]="v1.0.3";
+const char version_autoccode[]="v1.1";
 
 
 

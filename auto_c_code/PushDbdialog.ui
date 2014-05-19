@@ -82,6 +82,16 @@
        <widget class="QComboBox" name="comboBox_vartype"/>
       </item>
       <item>
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>范畴</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_aspect"/>
+      </item>
+      <item>
        <spacer name="verticalSpacer_2">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -128,6 +138,35 @@
    </property>
    <property name="text">
     <string>取消</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_add">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>270</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>楷体</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>添加</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_add_aspect">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>270</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
    </property>
   </widget>
  </widget>

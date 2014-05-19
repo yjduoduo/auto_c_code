@@ -11,8 +11,13 @@
     "[keywords] varchar(100),"\
     "[note] varchar(100),"\
     "[vartype] varchar(100),"\
+    "[aspect_field] varchar(100),"\
     "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
 
+#define CREATTABLE_ASPECT(A) "CREATE TABLE  "#A \
+    "([ID] INTEGER PRIMARY KEY,"\
+    "[aspect_field] varchar(100),"\
+    "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
 
 
 #ifdef GENCODEDATABASE_H
@@ -21,6 +26,8 @@ codestructSets codesets[]={{languagetype_C_,"c_table",DB_NAME,CREATTABLE(c_table
                            {languagetype_Qt_,"qt_table",DB_NAME,CREATTABLE(qt_table),},
                            {languagetype_Python_,"python_table",DB_NAME,CREATTABLE(python_table),},
                            {languagetype_Jave_,"java_table",DB_NAME,CREATTABLE(java_table),},
+                           //范围,存储哪方面的内容
+                           {languagetype_Aspect_,"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
                           };
 #endif
 
@@ -115,7 +122,7 @@ int GenCodeDatabase::insertdatabase(const char *databases_name,
 }
 int GenCodeDatabase::selectdatabase(const char *databases_name,
                                     char *selecttableexpress,
-                                    SelectResult &selectres)
+                                    SelectResult &selectres,int aspeactflag)
 {
     sqlite3 * db = 0;
     int result;
@@ -149,18 +156,23 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
             //           printf( "第 %d 条记录\n", i+1 );
             for( int j = 0 ; j < nColumn; j++ )
             {
-                //                printf( "字段名:%s  ?> 字段值:%s\n",  dbResult[j], dbResult [index] );
-                if(0==j){
-                    selectres.contentstr+= QString::fromUtf8(dbResult [index]);
-                    selectres.content_list << QString::fromUtf8(dbResult [index]);
-                }else if(2==j)
-                    selectres.keyword_list << QString::fromUtf8(dbResult [index]);
-                else if(3==j)
-                    selectres.note_list<< QString::fromUtf8(dbResult [index]);
-                else if(4==j)
-                    selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
+                if(ASPECT_HAVE == aspeactflag){
+                    selectres.aspect_list <<QString::fromUtf8(dbResult [index]);
+                }else{
+                    //                printf( "字段名:%s  ?> 字段值:%s\n",  dbResult[j], dbResult [index] );
+                    if(0==j){
+                        selectres.contentstr+= QString::fromUtf8(dbResult [index]);
+                        selectres.content_list << QString::fromUtf8(dbResult [index]);
+                    }else if(2==j)
+                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+                    else if(3==j)
+                        selectres.note_list<< QString::fromUtf8(dbResult [index]);
+                    else if(4==j)
+                        selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
 
-                selectres.existflag = 1;
+                    selectres.existflag = 1;
+                }
+
                 ++index;
             }
             //            printf( "-------\n" );
@@ -187,20 +199,12 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     switch(cont->languagetype)
     {
     case     languagetype_C_:
-        opendatabase(sets->databasename,sets->creat_table_express);
-        break;
     case    languagetypeCpp_:
-        opendatabase(sets->databasename,sets->creat_table_express);
-        break;
     case    languagetype_Qt_:
-        opendatabase(sets->databasename,sets->creat_table_express);
-        break;
     case    languagetype_Python_:
-        opendatabase(sets->databasename,sets->creat_table_express);
-        break;
     case    languagetype_Jave_:
+    case languagetype_Aspect_:
         opendatabase(sets->databasename,sets->creat_table_express);
-        break;
     default:
         break;
     }
@@ -215,41 +219,55 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
 
     QString insertexpress;
     insertexpress.clear();
-    QString content = cont->content.replace("\'","\'\'");
-    QString keyword =  cont->keyword.replace("\'","\'\'");
-    QString note    =  cont->note.replace("\'","\'\'");
-    QString vartype    =  cont->vartype.replace("\'","\'\'");
+
+    QString content ;
+    QString keyword ;
+    QString note    ;
+    QString vartype ;
+    QString aspect ;
+    content.clear();
+    keyword.clear();
+    note.clear();
+    vartype.clear();
+    aspect.clear();
+
+    if(languagetype_Aspect_ == cont->languagetype)
+    {
+        aspect = cont->aspect.replace("\'","\'\'");
+        insertexpress = QString("insert into %1([aspect_field])  VALUES('%2');")
+                .arg(sets->talbename)
+                .arg(aspect);
+    }else{
+        content = cont->content.replace("\'","\'\'");
+        keyword =  cont->keyword.replace("\'","\'\'");
+        note    =  cont->note.replace("\'","\'\'");
+        vartype    =  cont->vartype.replace("\'","\'\'");
+        insertexpress = QString("insert into %1([content],[lantype] ,[keywords] ,[note] ,[vartype], [aspect_field])  VALUES('%2','%3','%4','%5','%6','%7');")
+                .arg(sets->talbename)
+                .arg(content)
+                .arg(langtype)
+                .arg(keyword)
+                .arg(note)
+                .arg(vartype)
+                .arg(aspect);
+    }
 
 
-    insertexpress = QString("insert into %1([content],[lantype] ,[keywords] ,[note] ,[vartype])  VALUES('%2','%3','%4','%5','%6');")
-            .arg(sets->talbename)
-            .arg(content)
-            .arg(langtype)
-            .arg(keyword)
-            .arg(note)
-            .arg(vartype);
 
     str_print(insertexpress);
     str_print(sets->talbename);
 
     switch(cont->languagetype)
     {
-    case     languagetype_C_:
-        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
-        break;
+    case    languagetype_C_:
     case    languagetypeCpp_:
-        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
-        break;
     case    languagetype_Qt_:
-        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
-        break;
     case    languagetype_Python_:
-        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
-        break;
     case    languagetype_Jave_:
+    case    languagetype_Aspect_:
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
-
         break;
+
     default:
         break;
     }
