@@ -93,7 +93,8 @@ void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
     select_express.clear();
     //str_print(sets->talbename);
     QString aspect = ui_dialog->comboBox_aspect->currentText();
-    if(aspect.isEmpty())
+    str_print(aspect);
+    if(aspect == "")
     {
         select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
                 .arg(sets->talbename)
@@ -171,7 +172,8 @@ void autoCCode::addstr_comboBox(void)
          <<str_china(C++)
         <<str_china(Qt)
        <<str_china(Python)
-      <<str_china(Jave);
+      <<str_china(shell)
+     <<str_china(Jave);
 
     ui_dialog->langtype_comboBox->addItems(strlist);
 
@@ -245,9 +247,10 @@ void autoCCode::on_gencode_btn_clicked(void)
                   << qPrintable(file.errorString()) << std::endl;
         return;
     }
-    QString text_file = file.readAll();
+//    QString text_file = file.readAll();
+    QString text_china = QString::fromLocal8Bit(file.readAll().data());
 
-    ui->codeshow_textEdit->setText(text_file);
+    ui->codeshow_textEdit->setText(text_china);
 
     //    QTextStream out(&file);
     //    out << "Thomas M. Disch: " << 334 << endl;
@@ -398,11 +401,11 @@ void autoCCode::on_ok_btn_dia_clicked(void)
         QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
         return;
     }
-//    if(aspect.isEmpty())
-//    {
-//        QMessageBox::information(NULL, str_china(范围), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
-//        return;
-//    }
+    //    if(aspect.isEmpty())
+    //    {
+    //        QMessageBox::information(NULL, str_china(范围), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+    //        return;
+    //    }
 
     InsertCon insertcontent;
     insertcontent.content = content;
@@ -562,12 +565,12 @@ void autoCCode::add_aspect_totable(void)
     }
 
     InsertCon insertcontent;
-//    insertcontent.content = content;
+    //    insertcontent.content = content;
     insertcontent.languagetype = languagetype_Aspect_;
     insertcontent.aspect       = aspect_str;
-//    insertcontent.keyword   = index_keyword;
-//    insertcontent.note      = note;
-//    insertcontent.vartype   = vartype;
+    //    insertcontent.keyword   = index_keyword;
+    //    insertcontent.note      = note;
+    //    insertcontent.vartype   = vartype;
 
     b.creatable(&insertcontent);
     b.inserttable(&insertcontent);
