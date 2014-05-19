@@ -45,12 +45,14 @@
           </layout>
          </item>
          <item>
-          <widget class="QListWidget" name="listWidget_codeview"/>
-         </item>
-         <item>
-          <widget class="QDockWidget" name="dockWidget">
-           <widget class="QWidget" name="dockWidgetContents"/>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QListWidget" name="listWidget_codeview"/>
+           </item>
+           <item>
+            <widget class="QListWidget" name="listWidget_note"/>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QTextEdit" name="codeshow_textEdit"/>
@@ -62,7 +64,21 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <spacer name="verticalSpacer_2">
+        <widget class="QPushButton" name="indb_btn">
+         <property name="text">
+          <string>入库</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="outdb_btn">
+         <property name="text">
+          <string>出库</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -73,20 +89,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="outdb_btn">
-         <property name="text">
-          <string>出库</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="indb_btn">
-         <property name="text">
-          <string>入库</string>
-         </property>
-        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="rightclear_btn">

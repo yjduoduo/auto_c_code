@@ -159,6 +159,7 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
                 if(ASPECT_HAVE == aspeactflag){
                     selectres.aspect_list <<QString::fromUtf8(dbResult [index]);
                 }else{
+#if 0
                     //                printf( "×Ö¶ÎÃû:%s  ?> ×Ö¶ÎÖµ:%s\n",  dbResult[j], dbResult [index] );
                     if(0==j){
                         selectres.contentstr+= QString::fromUtf8(dbResult [index]);
@@ -169,7 +170,18 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
                         selectres.note_list<< QString::fromUtf8(dbResult [index]);
                     else if(4==j)
                         selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
+#else
+                    if(0==j){
+                        selectres.contentstr+= QString::fromUtf8(dbResult [index]);
+                        selectres.content_list << QString::fromUtf8(dbResult [index]);
+                    }else if(2==j)
+                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+                    else if(3==j)
+                        selectres.note_list<< QString::fromUtf8(dbResult [index]);
+                    else if(4==j)
+                        selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
 
+#endif
                     selectres.existflag = 1;
                 }
 

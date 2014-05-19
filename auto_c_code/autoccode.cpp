@@ -117,6 +117,8 @@ void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
     ui->codeshow_textEdit->setText(selectresult.contentstr);
     ui->listWidget_codeview->clear();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    ui->listWidget_note->clear();
+    ui->listWidget_note->addItems(selectresult.note_list);
 
     dialog_selectdb->close();
 }
@@ -280,7 +282,8 @@ void autoCCode::on_indb_btn_clicked(void)
     QString select_text = ui->codeshow_textEdit->textCursor().selectedText();
     ui_dialog->content_textEdit_dia->setText(select_text);
 
-    InDb_Dialog->exec();
+//    InDb_Dialog->exec();
+    InDb_Dialog->show();
 
 }
 
@@ -419,7 +422,12 @@ void autoCCode::on_ok_btn_dia_clicked(void)
     b.creatable(&insertcontent);
     b.inserttable(&insertcontent);
 
-    InDb_Dialog->close();
+#ifdef RELEASE_VERSION
+        InDb_Dialog->close();
+#else
+//    InDb_Dialog->close();
+    ui_dialog->content_textEdit_dia->clear();
+#endif
 }
 
 void autoCCode::on_cancel_btn_dia_clicked(void)
@@ -445,10 +453,13 @@ void autoCCode::listWidgetSet(void)
 {
     self_print(listWidget);
     QObject::connect(ui->listWidget_codeview,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-                     this,SLOT(add_to_gen_code_textedit(QListWidgetItem*)));
+                     this,SLOT(add_to_gen_code_textedit_by_keyword(QListWidgetItem*)));
+    QObject::connect(ui->listWidget_note,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+                     this,SLOT(add_to_gen_code_textedit_by_note(QListWidgetItem*)));
+
 }
 //添加到右边的内容中
-void autoCCode::add_to_gen_code_textedit(QListWidgetItem* item)
+void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
 {
     self_print(add_to_gen_code_textedit);
     QString str = item->text();
@@ -456,7 +467,7 @@ void autoCCode::add_to_gen_code_textedit(QListWidgetItem* item)
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.keyword_list.at(i))
             index = i;
-        qDebug()<<"note list:"<<selectresult.note_list.at(i);
+//        qDebug()<<"note list:"<<selectresult.note_list.at(i);
     }
 
     str_print(str);
@@ -471,6 +482,31 @@ void autoCCode::add_to_gen_code_textedit(QListWidgetItem* item)
     ui->genshow_textEdit->setText(GenCode_str);
 
 }
+//添加到右边的内容中
+void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
+{
+    self_print(add_to_gen_code_textedit);
+    QString str = item->text();
+    unsigned int index = 0;
+    for(int i=0;i<selectresult.content_list.size();i++){
+        if(str == selectresult.note_list.at(i))
+            index = i;
+//        qDebug()<<"note list:"<<selectresult.note_list.at(i);
+    }
+
+    str_print(str);
+
+    GenCode_str+="/*  ";
+    GenCode_str+=selectresult.note_list.at(index);
+    GenCode_str+="   */";
+    GenCode_str+="\n";
+    GenCode_str+=selectresult.content_list.at(index);
+    GenCode_str+="\n";
+    GenCode_str+="\n";
+    ui->genshow_textEdit->setText(GenCode_str);
+
+}
+
 
 void autoCCode::rightClear_textedit(void)
 {
@@ -502,6 +538,8 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     ui->codeshow_textEdit->setText(selectresult.contentstr);
     ui->listWidget_codeview->clear();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    ui->listWidget_note->clear();
+    ui->listWidget_note->addItems(selectresult.note_list);
 }
 
 void autoCCode::on_ui_comboBox_vartype_currentIndexChanged(const QString &str)

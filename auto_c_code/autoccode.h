@@ -48,7 +48,11 @@ private slots:
 
     void on_comboBox_selectdb_currentIndexChanged(const QString &arg1);
 
-    void add_to_gen_code_textedit(QListWidgetItem* item);
+//    void add_to_gen_code_textedit(QListWidgetItem* item);
+    void add_to_gen_code_textedit_by_keyword(QListWidgetItem* item);
+
+    void add_to_gen_code_textedit_by_note(QListWidgetItem* item);
+
 
     void rightClear_textedit(void);
 
