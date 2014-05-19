@@ -15,8 +15,7 @@ SOURCES += main.cpp\
     sqlite-3080403/sqlite3.c \
     prefix_string.cpp \
     gencodedatabase.cpp \
-    dialog_select_database.cpp \
-    dialog_test.cpp
+    dialog_select_database.cpp
 
 HEADERS  += autoccode.h \
     sqlite-3080403/sqlite3ext.h \
@@ -24,8 +23,7 @@ HEADERS  += autoccode.h \
     prefix_string.h \
     version.h \
     gencodedatabase.h \
-    dialog_select_database.h \
-    dialog_test.h
+    dialog_select_database.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \

@@ -6,8 +6,12 @@
 
 #define CREATTABLE(A) "CREATE TABLE  "#A \
     "([ID] INTEGER PRIMARY KEY,"\
-    "[content] varchar(100),[lantype] varchar(100),[keywords] varchar(100),"\
-    "[note] varchar(100),CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
+    "[content] varchar(100),"\
+    "[lantype] varchar(100),"\
+    "[keywords] varchar(100),"\
+    "[note] varchar(100),"\
+    "[vartype] varchar(100),"\
+    "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
 
 
 
@@ -31,14 +35,14 @@ GenCodeDatabase::GenCodeDatabase()
 codestructSets* GenCodeDatabase::get_table_sets_bytype(LanguageType type)
 {
     for(unsigned i=0;i<ARRAY_SIZE(codesets);i++)
-        if(type == codesets[i].type)
+        if(type == codesets[i].langtype)
             return &codesets[i];
     return NULL;
 }
 const char * GenCodeDatabase::get_tablename_bytype(LanguageType type)
 {
     for(unsigned i=0;i<ARRAY_SIZE(codesets);i++)
-        if(type == codesets[i].type)
+        if(type == codesets[i].langtype)
             return codesets[i].talbename;
     return NULL;
 }
@@ -111,10 +115,7 @@ int GenCodeDatabase::insertdatabase(const char *databases_name,
 }
 int GenCodeDatabase::selectdatabase(const char *databases_name,
                                     char *selecttableexpress,
-                                    QString &contentstr,
-                                    QStringList &contentlist,
-                                    QStringList &keywords_list,
-                                    QStringList &note_list)
+                                    SelectResult &selectres)
 {
     sqlite3 * db = 0;
     int result;
@@ -150,12 +151,16 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
             {
                 //                printf( "×Ö¶ÎÃû:%s  ?> ×Ö¶ÎÖµ:%s\n",  dbResult[j], dbResult [index] );
                 if(0==j){
-                    contentstr+= QString::fromUtf8(dbResult [index]);
-                    contentlist << QString::fromUtf8(dbResult [index]);
+                    selectres.contentstr+= QString::fromUtf8(dbResult [index]);
+                    selectres.content_list << QString::fromUtf8(dbResult [index]);
                 }else if(2==j)
-                    keywords_list << QString::fromUtf8(dbResult [index]);
+                    selectres.keyword_list << QString::fromUtf8(dbResult [index]);
                 else if(3==j)
-                    note_list<< QString::fromUtf8(dbResult [index]);
+                    selectres.note_list<< QString::fromUtf8(dbResult [index]);
+                else if(4==j)
+                    selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
+
+                selectres.existflag = 1;
                 ++index;
             }
             //            printf( "-------\n" );
@@ -174,12 +179,12 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
 void GenCodeDatabase::creatable(InsertCon *cont)
 {
     self_print(creatable);
-    codestructSets *sets = get_table_sets_bytype(cont->languageType);
+    codestructSets *sets = get_table_sets_bytype(cont->languagetype);
     if(!sets)
         return;
     //    self_print(tablename);
     str_print(sets->talbename);
-    switch(cont->languageType)
+    switch(cont->languagetype)
     {
     case     languagetype_C_:
         opendatabase(sets->databasename,sets->creat_table_express);
@@ -205,27 +210,29 @@ void GenCodeDatabase::creatable(InsertCon *cont)
 void GenCodeDatabase::inserttable(InsertCon *cont)
 {
     self_print(creatable);
-    codestructSets *sets = get_table_sets_bytype(cont->languageType);
-    QString langtype = getLanguageStr(cont->languageType);
+    codestructSets *sets = get_table_sets_bytype(cont->languagetype);
+    QString langtype = getLanguageStr(cont->languagetype);
 
     QString insertexpress;
     insertexpress.clear();
     QString content = cont->content.replace("\'","\'\'");
     QString keyword =  cont->keyword.replace("\'","\'\'");
     QString note    =  cont->note.replace("\'","\'\'");
+    QString vartype    =  cont->vartype.replace("\'","\'\'");
 
 
-    insertexpress = QString("insert into %1([content],[lantype] ,[keywords] ,[note] )  VALUES('%2','%3','%4','%5');")
-            .arg(sets->talbename).arg(content).arg(langtype).arg(keyword).arg(note);
+    insertexpress = QString("insert into %1([content],[lantype] ,[keywords] ,[note] ,[vartype])  VALUES('%2','%3','%4','%5','%6');")
+            .arg(sets->talbename)
+            .arg(content)
+            .arg(langtype)
+            .arg(keyword)
+            .arg(note)
+            .arg(vartype);
 
     str_print(insertexpress);
-
-    //    fprintf(stderr,"len:%d\n",cont->content.length());
-    //    fprintf(stderr,"len:%d\n",cont->keyword.length());
-    //    fprintf(stderr,"len:%d\n",cont->note.length());
-    //    self_print(tablename);
     str_print(sets->talbename);
-    switch(cont->languageType)
+
+    switch(cont->languagetype)
     {
     case     languagetype_C_:
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());

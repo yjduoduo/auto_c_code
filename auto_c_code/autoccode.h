@@ -13,14 +13,6 @@ class Dialog_select_database;
 }
 
 
-typedef struct
-{
-    QString contentstr;
-    QStringList contentList;
-    QStringList Keyword_list;
-    QStringList note_list;
-}SelectResult;
-
 
 
 class autoCCode : public QWidget,public GenCodeDatabase
@@ -60,6 +52,8 @@ private slots:
 
     void rightClear_textedit(void);
 
+    void on_ui_comboBox_vartype_currentIndexChanged(const QString &str);
+
 public slots:
 
     void on_ok_btn_dia_clicked(void);
@@ -84,6 +78,10 @@ private:
     void comboBoxSet(void);
     void listWidgetSet(void);
 
+    void select_db_by_vartype(QString &select_exp);
+
+    void clr_selectresult(void);
+
 private:
 
     Ui::autoCCode *ui;
@@ -96,6 +94,8 @@ private://QString
     QString selected_langtype;
 
     SelectResult selectresult;
+
+    codestructSets* sets;
 
 
 };

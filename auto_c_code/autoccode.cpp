@@ -25,7 +25,8 @@ autoCCode::autoCCode(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::autoCCode),
     ui_dialog(new Ui::Dialog),
-    ui_dia_selectdb(new Ui::Dialog_select_database)
+    ui_dia_selectdb(new Ui::Dialog_select_database),
+    sets(NULL)
 {
     ui->setupUi(this);
     InDb_Dialog = new QDialog(this);
@@ -67,6 +68,8 @@ void autoCCode::comboBoxSet(void)
     self_print(comboBoxSet);
     QObject::connect(this->ui_dia_selectdb->comboBox_selectdb,SIGNAL(currentIndexChanged(QString)),
                      this,SLOT(on_comboBox_selectdb_currentIndexChanged(QString)));
+    QObject::connect(this->ui->comboBox_vartype,SIGNAL(currentIndexChanged(QString)),
+                     this,SLOT(on_ui_comboBox_vartype_currentIndexChanged(QString)));
 }
 
 
@@ -77,32 +80,26 @@ void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
     selected_langtype = arg1;
     //str_print(selected_langtype);
     LanguageType langtype = getLanguageType(selected_langtype);
-    codestructSets* sets = get_table_sets_bytype(langtype);
+    sets = get_table_sets_bytype(langtype);
     if(!sets)
         return;
     //str_print(sets->talbename);
 
-    QString select_express = QString("select content,lantype,keywords,note from %1 where lantype='%2'")
+    QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
             .arg(sets->talbename)
             .arg(selected_langtype);
 
 
-    selectresult.contentList.clear();
-    selectresult.contentstr.clear();
-    selectresult.Keyword_list.clear();
-    selectresult.note_list.clear();
+    clr_selectresult();
     //gencode str clear
     GenCode_str.clear();
 
     b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
-                     selectresult.contentstr,
-                     selectresult.contentList,
-                     selectresult.Keyword_list,
-                     selectresult.note_list);
+                     selectresult);
 
     ui->codeshow_textEdit->setText(selectresult.contentstr);
     ui->listWidget_codeview->clear();
-    ui->listWidget_codeview->addItems(selectresult.Keyword_list);
+    ui->listWidget_codeview->addItems(selectresult.keyword_list);
 
     dialog_selectdb->close();
 }
@@ -122,11 +119,13 @@ void autoCCode::addstr_comboBox(void)
     self_print(addstr_comboBox);
     QStringList strlist;
     strlist.clear();
-    strlist<<str_china(头文件)
-          <<str_china(函数)
-         <<str_china(结构体)
-        <<str_china(变量);
-    ui->db_comboBox->addItems(strlist);
+    strlist<<str_china()
+          <<str_china(header)
+         <<str_china(function)
+        <<str_china(struct)
+       <<str_china(variable);
+    ui->comboBox_vartype->addItems(strlist);
+    ui_dialog->comboBox_vartype->addItems(strlist);
 
 
     strlist.clear();
@@ -174,7 +173,6 @@ void autoCCode::on_save_btn_clicked()
 
     file.close();
 
-    //点的是取消    qDebug()<<"fileName:"<<fileName;
 }
 
 void autoCCode::on_db_comboBox_activated(const QString &arg1)
@@ -295,26 +293,57 @@ void autoCCode::on_ok_btn_dia_clicked(void)
     QString lanaugetype = ui_dialog->langtype_comboBox->currentText();
     QString index_keyword   = ui_dialog->index_textEdit_dia->toPlainText();
     QString note   = ui_dialog->note_textEdit_dia->toPlainText();
+    QString vartype = ui_dialog->comboBox_vartype->currentText();
 
-
-
+    str_print(vartype);
 
     //str_print(content);
     //str_print(lanaugetype);
     //str_print(index_keyword);
     //str_print(note);
 
-
-    if(content.isEmpty())
-    {
-        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
-        return;
-    }
     if(lanaugetype.isEmpty())
     {
         QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
         return;
     }
+    if(content.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        return;
+    }
+    //检测内容是否已经存在了。
+    QString exitstr;
+    exitstr.clear();
+
+
+    LanguageType langtype = getLanguageType(lanaugetype);
+    sets = get_table_sets_bytype(langtype);
+    if(!sets)
+        return;
+    //str_print(sets->talbename);
+
+    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4'")
+            .arg(sets->talbename)
+            .arg(lanaugetype)
+            .arg(content)
+            .arg(vartype);
+    clr_selectresult();
+    str_print(select_express);
+    b.selectdatabase(sets->databasename,select_express.toUtf8().data(),selectresult);
+
+    if(selectresult.existflag)
+    {
+        QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        return;
+    }
+
+    if(vartype.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        return;
+    }
+
     if(index_keyword.isEmpty())
     {
         QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
@@ -328,9 +357,10 @@ void autoCCode::on_ok_btn_dia_clicked(void)
 
     InsertCon insertcontent;
     insertcontent.content = content;
-    insertcontent.languageType = getLanguageType(lanaugetype);
+    insertcontent.languagetype = getLanguageType(lanaugetype);
     insertcontent.keyword   = index_keyword;
     insertcontent.note      = note;
+    insertcontent.vartype   = vartype;
 
 
     b.creatable(&insertcontent);
@@ -369,9 +399,9 @@ void autoCCode::add_to_gen_code_textedit(QListWidgetItem* item)
 {
     self_print(add_to_gen_code_textedit);
     QString str = item->text();
-    unsigned index = 0;
-    for(unsigned i=0;i<selectresult.contentList.size();i++){
-        if(str == selectresult.Keyword_list.at(i))
+    unsigned int index = 0;
+    for(int i=0;i<selectresult.content_list.size();i++){
+        if(str == selectresult.keyword_list.at(i))
             index = i;
         qDebug()<<"note list:"<<selectresult.note_list.at(i);
     }
@@ -382,7 +412,7 @@ void autoCCode::add_to_gen_code_textedit(QListWidgetItem* item)
     GenCode_str+=selectresult.note_list.at(index);
     GenCode_str+="   */";
     GenCode_str+="\n";
-    GenCode_str+=selectresult.contentList.at(index);
+    GenCode_str+=selectresult.content_list.at(index);
     GenCode_str+="\n";
     GenCode_str+="\n";
     ui->genshow_textEdit->setText(GenCode_str);
@@ -393,4 +423,68 @@ void autoCCode::rightClear_textedit(void)
 {
     GenCode_str.clear();
     ui->genshow_textEdit->clear();
+}
+void autoCCode::clr_selectresult(void)
+{
+    selectresult.content_list.clear();
+    selectresult.contentstr.clear();
+    selectresult.keyword_list.clear();
+    selectresult.note_list.clear();
+    selectresult.vartype_list.clear();
+    selectresult.existflag = 0;
+}
+
+void autoCCode::select_db_by_vartype(QString &select_express)
+{
+    if(!sets)
+        return;
+    //str_print(sets->talbename);
+    clr_selectresult();
+
+    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+                     selectresult);
+
+    ui->codeshow_textEdit->setText(selectresult.contentstr);
+    ui->listWidget_codeview->clear();
+    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+}
+
+void autoCCode::on_ui_comboBox_vartype_currentIndexChanged(const QString &str)
+{
+    self_print(on_ui_comboBox_vartype_currentIndexChanged);
+    str_print(str);
+
+    if(!sets)
+        return;
+
+    if(str.contains("header")){
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2'")
+                .arg(sets->talbename)
+                .arg("header");
+        select_db_by_vartype(select_express);
+    }else if(str.contains("function")){
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2'")
+                .arg(sets->talbename)
+                .arg("function");
+        select_db_by_vartype(select_express);
+    }else if(str.contains("struct")){
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2'")
+                .arg(sets->talbename)
+                .arg("struct");
+        select_db_by_vartype(select_express);
+    }
+    else if(str.contains("variable")){
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2'")
+                .arg(sets->talbename)
+                .arg("variable");
+        select_db_by_vartype(select_express);
+    }
+    else{
+//        str_print(sets->langtype);
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
+                .arg(sets->talbename)
+                .arg(getLanguageStr(sets->langtype));
+        select_db_by_vartype(select_express);
+    }
+
 }

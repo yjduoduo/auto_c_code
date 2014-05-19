@@ -33,7 +33,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="db_comboBox"/>
+            <widget class="QComboBox" name="comboBox_vartype"/>
            </item>
            <item>
             <widget class="QPushButton" name="choseCodeDB_btn">

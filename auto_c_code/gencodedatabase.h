@@ -16,7 +16,7 @@ enum LanguageType{
 
 typedef struct
 {
-    LanguageType type;
+    LanguageType langtype;
     const char *talbename;
     const char *databasename;
     const char *creat_table_express;
@@ -27,10 +27,23 @@ typedef struct
 typedef struct
 {
     QString content;
-    LanguageType languageType;
+    LanguageType languagetype;
     QString keyword;
     QString note;
+    QString vartype;
 }InsertCon;
+
+typedef struct
+{
+    QString contentstr;
+    QStringList content_list;
+    QStringList keyword_list;
+    QStringList note_list;
+    QStringList vartype_list;
+    int existflag;
+}SelectResult;
+
+
 
 
 
@@ -45,10 +58,7 @@ public:
                        char *inserttableexpress);
     int selectdatabase(const char *databases_name,
                        char *selecttableexpress,
-                       QString &contentstr,
-                       QStringList &contentlist,
-                       QStringList &keywords_list,
-                       QStringList &note_list);
+                       SelectResult &selectres);
     QString getLanguageStr(LanguageType type);
 protected:
     codestructSets* get_table_sets_bytype(LanguageType type);
