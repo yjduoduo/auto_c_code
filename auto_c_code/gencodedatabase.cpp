@@ -26,6 +26,7 @@ codestructSets codesets[]={{languagetype_C_,"c_table",DB_NAME,CREATTABLE(c_table
                            {languagetype_Qt_,"qt_table",DB_NAME,CREATTABLE(qt_table),},
                            {languagetype_Python_,"python_table",DB_NAME,CREATTABLE(python_table),},
                            {languagetype_Jave_,"java_table",DB_NAME,CREATTABLE(java_table),},
+                           {languagetype_Shell_,"shell_table",DB_NAME,CREATTABLE(shell_table),},
                            //范围,存储哪方面的内容
                            {languagetype_Aspect_,"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
                           };
@@ -215,6 +216,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
+    case languagetype_Shell_:
     case languagetype_Aspect_:
         opendatabase(sets->databasename,sets->creat_table_express);
     default:
@@ -276,6 +278,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
+    case languagetype_Shell_:
     case    languagetype_Aspect_:
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
         break;
@@ -295,6 +298,8 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "Qt";
     case languagetype_Python_:
         return "Python";
+    case languagetype_Shell_:
+        return "shell";
     case languagetype_Jave_:
         return "Jave";
     case languagetypeCpp_:

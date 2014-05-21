@@ -303,6 +303,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Python"){
         return languagetype_Python_;
     }
+    else if(type == "shell")
+    {
+        return languagetype_Shell_;
+    }
     else if(type == "Jave"){
         return languagetype_Jave_;
     }else if(type == "C++"){

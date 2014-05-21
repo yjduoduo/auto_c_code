@@ -11,6 +11,7 @@ enum LanguageType{
     languagetype_Qt_,
     languagetype_Python_,
     languagetype_Jave_,
+    languagetype_Shell_,
     languagetype_Aspect_,
     languagetype_Err_,
 };
