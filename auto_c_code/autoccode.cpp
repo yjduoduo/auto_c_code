@@ -26,7 +26,9 @@ autoCCode::autoCCode(QWidget *parent) :
     ui(new Ui::autoCCode),
     ui_dialog(new Ui::Dialog),
     ui_dia_selectdb(new Ui::Dialog_select_database),
-    sets(NULL)
+    sets(NULL),
+    index_key_color(0),
+    index_note_color(0)
 {
     ui->setupUi(this);
     InDb_Dialog = new QDialog(this);
@@ -75,6 +77,12 @@ void autoCCode::comboBoxSet(void)
                      this,SLOT(on_ui_comboBox_vartype_currentIndexChanged(QString)));
     QObject::connect(this->ui_dia_selectdb->comboBox_aspect,SIGNAL(currentIndexChanged(QString)),
                      this,SLOT(on_comboBox_aspect_currentIndexChanged(QString)));
+
+    //左滚动，对应 右滚动
+    QObject::connect(this->ui->listWidget_codeview,SIGNAL(itemClicked(QListWidgetItem*)),
+                     this,SLOT(listWidget_note_scroll_sync(QListWidgetItem*)));
+    QObject::connect(this->ui->listWidget_note,SIGNAL(itemClicked(QListWidgetItem*)),
+                     this,SLOT(listWidget_codeview_scroll_sync(QListWidgetItem*)));
 }
 
 
@@ -249,7 +257,7 @@ void autoCCode::on_gencode_btn_clicked(void)
                   << qPrintable(file.errorString()) << std::endl;
         return;
     }
-//    QString text_file = file.readAll();
+    //    QString text_file = file.readAll();
     QString text_china = QString::fromLocal8Bit(file.readAll().data());
 
     ui->codeshow_textEdit->setText(text_china);
@@ -282,7 +290,7 @@ void autoCCode::on_indb_btn_clicked(void)
     QString select_text = ui->codeshow_textEdit->textCursor().selectedText();
     ui_dialog->content_textEdit_dia->setText(select_text);
 
-//    InDb_Dialog->exec();
+    //    InDb_Dialog->exec();
     InDb_Dialog->show();
 
 }
@@ -427,11 +435,13 @@ void autoCCode::on_ok_btn_dia_clicked(void)
     b.inserttable(&insertcontent);
 
 #ifdef RELEASE_VERSION
-        InDb_Dialog->close();
+    InDb_Dialog->close();
 #else
-//    InDb_Dialog->close();
+    //    InDb_Dialog->close();
     ui_dialog->content_textEdit_dia->clear();
 #endif
+
+    //内容添加后，更新控件中内容的相关显示
 }
 
 void autoCCode::on_cancel_btn_dia_clicked(void)
@@ -471,7 +481,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.keyword_list.at(i))
             index = i;
-//        qDebug()<<"note list:"<<selectresult.note_list.at(i);
+        //        qDebug()<<"note list:"<<selectresult.note_list.at(i);
     }
 
     str_print(str);
@@ -495,7 +505,7 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.note_list.at(i))
             index = i;
-//        qDebug()<<"note list:"<<selectresult.note_list.at(i);
+        //        qDebug()<<"note list:"<<selectresult.note_list.at(i);
     }
 
     str_print(str);
@@ -619,5 +629,43 @@ void autoCCode::add_aspect_totable(void)
 
     //范畴
     addstr_aspect_comboBox();
+
+}
+//右边的注释同步滚动，选择
+void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
+{
+    self_print(listWidget_note_scroll_sync);
+    unsigned int index = 0;
+    QString str = item->text();
+    for(int i=0;i<selectresult.content_list.size();i++){
+        if(str == selectresult.keyword_list.at(i))
+            index = i;
+    }
+
+//    str_print(str);
+//    str_print(index);
+    ui->listWidget_note->setCurrentRow(index);
+    ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
+    ui->listWidget_note->item(index)->setBackgroundColor(Qt::green);
+    index_key_color = index; //
+
+    ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
+}
+
+void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
+{
+    self_print(listWidget_codeview_scroll_sync);
+    unsigned int index = 0;
+    QString str = item->text();
+    for(int i=0;i<selectresult.content_list.size();i++){
+        if(str == selectresult.note_list.at(i))
+            index = i;
+    }
+    ui->listWidget_codeview->setCurrentRow(index);
+    ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
+    ui->listWidget_codeview->item(index)->setBackgroundColor(Qt::red);
+    index_note_color = index; //
+
+    ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
 
 }

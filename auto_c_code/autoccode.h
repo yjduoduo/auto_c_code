@@ -64,6 +64,11 @@ private slots:
 
     void addstr_aspect_comboBox(void);
 
+    void listWidget_note_scroll_sync(QListWidgetItem *item);
+
+    void listWidget_codeview_scroll_sync(QListWidgetItem* item);
+
+
 public slots:
 
     void on_ok_btn_dia_clicked(void);
@@ -106,6 +111,10 @@ private://QString
     SelectResult selectresult;
 
     codestructSets* sets;
+
+    unsigned int index_key_color;//记录上次点击的位置，并注意再次点击时取消
+
+    unsigned int index_note_color;
 
 
 };
