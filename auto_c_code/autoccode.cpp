@@ -90,6 +90,10 @@ void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
 {
     self_print(on_comboBox_selectdb_currentIndexChanged);
     str_print(arg1);
+
+    ui->listWidget_codeview->clear();
+    ui->listWidget_note->clear();
+
     selected_langtype = arg1;
     //str_print(selected_langtype);
     LanguageType langtype = getLanguageType(selected_langtype);
@@ -123,11 +127,8 @@ void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
                      ASPECT_NONE);
 
     ui->codeshow_textEdit->setText(selectresult.contentstr);
-    ui->listWidget_codeview->clear();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
-    ui->listWidget_note->clear();
     ui->listWidget_note->addItems(selectresult.note_list);
-
     dialog_selectdb->close();
 }
 
@@ -536,10 +537,18 @@ void autoCCode::clr_selectresult(void)
     selectresult.vartype_list.clear();
     selectresult.existflag = 0;
     selectresult.aspect_list.clear();
+
+    //每次重新开始记录，否则滚动时点击会死机
+    index_key_color = 0;
+    index_note_color = 0;
+
+
 }
 
 void autoCCode::select_db_by_vartype(QString &select_express)
 {
+    ui->listWidget_codeview->clear();
+    ui->listWidget_note->clear();
     if(!sets)
         return;
     //str_print(sets->talbename);
@@ -550,9 +559,7 @@ void autoCCode::select_db_by_vartype(QString &select_express)
                      ASPECT_NONE);
 
     ui->codeshow_textEdit->setText(selectresult.contentstr);
-    ui->listWidget_codeview->clear();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
-    ui->listWidget_note->clear();
     ui->listWidget_note->addItems(selectresult.note_list);
 }
 
@@ -637,13 +644,17 @@ void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
     self_print(listWidget_note_scroll_sync);
     unsigned int index = 0;
     QString str = item->text();
+    if(str.isEmpty())
+        return;
+    if(selectresult.content_list.size() == 0)
+        return;
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.keyword_list.at(i))
             index = i;
     }
 
-//    str_print(str);
-//    str_print(index);
+    //    str_print(str);
+    //    str_print(index);
     ui->listWidget_note->setCurrentRow(index);
     ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
     ui->listWidget_note->item(index)->setBackgroundColor(Qt::green);
@@ -657,6 +668,11 @@ void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
     self_print(listWidget_codeview_scroll_sync);
     unsigned int index = 0;
     QString str = item->text();
+    str_print(selectresult.existflag);
+    if(str.isEmpty())
+        return;
+    if(selectresult.content_list.size() == 0)
+        return;
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.note_list.at(i))
             index = i;

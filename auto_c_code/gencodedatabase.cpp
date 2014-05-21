@@ -211,13 +211,13 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     str_print(sets->talbename);
     switch(cont->languagetype)
     {
-    case     languagetype_C_:
+    case    languagetype_C_:
     case    languagetypeCpp_:
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
-    case languagetype_Shell_:
-    case languagetype_Aspect_:
+    case    languagetype_Shell_:
+    case    languagetype_Aspect_:
         opendatabase(sets->databasename,sets->creat_table_express);
     default:
         break;
