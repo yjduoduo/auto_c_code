@@ -13,6 +13,7 @@ enum LanguageType{
     languagetype_Jave_,
     languagetype_Shell_,
     languagetype_Aspect_,
+    languagetype_Oracle_,
     languagetype_Err_,
 };
 

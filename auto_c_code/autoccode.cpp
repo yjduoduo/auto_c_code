@@ -184,7 +184,8 @@ void autoCCode::addstr_comboBox(void)
         <<str_china(Qt)
        <<str_china(Python)
       <<str_china(shell)
-     <<str_china(Jave);
+     <<str_china(Jave)
+    <<str_china(Oracle);
 
     ui_dialog->langtype_comboBox->addItems(strlist);
 
@@ -320,7 +321,12 @@ LanguageType autoCCode::getLanguageType(QString &type)
         return languagetype_Jave_;
     }else if(type == "C++"){
         return languagetypeCpp_;
-    }else{
+    }
+    else if(type == "Oracle")
+    {
+        return languagetype_Oracle_;
+    }
+    else{
         return languagetype_Err_;
     }
 #else //type must be integer
