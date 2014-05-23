@@ -232,7 +232,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     self_print(creatable);
     codestructSets *sets = get_table_sets_bytype(cont->languagetype);
     QString langtype = getLanguageStr(cont->languagetype);
-
+    str_print(langtype);
     QString insertexpress;
     insertexpress.clear();
 
@@ -258,7 +258,10 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
         keyword =  cont->keyword.replace("\'","\'\'");
         note    =  cont->note.replace("\'","\'\'");
         vartype    =  cont->vartype.replace("\'","\'\'");
-        insertexpress = QString("insert into %1([content],[lantype] ,[keywords] ,[note] ,[vartype], [aspect_field])  VALUES('%2','%3','%4','%5','%6','%7');")
+        aspect = cont->aspect.replace("\'","\'\'");
+
+#if 0
+        insertexpress = QString("insert into %1([content],[lantype] ,[keywords] ,[note] ,[vartype], [aspect_field])  VALUES('%2','%3','%4','%5','%6','%7')")
                 .arg(sets->talbename)
                 .arg(content)
                 .arg(langtype)
@@ -266,6 +269,35 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
                 .arg(note)
                 .arg(vartype)
                 .arg(aspect);
+#endif
+        QString tempstr;
+        tempstr.clear();
+
+        insertexpress += "insert into ";
+        insertexpress += sets->talbename;
+        insertexpress += "([content],[lantype] ,[keywords] ,[note] ,[vartype], [aspect_field])  VALUES(";
+
+        tempstr = QString("'%1',").arg(content);
+        insertexpress += tempstr;
+
+        tempstr = QString("'%1',").arg(langtype);
+        insertexpress += tempstr;
+
+        tempstr = QString("'%1',").arg(keyword);
+        insertexpress += tempstr;
+
+        tempstr = QString("'%1',").arg(note);
+        insertexpress += tempstr;
+
+        tempstr = QString("'%1',").arg(vartype);
+        insertexpress += tempstr;
+
+        tempstr = QString("'%1');").arg(aspect);
+        insertexpress += tempstr;
+
+        str_print(tempstr);
+        str_print(cont->content);
+
     }
 
 
