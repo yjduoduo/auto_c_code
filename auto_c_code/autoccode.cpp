@@ -441,14 +441,15 @@ void autoCCode::on_ok_btn_dia_clicked(void)
     b.creatable(&insertcontent);
     b.inserttable(&insertcontent);
 
-#ifdef RELEASE_VERSION
+#ifndef DEBUG_V
     InDb_Dialog->close();
 #else
-    //    InDb_Dialog->close();
+    //对话框不关闭
     ui_dialog->content_textEdit_dia->clear();
 #endif
 
     //内容添加后，更新控件中内容的相关显示
+    update_show_after_insert();
 }
 
 void autoCCode::on_cancel_btn_dia_clicked(void)
@@ -689,5 +690,17 @@ void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
     index_note_color = index; //
 
     ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
+
+}
+
+void autoCCode::update_show_after_insert(void)
+{
+    if(!sets)
+        return;
+    QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
+            .arg(sets->talbename)
+            .arg(getLanguageStr(sets->langtype));
+    select_db_by_vartype(select_express);
+
 
 }

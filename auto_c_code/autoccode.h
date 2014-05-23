@@ -97,6 +97,7 @@ private:
 
     void clr_selectresult(void);
 
+    void update_show_after_insert(void);
 private:
 
     Ui::autoCCode *ui;
