@@ -6,56 +6,58 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>936</width>
-    <height>438</height>
+    <width>792</width>
+    <height>481</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>autoCCode</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_4">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QLabel" name="get_listlabel">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>GetList</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="get_listlabel">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="text">
+              <string>GetList</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboBox_vartype"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="choseCodeDB_btn">
+             <property name="text">
+              <string>选择代码库</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QComboBox" name="comboBox_vartype"/>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QListWidget" name="listWidget_codeview"/>
+           </item>
+           <item>
+            <widget class="QListWidget" name="listWidget_note"/>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QPushButton" name="choseCodeDB_btn">
-           <property name="text">
-            <string>选择代码库</string>
-           </property>
-          </widget>
+          <widget class="QTextEdit" name="codeshow_textEdit"/>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QSplitter" name="splitter_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <widget class="QSplitter" name="splitter">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <widget class="QListWidget" name="listWidget_codeview"/>
-          <widget class="QListWidget" name="listWidget_note"/>
-         </widget>
-         <widget class="QTextEdit" name="codeshow_textEdit"/>
-        </widget>
        </item>
       </layout>
      </item>
@@ -76,6 +78,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="rightclear_btn">
+         <property name="text">
+          <string>右清空</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -87,13 +96,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="rightclear_btn">
-         <property name="text">
-          <string>右清空</string>
-         </property>
-        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="delete_btn">
@@ -132,39 +134,31 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QPushButton" name="save_btn">
-           <property name="minimumSize">
-            <size>
-             <width>150</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>save</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QPushButton" name="gencode_btn">
+             <property name="text">
+              <string>生成代码库</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="save_btn">
+             <property name="text">
+              <string>save</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QPushButton" name="gencode_btn">
-           <property name="minimumSize">
-            <size>
-             <width>150</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>生成代码库</string>
-           </property>
-          </widget>
+          <widget class="QTextEdit" name="genshow_textEdit"/>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QTextEdit" name="genshow_textEdit"/>
        </item>
       </layout>
      </item>

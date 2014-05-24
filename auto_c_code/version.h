@@ -8,7 +8,7 @@
 #define DEBUG_V
 #endif
 
-const char version_autoccode[]="v1.1.7";
+const char version_autoccode[]="v1.1.8";
 
 
 

@@ -34,7 +34,7 @@ public:
 private slots:
     void on_save_btn_clicked();
 
-    void on_db_comboBox_activated(const QString &arg1);
+    void db_comboBox_activated(const QString &arg1);
 
     void on_choseCodeDB_btn_clicked(void);
 
@@ -46,7 +46,7 @@ private slots:
 
     void aboutVersion(void);
 
-    void on_comboBox_selectdb_currentIndexChanged(const QString &arg1);
+    void comboBox_selectdb_currentIndexChanged(const QString &arg1);
 
 //    void add_to_gen_code_textedit(QListWidgetItem* item);
     void add_to_gen_code_textedit_by_keyword(QListWidgetItem* item);
@@ -56,9 +56,9 @@ private slots:
 
     void rightClear_textedit(void);
 
-    void on_ui_comboBox_vartype_currentIndexChanged(const QString &str);
+    void ui_comboBox_vartype_currentIndexChanged(const QString &str);
 
-    void on_comboBox_aspect_currentIndexChanged(const QString &str);
+    void comboBox_aspect_currentIndexChanged(const QString &str);
 
     void add_aspect_totable(void);
 
@@ -68,13 +68,13 @@ private slots:
 
     void listWidget_codeview_scroll_sync(QListWidgetItem* item);
 
-    void on_delete_btn_clicked_selfdefine(void);
+    void delete_btn_clicked_selfdefine(void);
 
 public slots:
 
-    void on_ok_btn_dia_clicked(void);
+    void ok_btn_dia_clicked_self(void);
 
-    void on_cancel_btn_dia_clicked(void);
+    void cancel_btn_dia_clicked_self(void);
 
 
 private:

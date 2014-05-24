@@ -56,9 +56,9 @@ void autoCCode::pushButtonSet(void)
     //    QObject::connect(ui->tocode_btn,SIGNAL(clicked()),this,SLOT(on_tocode_btn_clicked()));
     //ui_dialog
     QObject::connect(this->ui_dialog->ok_btn_dia,SIGNAL(clicked()),
-                     this,SLOT(on_ok_btn_dia_clicked()));
+                     this,SLOT(ok_btn_dia_clicked_self()));
     QObject::connect(this->ui_dialog->cancel_btn_dia,SIGNAL(clicked()),
-                     this,SLOT(on_cancel_btn_dia_clicked()));
+                     this,SLOT(cancel_btn_dia_clicked_self()));
 
     //右清空
     QObject::connect(this->ui->rightclear_btn,SIGNAL(clicked()),
@@ -70,17 +70,17 @@ void autoCCode::pushButtonSet(void)
 
     //删除按键
     QObject::connect(ui->delete_btn,SIGNAL(clicked()),
-                     this,SLOT(on_delete_btn_clicked_selfdefine()));
+                     this,SLOT(delete_btn_clicked_selfdefine()));
 }
 void autoCCode::comboBoxSet(void)
 {
     self_print(comboBoxSet);
     QObject::connect(this->ui_dia_selectdb->comboBox_selectdb,SIGNAL(currentIndexChanged(QString)),
-                     this,SLOT(on_comboBox_selectdb_currentIndexChanged(QString)));
+                     this,SLOT(comboBox_selectdb_currentIndexChanged(QString)));
     QObject::connect(this->ui->comboBox_vartype,SIGNAL(currentIndexChanged(QString)),
-                     this,SLOT(on_ui_comboBox_vartype_currentIndexChanged(QString)));
+                     this,SLOT(ui_comboBox_vartype_currentIndexChanged(QString)));
     QObject::connect(this->ui_dia_selectdb->comboBox_aspect,SIGNAL(currentIndexChanged(QString)),
-                     this,SLOT(on_comboBox_aspect_currentIndexChanged(QString)));
+                     this,SLOT(comboBox_aspect_currentIndexChanged(QString)));
 
     //左滚动，对应 右滚动
     QObject::connect(this->ui->listWidget_codeview,SIGNAL(itemClicked(QListWidgetItem*)),
@@ -92,9 +92,9 @@ void autoCCode::comboBoxSet(void)
 }
 
 
-void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
+void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
 {
-    self_print(on_comboBox_selectdb_currentIndexChanged);
+    self_print(comboBox_selectdb_currentIndexChanged);
     str_print(arg1);
 
     ui->listWidget_codeview->clear();
@@ -235,9 +235,9 @@ void autoCCode::on_save_btn_clicked()
 
 }
 
-void autoCCode::on_db_comboBox_activated(const QString &arg1)
+void autoCCode::db_comboBox_activated(const QString &arg1)
 {
-    self_print(on_db_comboBox_activated);
+    self_print(db_comboBox_activated);
 }
 //选择数据库
 void autoCCode::on_choseCodeDB_btn_clicked(void)
@@ -355,9 +355,9 @@ LanguageType autoCCode::getLanguageType(QString &type)
 }
 
 //dialog ok button
-void autoCCode::on_ok_btn_dia_clicked(void)
+void autoCCode::ok_btn_dia_clicked_self(void)
 {
-    self_print(on_ok_btn_dia_clicked);
+    self_print(ok_btn_dia_clicked_self);
 
     //获取内容
     QString content = ui_dialog->content_textEdit_dia->toPlainText();
@@ -458,9 +458,9 @@ void autoCCode::on_ok_btn_dia_clicked(void)
     update_show_after_insert();
 }
 
-void autoCCode::on_cancel_btn_dia_clicked(void)
+void autoCCode::cancel_btn_dia_clicked_self(void)
 {
-    self_print(on_cancel_btn_dia_clicked);
+    self_print(cancel_btn_dia_clicked_self);
     InDb_Dialog->close();
 }
 void autoCCode::aboutVersion(void)
@@ -578,9 +578,9 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     ui->listWidget_note->addItems(selectresult.note_list);
 }
 
-void autoCCode::on_ui_comboBox_vartype_currentIndexChanged(const QString &str)
+void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
 {
-    self_print(on_ui_comboBox_vartype_currentIndexChanged);
+    self_print(ui_comboBox_vartype_currentIndexChanged);
     str_print(str);
 
     if(!sets)
@@ -618,9 +618,9 @@ void autoCCode::on_ui_comboBox_vartype_currentIndexChanged(const QString &str)
 
 }
 
-void autoCCode::on_comboBox_aspect_currentIndexChanged(const QString &str)
+void autoCCode::comboBox_aspect_currentIndexChanged(const QString &str)
 {
-    self_print(on_comboBox_aspect_currentIndexChanged);
+    self_print(comboBox_aspect_currentIndexChanged);
     str_print(str);
 
     if(!str.isEmpty())
@@ -713,11 +713,15 @@ void autoCCode::update_show_after_insert(void)
 
 
 }
-void autoCCode::on_delete_btn_clicked_selfdefine(void)
+void autoCCode::delete_btn_clicked_selfdefine(void)
 {
-    self_print(on_delete_btn_clicked);
+    self_print(delete_btn_clicked);
     if(!sets)
         return;
+    //开机删除死机bug
+    if(0 == selectresult.existflag )
+        return;
+
     /*  输入对话框   */
     bool isOK;
     QString text = QInputDialog::getText(this,"Input Dialog",
