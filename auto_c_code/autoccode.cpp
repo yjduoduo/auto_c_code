@@ -67,6 +67,10 @@ void autoCCode::pushButtonSet(void)
     //dialog_select_database.ui add_btn
     QObject::connect(this->ui_dialog->pushButton_add,SIGNAL(clicked()),
                      this,SLOT(add_aspect_totable()));
+
+    //删除按键
+    QObject::connect(ui->delete_btn,SIGNAL(clicked()),
+                     this,SLOT(on_delete_btn_clicked_selfdefine()));
 }
 void autoCCode::comboBoxSet(void)
 {
@@ -81,6 +85,8 @@ void autoCCode::comboBoxSet(void)
     //左滚动，对应 右滚动
     QObject::connect(this->ui->listWidget_codeview,SIGNAL(itemClicked(QListWidgetItem*)),
                      this,SLOT(listWidget_note_scroll_sync(QListWidgetItem*)));
+
+
     QObject::connect(this->ui->listWidget_note,SIGNAL(itemClicked(QListWidgetItem*)),
                      this,SLOT(listWidget_codeview_scroll_sync(QListWidgetItem*)));
 }
@@ -108,11 +114,11 @@ void autoCCode::on_comboBox_selectdb_currentIndexChanged(const QString &arg1)
     str_print(aspect);
     if(aspect == "")
     {
-        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
+        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0 ")
                 .arg(sets->talbename)
                 .arg(selected_langtype);
     }else{
-        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and aspect_field='%3'")
+        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and aspect_field='%3' and delflag=0")
                 .arg(sets->talbename)
                 .arg(selected_langtype)
                 .arg(aspect);
@@ -389,7 +395,7 @@ void autoCCode::on_ok_btn_dia_clicked(void)
         return;
     //str_print(sets->talbename);
 
-    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4'")
+    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0")
             .arg(sets->talbename)
             .arg(lanaugetype)
             .arg(content)
@@ -566,7 +572,9 @@ void autoCCode::select_db_by_vartype(QString &select_express)
                      ASPECT_NONE);
 
     ui->codeshow_textEdit->setText(selectresult.contentstr);
+    ui->listWidget_codeview->clear();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    ui->listWidget_note->clear();
     ui->listWidget_note->addItems(selectresult.note_list);
 }
 
@@ -579,30 +587,30 @@ void autoCCode::on_ui_comboBox_vartype_currentIndexChanged(const QString &str)
         return;
 
     if(str.contains("header")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2'")
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg("header");
         select_db_by_vartype(select_express);
     }else if(str.contains("function")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2'")
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg("function");
         select_db_by_vartype(select_express);
     }else if(str.contains("struct")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2'")
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg("struct");
         select_db_by_vartype(select_express);
     }
     else if(str.contains("variable")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2'")
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg("variable");
         select_db_by_vartype(select_express);
     }
     else{
         //        str_print(sets->langtype);
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
+        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg(getLanguageStr(sets->langtype));
         select_db_by_vartype(select_express);
@@ -666,6 +674,7 @@ void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
     ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
     ui->listWidget_note->item(index)->setBackgroundColor(Qt::green);
     index_key_color = index; //
+    str_print(index_key_color);
 
     ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
 }
@@ -697,10 +706,42 @@ void autoCCode::update_show_after_insert(void)
 {
     if(!sets)
         return;
-    QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
+    QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0")
             .arg(sets->talbename)
             .arg(getLanguageStr(sets->langtype));
     select_db_by_vartype(select_express);
+
+
+}
+void autoCCode::on_delete_btn_clicked_selfdefine(void)
+{
+    self_print(on_delete_btn_clicked);
+    if(!sets)
+        return;
+    /*  输入对话框   */
+    bool isOK;
+    QString text = QInputDialog::getText(this,"Input Dialog",
+                                         "Please Press Ok to delete",
+                                         QLineEdit::Normal,
+                                         "Ok?",
+                                         &isOK);
+    if(isOK)
+    {
+        str_print(index_key_color);
+        QString select_express = QString("update %1 set delflag=1 where keywords='%2'")
+                .arg(sets->talbename)
+                .arg(selectresult.keyword_list.at(index_key_color));
+
+        b.updatetable(sets->langtype,select_express);
+
+        update_show_after_insert();
+        QMessageBox::information(this,"Information",
+                                 "Your comment is:<b>" +text +"</b>",
+                                 QMessageBox::Yes|QMessageBox::No,QMessageBox::Yes);
+    }
+
+
+
 
 
 }

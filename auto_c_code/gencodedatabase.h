@@ -62,6 +62,7 @@ public:
     GenCodeDatabase();
     void creatable(InsertCon *cont);
     void inserttable(InsertCon *cont );
+    void updatetable(LanguageType languagetype,QString &insertexpress);
     int opendatabase(const char *databases_name, const char *createtableexpress);
     int insertdatabase(const char *databases_name,
                        char *inserttableexpress);

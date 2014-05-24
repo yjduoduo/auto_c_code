@@ -4,6 +4,7 @@
 
 #define DB_NAME "all.db"
 
+
 #define CREATTABLE(A) "CREATE TABLE  "#A \
     "([ID] INTEGER PRIMARY KEY,"\
     "[content] varchar(100),"\
@@ -12,7 +13,8 @@
     "[note] varchar(100),"\
     "[vartype] varchar(100),"\
     "[aspect_field] varchar(100),"\
-    "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
+    "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')),"\
+    "[delflag] integer DEFAULT 0);"
 
 #define CREATTABLE_ASPECT(A) "CREATE TABLE  "#A \
     "([ID] INTEGER PRIMARY KEY,"\
@@ -231,6 +233,8 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
 {
     self_print(creatable);
     codestructSets *sets = get_table_sets_bytype(cont->languagetype);
+    if(!sets)
+        return;
     QString langtype = getLanguageStr(cont->languagetype);
     str_print(langtype);
     QString insertexpress;
@@ -323,6 +327,35 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     }
 
 }
+void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpress)
+{
+    self_print(updatetable);
+    codestructSets *sets = get_table_sets_bytype(languagetype);
+    if(!sets)
+        return;
+    str_print(insertexpress);
+    str_print(sets->talbename);
+
+    switch(languagetype)
+    {
+    case    languagetype_C_:
+    case    languagetypeCpp_:
+    case    languagetype_Qt_:
+    case    languagetype_Python_:
+    case    languagetype_Jave_:
+    case languagetype_Shell_:
+    case    languagetype_Aspect_:
+    case languagetype_Oracle_:
+        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
+        break;
+
+    default:
+        break;
+    }
+
+}
+
+
 QString GenCodeDatabase::getLanguageStr(LanguageType type)
 {
     switch(type)

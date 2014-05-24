@@ -68,6 +68,7 @@ private slots:
 
     void listWidget_codeview_scroll_sync(QListWidgetItem* item);
 
+    void on_delete_btn_clicked_selfdefine(void);
 
 public slots:
 

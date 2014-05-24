@@ -78,6 +78,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="rightclear_btn">
+         <property name="text">
+          <string>右清空</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -91,9 +98,9 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="rightclear_btn">
+        <widget class="QPushButton" name="delete_btn">
          <property name="text">
-          <string>右清空</string>
+          <string>删除</string>
          </property>
         </widget>
        </item>

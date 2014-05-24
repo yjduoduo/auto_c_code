@@ -1,0 +1,152 @@
+commit baaa548a0cd3f1c39f965422209e86650de58403
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Fri May 23 08:28:34 2014 +0800
+
+    插入数据后，显示部分自动更新，完毕
+
+commit c3dfaa8184c1b635891f75fad99e722e2ecb6457
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Fri May 23 08:16:27 2014 +0800
+
+    修复插入数据库失败的问题，出现%6，%7结尾的内容，改换另外一种方法实现
+    生成新的软件版本
+
+commit dcabfddb8296dc24e626d3b3a3926161741e02da
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Wed May 21 22:45:09 2014 +0800
+
+    添加oracle类型
+
+commit 96a82d21d8fc1e051856c0253960b78c3ef30519
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Wed May 21 22:27:45 2014 +0800
+
+    修复选择不同数据库时，滚动时点击会死机
+
+commit f15172767e2ecd9efa99f76cc84d8b4bfe0e7f8a
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Wed May 21 18:24:29 2014 +0800
+
+    ui下面两个listwidget同步分别点击时，同步滚动显示
+
+commit a61100329941f3121f1ba319d57d754fb6cf5aca
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Wed May 21 10:38:51 2014 +0800
+
+    添加shell类型对应的数据库内容，
+
+commit 48a462f1830630f50192de2729b4d6629ccdecf2
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Mon May 19 22:33:22 2014 +0800
+
+    修改入库对话框为显示
+    添加备注栏可以双击添加
+
+commit f207e8fcfb7b0f81b84e14c75579213c5b687893
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Mon May 19 12:22:46 2014 +0800
+
+    发现读取文件内容为乱码，修复此bug
+
+commit faa95f2b20d0a6b9bf57abe5fc44f8703b6ce7a3
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Mon May 19 11:32:09 2014 +0800
+
+    添加 范围表
+    并且可以自定义添加相应的内容
+    主程序表中也添加相应的列
+    发布1.1 release版本
+    auto_c_code.exe
+
+commit 08839c9e0286336029826ea2b1d0190bfec3ed7c
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Mon May 19 09:07:49 2014 +0800
+
+    添加ui.comboBox的选择库功能
+    添加插入新数据时检测是否已经存在功能
+
+commit a4b874e357edb5faffb25617ac5d321033acefc6
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sun May 18 12:48:45 2014 +0800
+
+    添加save按钮，保存文件
+
+commit 317f122630fbb270db196da8910ef994e349d189
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sun May 18 12:00:56 2014 +0800
+
+    添加文件过滤类型
+    getOpenFileName(this, tr("Open File"),
+                                                        "../",
+                                                        tr("Ctype (*.c *.h)"
+                                                           ";;Cpptype(*.cpp *.h)"
+                                                           ";;JavaType(*.java)"));
+
+commit 5e46868e4ace8b05e91e212ecc260c30aab4f158
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sun May 18 09:29:27 2014 +0800
+
+    指针必须检测是否为空
+    langtype_comboBox添加空部分内容，防止选择数据库时直接根据内容就查询了。
+
+commit ddc3bf3f181de2f8c3287774c52837338d69bbab
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sun May 18 07:58:15 2014 +0800
+
+    添加选择数据库类型对话框，明白了，需要构造函数中初始化
+
+commit d5602d958e7e2beb075b4b258dc06f50f3d1aa41
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sun May 18 00:19:11 2014 +0800
+
+    添加数据库选择对话框
+
+commit e62b88786aabb08b461cdd2c4e9197d32e88d585
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sat May 17 23:46:27 2014 +0800
+
+    移动close按钮到关于button下面
+
+commit c67957d1b26119fd81c2706f7d321f7c34a82953
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sat May 17 23:37:37 2014 +0800
+
+    添加版本信息
+
+commit f25ed91a949e5e59369fe62beee4e3cdb21c8912
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sat May 17 23:20:29 2014 +0800
+
+    建立表和插入表，数据库
+
+commit a1deabb5580cba51e222e6cbbc30568afbc41939
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sat May 17 17:50:41 2014 +0800
+
+    对话框中显示父文本qtextedit中选中的内容
+    添加logo,autoccode.ico
+
+commit dbcb76d38bd64c3aa5ea50b3d8e49f5b6b72fc1a
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sat May 17 17:17:59 2014 +0800
+
+    添加一个对话框，明白点了。
+
+commit fce91de968ead0fc91c3e3a7aad95a68a353bdec
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Sat May 17 12:18:46 2014 +0800
+
+    添加qt designer，网格网格排列界面测试，直接摘取到对应的内容框即可
+
+commit 008b5823735ca02c809e9f51f82bd0ab04f1f17a
+Author: yjduoduo <wxjlmr@126.com>
+Date:   Fri May 16 15:22:39 2014 +0800
+
+    添加数据库文件sqlite-amalgamation-3080403
+    说明文件
+
+commit 1b819db4027e19b80b821c364b63cd95fe3a572c
+Author: yjduoduo <yjduoduo@users.noreply.github.com>
+Date:   Thu May 15 00:36:54 2014 -0700
+
+    Initial commit
