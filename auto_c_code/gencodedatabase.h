@@ -70,6 +70,10 @@ public:
                        char *selecttableexpress,
                        SelectResult &selectres,
                        int aspeactflag);
+    int searchdatabase(const char *databases_name,
+                       char *selecttableexpress,
+                       SelectResult &selectres,
+                       const QString &searchtext);
     QString getLanguageStr(LanguageType type);
 protected:
     codestructSets* get_table_sets_bytype(LanguageType type);

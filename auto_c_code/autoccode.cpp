@@ -10,6 +10,7 @@
 #include "version.h"
 #include "gencodedatabase.h"
 #include <iostream>
+using namespace std;
 
 
 
@@ -42,7 +43,15 @@ autoCCode::autoCCode(QWidget *parent) :
     comboBoxSet();
     listWidgetSet();
     addstr_comboBox();
+    lineTextEditSet();
 }
+
+void autoCCode::lineTextEditSet(void)
+{
+    QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
+                     this,SLOT(SearchText(QString)));
+}
+
 
 void autoCCode::pushButtonSet(void)
 {
@@ -71,6 +80,9 @@ void autoCCode::pushButtonSet(void)
     //删除按键
     QObject::connect(ui->delete_btn,SIGNAL(clicked()),
                      this,SLOT(delete_btn_clicked_selfdefine()));
+    //clean search text
+    QObject::connect(ui->pushButton_clean,SIGNAL(clicked()),
+                     this,SLOT(cleanLineTextEditSearch()));
 }
 void autoCCode::comboBoxSet(void)
 {
@@ -97,9 +109,6 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     self_print(comboBox_selectdb_currentIndexChanged);
     str_print(arg1);
 
-    ui->listWidget_codeview->clear();
-    ui->listWidget_note->clear();
-
     selected_langtype = arg1;
     //str_print(selected_langtype);
     LanguageType langtype = getLanguageType(selected_langtype);
@@ -123,7 +132,7 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
                 .arg(selected_langtype)
                 .arg(aspect);
     }
-    clr_selectresult();
+    clr_selectresult(selectresult);
     str_print(select_express);
     //gencode str clear
     GenCode_str.clear();
@@ -133,6 +142,7 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
                      ASPECT_NONE);
 
     ui->codeshow_textEdit->setText(selectresult.contentstr);
+    clear_listWidget_beforecall();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
     dialog_selectdb->close();
@@ -153,7 +163,7 @@ void autoCCode::addstr_aspect_comboBox(void)
     if(!sets)
         return;
     QString select_express = QString("select distinct aspect_field from aspect_table;");
-    clr_selectresult();
+    clr_selectresult(selectresult);
     str_print(select_express);
     selectresult.aspect_list<<str_china();
     b.selectdatabase(sets->databasename,
@@ -354,6 +364,19 @@ LanguageType autoCCode::getLanguageType(QString &type)
 #endif
 }
 
+void autoCCode::save_before_ops(void)
+{
+    selectresult_tmp = selectresult;
+    index_key_color_tmp = index_key_color;
+    index_note_color_tmp = index_note_color;
+}
+void autoCCode::restore_before_ops(void)
+{
+    selectresult = selectresult_tmp;
+    index_key_color = index_key_color_tmp ;
+    index_note_color = index_note_color_tmp ;
+}
+
 //dialog ok button
 void autoCCode::ok_btn_dia_clicked_self(void)
 {
@@ -367,40 +390,31 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     QString vartype = ui_dialog->comboBox_vartype->currentText();
     QString aspect = ui_dialog->comboBox_aspect->currentText();
 
-    str_print(vartype);
-
-    //str_print(content);
-    //str_print(lanaugetype);
-    //str_print(index_keyword);
-    //str_print(note);
 
     if(lanaugetype.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
         return;
     }
     if(content.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
         return;
     }
-    //检测内容是否已经存在了。
-    QString exitstr;
-    exitstr.clear();
-
 
     LanguageType langtype = getLanguageType(lanaugetype);
     sets = get_table_sets_bytype(langtype);
     if(!sets)
         return;
-    //str_print(sets->talbename);
 
     QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0")
             .arg(sets->talbename)
             .arg(lanaugetype)
             .arg(content)
             .arg(vartype);
-    clr_selectresult();
+    save_before_ops();
+
+    clr_selectresult(selectresult);
     str_print(select_express);
     b.selectdatabase(sets->databasename,
                      select_express.toUtf8().data(),
@@ -409,31 +423,35 @@ void autoCCode::ok_btn_dia_clicked_self(void)
 
     if(selectresult.existflag)
     {
-        QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        restore_before_ops();
+        QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
 
     if(vartype.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
 
     if(index_keyword.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
     if(note.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
     //    if(aspect.isEmpty())
     //    {
-    //        QMessageBox::information(NULL, str_china(范围), str_china(不能为空), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+    //        QMessageBox::information(NULL, str_china(范围), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
     //        return;
     //    }
+
+
+    clr_selectresult(selectresult_tmp);
 
     InsertCon insertcontent;
     insertcontent.content = content;
@@ -495,7 +513,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.keyword_list.at(i))
             index = i;
-        //        qDebug()<<"note list:"<<selectresult.note_list.at(i);
+        qDebug()<<"note list:"<<selectresult.note_list.at(i);
     }
 
     str_print(str);
@@ -541,15 +559,15 @@ void autoCCode::rightClear_textedit(void)
     GenCode_str.clear();
     ui->genshow_textEdit->clear();
 }
-void autoCCode::clr_selectresult(void)
+void autoCCode::clr_selectresult(SelectResult &result)
 {
-    selectresult.content_list.clear();
-    selectresult.contentstr.clear();
-    selectresult.keyword_list.clear();
-    selectresult.note_list.clear();
-    selectresult.vartype_list.clear();
-    selectresult.existflag = 0;
-    selectresult.aspect_list.clear();
+    result.content_list.clear();
+    result.contentstr.clear();
+    result.keyword_list.clear();
+    result.note_list.clear();
+    result.vartype_list.clear();
+    result.existflag = 0;
+    result.aspect_list.clear();
 
     //每次重新开始记录，否则滚动时点击会死机
     index_key_color = 0;
@@ -557,24 +575,30 @@ void autoCCode::clr_selectresult(void)
 
 
 }
-
-void autoCCode::select_db_by_vartype(QString &select_express)
+void autoCCode::clear_listWidget_beforecall(void)
 {
     ui->listWidget_codeview->clear();
     ui->listWidget_note->clear();
+}
+
+void autoCCode::select_db_by_vartype(QString &select_express)
+{
+
     if(!sets)
         return;
     //str_print(sets->talbename);
-    clr_selectresult();
+    clr_selectresult(selectresult);
 
     b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);
 
+
+
     ui->codeshow_textEdit->setText(selectresult.contentstr);
-    ui->listWidget_codeview->clear();
+
+    clear_listWidget_beforecall();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
-    ui->listWidget_note->clear();
     ui->listWidget_note->addItems(selectresult.note_list);
 }
 
@@ -653,6 +677,19 @@ void autoCCode::add_aspect_totable(void)
     addstr_aspect_comboBox();
 
 }
+
+void autoCCode::judge_color_index(void)
+{
+    if(index_key_color > selectresult.content_list.size())
+    {
+        index_key_color=0;
+        index_note_color = 0;
+        index_key_color_tmp = 0;
+        index_note_color_tmp = 0;
+    }
+
+}
+
 //右边的注释同步滚动，选择
 void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
 {
@@ -663,13 +700,14 @@ void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
         return;
     if(selectresult.content_list.size() == 0)
         return;
+    judge_color_index();
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.keyword_list.at(i))
             index = i;
     }
 
-    //    str_print(str);
-    //    str_print(index);
+    str_print(str);
+    str_print(index);
     ui->listWidget_note->setCurrentRow(index);
     ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
     ui->listWidget_note->item(index)->setBackgroundColor(Qt::green);
@@ -689,6 +727,7 @@ void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
         return;
     if(selectresult.content_list.size() == 0)
         return;
+    judge_color_index();
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.note_list.at(i))
             index = i;
@@ -727,7 +766,7 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
     QString text = QInputDialog::getText(this,"Input Dialog",
                                          "Please Press Ok to delete",
                                          QLineEdit::Normal,
-                                         "Ok?",
+                                         selectresult.keyword_list.at(index_key_color),
                                          &isOK);
     if(isOK)
     {
@@ -740,12 +779,69 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
 
         update_show_after_insert();
         QMessageBox::information(this,"Information",
-                                 "Your comment is:<b>" +text +"</b>",
-                                 QMessageBox::Yes|QMessageBox::No,QMessageBox::Yes);
+                                 "Your comment:<h1><font color=red>" +text +"</font></h1>"+" deleted!",
+                                 QMessageBox::Yes,QMessageBox::Yes);
     }
 
 
 
 
 
+}
+
+void autoCCode::SearchText(const QString &searchStr)
+{
+    self_print(SearchText);
+    str_print(searchStr);
+    if(!sets)
+        return;
+    if(selectresult.content_list.size() == 0)
+        return;
+    judge_color_index();
+    str_print(selectresult.content_list.size());
+
+    clear_listWidget_beforecall();
+
+
+    //    return;
+    QString select_express;
+    select_express.clear();
+    //    select_express = QString("select content,lantype,keywords,note,vartype  from %1 where keywords not null and delflag=0 ")
+    select_express = QString("select keywords,content,lantype,note,vartype from %1 where lantype='%2' and delflag=0")
+            .arg(sets->talbename)
+            .arg(getLanguageStr(sets->langtype));
+
+
+    clr_selectresult(selectresult);
+
+    str_print(select_express);
+
+    b.searchdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+                     selectresult,
+                     searchStr);
+
+    QStringList::const_iterator iterator_key = selectresult.keyword_list.begin();
+    QStringList::const_iterator iterator_note = selectresult.note_list.begin();
+    while( iterator_key != selectresult.keyword_list.end()){
+        cout << "keys -- :"<<(*iterator_key).toAscii().data()  <<endl;
+        //            cout << (*iterator_note) <<endl;
+        ++iterator_key;
+        ++iterator_note;
+    }
+
+    ui->codeshow_textEdit->setText(selectresult.contentstr);
+
+    clear_listWidget_beforecall();
+    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    ui->listWidget_note->addItems(selectresult.note_list);
+
+
+
+}
+void autoCCode::cleanLineTextEditSearch(void)
+{
+    if(ui->lineEdit_search->text().isEmpty())
+        return;
+    ui->lineEdit_search->clear();
+    update_show_after_insert();
 }

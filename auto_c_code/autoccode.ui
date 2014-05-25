@@ -31,6 +31,16 @@
           </widget>
          </item>
          <item>
+          <widget class="QLineEdit" name="lineEdit_search"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_clean">
+           <property name="text">
+            <string>search clean</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QComboBox" name="comboBox_vartype"/>
          </item>
          <item>

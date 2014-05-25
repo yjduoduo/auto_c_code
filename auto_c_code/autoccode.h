@@ -70,6 +70,9 @@ private slots:
 
     void delete_btn_clicked_selfdefine(void);
 
+    void SearchText(const QString &searchStr);
+
+    void cleanLineTextEditSearch(void);
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -96,9 +99,19 @@ private:
 
     void select_db_by_vartype(QString &select_exp);
 
-    void clr_selectresult(void);
+    void clr_selectresult(SelectResult &result);
 
     void update_show_after_insert(void);
+
+    void lineTextEditSet(void);
+
+    void save_before_ops(void);
+
+    void restore_before_ops(void);
+
+    void clear_listWidget_beforecall(void);
+
+    void judge_color_index(void);
 private:
 
     Ui::autoCCode *ui;
@@ -112,11 +125,15 @@ private://QString
 
     SelectResult selectresult;
 
+    SelectResult selectresult_tmp;
+    unsigned int index_key_color_tmp;
+    unsigned int index_note_color_tmp;
+
+
     codestructSets* sets;
 
-    unsigned int index_key_color;//记录上次点击的位置，并注意再次点击时取消
-
-    unsigned int index_note_color;
+    int index_key_color;//记录上次点击的位置，并注意再次点击时取消
+    int index_note_color;
 
 
 };

@@ -35,3 +35,5 @@ INCLUDEPATH +=\
 
 RC_FILE = autoapp.rc
 
+RESOURCES +=
+

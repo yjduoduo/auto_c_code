@@ -204,6 +204,89 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
     return(0);
 }
 
+
+int GenCodeDatabase::searchdatabase(const char *databases_name,
+                                    char *selecttableexpress,
+                                    SelectResult &selectres,
+                                    const QString &searchtext)
+{
+    sqlite3 * db = 0;
+    int result;
+    char * pErrMsg = 0;
+    int ret = 0;
+    int nRow=0, nColumn;
+    char **dbResult; //是 char ** 类型，两个*号
+    int index;
+    // 连接数据库
+    ret = sqlite3_open(databases_name, &db);
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
+        return(1);
+    }
+    //    str_print(databases_name);
+    //    printf("connect database success!\n");
+
+
+    //    fprintf(stdout,"express:%s\n",selecttableexpress);
+    result = sqlite3_get_table( db, selecttableexpress, &dbResult, &nRow, &nColumn, &pErrMsg );
+    if( SQLITE_OK == result )
+    {
+        //查询成功
+
+        index = nColumn; //前面说过 dbResult 前面第一行数据是字段名称，从 nColumn 索引开始才是真正的数据
+        int searchflag = 0;
+        //        printf( "查到%d条记录\n", nRow );
+        for(  int i = 0; i < nRow ; i++ )
+
+        {
+            //           printf( "第 %d 条记录\n", i+1 );
+            for( int j = 0 ; j < nColumn; j++ )
+            {
+                if(0==j){
+                    if(QString::fromUtf8(dbResult [index]).contains(searchtext)){
+                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+
+                        searchflag = 1;
+                    }
+                }else if(1==j){
+                    if(searchflag){
+                        selectres.contentstr+= QString::fromUtf8(dbResult [index]);
+                        selectres.content_list << QString::fromUtf8(dbResult [index]);
+                    }
+
+                }
+                else if(3==j){
+                    if(searchflag)
+                        selectres.note_list<< QString::fromUtf8(dbResult [index]);
+                }
+                else if(4==j){
+                    if(searchflag)
+                        selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
+                }
+
+                if(nColumn-1 == j)
+                    searchflag = 0;
+
+                selectres.existflag = 1;
+
+
+                ++index;
+            }
+            //            printf( "-------\n" );
+        }
+
+    }
+
+    sqlite3_free_table(dbResult);
+    //关闭数据库，释放内存
+    sqlite3_close(db);
+
+
+    return(0);
+}
+
+
+
 void GenCodeDatabase::creatable(InsertCon *cont)
 {
     self_print(creatable);
