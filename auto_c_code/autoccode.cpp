@@ -29,7 +29,8 @@ autoCCode::autoCCode(QWidget *parent) :
     ui_dia_selectdb(new Ui::Dialog_select_database),
     sets(NULL),
     index_key_color(0),
-    index_note_color(0)
+    index_note_color(0),
+    flag_selectLeft(1)
 {
     ui->setupUi(this);
     InDb_Dialog = new QDialog(this);
@@ -736,8 +737,9 @@ void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
     str_print(index_key_color);
 
     ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
+    flag_selectLeft = 0 ;
 }
-
+//note滚动点击
 void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
 {
     self_print(listWidget_codeview_scroll_sync);
@@ -758,8 +760,12 @@ void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
     ui->listWidget_codeview->item(index)->setBackgroundColor(Qt::red);
     index_note_color = index; //
 
+
     ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
 
+
+    flag_selectLeft = 1 ;
+    str_print( flag_selectLeft );
 }
 
 void autoCCode::update_show_after_insert(void)
@@ -781,6 +787,19 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
     //开机删除死机bug
     if(0 == selectresult.existflag )
         return;
+
+    //    if()
+    str_print(index_key_color);
+    //先判定第一个不删除吧，点击note右侧的内容进行删除时出现问题
+    if( flag_selectLeft )
+    {
+        /*  标准对话框——警示消息框   */
+        QMessageBox::warning(NULL,"Warning",
+                             str_china(请选择左侧进行删除),
+                             QMessageBox::Yes,QMessageBox::Yes);
+
+        return;
+    }
 
     /*  输入对话框   */
     bool isOK;
@@ -888,7 +907,7 @@ void autoCCode::add_column_lowercase_keywords_content(void)
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
 
-//    return;
+    //    return;
 
     QStringList::const_iterator iterator = selectresult.keyword_list.begin();
 

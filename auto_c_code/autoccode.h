@@ -149,7 +149,7 @@ private://QString
     int index_key_color;//记录上次点击的位置，并注意再次点击时取消
     int index_note_color;
 
-
+    int flag_selectLeft;
 };
 
 
