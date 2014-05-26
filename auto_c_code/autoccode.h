@@ -73,6 +73,10 @@ private slots:
     void SearchText(const QString &searchStr);
 
     void cleanLineTextEditSearch(void);
+
+
+    void add_column_lowercase_keywords_content(void);
+
 public slots:
 
     void ok_btn_dia_clicked_self(void);

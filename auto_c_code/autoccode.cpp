@@ -83,6 +83,13 @@ void autoCCode::pushButtonSet(void)
     //clean search text
     QObject::connect(ui->pushButton_clean,SIGNAL(clicked()),
                      this,SLOT(cleanLineTextEditSearch()));
+
+#ifndef RELEASE_VERSION
+    //更新库,为添加小写的keyworks for search 使用的，默认不显示
+    ui->pushButton_updatedb->hide();
+    QObject::connect(ui->pushButton_updatedb,SIGNAL(clicked()),
+                     this,SLOT(add_column_lowercase_keywords_content()));
+#endif
 }
 void autoCCode::comboBoxSet(void)
 {
@@ -789,25 +796,25 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
 
 }
 
+
+
+
 void autoCCode::SearchText(const QString &searchStr)
 {
     self_print(SearchText);
     str_print(searchStr);
     if(!sets)
         return;
-    if(selectresult.content_list.size() == 0)
+    if(searchStr.isEmpty()){
+        update_show_after_insert();
         return;
+    }
     judge_color_index();
     str_print(selectresult.content_list.size());
 
-    clear_listWidget_beforecall();
-
-
-    //    return;
     QString select_express;
     select_express.clear();
-    //    select_express = QString("select content,lantype,keywords,note,vartype  from %1 where keywords not null and delflag=0 ")
-    select_express = QString("select keywords,content,lantype,note,vartype from %1 where lantype='%2' and delflag=0")
+    select_express = QString("select lowercase_keyworks,keywords,content,lantype,note,vartype from %1 where lantype='%2' and delflag=0")
             .arg(sets->talbename)
             .arg(getLanguageStr(sets->langtype));
 
@@ -818,24 +825,13 @@ void autoCCode::SearchText(const QString &searchStr)
 
     b.searchdatabase(sets->databasename,select_express.toLocal8Bit().data(),
                      selectresult,
-                     searchStr);
-
-    QStringList::const_iterator iterator_key = selectresult.keyword_list.begin();
-    QStringList::const_iterator iterator_note = selectresult.note_list.begin();
-    while( iterator_key != selectresult.keyword_list.end()){
-        cout << "keys -- :"<<(*iterator_key).toAscii().data()  <<endl;
-        //            cout << (*iterator_note) <<endl;
-        ++iterator_key;
-        ++iterator_note;
-    }
+                     searchStr.toLower());
 
     ui->codeshow_textEdit->setText(selectresult.contentstr);
 
     clear_listWidget_beforecall();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
-
-
 
 }
 void autoCCode::cleanLineTextEditSearch(void)
@@ -844,4 +840,61 @@ void autoCCode::cleanLineTextEditSearch(void)
         return;
     ui->lineEdit_search->clear();
     update_show_after_insert();
+}
+
+
+
+//为所有表中的lowercase_keyword添加内容
+void autoCCode::add_column_lowercase_keywords_content(void)
+{
+    self_print(add_column_lowercase_keywords);
+    if(!sets)
+        return;
+    //开机删除死机bug
+    if(0 == selectresult.existflag )
+        return;
+
+
+    QString select_express;
+    select_express.clear();
+    select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
+            .arg(sets->talbename)
+            .arg(getLanguageStr(sets->langtype));
+    clr_selectresult(selectresult);
+    str_print(select_express);
+    GenCode_str.clear();
+
+    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+                     selectresult,
+                     ASPECT_NONE);
+
+    ui->codeshow_textEdit->setText(selectresult.contentstr);
+
+    clear_listWidget_beforecall();
+    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    ui->listWidget_note->addItems(selectresult.note_list);
+
+//    return;
+
+    QStringList::const_iterator iterator = selectresult.keyword_list.begin();
+
+    while( iterator != selectresult.keyword_list.end()){
+        cout << (*iterator).toAscii().data() << endl;
+        QString tmp =(*iterator).toLower();
+        QString repalceafter = tmp.replace("\'","\'\'");
+        select_express = QString("update %1 set lowercase_keyworks='%2' where keywords='%3' and lantype='%4'")
+                .arg(sets->talbename)
+                .arg(repalceafter)
+                .arg((*iterator))
+                .arg(getLanguageStr(sets->langtype));
+
+        str_print(select_express);
+        b.updatetable(sets->langtype,select_express);
+
+        ++iterator;
+    }
+
+
+
+
 }

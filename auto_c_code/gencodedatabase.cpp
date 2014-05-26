@@ -14,7 +14,9 @@
     "[vartype] varchar(100),"\
     "[aspect_field] varchar(100),"\
     "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')),"\
-    "[delflag] integer DEFAULT 0);"
+    "[delflag] integer DEFAULT 0," \
+    "[lowercase_keyworks] varchar(100)" \
+    ");"
 
 #define CREATTABLE_ASPECT(A) "CREATE TABLE  "#A \
     "([ID] INTEGER PRIMARY KEY,"\
@@ -241,25 +243,31 @@ int GenCodeDatabase::searchdatabase(const char *databases_name,
         {
             //           printf( "第 %d 条记录\n", i+1 );
             for( int j = 0 ; j < nColumn; j++ )
-            {
+            {//查询顺序表
+                /* lowercase_keyworks,keywords,content,lantype,note,vartype */
                 if(0==j){
                     if(QString::fromUtf8(dbResult [index]).contains(searchtext)){
-                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
-
                         searchflag = 1;
                     }
                 }else if(1==j){
+                    if(searchflag){
+                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+
+                    }
+
+                }
+                else if(2==j){
                     if(searchflag){
                         selectres.contentstr+= QString::fromUtf8(dbResult [index]);
                         selectres.content_list << QString::fromUtf8(dbResult [index]);
                     }
 
                 }
-                else if(3==j){
+                else if(4==j){
                     if(searchflag)
                         selectres.note_list<< QString::fromUtf8(dbResult [index]);
                 }
-                else if(4==j){
+                else if(5==j){
                     if(searchflag)
                         selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
                 }
@@ -362,7 +370,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
 
         insertexpress += "insert into ";
         insertexpress += sets->talbename;
-        insertexpress += "([content],[lantype] ,[keywords] ,[note] ,[vartype], [aspect_field])  VALUES(";
+        insertexpress += "([content],[lantype] ,[keywords] ,[note] ,[vartype], [aspect_field], [lowercase_keyworks])  VALUES(";
 
         tempstr = QString("'%1',").arg(content);
         insertexpress += tempstr;
@@ -379,7 +387,10 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
         tempstr = QString("'%1',").arg(vartype);
         insertexpress += tempstr;
 
-        tempstr = QString("'%1');").arg(aspect);
+        tempstr = QString("'%1',").arg(aspect);
+        insertexpress += tempstr;
+
+        tempstr = QString("'%1');").arg(keyword.toLower());
         insertexpress += tempstr;
 
         str_print(tempstr);

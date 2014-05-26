@@ -99,6 +99,13 @@
         </spacer>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButton_updatedb">
+         <property name="text">
+          <string>更新库</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="rightclear_btn">
          <property name="text">
           <string>右清空</string>
