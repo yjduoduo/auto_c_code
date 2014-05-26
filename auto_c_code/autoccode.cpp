@@ -44,12 +44,19 @@ autoCCode::autoCCode(QWidget *parent) :
     listWidgetSet();
     addstr_comboBox();
     lineTextEditSet();
+    dragDropSet();
 }
 
 void autoCCode::lineTextEditSet(void)
 {
     QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
                      this,SLOT(SearchText(QString)));
+}
+
+void autoCCode::dragDropSet(void)
+{
+    //允许拖放的文字添加到编辑框中
+    ui->codeshow_textEdit->setAcceptDrops(true);
 }
 
 
@@ -84,7 +91,7 @@ void autoCCode::pushButtonSet(void)
     QObject::connect(ui->pushButton_clean,SIGNAL(clicked()),
                      this,SLOT(cleanLineTextEditSearch()));
 
-#ifndef RELEASE_VERSION
+#ifdef RELEASE_VERSION
     //更新库,为添加小写的keyworks for search 使用的，默认不显示
     ui->pushButton_updatedb->hide();
     QObject::connect(ui->pushButton_updatedb,SIGNAL(clicked()),
@@ -587,6 +594,11 @@ void autoCCode::clear_listWidget_beforecall(void)
     ui->listWidget_codeview->clear();
     ui->listWidget_note->clear();
 }
+void autoCCode::listWidget_scrollToBottom(void)
+{
+    ui->listWidget_codeview->scrollToBottom();
+    ui->listWidget_note->scrollToBottom();
+}
 
 void autoCCode::select_db_by_vartype(QString &select_express)
 {
@@ -607,6 +619,8 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     clear_listWidget_beforecall();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
+
+    listWidget_scrollToBottom();
 }
 
 void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
@@ -897,4 +911,38 @@ void autoCCode::add_column_lowercase_keywords_content(void)
 
 
 
+}
+
+void autoCCode::dragEnterEvent(QDragEnterEvent *event)
+{
+    if(event->mimeData()->hasUrls()){
+        event->acceptProposedAction();
+    }
+}
+void autoCCode::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urls = event->mimeData()->urls();
+    if(urls.isEmpty()){
+        return;
+    }
+
+    QString fileName = urls.first().toLocalFile();
+    if(fileName.isEmpty()){
+        return;
+    }
+    this->setWindowTitle(fileName);
+    readTextFile(fileName);
+}
+
+void autoCCode::readTextFile(const QString &fileName)
+{
+    str_print(fileName);
+    /*  读取文件 只读   */
+    QFile file(fileName);
+    if(file.open(QIODevice::ReadOnly))
+    {
+        QTextStream stream(&file);
+        ui->codeshow_textEdit->setText(stream.readAll());
+    }
+    file.close();
 }

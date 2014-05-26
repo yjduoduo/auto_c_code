@@ -116,11 +116,21 @@ private:
     void clear_listWidget_beforecall(void);
 
     void judge_color_index(void);
+
+    void listWidget_scrollToBottom(void);
+
+    void dragDropSet(void);
 private:
 
     Ui::autoCCode *ui;
     Ui::Dialog *ui_dialog;
     Ui::Dialog_select_database *ui_dia_selectdb;
+
+
+private:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+    void readTextFile(const QString &fileName);
 
 protected:
     QString GenCode_str;
