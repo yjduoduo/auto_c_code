@@ -323,9 +323,12 @@ void autoCCode::on_indb_btn_clicked(void)
     QString select_text = ui->codeshow_textEdit->textCursor().selectedText();
     ui_dialog->content_textEdit_dia->setText(select_text);
 
-    //    InDb_Dialog->exec();
-    InDb_Dialog->show();
-
+    if(ui->checkBox_inbox->isChecked())
+    {
+        InDb_Dialog->exec();
+    }else{
+        InDb_Dialog->show();
+    }
 }
 
 void autoCCode::on_outdb_btn_clicked(void)
@@ -481,7 +484,15 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     b.inserttable(&insertcontent);
 
 #ifndef DEBUG_V
-    InDb_Dialog->close();
+
+    if(ui->checkBox_inbox->isChecked())
+    {
+
+    }else{
+        InDb_Dialog->close();
+    }
+
+
 #else
     //对话框不关闭
     ui_dialog->content_textEdit_dia->clear();
@@ -731,12 +742,12 @@ void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
     str_print(str);
     str_print(index);
     ui->listWidget_note->setCurrentRow(index);
-    ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
-    ui->listWidget_note->item(index)->setBackgroundColor(Qt::green);
+    ui->listWidget_note->item(index_key_color)->setBackground(QBrush(Qt::white,Qt::SolidPattern));
+    ui->listWidget_note->item(index)->setBackground(QBrush(Qt::green,Qt::SolidPattern));
     index_key_color = index; //
     str_print(index_key_color);
 
-    ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
+    ui->listWidget_codeview->item(index_note_color)->setBackground(QBrush(Qt::white,Qt::SolidPattern));
     flag_selectLeft = 0 ;
 }
 //note滚动点击
@@ -756,12 +767,12 @@ void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
             index = i;
     }
     ui->listWidget_codeview->setCurrentRow(index);
-    ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
-    ui->listWidget_codeview->item(index)->setBackgroundColor(Qt::red);
+    ui->listWidget_codeview->item(index_note_color)->setBackground(QBrush(Qt::white,Qt::SolidPattern));
+    ui->listWidget_codeview->item(index)->setBackground(QBrush(Qt::red,Qt::SolidPattern));
     index_note_color = index; //
 
 
-    ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
+    ui->listWidget_note->item(index_key_color)->setBackground(QBrush(Qt::white,Qt::SolidPattern));
 
 
     flag_selectLeft = 1 ;

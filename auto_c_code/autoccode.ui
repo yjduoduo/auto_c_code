@@ -61,7 +61,14 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="QListWidget" name="listWidget_codeview"/>
+          <widget class="QListWidget" name="listWidget_codeview">
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="wordWrap">
+            <bool>false</bool>
+           </property>
+          </widget>
           <widget class="QListWidget" name="listWidget_note"/>
          </widget>
          <widget class="QTextEdit" name="codeshow_textEdit"/>
@@ -75,6 +82,13 @@
         <widget class="QPushButton" name="indb_btn">
          <property name="text">
           <string>入库</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_inbox">
+         <property name="text">
+          <string>连续输入</string>
          </property>
         </widget>
        </item>

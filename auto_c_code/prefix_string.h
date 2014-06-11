@@ -21,9 +21,6 @@
 
 #define FUNCDEBUG(A) __prefix_##A
 
-
-
-
 #ifndef RELEASE_VERSION
 //声明变量并打印
 #define self_print(Var) \
@@ -37,13 +34,5 @@
 #endif
 
 
-
-
-
-class prefix_string
-{
-public:
-    prefix_string();
-};
 
 #endif // PREFIX_STRING_H
