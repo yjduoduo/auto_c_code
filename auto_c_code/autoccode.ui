@@ -36,7 +36,14 @@
          <item>
           <widget class="QPushButton" name="pushButton_clean">
            <property name="text">
-            <string>search clean</string>
+            <string>clean</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_search_fromClip">
+           <property name="text">
+            <string>GetClipD</string>
            </property>
           </widget>
          </item>
@@ -93,9 +100,16 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="outdb_btn">
+        <widget class="QCheckBox" name="checkBox_same">
          <property name="text">
-          <string>出库</string>
+          <string>相同</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="rightclear_btn">
+         <property name="text">
+          <string>右清空</string>
          </property>
         </widget>
        </item>
@@ -120,20 +134,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="rightclear_btn">
-         <property name="text">
-          <string>右清空</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="delete_btn">
-         <property name="text">
-          <string>删除</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -145,6 +145,13 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="delete_btn">
+         <property name="text">
+          <string>删除</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="about_btn">

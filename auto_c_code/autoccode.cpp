@@ -46,6 +46,21 @@ autoCCode::autoCCode(QWidget *parent) :
     addstr_comboBox();
     lineTextEditSet();
     dragDropSet();
+    checkboxSet();
+
+}
+void autoCCode::checkboxSet()
+{
+    if(!ui_dialog)
+        return;
+
+    QObject::connect(ui_dialog->content_textEdit_dia,SIGNAL(textChanged()),
+                     this,SLOT(set_index_text()));
+}
+void autoCCode::set_index_text()
+{
+    if(ui->checkBox_same->isChecked())
+        ui_dialog->index_textEdit_dia->setText(ui_dialog->content_textEdit_dia->toPlainText());
 }
 
 void autoCCode::lineTextEditSet(void)
@@ -98,6 +113,89 @@ void autoCCode::pushButtonSet(void)
     QObject::connect(ui->pushButton_updatedb,SIGNAL(clicked()),
                      this,SLOT(add_column_lowercase_keywords_content()));
 #endif
+
+    /*  信号——槽   */
+    QObject::connect(ui_dialog->pushButton_note,SIGNAL(clicked()),
+                     this,SLOT(setCliptext()));
+
+    QObject::connect(ui_dialog->pushButton_note_clear,SIGNAL(clicked()),
+                     this,SLOT(note_clear()));
+    QObject::connect(ui->pushButton_search_fromClip,SIGNAL(clicked()),
+                     this,SLOT(set_search_text()));
+
+    /*  content按钮操作   */
+    QObject::connect(ui_dialog->pushButton_content_paste,SIGNAL(clicked()),
+                     this,SLOT(setCliptext_content()));
+
+    QObject::connect(ui_dialog->pushButton_content_clear,SIGNAL(clicked()),
+                     this,SLOT(content_clear()));
+
+    /*  min size 操作   */
+    QObject::connect(ui_dialog->pushButton_minsize,SIGNAL(clicked()),
+                     this,SLOT(minSize_ui_dialog()));
+    QObject::connect(ui_dialog->pushButton_widthsize,SIGNAL(clicked()),
+                     this,SLOT(widthSize_ui_dialog()));
+    QObject::connect(ui_dialog->pushButton_maxsize,SIGNAL(clicked()),
+                     this,SLOT(maxSize_ui_dialog()));
+}
+void autoCCode::set_search_text()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    ui->lineEdit_search->clear();
+    ui->lineEdit_search->setText(clipboard->text());
+}
+void autoCCode::note_clear()
+{
+    ui_dialog->note_textEdit_dia->clear();
+}
+void autoCCode::content_clear()
+{
+    ui_dialog->content_textEdit_dia->clear();
+}
+void autoCCode::setCliptext()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    ui_dialog->note_textEdit_dia->clear();
+    ui_dialog->note_textEdit_dia->setText(clipboard->text());
+}
+void autoCCode::setCliptext_content()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    ui_dialog->content_textEdit_dia->clear();
+    ui_dialog->content_textEdit_dia->setText(clipboard->text());
+}
+void autoCCode::setDesktop_center(QDialog *dialog)
+{
+    QDesktopWidget *desk=QApplication::desktop();
+    int wd=desk->width();
+    int ht=desk->height();
+    dialog->move(0,(ht-height()/2)/2);
+}
+
+void autoCCode::minSize_ui_dialog()
+{
+    InDb_Dialog->resize(QSize());
+    setDesktop_center(InDb_Dialog);
+
+}
+void autoCCode::widthSize_ui_dialog()
+{
+
+    InDb_Dialog->resize(QSize(QApplication::desktop()->width(),Qt::MinimumSize));
+    QDesktopWidget *desk=QApplication::desktop();
+    int wd=desk->width();
+    int ht=desk->height();
+    InDb_Dialog->move(0,(ht-height()/2)/2);
+}
+void autoCCode::maxSize_ui_dialog()
+{
+
+    InDb_Dialog->setMaximumSize(QSize(QApplication::desktop()->width(),QApplication::desktop()->height()));
+//    InDb_Dialog->setWindowFlags(InDb_Dialog->windowFlags()& Qt::WindowMaximizeButtonHint & Qt::WindowMinimizeButtonHint);
+
+    //    InDb_Dialog->resize(QSize(QApplication::desktop()->width(),QApplication::desktop()->height()));
+    InDb_Dialog->resize(QSize(QApplication::desktop()->width(),QApplication::desktop()->height()));
+    InDb_Dialog->move(0,0);
 }
 void autoCCode::comboBoxSet(void)
 {
@@ -216,7 +314,8 @@ void autoCCode::addstr_comboBox(void)
        <<str_china(Python)
       <<str_china(shell)
      <<str_china(Jave)
-    <<str_china(Oracle);
+    <<str_china(Oracle)
+    <<str_china(Qtquick);
 
     ui_dialog->langtype_comboBox->addItems(strlist);
 
@@ -304,14 +403,7 @@ void autoCCode::hide_inBtn(void)
 {
     ui->indb_btn->hide();
 }
-void autoCCode::hide_OutBtn(void)
-{
-    ui->outdb_btn->hide();
-}
-void autoCCode::show_OutBtn(void)
-{
-    ui->outdb_btn->show();
-}
+
 void autoCCode::show_InBtn(void)
 {
     ui->indb_btn->show();
@@ -325,16 +417,17 @@ void autoCCode::on_indb_btn_clicked(void)
 
     if(ui->checkBox_inbox->isChecked())
     {
-        InDb_Dialog->exec();
+        InDb_Dialog->show();
+        //        InDb_Dialog->exec();
     }else{
         InDb_Dialog->show();
     }
 }
 
-void autoCCode::on_outdb_btn_clicked(void)
-{
-    self_print(on_outdb_btn_clicked);
-}
+//void autoCCode::on_outdb_btn_clicked(void)
+//{
+//    self_print(on_outdb_btn_clicked);
+//}
 
 LanguageType autoCCode::getLanguageType(QString &type)
 {
@@ -346,6 +439,9 @@ LanguageType autoCCode::getLanguageType(QString &type)
     }
     else if(type == "Python"){
         return languagetype_Python_;
+    }
+    else if(type == "Qtquick"){
+        return languagetype_Qtquick_;
     }
     else if(type == "shell")
     {
@@ -401,10 +497,14 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     self_print(ok_btn_dia_clicked_self);
 
     //获取内容
-    QString content = ui_dialog->content_textEdit_dia->toPlainText();
+    QString content = ui_dialog->content_textEdit_dia->toPlainText().trimmed();
     QString lanaugetype = ui_dialog->langtype_comboBox->currentText();
-    QString index_keyword   = ui_dialog->index_textEdit_dia->toPlainText();
-    QString note   = ui_dialog->note_textEdit_dia->toPlainText();
+    QString index_keyword   = ui_dialog->index_textEdit_dia->toPlainText().trimmed();
+    index_keyword = index_keyword.replace("\n"," ");
+//    index_keyword.trimmed();
+    QString note   = ui_dialog->note_textEdit_dia->toPlainText().trimmed();
+    note = note.replace("\n"," ");
+//    note.trimmed();
     QString vartype = ui_dialog->comboBox_vartype->currentText();
     QString aspect = ui_dialog->comboBox_aspect->currentText();
 
@@ -487,7 +587,8 @@ void autoCCode::ok_btn_dia_clicked_self(void)
 
     if(ui->checkBox_inbox->isChecked())
     {
-
+        //对话框不关闭
+        ui_dialog->content_textEdit_dia->clear();
     }else{
         InDb_Dialog->close();
     }
@@ -524,10 +625,19 @@ QString autoCCode::GetVersion(void)
 void autoCCode::listWidgetSet(void)
 {
     self_print(listWidget);
+#if 0 //双击
     QObject::connect(ui->listWidget_codeview,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
                      this,SLOT(add_to_gen_code_textedit_by_keyword(QListWidgetItem*)));
     QObject::connect(ui->listWidget_note,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
                      this,SLOT(add_to_gen_code_textedit_by_note(QListWidgetItem*)));
+#else//单击
+    QObject::connect(ui->listWidget_codeview,SIGNAL(itemClicked(QListWidgetItem*)),
+                     this,SLOT(add_to_gen_code_textedit_by_keyword(QListWidgetItem*)));
+    //双击
+    QObject::connect(ui->listWidget_note,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+                     this,SLOT(add_to_gen_code_textedit_by_note(QListWidgetItem*)));
+#endif
+
 
 }
 //添加到右边的内容中
@@ -880,10 +990,12 @@ void autoCCode::SearchText(const QString &searchStr)
 }
 void autoCCode::cleanLineTextEditSearch(void)
 {
+    ui->lineEdit_search->setFocus();
     if(ui->lineEdit_search->text().isEmpty())
         return;
     ui->lineEdit_search->clear();
     update_show_after_insert();
+
 }
 
 

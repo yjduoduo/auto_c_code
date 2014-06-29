@@ -10,6 +10,7 @@ enum LanguageType{
     languagetypeCpp_,
     languagetype_Qt_,
     languagetype_Python_,
+    languagetype_Qtquick_,
     languagetype_Jave_,
     languagetype_Shell_,
     languagetype_Aspect_,

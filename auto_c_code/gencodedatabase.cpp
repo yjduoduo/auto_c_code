@@ -32,6 +32,7 @@ codestructSets codesets[]={{languagetype_C_,"c_table",DB_NAME,CREATTABLE(c_table
                            {languagetype_Jave_,"java_table",DB_NAME,CREATTABLE(java_table),},
                            {languagetype_Shell_,"shell_table",DB_NAME,CREATTABLE(shell_table),},
                            {languagetype_Oracle_,"oracle_table",DB_NAME,CREATTABLE(oracle_table),},
+                           {languagetype_Qtquick_,"qtquick_table",DB_NAME,CREATTABLE(qtquick_table),},
                            //范围,存储哪方面的内容
                            {languagetype_Aspect_,"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
                           };
@@ -312,7 +313,8 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Jave_:
     case    languagetype_Shell_:
     case    languagetype_Aspect_:
-    case languagetype_Oracle_:
+    case    languagetype_Oracle_:
+    case    languagetype_Qtquick_:
         opendatabase(sets->databasename,sets->creat_table_express);
     default:
         break;
@@ -410,9 +412,10 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
-    case languagetype_Shell_:
+    case    languagetype_Shell_:
     case    languagetype_Aspect_:
-    case languagetype_Oracle_:
+    case    languagetype_Oracle_:
+    case    languagetype_Qtquick_:
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
         break;
 
@@ -437,9 +440,10 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
-    case languagetype_Shell_:
+    case    languagetype_Shell_:
     case    languagetype_Aspect_:
-    case languagetype_Oracle_:
+    case    languagetype_Oracle_:
+    case    languagetype_Qtquick_:
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
         break;
 
@@ -468,6 +472,8 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "C++";
     case languagetype_Oracle_:
         return "Oracle";
+    case    languagetype_Qtquick_:
+        return "Qtquick";
     default:
         return "Err";
     }

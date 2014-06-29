@@ -42,7 +42,7 @@ private slots:
 
     void on_indb_btn_clicked(void);
 
-    void on_outdb_btn_clicked(void);
+//    void on_outdb_btn_clicked(void);
 
     void aboutVersion(void);
 
@@ -77,6 +77,25 @@ private slots:
 
     void add_column_lowercase_keywords_content(void);
 
+    void set_index_text();
+
+    void setCliptext();
+
+    void setCliptext_content();
+
+    void note_clear();
+
+    void content_clear();
+
+    void set_search_text();
+
+    void minSize_ui_dialog();
+
+    void widthSize_ui_dialog();
+
+    void maxSize_ui_dialog();
+
+    void setDesktop_center(QDialog *dialog);
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -120,6 +139,8 @@ private:
     void listWidget_scrollToBottom(void);
 
     void dragDropSet(void);
+
+    void checkboxSet();
 private:
 
     Ui::autoCCode *ui;
