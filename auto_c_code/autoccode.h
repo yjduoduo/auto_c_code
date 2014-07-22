@@ -1,9 +1,11 @@
 #ifndef AUTOCCODE_H
 #define AUTOCCODE_H
 
+#include <QtGui>
 #include <QWidget>
 #include "prefix_string.h"
 #include <QDialog>
+#include <QListWidgetItem>
 #include "gencodedatabase.h"
 
 namespace Ui {
@@ -171,6 +173,8 @@ private://QString
     int index_note_color;
 
     int flag_selectLeft;
+
+    QTextCodec *codec;
 };
 
 

@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT       += widgets
 TARGET = auto_c_code
 TEMPLATE = app
 

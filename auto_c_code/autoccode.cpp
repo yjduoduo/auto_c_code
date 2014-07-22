@@ -9,15 +9,23 @@
 #include <stdarg.h>
 #include "version.h"
 #include "gencodedatabase.h"
+#include <QFileDialog>
+#include <QInputDialog>
+#include <QMessageBox>
 #include <iostream>
+#include <QString>
 using namespace std;
 
 
 
 
-
+#if 0
 //编码汉字
 #define str_china(A)     QString::fromLocal8Bit(#A)
+//#define str_china(A)     QString::fromUtf8(#A)
+#else
+#define str_china(A)     codec->toUnicode(#A)
+#endif
 
 
 
@@ -30,8 +38,10 @@ autoCCode::autoCCode(QWidget *parent) :
     sets(NULL),
     index_key_color(0),
     index_note_color(0),
-    flag_selectLeft(1)
+    flag_selectLeft(1),
+    codec(NULL)
 {
+    codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
     ui->setupUi(this);
     InDb_Dialog = new QDialog(this);
     ui_dialog->setupUi(InDb_Dialog);
@@ -47,7 +57,6 @@ autoCCode::autoCCode(QWidget *parent) :
     lineTextEditSet();
     dragDropSet();
     checkboxSet();
-
 }
 void autoCCode::checkboxSet()
 {
@@ -852,12 +861,12 @@ void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
     str_print(str);
     str_print(index);
     ui->listWidget_note->setCurrentRow(index);
-    ui->listWidget_note->item(index_key_color)->setBackground(QBrush(Qt::white,Qt::SolidPattern));
-    ui->listWidget_note->item(index)->setBackground(QBrush(Qt::green,Qt::SolidPattern));
+    ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
+    ui->listWidget_note->item(index)->setBackgroundColor(Qt::green);
     index_key_color = index; //
     str_print(index_key_color);
 
-    ui->listWidget_codeview->item(index_note_color)->setBackground(QBrush(Qt::white,Qt::SolidPattern));
+    ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
     flag_selectLeft = 0 ;
 }
 //note滚动点击
@@ -877,12 +886,13 @@ void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
             index = i;
     }
     ui->listWidget_codeview->setCurrentRow(index);
-    ui->listWidget_codeview->item(index_note_color)->setBackground(QBrush(Qt::white,Qt::SolidPattern));
-    ui->listWidget_codeview->item(index)->setBackground(QBrush(Qt::red,Qt::SolidPattern));
+    ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
+    ui->listWidget_codeview->item(index)->setBackgroundColor(Qt::red);
+
     index_note_color = index; //
 
 
-    ui->listWidget_note->item(index_key_color)->setBackground(QBrush(Qt::white,Qt::SolidPattern));
+    ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
 
 
     flag_selectLeft = 1 ;
@@ -918,7 +928,10 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
         QMessageBox::warning(NULL,"Warning",
                              str_china(请选择左侧进行删除),
                              QMessageBox::Yes,QMessageBox::Yes);
-
+        //        /*  标准对话框——警示消息框   */
+        //        QMessageBox::warning(NULL,"Warning",
+        //                             str_china(请选择左侧进行删除),
+        //                             QMessageBox::Yes,QMessageBox::Yes);
         return;
     }
 
@@ -995,7 +1008,6 @@ void autoCCode::cleanLineTextEditSearch(void)
         return;
     ui->lineEdit_search->clear();
     update_show_after_insert();
-
 }
 
 
@@ -1035,7 +1047,7 @@ void autoCCode::add_column_lowercase_keywords_content(void)
     QStringList::const_iterator iterator = selectresult.keyword_list.begin();
 
     while( iterator != selectresult.keyword_list.end()){
-        cout << (*iterator).toAscii().data() << endl;
+        //        cout << (*iterator).toAscii().data() << endl;
         QString tmp =(*iterator).toLower();
         QString repalceafter = tmp.replace("\'","\'\'");
         select_express = QString("update %1 set lowercase_keyworks='%2' where keywords='%3' and lantype='%4'")

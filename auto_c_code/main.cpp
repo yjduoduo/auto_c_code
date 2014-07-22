@@ -1,4 +1,6 @@
-#include <QtGui/QApplication>
+//#include <QtGui/QApplication>
+#include <QApplication>
+#include <QtGui>
 #include "autoccode.h"
 #include <QtGui>
 
