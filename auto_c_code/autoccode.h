@@ -32,6 +32,12 @@ public:
 
     GenCodeDatabase b;
 
+protected://function declared
+    void SetlistWidget_codeview_row(int row);
+    int GetlistWidget_codeview_row(void);
+
+    int get_CurrentIndex_comboBox_vartype(const QString &vartype);
+    int get_aspect_list_index(const QString &index_str);
 
 private slots:
     void on_save_btn_clicked();
@@ -43,6 +49,8 @@ private slots:
     void on_gencode_btn_clicked(void);
 
     void on_indb_btn_clicked(void);
+
+    void on_indb_window_show_hide();
 
 //    void on_outdb_btn_clicked(void);
 
@@ -87,9 +95,15 @@ private slots:
 
     void note_clear();
 
+    void note_clear_focus();
+
+    void note_focus();
+
     void content_clear();
 
     void set_search_text();
+
+    void search_text_clear();
 
     void minSize_ui_dialog();
 
@@ -98,6 +112,35 @@ private slots:
     void maxSize_ui_dialog();
 
     void setDesktop_center(QDialog *dialog);
+
+    void SearchEnter();
+
+    void listWidget_note_with_currentRowChanged(int row);
+
+    void listWidget_note_with_enter(const QModelIndex &modelindex);
+
+    /*  隐藏和显示窗口   */
+    #if 1 /*for shotcut*/
+        void toggle()
+        {
+
+            activateWindow();
+            setVisible(!isVisible());
+            //focusInEvent();
+    //        setFocus();
+            contentSetFocus();
+
+            //this->ui.focus();
+        }
+    #endif
+
+    void contentSetFocus(void);
+
+    void modify_content();
+
+    void rightTextShowClear_oncheched();//cheched selected 右清空
+
+    void getText_FromRight(void);
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -106,9 +149,13 @@ public slots:
 
 
 private:
-    void pushButtonSet(void);
+    void pushButtonSet(void);//按钮集合
+
+    void keyPressEventSet();
     void textEditSet(void);
     void addstr_comboBox(void);
+
+    void shortCutSet(void);
 
     void hide_inBtn(void);
     void hide_OutBtn(void);
@@ -155,6 +202,7 @@ private:
     void dropEvent(QDropEvent *event);
     void readTextFile(const QString &fileName);
 
+
 protected:
     QString GenCode_str;
 private://QString
@@ -173,6 +221,16 @@ private://QString
     int index_note_color;
 
     int flag_selectLeft;
+
+    int listWidget_codeview_row;
+
+    int CurrentIndex_comboBox_aspect;
+    int CurrentIndex_comboBox_vartype;
+    int CurrentIndex_comboBox_langtype;
+
+
+    QStringList aspect_list_mem;
+public:
 
     QTextCodec *codec;
 };

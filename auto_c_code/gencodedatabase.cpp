@@ -187,6 +187,10 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
                         selectres.note_list<< QString::fromUtf8(dbResult [index]);
                     else if(4==j)
                         selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
+                    else if(5 == j){
+                        selectres.aspect_field << QString::fromUtf8(dbResult [index]);
+                        str_print(QString::fromUtf8(dbResult [index]));
+                    }
 
 #endif
                     selectres.existflag = 1;

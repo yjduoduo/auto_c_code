@@ -6,16 +6,17 @@
 #include <QtGui>
 
 enum LanguageType{
-    languagetype_C_,
+    languagetype_Err_,
+    languagetype_C_ ,
     languagetypeCpp_,
     languagetype_Qt_,
     languagetype_Python_,
-    languagetype_Qtquick_,
-    languagetype_Jave_,
     languagetype_Shell_,
-    languagetype_Aspect_,
+    languagetype_Jave_,
     languagetype_Oracle_,
-    languagetype_Err_,
+    languagetype_Qtquick_,
+
+    languagetype_Aspect_,
 };
 
 typedef struct
@@ -47,6 +48,7 @@ typedef struct
     QStringList vartype_list;
     int existflag;//检测是否存在内容 标志
     QStringList aspect_list;
+    QStringList aspect_field;//自定义区域
 }SelectResult;
 
 enum aspect{

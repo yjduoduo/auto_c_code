@@ -2,6 +2,7 @@
 #define PREFIX_STRING_H
 
 #include "version.h"
+#include <QDebug>
 
 
 /* v850 toolchain uses a `_' prefix for all user symbols */

@@ -78,7 +78,14 @@
           </widget>
           <widget class="QListWidget" name="listWidget_note"/>
          </widget>
-         <widget class="QTextEdit" name="codeshow_textEdit"/>
+         <widget class="QTextEdit" name="codeshow_textEdit">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -107,6 +114,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkBox_rightTextClean">
+         <property name="text">
+          <string>右清空？</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="rightclear_btn">
          <property name="text">
           <string>右清空</string>
@@ -127,6 +141,13 @@
         </spacer>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButton_getpaste">
+         <property name="text">
+          <string>粘上</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButton_updatedb">
          <property name="text">
           <string>更新库</string>
@@ -145,6 +166,13 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="modify_btn">
+         <property name="text">
+          <string>修改</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="delete_btn">

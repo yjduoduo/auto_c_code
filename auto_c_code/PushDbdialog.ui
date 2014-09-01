@@ -17,7 +17,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>入库</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -184,6 +184,16 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_EOR">
+           <property name="toolTip">
+            <string>入库是否清空，选中清空</string>
+           </property>
+           <property name="text">
+            <string>EOR</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -217,20 +227,6 @@
          </item>
          <item>
           <widget class="QComboBox" name="comboBox_aspect"/>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox">
-           <property name="text">
-            <string>连续输入</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_2">
-           <property name="text">
-            <string>相同</string>
-           </property>
-          </widget>
          </item>
          <item>
           <spacer name="verticalSpacer_2">

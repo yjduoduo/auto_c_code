@@ -5,8 +5,9 @@ INPUT(
 ./release/prefix_string.o
 ./release/gencodedatabase.o
 ./release/dialog_select_database.o
-./release/dialog_test.o
+./release/qxtglobalshortcut_win.o
+./release/qxtglobalshortcut.o
 ./release/moc_autoccode.o
 ./release/moc_dialog_select_database.o
-./release/moc_dialog_test.o
+./release/moc_qxtglobalshortcut.o
 );

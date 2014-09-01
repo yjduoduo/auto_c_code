@@ -14,12 +14,16 @@
 #include <QMessageBox>
 #include <iostream>
 #include <QString>
+
+#include "qxtglobalshortcut/qxtglobalshortcut.h"   //add shortcut
+
+
 using namespace std;
 
 
 
 
-#if 0
+#if 1
 //编码汉字
 #define str_china(A)     QString::fromLocal8Bit(#A)
 //#define str_china(A)     QString::fromUtf8(#A)
@@ -39,7 +43,12 @@ autoCCode::autoCCode(QWidget *parent) :
     index_key_color(0),
     index_note_color(0),
     flag_selectLeft(1),
-    codec(NULL)
+    codec(NULL),
+    listWidget_codeview_row(0),
+    CurrentIndex_comboBox_aspect(0),
+    CurrentIndex_comboBox_vartype(0),
+    CurrentIndex_comboBox_langtype(0)
+
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
     ui->setupUi(this);
@@ -57,7 +66,58 @@ autoCCode::autoCCode(QWidget *parent) :
     lineTextEditSet();
     dragDropSet();
     checkboxSet();
+    keyPressEventSet();
+    shortCutSet();
 }
+void autoCCode::shortCutSet(void)
+{
+    //show or hide windows
+    QxtGlobalShortcut * sc = new QxtGlobalShortcut(QKeySequence("Shift+Alt+S"), this);
+    QObject::connect(sc, SIGNAL(activated()),this, SLOT(toggle()));
+    //
+    QxtGlobalShortcut * ruku = new QxtGlobalShortcut(QKeySequence("Shift+Alt+R"), this);
+//    QObject::connect(ruku, SIGNAL(activated()),this, SLOT(on_indb_window_show_hide()));
+    QObject::connect(ruku, SIGNAL(activated()),this, SLOT(on_indb_window_show_hide()));
+
+    QxtGlobalShortcut * beizhu_fous = new QxtGlobalShortcut(QKeySequence("Shift+Alt+B"), this);
+    QObject::connect(beizhu_fous, SIGNAL(activated()),this, SLOT(note_focus()));
+
+    QxtGlobalShortcut * beizhu_clr_fous = new QxtGlobalShortcut(QKeySequence("Shift+Alt+N"), this);
+    QObject::connect(beizhu_clr_fous, SIGNAL(activated()),this, SLOT(note_clear_focus()));
+
+    QxtGlobalShortcut * ruku_ok = new QxtGlobalShortcut(QKeySequence("Shift+Alt+O"), this);
+    QObject::connect(ruku_ok, SIGNAL(activated()),this, SLOT(ok_btn_dia_clicked_self()));
+
+    QxtGlobalShortcut * ruku_max = new QxtGlobalShortcut(QKeySequence("Shift+Alt+M"), this);
+    QObject::connect(ruku_max, SIGNAL(activated()),this, SLOT(maxSize_ui_dialog()));
+
+    QxtGlobalShortcut * ruku_width = new QxtGlobalShortcut(QKeySequence("Shift+Alt+W"), this);
+    QObject::connect(ruku_width, SIGNAL(activated()),this, SLOT(widthSize_ui_dialog()));
+
+    QxtGlobalShortcut * ruku_min = new QxtGlobalShortcut(QKeySequence("Shift+Alt+L"), this);
+    QObject::connect(ruku_min, SIGNAL(activated()),this, SLOT(minSize_ui_dialog()));
+
+    QxtGlobalShortcut * ruku_paste_left = new QxtGlobalShortcut(QKeySequence("Shift+Alt+P"), this);
+    QObject::connect(ruku_paste_left, SIGNAL(activated()),this, SLOT(setCliptext_content()));
+
+    QxtGlobalShortcut * search_paste = new QxtGlobalShortcut(QKeySequence("Shift+Alt+V"), this);
+    QObject::connect(search_paste, SIGNAL(activated()),this, SLOT(set_search_text()));
+
+    QxtGlobalShortcut * search_clean = new QxtGlobalShortcut(QKeySequence("Shift+Alt+C"), this);
+    QObject::connect(search_clean, SIGNAL(activated()),this, SLOT(search_text_clear()));
+
+}
+
+void autoCCode::keyPressEventSet()
+{
+    //    QObject::connect(btn4,SIGNAL(clicked()),
+    //                     this,SLOT(popup()));
+
+    QObject::connect(ui->lineEdit_search,SIGNAL(editingFinished()),
+                     this,SLOT(SearchEnter()));
+}
+
+
 void autoCCode::checkboxSet()
 {
     if(!ui_dialog)
@@ -146,6 +206,17 @@ void autoCCode::pushButtonSet(void)
                      this,SLOT(widthSize_ui_dialog()));
     QObject::connect(ui_dialog->pushButton_maxsize,SIGNAL(clicked()),
                      this,SLOT(maxSize_ui_dialog()));
+
+
+    ui->pushButton_updatedb->hide();//隐藏更新库按钮
+
+    QObject::connect(ui->modify_btn,SIGNAL(clicked()),
+                     this,SLOT(modify_content()));
+
+    QObject::connect(ui->pushButton_getpaste,SIGNAL(clicked()),
+                     this,SLOT(getText_FromRight()));
+
+
 }
 void autoCCode::set_search_text()
 {
@@ -153,10 +224,27 @@ void autoCCode::set_search_text()
     ui->lineEdit_search->clear();
     ui->lineEdit_search->setText(clipboard->text());
 }
+void autoCCode::search_text_clear()
+{
+    ui->lineEdit_search->clear();
+    ui->lineEdit_search->setFocus();
+}
 void autoCCode::note_clear()
 {
-    ui_dialog->note_textEdit_dia->clear();
+    if(!InDb_Dialog->isHidden())
+        ui_dialog->note_textEdit_dia->clear();
 }
+void autoCCode::note_focus()
+{
+    if(!InDb_Dialog->isHidden())
+        ui_dialog->note_textEdit_dia->setFocus();
+}
+void autoCCode::note_clear_focus()
+{
+    note_clear();
+    note_focus();
+}
+
 void autoCCode::content_clear()
 {
     ui_dialog->content_textEdit_dia->clear();
@@ -200,10 +288,10 @@ void autoCCode::maxSize_ui_dialog()
 {
 
     InDb_Dialog->setMaximumSize(QSize(QApplication::desktop()->width(),QApplication::desktop()->height()));
-//    InDb_Dialog->setWindowFlags(InDb_Dialog->windowFlags()& Qt::WindowMaximizeButtonHint & Qt::WindowMinimizeButtonHint);
+    //    InDb_Dialog->setWindowFlags(InDb_Dialog->windowFlags()& Qt::WindowMaximizeButtonHint & Qt::WindowMinimizeButtonHint);
 
     //    InDb_Dialog->resize(QSize(QApplication::desktop()->width(),QApplication::desktop()->height()));
-    InDb_Dialog->resize(QSize(QApplication::desktop()->width(),QApplication::desktop()->height()));
+    InDb_Dialog->resize(QSize(QApplication::desktop()->width(),QApplication::desktop()->height()-60));
     InDb_Dialog->move(0,0);
 }
 void autoCCode::comboBoxSet(void)
@@ -216,9 +304,19 @@ void autoCCode::comboBoxSet(void)
     QObject::connect(this->ui_dia_selectdb->comboBox_aspect,SIGNAL(currentIndexChanged(QString)),
                      this,SLOT(comboBox_aspect_currentIndexChanged(QString)));
 
+
+    //添加current index of ui_dialog
+
     //左滚动，对应 右滚动
     QObject::connect(this->ui->listWidget_codeview,SIGNAL(itemClicked(QListWidgetItem*)),
                      this,SLOT(listWidget_note_scroll_sync(QListWidgetItem*)));
+    //code view with enter Key
+
+    QObject::connect(this->ui->listWidget_codeview,SIGNAL(currentRowChanged(int)),
+                     this,SLOT(listWidget_note_with_currentRowChanged(int)));
+
+    QObject::connect(this->ui->listWidget_codeview,SIGNAL(activated(QModelIndex)),
+                     this,SLOT(listWidget_note_with_enter(QModelIndex)));
 
 
     QObject::connect(this->ui->listWidget_note,SIGNAL(itemClicked(QListWidgetItem*)),
@@ -232,8 +330,14 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     str_print(arg1);
 
     selected_langtype = arg1;
-    //str_print(selected_langtype);
+    str_print(selected_langtype);
     LanguageType langtype = getLanguageType(selected_langtype);
+
+    CurrentIndex_comboBox_langtype = langtype;
+
+    str_print(CurrentIndex_comboBox_langtype);
+
+
     sets = get_table_sets_bytype(langtype);
     if(!sets)
         return;
@@ -245,11 +349,11 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     str_print(aspect);
     if(aspect == "")
     {
-        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0 ")
+        select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0 ")
                 .arg(sets->talbename)
                 .arg(selected_langtype);
     }else{
-        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and aspect_field='%3' and delflag=0")
+        select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0")
                 .arg(sets->talbename)
                 .arg(selected_langtype)
                 .arg(aspect);
@@ -297,6 +401,10 @@ void autoCCode::addstr_aspect_comboBox(void)
 
     ui_dialog->comboBox_aspect->clear();
     ui_dialog->comboBox_aspect->addItems(selectresult.aspect_list);
+
+
+    //
+    aspect_list_mem = selectresult.aspect_list;
 
 }
 
@@ -391,7 +499,7 @@ void autoCCode::on_gencode_btn_clicked(void)
                                                        ";;Pythontype(*.py *.PY)"
                                                        ";;JavaType(*.java)"
                                                        ";;All Files(*.*)"));
-    qDebug()<<"fileName:"<<fileName;
+    //    qDebug()<<"fileName:"<<fileName;
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
         std::cerr << "Cannot open file for writing: "
@@ -433,6 +541,27 @@ void autoCCode::on_indb_btn_clicked(void)
     }
 }
 
+void autoCCode::on_indb_window_show_hide()
+{
+    self_print(on_indb_btn_clicked);
+    QString select_text = ui->codeshow_textEdit->textCursor().selectedText();
+    ui_dialog->content_textEdit_dia->setText(select_text);
+
+    if(ui->checkBox_inbox->isChecked())
+    {
+        if(InDb_Dialog->isHidden())
+            InDb_Dialog->show();
+        else
+            InDb_Dialog->hide();
+        //        InDb_Dialog->exec();
+    }else{
+        if(InDb_Dialog->isHidden())
+            InDb_Dialog->show();
+        else
+            InDb_Dialog->hide();
+    }
+}
+
 //void autoCCode::on_outdb_btn_clicked(void)
 //{
 //    self_print(on_outdb_btn_clicked);
@@ -440,7 +569,7 @@ void autoCCode::on_indb_btn_clicked(void)
 
 LanguageType autoCCode::getLanguageType(QString &type)
 {
-#if 1
+
     if(type == "C"){
         return languagetype_C_;
     }else if(type == "Qt"){
@@ -468,23 +597,6 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else{
         return languagetype_Err_;
     }
-#else //type must be integer
-    switch(type)
-    {
-    case "C":
-        return languagetype_C_;
-    case "Qt":
-        return languagetype_Qt_;
-    case "Python":
-        return languagetype_Python_;
-    case "Jave":
-        return languagetype_Jave_;
-    case "C++":
-        return languagetypeCpp_;
-    default:
-        return languagetype_Err_;
-    }
-#endif
 }
 
 void autoCCode::save_before_ops(void)
@@ -510,10 +622,16 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     QString lanaugetype = ui_dialog->langtype_comboBox->currentText();
     QString index_keyword   = ui_dialog->index_textEdit_dia->toPlainText().trimmed();
     index_keyword = index_keyword.replace("\n"," ");
-//    index_keyword.trimmed();
+    //    index_keyword.trimmed();
     QString note   = ui_dialog->note_textEdit_dia->toPlainText().trimmed();
     note = note.replace("\n"," ");
-//    note.trimmed();
+    note += "\t\t\t\t";
+    note += QDateTime::currentDateTime().toString("yyyy MMM d ddd,hh:mm:ss");
+
+//    QDateTime d = lo.toDateTime("Mon,26 Apr 2010, 08:21:03","ddd,d MMM yyyy, hh:mm:ss");
+//    Q_ASSERT(d.isValid());
+
+    //    note.trimmed();
     QString vartype = ui_dialog->comboBox_vartype->currentText();
     QString aspect = ui_dialog->comboBox_aspect->currentText();
 
@@ -594,6 +712,9 @@ void autoCCode::ok_btn_dia_clicked_self(void)
 
 #ifndef DEBUG_V
 
+    if(ui_dialog->checkBox_EOR->isChecked())
+        ui_dialog->note_textEdit_dia->clear();
+
     if(ui->checkBox_inbox->isChecked())
     {
         //对话框不关闭
@@ -653,12 +774,13 @@ void autoCCode::listWidgetSet(void)
 void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
 {
     self_print(add_to_gen_code_textedit);
+    rightTextShowClear_oncheched();
     QString str = item->text();
     unsigned int index = 0;
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.keyword_list.at(i))
             index = i;
-        qDebug()<<"note list:"<<selectresult.note_list.at(i);
+        //        qDebug()<<"note list:"<<selectresult.note_list.at(i);
     }
 
     str_print(str);
@@ -671,12 +793,14 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     GenCode_str+="\n";
     GenCode_str+="\n";
     ui->genshow_textEdit->setText(GenCode_str);
-
+    ui->genshow_textEdit->moveCursor(QTextCursor::End);
+    ui->listWidget_codeview->setFocus();
 }
 //添加到右边的内容中
 void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
 {
     self_print(add_to_gen_code_textedit);
+    rightTextShowClear_oncheched();
     QString str = item->text();
     unsigned int index = 0;
     for(int i=0;i<selectresult.content_list.size();i++){
@@ -713,6 +837,7 @@ void autoCCode::clr_selectresult(SelectResult &result)
     result.vartype_list.clear();
     result.existflag = 0;
     result.aspect_list.clear();
+    result.aspect_field.clear();
 
     //每次重新开始记录，否则滚动时点击会死机
     index_key_color = 0;
@@ -763,30 +888,30 @@ void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
         return;
 
     if(str.contains("header")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg("header");
         select_db_by_vartype(select_express);
     }else if(str.contains("function")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg("function");
         select_db_by_vartype(select_express);
     }else if(str.contains("struct")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg("struct");
         select_db_by_vartype(select_express);
     }
     else if(str.contains("variable")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where vartype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg("variable");
         select_db_by_vartype(select_express);
     }
     else{
         //        str_print(sets->langtype);
-        QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0")
                 .arg(sets->talbename)
                 .arg(getLanguageStr(sets->langtype));
         select_db_by_vartype(select_express);
@@ -1099,4 +1224,172 @@ void autoCCode::readTextFile(const QString &fileName)
         ui->codeshow_textEdit->setText(stream.readAll());
     }
     file.close();
+}
+
+void autoCCode::SearchEnter()
+{
+    self_print(SearchEnter);
+    SetlistWidget_codeview_row(0);
+    this->ui->listWidget_codeview->setFocus();
+    this->ui->listWidget_codeview->setModelColumn(GetlistWidget_codeview_row());
+
+
+}
+
+
+void autoCCode::listWidget_note_with_currentRowChanged(int row)
+{
+    self_print(listWidget_note_with_currentRowChanged);
+    //    qDebug()<<"row:"<<row<<endl;
+    SetlistWidget_codeview_row(row);
+    //change color
+    unsigned int index = GetlistWidget_codeview_row();
+    if(selectresult.content_list.size() == 0)
+        return;
+    judge_color_index();
+
+    ui->listWidget_note->setCurrentRow(index);
+    ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
+    ui->listWidget_note->item(index)->setBackgroundColor(Qt::green);
+    index_key_color = index; //
+    str_print(index_key_color);
+
+    ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
+    flag_selectLeft = 0 ;
+
+}
+
+void autoCCode::SetlistWidget_codeview_row(int row)
+{
+    self_print(SetlistWidget_codeview_row);
+    if(row < 0)
+        row = 0;
+    listWidget_codeview_row = row;
+}
+int autoCCode::GetlistWidget_codeview_row(void)
+{
+    self_print(GetlistWidget_codeview_row);
+    return listWidget_codeview_row;
+}
+
+void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
+{
+    self_print(listWidget_note_with_enter);
+    rightTextShowClear_oncheched();
+    //    qDebug()<<"index:"<<modelindex.row();
+    unsigned int index = GetlistWidget_codeview_row();
+
+
+    GenCode_str+="/*  ";
+    GenCode_str+=selectresult.note_list.at(index);
+    GenCode_str+="   */";
+    GenCode_str+="\n";
+    GenCode_str+=selectresult.content_list.at(index);
+    GenCode_str+="\n";
+    GenCode_str+="\n";
+    ui->genshow_textEdit->setText(GenCode_str);
+    ui->genshow_textEdit->moveCursor(QTextCursor::End);
+    ui->listWidget_codeview->setFocus();
+
+}
+
+void autoCCode::contentSetFocus(void)
+{
+    ui->lineEdit_search->clear();
+    ui->lineEdit_search->setFocus();
+}
+
+void autoCCode::modify_content()
+{
+    self_print(modify_content);
+    if(!sets)
+        return;
+    //开机删除死机bug
+    if(0 == selectresult.existflag )
+        return;
+
+    //    if()
+    str_print(index_key_color);
+    //先判定第一个不删除吧，点击note右侧的内容进行删除时出现问题
+    if( flag_selectLeft )
+    {
+        /*  标准对话框——警示消息框   */
+        QMessageBox::warning(NULL,"Warning",
+                             str_china(请选择左侧进行修改),
+                             QMessageBox::Yes,QMessageBox::Yes);
+        //        /*  标准对话框——警示消息框   */
+        //        QMessageBox::warning(NULL,"Warning",
+        //                             str_china(请选择左侧进行删除),
+        //                             QMessageBox::Yes,QMessageBox::Yes);
+        return;
+    }
+
+    str_print(index_key_color);
+
+
+    ui_dialog->note_textEdit_dia->setText(selectresult.note_list.at(index_key_color));
+    ui_dialog->content_textEdit_dia->setText(selectresult.content_list.at(index_key_color));
+    ui_dialog->index_textEdit_dia->setText(selectresult.keyword_list.at(index_key_color));
+
+    str_print(selectresult.vartype_list.at(index_key_color));
+    str_print(selectresult.aspect_field.at(index_key_color));
+    str_print(get_aspect_list_index(selectresult.aspect_field.at(index_key_color)));
+    //    ui_dialog->comboBox_aspect->setCurrentIndex(get_aspect_list_index(selectresult.aspect_field.at(index_key_color)));
+
+    ui_dialog->comboBox_vartype->setCurrentIndex(get_CurrentIndex_comboBox_vartype(selectresult.vartype_list.at(index_key_color)));
+
+    ui_dialog->langtype_comboBox->setCurrentIndex(CurrentIndex_comboBox_langtype);
+
+
+    InDb_Dialog->show();
+
+}
+
+
+int autoCCode::get_CurrentIndex_comboBox_vartype(const QString & vartype)
+{
+    if(vartype ==  str_china())
+        return 0;
+    else if (vartype ==  str_china(header))
+        return 1;
+    else if (vartype ==  str_china(function))
+        return 2;
+    else if (vartype ==  str_china(struct))
+        return 3;
+    else if (vartype ==  str_china(variable))
+        return 4;
+    else
+        return 0;
+}
+
+int autoCCode::get_aspect_list_index(const QString &index_str)
+{
+
+    int index = 0;
+    QStringList list = aspect_list_mem;
+
+    QStringList::const_iterator iterator = list.begin();
+    while( iterator != list.end()){
+        if((*iterator) == index_str)
+            return index;
+        ++iterator;
+        index++;
+    }
+
+}
+
+void autoCCode::rightTextShowClear_oncheched()
+{
+    if(ui->checkBox_rightTextClean->isChecked())//右边清空内容
+        rightClear_textedit();
+}
+
+void autoCCode::getText_FromRight(void)
+{
+    self_print(getText_FromRight);
+    QString str;
+    str.clear();
+    str = ui->genshow_textEdit->toPlainText();
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(str,QClipboard::Clipboard);
 }
