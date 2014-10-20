@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     gencodedatabase.cpp \
     dialog_select_database.cpp \
     qxtglobalshortcut/qxtglobalshortcut_win.cpp \
-    qxtglobalshortcut/qxtglobalshortcut.cpp
+    qxtglobalshortcut/qxtglobalshortcut.cpp \
+    autoindb.cpp
 
 HEADERS  += autoccode.h \
     sqlite-3080403/sqlite3ext.h \
@@ -28,11 +29,13 @@ HEADERS  += autoccode.h \
     dialog_select_database.h \
     qxtglobalshortcut/qxtglobalshortcut_p.h \
     qxtglobalshortcut/qxtglobalshortcut.h \
-    qxtglobalshortcut/qxtglobal.h
+    qxtglobalshortcut/qxtglobal.h \
+    autoindb.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
-    dialog_select_database.ui
+    dialog_select_database.ui \
+    autoindb.ui
 
 
 INCLUDEPATH +=\

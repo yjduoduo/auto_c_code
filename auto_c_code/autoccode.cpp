@@ -2,6 +2,7 @@
 #include "ui_autoccode.h"
 #include "ui_PushDbdialog.h"
 #include "ui_dialog_select_database.h"
+#include "ui_autoindb.h"
 #include <QtGui>
 #include "prefix_string.h"
 #include <stdio.h>
@@ -39,6 +40,7 @@ autoCCode::autoCCode(QWidget *parent) :
     ui(new Ui::autoCCode),
     ui_dialog(new Ui::Dialog),
     ui_dia_selectdb(new Ui::Dialog_select_database),
+    ui_autoindb(new Ui::AutoIndb),
     sets(NULL),
     index_key_color(0),
     index_note_color(0),
@@ -47,7 +49,12 @@ autoCCode::autoCCode(QWidget *parent) :
     listWidget_codeview_row(0),
     CurrentIndex_comboBox_aspect(0),
     CurrentIndex_comboBox_vartype(0),
-    CurrentIndex_comboBox_langtype(0)
+    CurrentIndex_comboBox_langtype(0),
+    timer(NULL),
+    timer_checkbox_sel(NULL),
+    lineEdit_search_timer(NULL),
+    checkbox_getcliptext_timer(NULL),
+    textline_total(0)
 
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
@@ -58,6 +65,10 @@ autoCCode::autoCCode(QWidget *parent) :
     dialog_selectdb =  new QDialog(this);;
     ui_dia_selectdb->setupUi(dialog_selectdb);
 
+    dialog_autoindb =  new QDialog(this);
+    ui_autoindb->setupUi(dialog_autoindb);
+
+    QTimerSet();
     pushButtonSet();
     textEditSet();
     comboBoxSet();
@@ -68,6 +79,8 @@ autoCCode::autoCCode(QWidget *parent) :
     checkboxSet();
     keyPressEventSet();
     shortCutSet();
+    ProgressBarSet();
+
 }
 void autoCCode::shortCutSet(void)
 {
@@ -76,7 +89,7 @@ void autoCCode::shortCutSet(void)
     QObject::connect(sc, SIGNAL(activated()),this, SLOT(toggle()));
     //
     QxtGlobalShortcut * ruku = new QxtGlobalShortcut(QKeySequence("Shift+Alt+R"), this);
-//    QObject::connect(ruku, SIGNAL(activated()),this, SLOT(on_indb_window_show_hide()));
+    //    QObject::connect(ruku, SIGNAL(activated()),this, SLOT(on_indb_window_show_hide()));
     QObject::connect(ruku, SIGNAL(activated()),this, SLOT(on_indb_window_show_hide()));
 
     QxtGlobalShortcut * beizhu_fous = new QxtGlobalShortcut(QKeySequence("Shift+Alt+B"), this);
@@ -108,6 +121,40 @@ void autoCCode::shortCutSet(void)
 
 }
 
+void autoCCode::ProgressBarSet(void)
+{
+    self_print(ProgressBarSet);
+    if(ui_autoindb->progressBar)
+        ui_autoindb->progressBar->setValue(0);
+
+}
+void autoCCode::ProgressBarSetValue(int value)
+{
+    self_print(ProgressBarSetValue);
+    if(value >=0 && value <=100){
+        ui_autoindb->progressBar->setValue(value);
+        ui_autoindb->progressBar->update();
+    }
+
+}
+void autoCCode::QTimerSet(void)
+{
+    self_print(QTimerSet);
+    timer = new QTimer(this);
+    timer->start(500);
+
+    timer_checkbox_sel = new QTimer(this);
+    timer_checkbox_sel->start(500);
+
+    lineEdit_search_timer = new QTimer(this);
+    lineEdit_search_timer->start(500);
+
+    checkbox_getcliptext_timer = new QTimer(this);
+    checkbox_getcliptext_timer->start(500);
+
+    QObject::connect(checkbox_getcliptext_timer,SIGNAL(timeout()),this,SLOT(pasteClicpTextToSearchEdit()));
+
+}
 void autoCCode::keyPressEventSet()
 {
     //    QObject::connect(btn4,SIGNAL(clicked()),
@@ -120,6 +167,8 @@ void autoCCode::keyPressEventSet()
 
 void autoCCode::checkboxSet()
 {
+    QObject::connect(ui->checkBox_autogetclipboxtext,SIGNAL(toggled(bool)),
+                     this,SLOT(isCheckBox_cliptext_checked(bool)));
     if(!ui_dialog)
         return;
 
@@ -134,8 +183,13 @@ void autoCCode::set_index_text()
 
 void autoCCode::lineTextEditSet(void)
 {
+#if 0//文本改变搜索
     QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
                      this,SLOT(SearchText(QString)));
+#else//定时搜索
+    QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer()));
+
+#endif
 }
 
 void autoCCode::dragDropSet(void)
@@ -215,6 +269,18 @@ void autoCCode::pushButtonSet(void)
 
     QObject::connect(ui->pushButton_getpaste,SIGNAL(clicked()),
                      this,SLOT(getText_FromRight()));
+
+    //自动入库
+    QObject::connect(ui->pushbtn_autoindb,SIGNAL(clicked()),
+                     this,SLOT(on_pushbtn_autoindb_clicked_self()));
+    QObject::connect(ui_autoindb->pushBtn_Open,SIGNAL(clicked()),
+                     this,SLOT(on_ui_autoindb_pushBtn_Open_clicked()));
+    QObject::connect(ui_autoindb->pushBtn_process,SIGNAL(clicked()),
+                     this,SLOT(on_ui_autoindb_pushBtn_process_clicked()));
+    QObject::connect(timer,SIGNAL(timeout()),this,SLOT(get_autoindb_textedit_cursor_postion()));
+
+    //入库，选择左侧的内容，添加到右侧
+    QObject::connect(timer_checkbox_sel,SIGNAL(timeout()),this,SLOT(pushdb_checkbox_if_selected()));
 
 
 }
@@ -432,7 +498,8 @@ void autoCCode::addstr_comboBox(void)
       <<str_china(shell)
      <<str_china(Jave)
     <<str_china(Oracle)
-    <<str_china(Qtquick);
+    <<str_china(Qtquick)
+    <<str_china(Php);
 
     ui_dialog->langtype_comboBox->addItems(strlist);
 
@@ -578,6 +645,9 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Python"){
         return languagetype_Python_;
     }
+    else if(type == "Php"){
+        return languagetype_Php_;
+    }
     else if(type == "Qtquick"){
         return languagetype_Qtquick_;
     }
@@ -628,8 +698,8 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     note += "\t\t\t\t";
     note += QDateTime::currentDateTime().toString("yyyy MMM d ddd,hh:mm:ss");
 
-//    QDateTime d = lo.toDateTime("Mon,26 Apr 2010, 08:21:03","ddd,d MMM yyyy, hh:mm:ss");
-//    Q_ASSERT(d.isValid());
+    //    QDateTime d = lo.toDateTime("Mon,26 Apr 2010, 08:21:03","ddd,d MMM yyyy, hh:mm:ss");
+    //    Q_ASSERT(d.isValid());
 
     //    note.trimmed();
     QString vartype = ui_dialog->comboBox_vartype->currentText();
@@ -766,7 +836,14 @@ void autoCCode::listWidgetSet(void)
     //双击
     QObject::connect(ui->listWidget_note,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
                      this,SLOT(add_to_gen_code_textedit_by_note(QListWidgetItem*)));
-#endif
+#if 0//多选
+
+    QObject::connect(ui->listWidget_codeview,SIGNAL(itemClicked(QListWidgetItem*)),
+                     this,SLOT(add_to_gen_code_textedit_by_keyword(QListWidgetItem*)));
+#endif//end 多选
+
+
+#endif //end 双击
 
 
 }
@@ -1088,13 +1165,22 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
 
 }
 
+void autoCCode::SearchText_WithTimer(void)
+{
+    QString searchStr = ui->lineEdit_search->text();
+    static QString oldStr;
+    if(oldStr != searchStr)
+        SearchText(searchStr);
+    oldStr = searchStr;
 
+}
 
 
 void autoCCode::SearchText(const QString &searchStr)
 {
     self_print(SearchText);
     str_print(searchStr);
+
     if(!sets)
         return;
     if(searchStr.isEmpty()){
@@ -1392,4 +1478,325 @@ void autoCCode::getText_FromRight(void)
     str = ui->genshow_textEdit->toPlainText();
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(str,QClipboard::Clipboard);
+}
+
+void autoCCode::on_pushbtn_autoindb_clicked_self()
+{
+    self_print(on_pushbtn_autoindb_clicked_self);
+    //    if(ui_autoindb->)
+    if(dialog_autoindb->isHidden()){
+        dialog_autoindb->show();
+        dialog_autoindb->update();
+    }
+
+}
+void autoCCode::on_ui_autoindb_pushBtn_Open_clicked()
+{
+    self_print(on_ui_autoindb_pushBtn_Open_clicked);
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                    "../",
+                                                    tr("Ctype (*.c *.C *.cc *.h)"
+                                                       ";;Cpptype(*.cpp *.CPP *.h)"
+                                                       ";;QTtype(*.c *.C *.cpp *.CPP *.ui *.rc *.pro *.h)"
+                                                       ";;Pythontype(*.py *.PY)"
+                                                       ";;JavaType(*.java)"
+                                                       ";;All Files(*.*)"));
+    //    qDebug()<<"fileName:"<<fileName;
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        std::cerr << "Cannot open file for writing: "
+                  << qPrintable(file.errorString()) << std::endl;
+        return;
+    }
+    //    QString text_file = file.readAll();
+    QString text_china = QString::fromLocal8Bit(file.readAll().data());
+
+    ui_autoindb->textEdit_show->setText(text_china);
+
+    //    QTextStream out(&file);
+    //    out << "Thomas M. Disch: " << 334 << endl;
+
+    file.close();
+}
+void autoCCode::on_ui_autoindb_pushBtn_process_clicked()
+{
+    self_print(on_ui_autoindb_pushBtn_process_clicked);
+
+    int retbtn = QMessageBox::information(this,str_china(请确认入库共有标题内容),
+                                          cursor_left_text,
+                                          QMessageBox::Yes|QMessageBox::No,QMessageBox::Yes);
+    str_print(retbtn);
+    if(0x00004000 == retbtn)//0x00004000 yesbutton
+    {
+        str_print(dialog_autoindb);
+#if 1
+        QStringList::const_iterator iterator = textlist_indb_content.begin();
+        int counter = 1;
+        int returnval = 0;
+#if 0 //出现乱码，不知道什么情况
+        while( iterator != textlist_indb_content.end()){
+            //            qDebug() << (*iterator).toAscii().data();
+            ok_btn_dia_clicked_self_autoindb((*iterator),&returnval);
+            if(returnval >0)
+                break;
+            //            qDebug()<<"current value:"<< counter <<endl;
+            ProgressBarSetValue((counter*100)/textlist_indb_content.count());
+            ++iterator;
+            ++counter;
+        }
+#else
+        for(int i = 0; i< textlist_indb_content.count() ; i++){
+            ok_btn_dia_clicked_self_autoindb(cursor_left_text,textlist_indb_content.at(i),&returnval);
+            if(returnval >0)
+                break;
+            //            qDebug()<<"current value:"<< counter <<endl;
+            ProgressBarSetValue((counter*100)/textlist_indb_content.count());
+            ++counter;
+        }
+
+#endif
+        //内容添加后，更新控件中内容的相关显示
+        update_show_after_insert();
+#endif
+    }
+}
+void autoCCode::get_autoindb_textedit_cursor_postion()
+{
+    //    self_print(get_autoindb_textedit_cursor_postion);
+    if(!dialog_autoindb->isHidden())
+    {
+        static int linenumber_old = -1;
+        int linenumber = ui_autoindb->textEdit_show->textCursor().blockNumber();//光标所在行
+        if(linenumber == linenumber_old)
+            return;
+        str_print(linenumber);
+        //获取光标左侧文本内容
+        cursor_left_text.clear();
+
+        textlist_indb_content.clear();
+        for(int i = 0; i< linenumber ; i++){
+            QTextBlock textBlock = ui_autoindb->textEdit_show->document()->findBlockByLineNumber(i);//通过行号找到指定行 数据块
+            cursor_left_text += textBlock.text()+"\n";
+        }
+        textline_total = ui_autoindb->textEdit_show->document()->lineCount();//文本总行数
+        str_print(textline_total);
+        str_print(cursor_left_text);
+        for(int i = linenumber; i< textline_total-1 ; i++){
+            QTextBlock textBlock = ui_autoindb->textEdit_show->document()->findBlockByLineNumber(i);//通过行号找到指定行 数据块
+            QString tmp_text = /*cursor_left_text +*/ textBlock.text();
+            if(textBlock.text().isEmpty())
+                continue;
+            textlist_indb_content.append(tmp_text);
+        }
+#if 0
+        //        QStringList::const_iterator iterator = textlist_indb_content.begin();
+        //        while( iterator != textlist_indb_content.end()){
+        //            qDebug() << "================================\n";
+        //            qDebug() << (*iterator).toAscii().data();
+        //            ++iterator;
+        //        }
+#endif
+
+        //        str_print(text_tmp);
+        int stringlistsize = textlist_indb_content.count();
+        str_print(stringlistsize);
+        ProgressBarSetValue(0);
+        linenumber_old = linenumber;
+    }
+}
+void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combinetext,int *ret)
+{
+    self_print(ok_btn_dia_clicked_self_autoindb);
+
+    //获取内容toUtf8
+    QString content = (begintext + combinetext).trimmed();
+    QString lanaugetype = ui_dialog->langtype_comboBox->currentText();
+    QString index_keyword   = content;
+    index_keyword = index_keyword.replace("\n"," ");
+
+    QString note;
+    QString time;
+    static QString time_old;
+    static int counter_time = 1;
+    note.clear();
+    if(ui_autoindb->checkBox_nullornot->isChecked()){
+        note = "";
+        note = note.replace("\n"," ");
+        note += "\t\t\t\t";
+        time = QDateTime::currentDateTime().toString("yyyy MMM d ddd,hh:mm:ss");
+        note += time ;
+
+        //        char buf[20];
+        //        memset(buf,0,sizeof(buf));
+        //        sprintf(buf,"%d",counter_time);
+        //        note += "\t"+QString::fromLocal8Bit(buf);
+        //        counter_time++;
+
+        if(time == time_old){
+            char buf[20];
+            memset(buf,0,sizeof(buf));
+            sprintf(buf,"%d",counter_time);
+            note += "  " +QString::fromLocal8Bit(buf);
+            counter_time++;
+        }else{
+            counter_time = 1;
+        }
+
+        time_old = time;
+    }else{
+        char buf[100];
+        memset(buf,0,sizeof(buf));
+        strncpy(buf,combinetext.toLocal8Bit().data(),ui_autoindb->spinBox_notenumber->text().toInt());
+        note   = QString::fromLocal8Bit(buf);
+        note = note.replace("\n"," ");
+        note = note.trimmed();
+        note += "\t\t\t\t";
+        time = QDateTime::currentDateTime().toString("yyyy MMM d ddd,hh:mm:ss");
+        note += time ;
+
+    }
+
+    QString vartype = ui_dialog->comboBox_vartype->currentText();
+    QString aspect = ui_dialog->comboBox_aspect->currentText();
+
+
+    if(lanaugetype.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        *ret = 1;
+        return;
+    }
+    if(content.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        *ret = 1;
+        return;
+    }
+
+    LanguageType langtype = getLanguageType(lanaugetype);
+    sets = get_table_sets_bytype(langtype);
+    if(!sets){
+        *ret = 1;
+        return;
+    }
+
+    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0")
+            .arg(sets->talbename)
+            .arg(lanaugetype)
+            .arg(content)
+            .arg(vartype);
+    save_before_ops();
+
+    clr_selectresult(selectresult);
+    str_print(select_express);
+    b.selectdatabase(sets->databasename,
+                     select_express.toUtf8().data(),
+                     selectresult,
+                     ASPECT_NONE);
+
+    if(selectresult.existflag)
+    {
+        restore_before_ops();
+        //消除内容存在的时候的提示
+        //        QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes, QMessageBox::Yes);
+        //        *ret = 1;
+        return;
+    }
+
+    if(vartype.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        *ret = 1;
+        return;
+    }
+
+    if(index_keyword.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        *ret = 1;
+        return;
+    }
+    if(note.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        *ret = 1;
+        return;
+    }
+
+
+
+    clr_selectresult(selectresult_tmp);
+
+    InsertCon insertcontent;
+    insertcontent.content = content;
+    insertcontent.languagetype = getLanguageType(lanaugetype);
+    insertcontent.keyword   = index_keyword;
+    insertcontent.note      = note;
+    insertcontent.vartype   = vartype;
+    insertcontent.aspect    = aspect;
+
+
+    b.creatable(&insertcontent);
+    b.inserttable(&insertcontent);
+
+    //#ifndef DEBUG_V
+
+    //    if(ui_dialog->checkBox_EOR->isChecked())
+    //        ui_dialog->note_textEdit_dia->clear();
+
+    //    if(ui->checkBox_inbox->isChecked())
+    //    {
+    //        //对话框不关闭
+    //        ui_dialog->content_textEdit_dia->clear();
+    //    }else{
+    //        InDb_Dialog->close();
+    //    }
+
+
+    //#else
+    //    //对话框不关闭
+    //    ui_dialog->content_textEdit_dia->clear();
+    //#endif
+
+    //    //内容添加后，更新控件中内容的相关显示
+    //    update_show_after_insert();
+}
+
+void autoCCode::pushdb_checkbox_if_selected()
+{
+    self_print(pushdb_checkbox_if_selected);
+    if(InDb_Dialog->isHidden())
+        return;
+    if(!ui_dialog->checkBox_SEL->isChecked())
+        return;
+    if(!ui_dialog->content_textEdit_dia->hasFocus())
+        return;
+    QString str_selected = ui_dialog->content_textEdit_dia->textCursor().selectedText();
+    str_print(str_selected);
+    if(str_selected.length())
+        ui_dialog->note_textEdit_dia->setText(str_selected);
+
+}
+
+void autoCCode::pasteClicpTextToSearchEdit()
+{
+    self_print(pasteClicpTextToSearchEdit);
+    if(!ui->checkBox_autogetclipboxtext->isChecked())
+        return;
+    QString linetext = ui->lineEdit_search->text();
+    QString cliptext =  QApplication::clipboard()->text();
+    str_print(linetext);
+    str_print(cliptext);
+
+    if(linetext != cliptext)
+        ui->lineEdit_search->setText(cliptext);
+}
+
+void autoCCode::isCheckBox_cliptext_checked(bool checked)
+{
+   self_print(pasteClicpTextToSearchEdit);
+   str_print(checked);
+   if(!checked)
+       ui->lineEdit_search->setText("");
+
 }

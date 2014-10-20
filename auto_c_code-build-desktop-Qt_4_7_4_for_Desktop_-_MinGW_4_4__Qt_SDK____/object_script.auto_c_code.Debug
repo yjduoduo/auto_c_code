@@ -7,7 +7,9 @@ INPUT(
 ./debug/dialog_select_database.o
 ./debug/qxtglobalshortcut_win.o
 ./debug/qxtglobalshortcut.o
+./debug/autoindb.o
 ./debug/moc_autoccode.o
 ./debug/moc_dialog_select_database.o
 ./debug/moc_qxtglobalshortcut.o
+./debug/moc_autoindb.o
 );

@@ -33,6 +33,7 @@ codestructSets codesets[]={{languagetype_C_,"c_table",DB_NAME,CREATTABLE(c_table
                            {languagetype_Shell_,"shell_table",DB_NAME,CREATTABLE(shell_table),},
                            {languagetype_Oracle_,"oracle_table",DB_NAME,CREATTABLE(oracle_table),},
                            {languagetype_Qtquick_,"qtquick_table",DB_NAME,CREATTABLE(qtquick_table),},
+                           {languagetype_Php_,"php_table",DB_NAME,CREATTABLE(php_table),},
                            //范围,存储哪方面的内容
                            {languagetype_Aspect_,"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
                           };
@@ -319,6 +320,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Aspect_:
     case    languagetype_Oracle_:
     case    languagetype_Qtquick_:
+    case    languagetype_Php_:
         opendatabase(sets->databasename,sets->creat_table_express);
     default:
         break;
@@ -420,6 +422,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Aspect_:
     case    languagetype_Oracle_:
     case    languagetype_Qtquick_:
+    case    languagetype_Php_:
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
         break;
 
@@ -448,6 +451,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     case    languagetype_Aspect_:
     case    languagetype_Oracle_:
     case    languagetype_Qtquick_:
+    case    languagetype_Php_:
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
         break;
 
@@ -478,6 +482,8 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "Oracle";
     case    languagetype_Qtquick_:
         return "Qtquick";
+    case    languagetype_Php_:
+        return "Php";
     default:
         return "Err";
     }

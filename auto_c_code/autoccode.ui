@@ -48,6 +48,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="checkBox_autogetclipboxtext">
+           <property name="text">
+            <string>AG</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QComboBox" name="comboBox_vartype"/>
          </item>
          <item>
@@ -151,6 +158,13 @@
         <widget class="QPushButton" name="pushButton_updatedb">
          <property name="text">
           <string>更新库</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushbtn_autoindb">
+         <property name="text">
+          <string>自动入库</string>
          </property>
         </widget>
        </item>

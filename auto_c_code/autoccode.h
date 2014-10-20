@@ -12,6 +12,7 @@ namespace Ui {
 class autoCCode;
 class Dialog;
 class Dialog_select_database;
+class AutoIndb;//自动入库界面
 }
 
 
@@ -29,6 +30,7 @@ public:
 public:
     QDialog *InDb_Dialog;
     QDialog *dialog_selectdb;
+    QDialog *dialog_autoindb;
 
     GenCodeDatabase b;
 
@@ -52,13 +54,13 @@ private slots:
 
     void on_indb_window_show_hide();
 
-//    void on_outdb_btn_clicked(void);
+    //    void on_outdb_btn_clicked(void);
 
     void aboutVersion(void);
 
     void comboBox_selectdb_currentIndexChanged(const QString &arg1);
 
-//    void add_to_gen_code_textedit(QListWidgetItem* item);
+    //    void add_to_gen_code_textedit(QListWidgetItem* item);
     void add_to_gen_code_textedit_by_keyword(QListWidgetItem* item);
 
     void add_to_gen_code_textedit_by_note(QListWidgetItem* item);
@@ -120,19 +122,19 @@ private slots:
     void listWidget_note_with_enter(const QModelIndex &modelindex);
 
     /*  隐藏和显示窗口   */
-    #if 1 /*for shotcut*/
-        void toggle()
-        {
+#if 1 /*for shotcut*/
+    void toggle()
+    {
 
-            activateWindow();
-            setVisible(!isVisible());
-            //focusInEvent();
-    //        setFocus();
-            contentSetFocus();
+        activateWindow();
+        setVisible(!isVisible());
+        //focusInEvent();
+        //        setFocus();
+        contentSetFocus();
 
-            //this->ui.focus();
-        }
-    #endif
+        //this->ui.focus();
+    }
+#endif
 
     void contentSetFocus(void);
 
@@ -141,6 +143,24 @@ private slots:
     void rightTextShowClear_oncheched();//cheched selected 右清空
 
     void getText_FromRight(void);
+
+    void on_pushbtn_autoindb_clicked_self();
+
+    void on_ui_autoindb_pushBtn_Open_clicked();
+
+    void on_ui_autoindb_pushBtn_process_clicked();
+
+    void get_autoindb_textedit_cursor_postion();
+
+    void ok_btn_dia_clicked_self_autoindb(QString begintext,QString combinetext,int *ret);//自动入库函数
+
+    void pushdb_checkbox_if_selected();
+
+    void SearchText_WithTimer(void);
+
+    void pasteClicpTextToSearchEdit();
+
+    void isCheckBox_cliptext_checked(bool checked);
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -156,14 +176,16 @@ private:
     void addstr_comboBox(void);
 
     void shortCutSet(void);
-
+    void ProgressBarSet(void);
+    void ProgressBarSetValue(int value);
+    void QTimerSet(void);
     void hide_inBtn(void);
     void hide_OutBtn(void);
     void show_OutBtn(void);
     void show_InBtn(void);
 
     LanguageType getLanguageType(QString &type);
-//    QString getTablename(QString &type);
+    //    QString getTablename(QString &type);
     QString GetVersion(void);
 
     void comboBoxSet(void);
@@ -193,8 +215,10 @@ private:
 private:
 
     Ui::autoCCode *ui;
-    Ui::Dialog *ui_dialog;
-    Ui::Dialog_select_database *ui_dia_selectdb;
+    Ui::Dialog *ui_dialog;//入库
+    Ui::Dialog_select_database *ui_dia_selectdb;//选择数据库
+    Ui::AutoIndb *ui_autoindb;//自动入库界面
+
 
 
 private:
@@ -230,6 +254,16 @@ private://QString
 
 
     QStringList aspect_list_mem;
+
+    QTimer *timer;
+    QTimer *timer_checkbox_sel;//入库checkbox如果选中，则将选择的内容自动添加到note
+    int textline_total;
+    QString cursor_left_text;//光标左侧文本
+//    QString text_tmp;//提示信息框
+    QStringList textlist_indb_content;
+
+    QTimer *lineEdit_search_timer;
+    QTimer *checkbox_getcliptext_timer;
 public:
 
     QTextCodec *codec;

@@ -15,6 +15,7 @@ enum LanguageType{
     languagetype_Jave_,
     languagetype_Oracle_,
     languagetype_Qtquick_,
+    languagetype_Php_,
 
     languagetype_Aspect_,
 };

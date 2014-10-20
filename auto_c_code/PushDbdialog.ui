@@ -12,12 +12,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>811</width>
-    <height>476</height>
+    <width>813</width>
+    <height>426</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>入库</string>
+  </property>
+  <property name="windowOpacity">
+   <double>0.800000000000000</double>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -191,6 +194,16 @@
            </property>
            <property name="text">
             <string>EOR</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_SEL">
+           <property name="toolTip">
+            <string>选中，从左边选择内容自动添加到右边</string>
+           </property>
+           <property name="text">
+            <string>SEL</string>
            </property>
           </widget>
          </item>
