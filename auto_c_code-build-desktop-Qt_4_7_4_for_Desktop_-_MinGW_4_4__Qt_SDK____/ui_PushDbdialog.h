@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PushDbdialog.ui'
 **
-** Created: Thu Sep 18 22:48:45 2014
+** Created: Mon Oct 20 23:09:35 2014
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -60,6 +60,7 @@ public:
     QComboBox *comboBox_vartype;
     QLabel *label_6;
     QComboBox *comboBox_aspect;
+    QCheckBox *checkBox_AutoGet_Con;
     QSpacerItem *verticalSpacer_2;
     QTextEdit *index_textEdit_dia;
     QTextEdit *note_textEdit_dia;
@@ -213,6 +214,11 @@ public:
 
         verticalLayout->addWidget(comboBox_aspect);
 
+        checkBox_AutoGet_Con = new QCheckBox(Dialog);
+        checkBox_AutoGet_Con->setObjectName(QString::fromUtf8("checkBox_AutoGet_Con"));
+
+        verticalLayout->addWidget(checkBox_AutoGet_Con);
+
         verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout->addItem(verticalSpacer_2);
@@ -319,6 +325,7 @@ public:
         checkBox_SEL->setText(QApplication::translate("Dialog", "SEL", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("Dialog", "\345\217\230\351\207\217\347\261\273\345\236\213", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("Dialog", "\350\214\203\347\225\264", 0, QApplication::UnicodeUTF8));
+        checkBox_AutoGet_Con->setText(QApplication::translate("Dialog", "\350\207\252\345\212\250\350\216\267\345\217\226", 0, QApplication::UnicodeUTF8));
         pushButton_add->setText(QApplication::translate("Dialog", "\346\267\273\345\212\240", 0, QApplication::UnicodeUTF8));
         ok_btn_dia->setText(QApplication::translate("Dialog", "\347\241\256\345\256\232", 0, QApplication::UnicodeUTF8));
         cancel_btn_dia->setText(QApplication::translate("Dialog", "\345\217\226\346\266\210", 0, QApplication::UnicodeUTF8));

@@ -161,6 +161,10 @@ private slots:
     void pasteClicpTextToSearchEdit();
 
     void isCheckBox_cliptext_checked(bool checked);
+
+    void ui_dialog_AutoGetCon(bool checked);
+
+    void pasteClicpTextToAutoGetCon_UiDialog();
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -264,6 +268,7 @@ private://QString
 
     QTimer *lineEdit_search_timer;
     QTimer *checkbox_getcliptext_timer;
+    QTimer *checkbox_AutoGetCon_timer;
 public:
 
     QTextCodec *codec;

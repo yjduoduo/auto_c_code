@@ -54,6 +54,7 @@ autoCCode::autoCCode(QWidget *parent) :
     timer_checkbox_sel(NULL),
     lineEdit_search_timer(NULL),
     checkbox_getcliptext_timer(NULL),
+    checkbox_AutoGetCon_timer(NULL),
     textline_total(0)
 
 {
@@ -154,6 +155,9 @@ void autoCCode::QTimerSet(void)
 
     QObject::connect(checkbox_getcliptext_timer,SIGNAL(timeout()),this,SLOT(pasteClicpTextToSearchEdit()));
 
+    checkbox_AutoGetCon_timer = new QTimer(this);
+    checkbox_AutoGetCon_timer->start(500);
+    QObject::connect(checkbox_AutoGetCon_timer,SIGNAL(timeout()),this,SLOT(pasteClicpTextToAutoGetCon_UiDialog()));
 }
 void autoCCode::keyPressEventSet()
 {
@@ -167,6 +171,8 @@ void autoCCode::keyPressEventSet()
 
 void autoCCode::checkboxSet()
 {
+    QObject::connect(ui_dialog->checkBox_AutoGet_Con,SIGNAL(toggled(bool)),
+                     this,SLOT(ui_dialog_AutoGetCon(bool)));
     QObject::connect(ui->checkBox_autogetclipboxtext,SIGNAL(toggled(bool)),
                      this,SLOT(isCheckBox_cliptext_checked(bool)));
     if(!ui_dialog)
@@ -1796,7 +1802,39 @@ void autoCCode::isCheckBox_cliptext_checked(bool checked)
 {
    self_print(pasteClicpTextToSearchEdit);
    str_print(checked);
+   if(checked){
+       if(!checkbox_getcliptext_timer->isActive())
+           checkbox_getcliptext_timer->start();
+   }else
+       checkbox_getcliptext_timer->stop();
    if(!checked)
        ui->lineEdit_search->setText("");
 
+
+}
+void autoCCode::ui_dialog_AutoGetCon(bool checked)
+{
+    self_print(ui_dialog_AutoGetCon);
+    str_print(checked);
+    if(checked){
+        if(!checkbox_AutoGetCon_timer->isActive())
+            checkbox_AutoGetCon_timer->start();
+    }else
+        checkbox_AutoGetCon_timer->stop();
+//    if(!checked)
+//        ui_dialog->content_textEdit_dia->setText("");
+
+}
+void autoCCode::pasteClicpTextToAutoGetCon_UiDialog()
+{
+    self_print(pasteClicpTextToAutoGetCon_UiDialog);
+    if((!ui_dialog->checkBox_AutoGet_Con->isChecked()) || InDb_Dialog->isHidden())
+        return;
+    QString linetext = ui_dialog->content_textEdit_dia->toPlainText();
+    QString cliptext =  QApplication::clipboard()->text();
+    str_print(linetext);
+    str_print(cliptext);
+
+    if(linetext != cliptext || linetext.isEmpty())
+        ui_dialog->content_textEdit_dia->setText(cliptext);
 }

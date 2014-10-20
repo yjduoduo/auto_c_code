@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'autoccode.h'
 **
-** Created: Fri Oct 10 22:07:42 2014
+** Created: Mon Oct 20 23:10:16 2014
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_autoCCode[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      53,   14, // methods
+      55,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -82,8 +82,10 @@ static const uint qt_meta_data_autoCCode[] = {
     1455,   10,   10,   10, 0x08,
     1478,   10,   10,   10, 0x08,
     1515, 1507,   10,   10, 0x08,
-    1549,   10,   10,   10, 0x0a,
-    1575,   10,   10,   10, 0x0a,
+    1549, 1507,   10,   10, 0x08,
+    1576,   10,   10,   10, 0x08,
+    1614,   10,   10,   10, 0x0a,
+    1640,   10,   10,   10, 0x0a,
 
        0        // eod
 };
@@ -130,6 +132,8 @@ static const char qt_meta_stringdata_autoCCode[] = {
     "SearchText_WithTimer()\0"
     "pasteClicpTextToSearchEdit()\0checked\0"
     "isCheckBox_cliptext_checked(bool)\0"
+    "ui_dialog_AutoGetCon(bool)\0"
+    "pasteClicpTextToAutoGetCon_UiDialog()\0"
     "ok_btn_dia_clicked_self()\0"
     "cancel_btn_dia_clicked_self()\0"
 };
@@ -216,11 +220,13 @@ int autoCCode::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 48: SearchText_WithTimer(); break;
         case 49: pasteClicpTextToSearchEdit(); break;
         case 50: isCheckBox_cliptext_checked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 51: ok_btn_dia_clicked_self(); break;
-        case 52: cancel_btn_dia_clicked_self(); break;
+        case 51: ui_dialog_AutoGetCon((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 52: pasteClicpTextToAutoGetCon_UiDialog(); break;
+        case 53: ok_btn_dia_clicked_self(); break;
+        case 54: cancel_btn_dia_clicked_self(); break;
         default: ;
         }
-        _id -= 53;
+        _id -= 55;
     }
     return _id;
 }
