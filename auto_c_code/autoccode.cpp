@@ -1779,8 +1779,12 @@ void autoCCode::pushdb_checkbox_if_selected()
         return;
     QString str_selected = ui_dialog->content_textEdit_dia->textCursor().selectedText();
     str_print(str_selected);
-    if(str_selected.length())
+    if(str_selected.length()){
         ui_dialog->note_textEdit_dia->setText(str_selected);
+        selecttext = str_selected;
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->setText(selecttext,QClipboard::Clipboard);
+    }
 
 }
 
@@ -1835,6 +1839,6 @@ void autoCCode::pasteClicpTextToAutoGetCon_UiDialog()
     str_print(linetext);
     str_print(cliptext);
 
-    if(linetext != cliptext || linetext.isEmpty())
+    if(linetext.isEmpty()&& cliptext != selecttext)
         ui_dialog->content_textEdit_dia->setText(cliptext);
 }

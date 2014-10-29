@@ -34,6 +34,8 @@ public:
 
     GenCodeDatabase b;
 
+    QString selecttext;
+
 protected://function declared
     void SetlistWidget_codeview_row(int row);
     int GetlistWidget_codeview_row(void);
