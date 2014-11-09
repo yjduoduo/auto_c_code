@@ -8,7 +8,7 @@
 enum LanguageType{
     languagetype_Err_,
     languagetype_C_ ,
-    languagetypeCpp_,
+    languagetype_Cpp_,
     languagetype_Qt_,
     languagetype_Python_,
     languagetype_Shell_,
@@ -16,6 +16,10 @@ enum LanguageType{
     languagetype_Oracle_,
     languagetype_Qtquick_,
     languagetype_Php_,
+    languagetype_Mysql_,
+    languagetype_Sqlite3_,
+    languagetype_JavaScript_,
+    languagetype_Debug_,
 
     languagetype_Aspect_,
 };

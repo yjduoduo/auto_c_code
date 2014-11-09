@@ -128,6 +128,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QRadioButton" name="radioButton_showall">
+         <property name="text">
+          <string>显示全部</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="rightclear_btn">
          <property name="text">
           <string>右清空</string>

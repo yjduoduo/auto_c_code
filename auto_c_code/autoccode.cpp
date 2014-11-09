@@ -497,17 +497,23 @@ void autoCCode::addstr_comboBox(void)
 
     strlist.clear();
     strlist<<str_china()
-          <<str_china(C)
-         <<str_china(C++)
+        <<str_china(C)
+        <<str_china(C++)
+        <<str_china(Debug)
+        <<str_china(Jave)
+        <<str_china(JavaScript)
+        <<str_china(Mysql)
+        <<str_china(Oracle)
+        <<str_china(Sqlite3)
+        <<str_china(shell)
+        <<str_china(Php)
+        <<str_china(Python)
         <<str_china(Qt)
-       <<str_china(Python)
-      <<str_china(shell)
-     <<str_china(Jave)
-    <<str_china(Oracle)
-    <<str_china(Qtquick)
-    <<str_china(Php);
+        <<str_china(Qtquick);
 
-    ui_dialog->langtype_comboBox->addItems(strlist);
+
+
+      ui_dialog->langtype_comboBox->addItems(strlist);
 
     //select db dialog add strlist;
     ui_dia_selectdb->comboBox_selectdb->addItems(strlist);
@@ -664,12 +670,30 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Jave"){
         return languagetype_Jave_;
     }else if(type == "C++"){
-        return languagetypeCpp_;
+        return languagetype_Cpp_;
     }
     else if(type == "Oracle")
     {
         return languagetype_Oracle_;
     }
+
+    else if(type == "Mysql")
+    {
+        return languagetype_Mysql_;
+    }
+    else if(type == "Sqlite3")
+    {
+        return languagetype_Sqlite3_;
+    }
+    else if(type == "JavaScript")
+    {
+        return languagetype_JavaScript_;
+    }
+    else if(type == "Debug")
+    {
+        return languagetype_Debug_;
+    }
+
     else{
         return languagetype_Err_;
     }
@@ -959,7 +983,7 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
 
-    listWidget_scrollToBottom();
+    //    listWidget_scrollToBottom();
 }
 
 void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
@@ -1111,12 +1135,17 @@ void autoCCode::update_show_after_insert(void)
 {
     if(!sets)
         return;
-    QString select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0")
-            .arg(sets->talbename)
-            .arg(getLanguageStr(sets->langtype));
+    QString select_express;
+    select_express.clear();
+    if(ui->radioButton_showall->isChecked())
+        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc")
+                .arg(sets->talbename)
+                .arg(getLanguageStr(sets->langtype));
+    else
+        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc limit 100")
+                .arg(sets->talbename)
+                .arg(getLanguageStr(sets->langtype));
     select_db_by_vartype(select_express);
-
-
 }
 void autoCCode::delete_btn_clicked_selfdefine(void)
 {
@@ -1804,15 +1833,15 @@ void autoCCode::pasteClicpTextToSearchEdit()
 
 void autoCCode::isCheckBox_cliptext_checked(bool checked)
 {
-   self_print(pasteClicpTextToSearchEdit);
-   str_print(checked);
-   if(checked){
-       if(!checkbox_getcliptext_timer->isActive())
-           checkbox_getcliptext_timer->start();
-   }else
-       checkbox_getcliptext_timer->stop();
-   if(!checked)
-       ui->lineEdit_search->setText("");
+    self_print(pasteClicpTextToSearchEdit);
+    str_print(checked);
+    if(checked){
+        if(!checkbox_getcliptext_timer->isActive())
+            checkbox_getcliptext_timer->start();
+    }else
+        checkbox_getcliptext_timer->stop();
+    if(!checked)
+        ui->lineEdit_search->setText("");
 
 
 }
@@ -1825,8 +1854,8 @@ void autoCCode::ui_dialog_AutoGetCon(bool checked)
             checkbox_AutoGetCon_timer->start();
     }else
         checkbox_AutoGetCon_timer->stop();
-//    if(!checked)
-//        ui_dialog->content_textEdit_dia->setText("");
+    //    if(!checked)
+    //        ui_dialog->content_textEdit_dia->setText("");
 
 }
 void autoCCode::pasteClicpTextToAutoGetCon_UiDialog()

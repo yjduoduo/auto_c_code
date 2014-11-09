@@ -23,19 +23,26 @@
     "[aspect_field] varchar(100),"\
     "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
 
+#define JOIN(A,B) A##B
+#define LANTY_JOIN(A) JOIN(languagetype_,A)
 
 #ifdef GENCODEDATABASE_H
-codestructSets codesets[]={{languagetype_C_,"c_table",DB_NAME,CREATTABLE(c_table),},
-                           {languagetypeCpp_,"cpp_table",DB_NAME,CREATTABLE(cpp_table),},
-                           {languagetype_Qt_,"qt_table",DB_NAME,CREATTABLE(qt_table),},
-                           {languagetype_Python_,"python_table",DB_NAME,CREATTABLE(python_table),},
-                           {languagetype_Jave_,"java_table",DB_NAME,CREATTABLE(java_table),},
-                           {languagetype_Shell_,"shell_table",DB_NAME,CREATTABLE(shell_table),},
-                           {languagetype_Oracle_,"oracle_table",DB_NAME,CREATTABLE(oracle_table),},
-                           {languagetype_Qtquick_,"qtquick_table",DB_NAME,CREATTABLE(qtquick_table),},
-                           {languagetype_Php_,"php_table",DB_NAME,CREATTABLE(php_table),},
+codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table),},
+                           {LANTY_JOIN(Cpp_),"cpp_table",DB_NAME,CREATTABLE(cpp_table),},
+                           {LANTY_JOIN(Qt_),"qt_table",DB_NAME,CREATTABLE(qt_table),},
+                           {LANTY_JOIN(Python_),"python_table",DB_NAME,CREATTABLE(python_table),},
+                           {LANTY_JOIN(Jave_),"java_table",DB_NAME,CREATTABLE(java_table),},
+                           {LANTY_JOIN(Shell_),"shell_table",DB_NAME,CREATTABLE(shell_table),},
+                           {LANTY_JOIN(Oracle_),"oracle_table",DB_NAME,CREATTABLE(oracle_table),},
+                           {LANTY_JOIN(Qtquick_),"qtquick_table",DB_NAME,CREATTABLE(qtquick_table),},
+                           {LANTY_JOIN(Php_),"php_table",DB_NAME,CREATTABLE(php_table),},
+                           {LANTY_JOIN(Mysql_),"mysql_table",DB_NAME,CREATTABLE(mysql_table),},
+                           {LANTY_JOIN(JavaScript_),"javascript_table",DB_NAME,CREATTABLE(javascript_table),},
+                           {LANTY_JOIN(Debug_),"debug_table",DB_NAME,CREATTABLE(debug_table),},
+                           {LANTY_JOIN(Sqlite3_),"sqlite3_table",DB_NAME,CREATTABLE(sqlite3_table),},
+
                            //范围,存储哪方面的内容
-                           {languagetype_Aspect_,"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
+                           {LANTY_JOIN(Aspect_),"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
                           };
 #endif
 
@@ -312,7 +319,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     switch(cont->languagetype)
     {
     case    languagetype_C_:
-    case    languagetypeCpp_:
+    case    languagetype_Cpp_:
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
@@ -321,6 +328,11 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Oracle_:
     case    languagetype_Qtquick_:
     case    languagetype_Php_:
+    case    languagetype_Mysql_:
+    case    languagetype_Sqlite3_:
+    case    languagetype_JavaScript_:
+    case    languagetype_Debug_:
+
         opendatabase(sets->databasename,sets->creat_table_express);
     default:
         break;
@@ -414,7 +426,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     switch(cont->languagetype)
     {
     case    languagetype_C_:
-    case    languagetypeCpp_:
+    case    languagetype_Cpp_:
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
@@ -423,6 +435,11 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Oracle_:
     case    languagetype_Qtquick_:
     case    languagetype_Php_:
+    case    languagetype_Mysql_:
+    case    languagetype_Sqlite3_:
+    case    languagetype_JavaScript_:
+    case    languagetype_Debug_:
+
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
         break;
 
@@ -443,7 +460,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     switch(languagetype)
     {
     case    languagetype_C_:
-    case    languagetypeCpp_:
+    case    languagetype_Cpp_:
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
@@ -452,6 +469,11 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     case    languagetype_Oracle_:
     case    languagetype_Qtquick_:
     case    languagetype_Php_:
+    case    languagetype_Mysql_:
+    case    languagetype_Sqlite3_:
+    case    languagetype_JavaScript_:
+    case    languagetype_Debug_:
+
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
         break;
 
@@ -476,7 +498,7 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "shell";
     case languagetype_Jave_:
         return "Jave";
-    case languagetypeCpp_:
+    case languagetype_Cpp_:
         return "C++";
     case languagetype_Oracle_:
         return "Oracle";
@@ -484,6 +506,15 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "Qtquick";
     case    languagetype_Php_:
         return "Php";
+    case    languagetype_Mysql_:
+        return "Mysql";
+    case    languagetype_Sqlite3_:
+        return "Sqlite3";
+    case    languagetype_JavaScript_:
+        return "JavaScript";
+    case    languagetype_Debug_:
+        return "Debug";
+
     default:
         return "Err";
     }
