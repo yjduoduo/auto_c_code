@@ -215,6 +215,8 @@ private:
 
     void listWidget_scrollToBottom(void);
 
+    void listWidget_scrollToTop(void);
+
     void dragDropSet(void);
 
     void checkboxSet();

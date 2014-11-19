@@ -421,11 +421,11 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     str_print(aspect);
     if(aspect == "")
     {
-        select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0 ")
+        select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0  order by ID desc")
                 .arg(sets->talbename)
                 .arg(selected_langtype);
     }else{
-        select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0")
+        select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0 order by ID desc")
                 .arg(sets->talbename)
                 .arg(selected_langtype)
                 .arg(aspect);
@@ -497,23 +497,23 @@ void autoCCode::addstr_comboBox(void)
 
     strlist.clear();
     strlist<<str_china()
-        <<str_china(C)
-        <<str_china(C++)
+          <<str_china(C)
+         <<str_china(C++)
         <<str_china(Debug)
-        <<str_china(Jave)
-        <<str_china(JavaScript)
-        <<str_china(Mysql)
-        <<str_china(Oracle)
-        <<str_china(Sqlite3)
-        <<str_china(shell)
-        <<str_china(Php)
-        <<str_china(Python)
-        <<str_china(Qt)
-        <<str_china(Qtquick);
+       <<str_china(Jave)
+      <<str_china(JavaScript)
+     <<str_china(Mysql)
+    <<str_china(Oracle)
+    <<str_china(Sqlite3)
+    <<str_china(shell)
+    <<str_china(Php)
+    <<str_china(Python)
+    <<str_china(Qt)
+    <<str_china(Qtquick);
 
 
 
-      ui_dialog->langtype_comboBox->addItems(strlist);
+    ui_dialog->langtype_comboBox->addItems(strlist);
 
     //select db dialog add strlist;
     ui_dia_selectdb->comboBox_selectdb->addItems(strlist);
@@ -752,7 +752,7 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     if(!sets)
         return;
 
-    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0")
+    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0 order by ID desc")
             .arg(sets->talbename)
             .arg(lanaugetype)
             .arg(content)
@@ -962,7 +962,11 @@ void autoCCode::listWidget_scrollToBottom(void)
     ui->listWidget_codeview->scrollToBottom();
     ui->listWidget_note->scrollToBottom();
 }
-
+void autoCCode::listWidget_scrollToTop(void)
+{
+    ui->listWidget_codeview->scrollToTop();
+    ui->listWidget_note->scrollToTop();
+}
 void autoCCode::select_db_by_vartype(QString &select_express)
 {
 
@@ -983,7 +987,7 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
 
-    //    listWidget_scrollToBottom();
+    listWidget_scrollToTop();
 }
 
 void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
@@ -995,30 +999,30 @@ void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
         return;
 
     if(str.contains("header")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0 order by ID desc")
                 .arg(sets->talbename)
                 .arg("header");
         select_db_by_vartype(select_express);
     }else if(str.contains("function")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0 order by ID desc")
                 .arg(sets->talbename)
                 .arg("function");
         select_db_by_vartype(select_express);
     }else if(str.contains("struct")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0 order by ID desc")
                 .arg(sets->talbename)
                 .arg("struct");
         select_db_by_vartype(select_express);
     }
     else if(str.contains("variable")){
-        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0 order by ID desc")
                 .arg(sets->talbename)
                 .arg("variable");
         select_db_by_vartype(select_express);
     }
     else{
         //        str_print(sets->langtype);
-        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0")
+        QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0 order by ID desc")
                 .arg(sets->talbename)
                 .arg(getLanguageStr(sets->langtype));
         select_db_by_vartype(select_express);
@@ -1227,7 +1231,7 @@ void autoCCode::SearchText(const QString &searchStr)
 
     QString select_express;
     select_express.clear();
-    select_express = QString("select lowercase_keyworks,keywords,content,lantype,note,vartype from %1 where lantype='%2' and delflag=0")
+    select_express = QString("select lowercase_keyworks,keywords,content,lantype,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc")
             .arg(sets->talbename)
             .arg(getLanguageStr(sets->langtype));
 
@@ -1271,7 +1275,7 @@ void autoCCode::add_column_lowercase_keywords_content(void)
 
     QString select_express;
     select_express.clear();
-    select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2'")
+    select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' order by ID desc")
             .arg(sets->talbename)
             .arg(getLanguageStr(sets->langtype));
     clr_selectresult(selectresult);
@@ -1715,7 +1719,7 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
         return;
     }
 
-    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0")
+    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0 order by ID desc")
             .arg(sets->talbename)
             .arg(lanaugetype)
             .arg(content)

@@ -118,12 +118,18 @@
          <property name="text">
           <string>相同</string>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QCheckBox" name="checkBox_rightTextClean">
          <property name="text">
           <string>右清空？</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

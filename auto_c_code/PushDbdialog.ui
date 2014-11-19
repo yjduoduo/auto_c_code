@@ -195,6 +195,9 @@
            <property name="text">
             <string>EOR</string>
            </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item>
@@ -204,6 +207,9 @@
            </property>
            <property name="text">
             <string>SEL</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -245,6 +251,9 @@
           <widget class="QCheckBox" name="checkBox_AutoGet_Con">
            <property name="text">
             <string>自动获取</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
