@@ -267,6 +267,10 @@ int GenCodeDatabase::searchdatabase(const char *databases_name,
                         selectres.keyword_list << QString::fromUtf8(dbResult [index]);
 
                     }
+                    else if(QString::fromUtf8(dbResult [index]).contains(searchtext)){
+                        searchflag = 1;
+                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+                    }
 
                 }
                 else if(2==j){

@@ -127,16 +127,34 @@ private slots:
 #if 1 /*for shotcut*/
     void toggle()
     {
+#if 0
 
-        activateWindow();
+        if(isVisible() /*&& is_countshow()*/){
+            setWindowFlags(Qt::Window);
+            setWindowFlags(Qt::WindowSystemMenuHint);
+            setVisible(FALSE);
+        }
+        else{
+            setWindowFlags(Qt::WindowStaysOnTopHint);
+
+            setVisible(TRUE);
+//            setWindowFlags(Qt::WindowStaysOnBottomHint);
+        }
+#endif
         setVisible(!isVisible());
+
         //focusInEvent();
         //        setFocus();
+        activateWindow();
         contentSetFocus();
 
         //this->ui.focus();
     }
 #endif
+
+    void alert(){
+        qApp->alert(this,2000); //窗口非激活状态下8秒内通知用户
+    }
 
     void contentSetFocus(void);
 
@@ -167,6 +185,8 @@ private slots:
     void ui_dialog_AutoGetCon(bool checked);
 
     void pasteClicpTextToAutoGetCon_UiDialog();
+
+    int getLimitNum();//获取limit数据查询限制的大小
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -226,8 +246,6 @@ private:
     Ui::Dialog *ui_dialog;//入库
     Ui::Dialog_select_database *ui_dia_selectdb;//选择数据库
     Ui::AutoIndb *ui_autoindb;//自动入库界面
-
-
 
 private:
     void dragEnterEvent(QDragEnterEvent *event);

@@ -22,6 +22,7 @@
 using namespace std;
 
 
+#define LIMIT_SHOW_SIZE getLimitNum()/*60*/
 
 
 #if 1
@@ -421,14 +422,27 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     str_print(aspect);
     if(aspect == "")
     {
-        select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0  order by ID desc")
-                .arg(sets->talbename)
-                .arg(selected_langtype);
+        if(ui->radioButton_showall->isChecked())
+            select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0  order by ID desc")
+                    .arg(sets->talbename)
+                    .arg(selected_langtype);
+        else
+            select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0  order by ID desc limit %3")
+                    .arg(sets->talbename)
+                    .arg(selected_langtype)
+                    .arg(LIMIT_SHOW_SIZE);
     }else{
-        select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0 order by ID desc")
-                .arg(sets->talbename)
-                .arg(selected_langtype)
-                .arg(aspect);
+        if(ui->radioButton_showall->isChecked())
+            select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0 order by ID desc")
+                    .arg(sets->talbename)
+                    .arg(selected_langtype)
+                    .arg(aspect);
+        else
+            select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0 order by ID desc limit %3")
+                    .arg(sets->talbename)
+                    .arg(selected_langtype)
+                    .arg(aspect)
+                    .arg(LIMIT_SHOW_SIZE);
     }
     clr_selectresult(selectresult);
     str_print(select_express);
@@ -1146,9 +1160,10 @@ void autoCCode::update_show_after_insert(void)
                 .arg(sets->talbename)
                 .arg(getLanguageStr(sets->langtype));
     else
-        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc limit 100")
+        select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc limit %3")
                 .arg(sets->talbename)
-                .arg(getLanguageStr(sets->langtype));
+                .arg(getLanguageStr(sets->langtype))
+                .arg(LIMIT_SHOW_SIZE);
     select_db_by_vartype(select_express);
 }
 void autoCCode::delete_btn_clicked_selfdefine(void)
@@ -1247,9 +1262,12 @@ void autoCCode::SearchText(const QString &searchStr)
     ui->codeshow_textEdit->setText(selectresult.contentstr);
 
     clear_listWidget_beforecall();
-    ui->listWidget_codeview->addItems(selectresult.keyword_list);
-    ui->listWidget_note->addItems(selectresult.note_list);
-
+    if(0 == selectresult.keyword_list.length()){
+        alert();
+    }else{
+        ui->listWidget_codeview->addItems(selectresult.keyword_list);
+        ui->listWidget_note->addItems(selectresult.note_list);
+    }
 }
 void autoCCode::cleanLineTextEditSearch(void)
 {
@@ -1808,13 +1826,21 @@ void autoCCode::pushdb_checkbox_if_selected()
         return;
     if(!ui_dialog->checkBox_SEL->isChecked())
         return;
-    if(!ui_dialog->content_textEdit_dia->hasFocus())
+    if((!ui_dialog->content_textEdit_dia->hasFocus()) &&
+            (!ui_dialog->index_textEdit_dia->hasFocus()))
         return;
     QString str_selected = ui_dialog->content_textEdit_dia->textCursor().selectedText();
+    QString str_index_sel = ui_dialog->index_textEdit_dia->textCursor().selectedText();
     str_print(str_selected);
-    if(str_selected.length()){
+    str_print(str_index_sel);
+    if(str_selected.length()&&ui_dialog->content_textEdit_dia->hasFocus()){
         ui_dialog->note_textEdit_dia->setText(str_selected);
         selecttext = str_selected;
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->setText(selecttext,QClipboard::Clipboard);
+    }else if(str_index_sel.length()&&ui_dialog->index_textEdit_dia->hasFocus()){
+        ui_dialog->note_textEdit_dia->setText(str_index_sel);
+        selecttext = str_index_sel;
         QClipboard *clipboard = QApplication::clipboard();
         clipboard->setText(selecttext,QClipboard::Clipboard);
     }
@@ -1874,4 +1900,9 @@ void autoCCode::pasteClicpTextToAutoGetCon_UiDialog()
 
     if(linetext.isEmpty()&& cliptext != selecttext)
         ui_dialog->content_textEdit_dia->setText(cliptext);
+}
+
+int autoCCode::getLimitNum()
+{
+    return ui_autoindb->spinBox_notenumber->text().toInt()?ui_autoindb->spinBox_notenumber->text().toInt():10;
 }
