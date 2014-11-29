@@ -14,6 +14,7 @@ enum LanguageType{
     languagetype_Shell_,
     languagetype_Jave_,
     languagetype_Oracle_,
+    languagetype_Object_C_,
     languagetype_Qtquick_,
     languagetype_Php_,
     languagetype_Mysql_,

@@ -517,6 +517,7 @@ void autoCCode::addstr_comboBox(void)
        <<str_china(Jave)
       <<str_china(JavaScript)
      <<str_china(Mysql)
+    <<str_china(Object_C)
     <<str_china(Oracle)
     <<str_china(Sqlite3)
     <<str_china(shell)
@@ -707,7 +708,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     {
         return languagetype_Debug_;
     }
-
+    else if(type == "Object_C")
+    {
+        return languagetype_Object_C_;
+    }
     else{
         return languagetype_Err_;
     }

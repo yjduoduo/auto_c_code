@@ -35,6 +35,7 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
                            {LANTY_JOIN(Shell_),"shell_table",DB_NAME,CREATTABLE(shell_table),},
                            {LANTY_JOIN(Oracle_),"oracle_table",DB_NAME,CREATTABLE(oracle_table),},
                            {LANTY_JOIN(Qtquick_),"qtquick_table",DB_NAME,CREATTABLE(qtquick_table),},
+                           {LANTY_JOIN(Object_C_),"object_c_table",DB_NAME,CREATTABLE(object_c_table),},
                            {LANTY_JOIN(Php_),"php_table",DB_NAME,CREATTABLE(php_table),},
                            {LANTY_JOIN(Mysql_),"mysql_table",DB_NAME,CREATTABLE(mysql_table),},
                            {LANTY_JOIN(JavaScript_),"javascript_table",DB_NAME,CREATTABLE(javascript_table),},
@@ -330,6 +331,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Shell_:
     case    languagetype_Aspect_:
     case    languagetype_Oracle_:
+    case    languagetype_Object_C_:
     case    languagetype_Qtquick_:
     case    languagetype_Php_:
     case    languagetype_Mysql_:
@@ -437,6 +439,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Shell_:
     case    languagetype_Aspect_:
     case    languagetype_Oracle_:
+    case    languagetype_Object_C_:
     case    languagetype_Qtquick_:
     case    languagetype_Php_:
     case    languagetype_Mysql_:
@@ -471,6 +474,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     case    languagetype_Shell_:
     case    languagetype_Aspect_:
     case    languagetype_Oracle_:
+    case    languagetype_Object_C_:
     case    languagetype_Qtquick_:
     case    languagetype_Php_:
     case    languagetype_Mysql_:
@@ -506,6 +510,8 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "C++";
     case languagetype_Oracle_:
         return "Oracle";
+    case    languagetype_Object_C_:
+        return "Object_C";
     case    languagetype_Qtquick_:
         return "Qtquick";
     case    languagetype_Php_:
