@@ -18,7 +18,9 @@ SOURCES += main.cpp\
     dialog_select_database.cpp \
     qxtglobalshortcut/qxtglobalshortcut_win.cpp \
     qxtglobalshortcut/qxtglobalshortcut.cpp \
-    autoindb.cpp
+    autoindb.cpp \
+    md5.cpp \
+    md5_test.cpp
 
 HEADERS  += autoccode.h \
     sqlite-3080403/sqlite3ext.h \
@@ -30,7 +32,8 @@ HEADERS  += autoccode.h \
     qxtglobalshortcut/qxtglobalshortcut_p.h \
     qxtglobalshortcut/qxtglobalshortcut.h \
     qxtglobalshortcut/qxtglobal.h \
-    autoindb.h
+    autoindb.h \
+    md5.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \

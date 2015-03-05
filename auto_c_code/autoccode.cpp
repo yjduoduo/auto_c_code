@@ -42,7 +42,7 @@ autoCCode::autoCCode(QWidget *parent) :
     ui_dialog(new Ui::Dialog),
     ui_dia_selectdb(new Ui::Dialog_select_database),
     ui_autoindb(new Ui::AutoIndb),
-    sets(NULL),
+//    sets(NULL),
     index_key_color(0),
     index_note_color(0),
     flag_selectLeft(1),
@@ -50,13 +50,19 @@ autoCCode::autoCCode(QWidget *parent) :
     listWidget_codeview_row(0),
     CurrentIndex_comboBox_aspect(0),
     CurrentIndex_comboBox_vartype(0),
-    CurrentIndex_comboBox_langtype(0),
+//    CurrentIndex_comboBox_langtype(0),
     timer(NULL),
     timer_checkbox_sel(NULL),
     lineEdit_search_timer(NULL),
     checkbox_getcliptext_timer(NULL),
     checkbox_AutoGetCon_timer(NULL),
-    textline_total(0)
+    textline_total(0),
+    time_total(0.0),
+    firstenterflag(0),
+    firstentrtime(0),
+    curms(0),
+    inputnums(0),
+    lookFlag(0)
 
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
@@ -149,7 +155,7 @@ void autoCCode::QTimerSet(void)
     timer_checkbox_sel->start(500);
 
     lineEdit_search_timer = new QTimer(this);
-    lineEdit_search_timer->start(500);
+    lineEdit_search_timer->start(200);
 
     checkbox_getcliptext_timer = new QTimer(this);
     checkbox_getcliptext_timer->start(500);
@@ -193,6 +199,8 @@ void autoCCode::lineTextEditSet(void)
 #if 0//文本改变搜索
     QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
                      this,SLOT(SearchText(QString)));
+    QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
+                     this,SLOT(CalcInterValTime(QString)));
 #else//定时搜索
     QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer()));
 
@@ -403,43 +411,50 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     str_print(arg1);
 
     selected_langtype = arg1;
+    selected_langtype = selected_langtype.toLower();
     str_print(selected_langtype);
-    LanguageType langtype = getLanguageType(selected_langtype);
-
-    CurrentIndex_comboBox_langtype = langtype;
-
-    str_print(CurrentIndex_comboBox_langtype);
+    LanguageType langtype;
+    memcpy(&langtype,&gbs.getLanguageType(selected_langtype),
+           sizeof(LanguageType));
+    memcpy(&CurrentIndex_comboBox_langtype,&langtype,
+           sizeof(LanguageType));
 
 
     sets = get_table_sets_bytype(langtype);
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        //qDebug() << "bad err sets!!!!!";
         return;
+    }
+//    if(NULL == sets.databasename)
+
 
     QString select_express;
     select_express.clear();
-    //str_print(sets->talbename);
+    //str_print(sets.talbename);
     QString aspect = ui_dialog->comboBox_aspect->currentText();
     str_print(aspect);
-    if(aspect == "")
+    ////qDebug() << "aspect--->>" <<aspect;
+    if(0 == aspect.length())
     {
         if(ui->radioButton_showall->isChecked())
             select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0  order by ID desc")
-                    .arg(sets->talbename)
+                    .arg(sets.talbename)
                     .arg(selected_langtype);
         else
             select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0  order by ID desc limit %3")
-                    .arg(sets->talbename)
+                    .arg(sets.talbename)
                     .arg(selected_langtype)
                     .arg(LIMIT_SHOW_SIZE);
     }else{
         if(ui->radioButton_showall->isChecked())
             select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0 order by ID desc")
-                    .arg(sets->talbename)
+                    .arg(sets.talbename)
                     .arg(selected_langtype)
                     .arg(aspect);
         else
             select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0 order by ID desc limit %3")
-                    .arg(sets->talbename)
+                    .arg(sets.talbename)
                     .arg(selected_langtype)
                     .arg(aspect)
                     .arg(LIMIT_SHOW_SIZE);
@@ -449,7 +464,7 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     //gencode str clear
     GenCode_str.clear();
 
-    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+    gbs.selectdatabase(sets.databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);
 
@@ -470,15 +485,18 @@ void autoCCode::textEditSet(void)
 }
 void autoCCode::addstr_aspect_comboBox(void)
 {
-    LanguageType langtype = languagetype_Aspect_;
+    LanguageType langtype = getLanguageAspect();
     sets = get_table_sets_bytype(langtype);
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        ////qDebug() << "bad err sets!!!!!";
         return;
+    }
     QString select_express = QString("select distinct aspect_field from aspect_table;");
     clr_selectresult(selectresult);
     str_print(select_express);
     selectresult.aspect_list<<str_china();
-    b.selectdatabase(sets->databasename,
+    gbs.selectdatabase(sets.databasename,
                      select_express.toUtf8().data(),
                      selectresult,
                      ASPECT_HAVE);
@@ -510,21 +528,9 @@ void autoCCode::addstr_comboBox(void)
 
 
     strlist.clear();
-    strlist<<str_china()
-          <<str_china(C)
-         <<str_china(C++)
-        <<str_china(Debug)
-       <<str_china(Jave)
-      <<str_china(JavaScript)
-     <<str_china(Mysql)
-    <<str_china(Object_C)
-    <<str_china(Oracle)
-    <<str_china(Sqlite3)
-    <<str_china(shell)
-    <<str_china(Php)
-    <<str_china(Python)
-    <<str_china(Qt)
-    <<str_china(Qtquick);
+    strlist<<str_china();
+    GetLanList(strlist);
+
 
 
 
@@ -593,7 +599,7 @@ void autoCCode::on_gencode_btn_clicked(void)
                                                        ";;Pythontype(*.py *.PY)"
                                                        ";;JavaType(*.java)"
                                                        ";;All Files(*.*)"));
-    //    qDebug()<<"fileName:"<<fileName;
+    //    //qDebug()<<"fileName:"<<fileName;
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
         std::cerr << "Cannot open file for writing: "
@@ -661,61 +667,6 @@ void autoCCode::on_indb_window_show_hide()
 //    self_print(on_outdb_btn_clicked);
 //}
 
-LanguageType autoCCode::getLanguageType(QString &type)
-{
-
-    if(type == "C"){
-        return languagetype_C_;
-    }else if(type == "Qt"){
-        return languagetype_Qt_;
-    }
-    else if(type == "Python"){
-        return languagetype_Python_;
-    }
-    else if(type == "Php"){
-        return languagetype_Php_;
-    }
-    else if(type == "Qtquick"){
-        return languagetype_Qtquick_;
-    }
-    else if(type == "shell")
-    {
-        return languagetype_Shell_;
-    }
-    else if(type == "Jave"){
-        return languagetype_Jave_;
-    }else if(type == "C++"){
-        return languagetype_Cpp_;
-    }
-    else if(type == "Oracle")
-    {
-        return languagetype_Oracle_;
-    }
-
-    else if(type == "Mysql")
-    {
-        return languagetype_Mysql_;
-    }
-    else if(type == "Sqlite3")
-    {
-        return languagetype_Sqlite3_;
-    }
-    else if(type == "JavaScript")
-    {
-        return languagetype_JavaScript_;
-    }
-    else if(type == "Debug")
-    {
-        return languagetype_Debug_;
-    }
-    else if(type == "Object_C")
-    {
-        return languagetype_Object_C_;
-    }
-    else{
-        return languagetype_Err_;
-    }
-}
 
 void autoCCode::save_before_ops(void)
 {
@@ -765,13 +716,16 @@ void autoCCode::ok_btn_dia_clicked_self(void)
         return;
     }
 
-    LanguageType langtype = getLanguageType(lanaugetype);
+    LanguageType langtype = gbs.getLanguageType(lanaugetype);
     sets = get_table_sets_bytype(langtype);
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        //qDebug() << "bad err sets!!!!!";
         return;
+    }
 
     QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0 order by ID desc")
-            .arg(sets->talbename)
+            .arg(sets.talbename)
             .arg(lanaugetype)
             .arg(content)
             .arg(vartype);
@@ -779,7 +733,7 @@ void autoCCode::ok_btn_dia_clicked_self(void)
 
     clr_selectresult(selectresult);
     str_print(select_express);
-    b.selectdatabase(sets->databasename,
+    gbs.selectdatabase(sets.databasename,
                      select_express.toUtf8().data(),
                      selectresult,
                      ASPECT_NONE);
@@ -818,15 +772,15 @@ void autoCCode::ok_btn_dia_clicked_self(void)
 
     InsertCon insertcontent;
     insertcontent.content = content;
-    insertcontent.languagetype = getLanguageType(lanaugetype);
+    insertcontent.languagetype = gbs.getLanguageType(lanaugetype);
     insertcontent.keyword   = index_keyword;
     insertcontent.note      = note;
     insertcontent.vartype   = vartype;
     insertcontent.aspect    = aspect;
 
 
-    b.creatable(&insertcontent);
-    b.inserttable(&insertcontent);
+    gbs.creatable(&insertcontent);
+    gbs.inserttable(&insertcontent);
 
 #ifndef DEBUG_V
 
@@ -905,7 +859,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.keyword_list.at(i))
             index = i;
-        //        qDebug()<<"note list:"<<selectresult.note_list.at(i);
+        //        //qDebug()<<"note list:"<<selectresult.note_list.at(i);
     }
 
     str_print(str);
@@ -931,7 +885,7 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
     for(int i=0;i<selectresult.content_list.size();i++){
         if(str == selectresult.note_list.at(i))
             index = i;
-        //        qDebug()<<"note list:"<<selectresult.note_list.at(i);
+        //        //qDebug()<<"note list:"<<selectresult.note_list.at(i);
     }
 
     str_print(str);
@@ -988,12 +942,15 @@ void autoCCode::listWidget_scrollToTop(void)
 void autoCCode::select_db_by_vartype(QString &select_express)
 {
 
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        ////qDebug() << "bad err sets!!!!!";
         return;
-    //str_print(sets->talbename);
+    }
+    //str_print(sets.talbename);
     clr_selectresult(selectresult);
 
-    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+    gbs.selectdatabase(sets.databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);
 
@@ -1013,36 +970,39 @@ void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
     self_print(ui_comboBox_vartype_currentIndexChanged);
     str_print(str);
 
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        ////qDebug() << "bad err sets!!!!!";
         return;
+    }
 
     if(str.contains("header")){
         QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0 order by ID desc")
-                .arg(sets->talbename)
+                .arg(sets.talbename)
                 .arg("header");
         select_db_by_vartype(select_express);
     }else if(str.contains("function")){
         QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0 order by ID desc")
-                .arg(sets->talbename)
+                .arg(sets.talbename)
                 .arg("function");
         select_db_by_vartype(select_express);
     }else if(str.contains("struct")){
         QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0 order by ID desc")
-                .arg(sets->talbename)
+                .arg(sets.talbename)
                 .arg("struct");
         select_db_by_vartype(select_express);
     }
     else if(str.contains("variable")){
         QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where vartype='%2' and delflag=0 order by ID desc")
-                .arg(sets->talbename)
+                .arg(sets.talbename)
                 .arg("variable");
         select_db_by_vartype(select_express);
     }
     else{
-        //        str_print(sets->langtype);
+        //        str_print(sets.langtype);
         QString select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and delflag=0 order by ID desc")
-                .arg(sets->talbename)
-                .arg(getLanguageStr(sets->langtype));
+                .arg(sets.talbename)
+                .arg(getLanguageStr(sets.langtype));
         select_db_by_vartype(select_express);
     }
 
@@ -1070,14 +1030,14 @@ void autoCCode::add_aspect_totable(void)
 
     InsertCon insertcontent;
     //    insertcontent.content = content;
-    insertcontent.languagetype = languagetype_Aspect_;
+    insertcontent.languagetype = getLanguageAspect();
     insertcontent.aspect       = aspect_str;
     //    insertcontent.keyword   = index_keyword;
     //    insertcontent.note      = note;
     //    insertcontent.vartype   = vartype;
 
-    b.creatable(&insertcontent);
-    b.inserttable(&insertcontent);
+    gbs.creatable(&insertcontent);
+    gbs.inserttable(&insertcontent);
 
     //范畴
     addstr_aspect_comboBox();
@@ -1155,26 +1115,32 @@ void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
 
 void autoCCode::update_show_after_insert(void)
 {
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        ////qDebug() << "bad err sets!!!!!";
         return;
+    }
     QString select_express;
     select_express.clear();
     if(ui->radioButton_showall->isChecked())
         select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc")
-                .arg(sets->talbename)
-                .arg(getLanguageStr(sets->langtype));
+                .arg(sets.talbename)
+                .arg(getLanguageStr(sets.langtype));
     else
         select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc limit %3")
-                .arg(sets->talbename)
-                .arg(getLanguageStr(sets->langtype))
+                .arg(sets.talbename)
+                .arg(getLanguageStr(sets.langtype))
                 .arg(LIMIT_SHOW_SIZE);
     select_db_by_vartype(select_express);
 }
 void autoCCode::delete_btn_clicked_selfdefine(void)
 {
     self_print(delete_btn_clicked);
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        ////qDebug() << "bad err sets!!!!!";
         return;
+    }
     //开机删除死机bug
     if(0 == selectresult.existflag )
         return;
@@ -1206,10 +1172,10 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
     {
         str_print(index_key_color);
         QString select_express = QString("update %1 set delflag=1 where keywords='%2'")
-                .arg(sets->talbename)
+                .arg(sets.talbename)
                 .arg(selectresult.keyword_list.at(index_key_color));
 
-        b.updatetable(sets->langtype,select_express);
+        gbs.updatetable(sets.langtype,select_express);
 
         update_show_after_insert();
         QMessageBox::information(this,"Information",
@@ -1226,21 +1192,86 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
 void autoCCode::SearchText_WithTimer(void)
 {
     QString searchStr = ui->lineEdit_search->text();
+    if(searchStr.isEmpty())
+        return;
     static QString oldStr;
+    QTime time;
     if(oldStr != searchStr)
-        SearchText(searchStr);
+    {
+        if(0 == firstenterflag)
+        {
+            firstenterflag = 1;
+            firstentrtime = time.currentTime().msec() + time.currentTime().second() * 1000;
+        }
+        curms = time.currentTime().msec() + time.currentTime().second() * 1000;
+
+
+        inputnums++;
+
+        qDebug() << "----interval time:" <<curms - firstentrtime;
+        qDebug() << "----interval time/times:" <<(curms - firstentrtime)/inputnums;
+
+        int temp = (curms - firstentrtime)/inputnums;
+        if(temp >=500)
+            lookFlag = 1;
+        if(lookFlag)
+        {
+            SearchText(searchStr);
+        }
+    }else if(0 == lookFlag){
+        curms = time.currentTime().msec() + time.currentTime().second() * 1000;
+
+        int temp = (curms - firstentrtime)/(inputnums=(0==inputnums)?1:inputnums);
+        qDebug() << "----interval time:" <<curms - firstentrtime;
+        qDebug() << "----interval time/times:" <<(curms - firstentrtime)/inputnums;
+
+        if(temp >=300)
+            lookFlag = 1;
+        if(lookFlag)
+        {
+            SearchText(searchStr);
+        }
+    }
     oldStr = searchStr;
 
 }
 
+void autoCCode::CalcInterValTime(const QString &searchStr)
+{
+    self_print(CalcInterValTime);
+    str_print(searchStr);
+
+
+    QTime time;
+    if(0 == firstenterflag)
+    {
+        firstenterflag = 1;
+        firstentrtime = time.currentTime().msec() + time.currentTime().second() * 1000;
+    }
+
+    int curms = time.currentTime().msec() + time.currentTime().second() * 1000;
+
+    inputnums++;
+
+    qDebug() << "----interval time:" <<curms - firstentrtime;
+    qDebug() << "----interval time/times:" <<(curms - firstentrtime)/inputnums;
+
+    int temp = (curms - firstentrtime)/inputnums;
+    if(temp >=500)
+        lookFlag = 1;
+
+}
 
 void autoCCode::SearchText(const QString &searchStr)
 {
     self_print(SearchText);
     str_print(searchStr);
 
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        ////qDebug() << "bad err sets!!!!!";
         return;
+    }
     if(searchStr.isEmpty()){
         update_show_after_insert();
         return;
@@ -1251,15 +1282,15 @@ void autoCCode::SearchText(const QString &searchStr)
     QString select_express;
     select_express.clear();
     select_express = QString("select lowercase_keyworks,keywords,content,lantype,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc")
-            .arg(sets->talbename)
-            .arg(getLanguageStr(sets->langtype));
+            .arg(sets.talbename)
+            .arg(getLanguageStr(sets.langtype));
 
 
     clr_selectresult(selectresult);
 
     str_print(select_express);
 
-    b.searchdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+    gbs.searchdatabase(sets.databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      searchStr.toLower());
 
@@ -1273,6 +1304,8 @@ void autoCCode::SearchText(const QString &searchStr)
         ui->listWidget_note->addItems(selectresult.note_list);
     }
 }
+
+
 void autoCCode::cleanLineTextEditSearch(void)
 {
     ui->lineEdit_search->setFocus();
@@ -1280,6 +1313,13 @@ void autoCCode::cleanLineTextEditSearch(void)
         return;
     ui->lineEdit_search->clear();
     update_show_after_insert();
+
+    time_total = 0.0;
+    firstenterflag = 0;
+    firstentrtime = 0;
+    curms = 0;
+    inputnums = 0;
+    lookFlag = 0;
 }
 
 
@@ -1288,8 +1328,11 @@ void autoCCode::cleanLineTextEditSearch(void)
 void autoCCode::add_column_lowercase_keywords_content(void)
 {
     self_print(add_column_lowercase_keywords);
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        ////qDebug() << "bad err sets!!!!!";
         return;
+    }
     //开机删除死机bug
     if(0 == selectresult.existflag )
         return;
@@ -1298,13 +1341,13 @@ void autoCCode::add_column_lowercase_keywords_content(void)
     QString select_express;
     select_express.clear();
     select_express = QString("select content,lantype,keywords,note,vartype from %1 where lantype='%2' order by ID desc")
-            .arg(sets->talbename)
-            .arg(getLanguageStr(sets->langtype));
+            .arg(sets.talbename)
+            .arg(getLanguageStr(sets.langtype));
     clr_selectresult(selectresult);
     str_print(select_express);
     GenCode_str.clear();
 
-    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+    gbs.selectdatabase(sets.databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);
 
@@ -1323,13 +1366,13 @@ void autoCCode::add_column_lowercase_keywords_content(void)
         QString tmp =(*iterator).toLower();
         QString repalceafter = tmp.replace("\'","\'\'");
         select_express = QString("update %1 set lowercase_keyworks='%2' where keywords='%3' and lantype='%4'")
-                .arg(sets->talbename)
+                .arg(sets.talbename)
                 .arg(repalceafter)
                 .arg((*iterator))
-                .arg(getLanguageStr(sets->langtype));
+                .arg(getLanguageStr(sets.langtype));
 
         str_print(select_express);
-        b.updatetable(sets->langtype,select_express);
+        gbs.updatetable(sets.langtype,select_express);
 
         ++iterator;
     }
@@ -1387,7 +1430,7 @@ void autoCCode::SearchEnter()
 void autoCCode::listWidget_note_with_currentRowChanged(int row)
 {
     self_print(listWidget_note_with_currentRowChanged);
-    //    qDebug()<<"row:"<<row<<endl;
+    //    //qDebug()<<"row:"<<row<<endl;
     SetlistWidget_codeview_row(row);
     //change color
     unsigned int index = GetlistWidget_codeview_row();
@@ -1423,7 +1466,7 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 {
     self_print(listWidget_note_with_enter);
     rightTextShowClear_oncheched();
-    //    qDebug()<<"index:"<<modelindex.row();
+    //    //qDebug()<<"index:"<<modelindex.row();
     unsigned int index = GetlistWidget_codeview_row();
 
 
@@ -1449,8 +1492,11 @@ void autoCCode::contentSetFocus(void)
 void autoCCode::modify_content()
 {
     self_print(modify_content);
-    if(!sets)
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        ////qDebug() << "bad err sets!!!!!";
         return;
+    }
     //开机删除死机bug
     if(0 == selectresult.existflag )
         return;
@@ -1485,7 +1531,7 @@ void autoCCode::modify_content()
 
     ui_dialog->comboBox_vartype->setCurrentIndex(get_CurrentIndex_comboBox_vartype(selectresult.vartype_list.at(index_key_color)));
 
-    ui_dialog->langtype_comboBox->setCurrentIndex(CurrentIndex_comboBox_langtype);
+    ui_dialog->langtype_comboBox->setCurrentIndex((int)CurrentIndex_comboBox_langtype.con);
 
 
     InDb_Dialog->show();
@@ -1562,7 +1608,7 @@ void autoCCode::on_ui_autoindb_pushBtn_Open_clicked()
                                                        ";;Pythontype(*.py *.PY)"
                                                        ";;JavaType(*.java)"
                                                        ";;All Files(*.*)"));
-    //    qDebug()<<"fileName:"<<fileName;
+    //    //qDebug()<<"fileName:"<<fileName;
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
         std::cerr << "Cannot open file for writing: "
@@ -1596,11 +1642,11 @@ void autoCCode::on_ui_autoindb_pushBtn_process_clicked()
         int returnval = 0;
 #if 0 //出现乱码，不知道什么情况
         while( iterator != textlist_indb_content.end()){
-            //            qDebug() << (*iterator).toAscii().data();
+            //            //qDebug() << (*iterator).toAscii().data();
             ok_btn_dia_clicked_self_autoindb((*iterator),&returnval);
             if(returnval >0)
                 break;
-            //            qDebug()<<"current value:"<< counter <<endl;
+            //            //qDebug()<<"current value:"<< counter <<endl;
             ProgressBarSetValue((counter*100)/textlist_indb_content.count());
             ++iterator;
             ++counter;
@@ -1610,7 +1656,7 @@ void autoCCode::on_ui_autoindb_pushBtn_process_clicked()
             ok_btn_dia_clicked_self_autoindb(cursor_left_text,textlist_indb_content.at(i),&returnval);
             if(returnval >0)
                 break;
-            //            qDebug()<<"current value:"<< counter <<endl;
+            //            //qDebug()<<"current value:"<< counter <<endl;
             ProgressBarSetValue((counter*100)/textlist_indb_content.count());
             ++counter;
         }
@@ -1652,8 +1698,8 @@ void autoCCode::get_autoindb_textedit_cursor_postion()
 #if 0
         //        QStringList::const_iterator iterator = textlist_indb_content.begin();
         //        while( iterator != textlist_indb_content.end()){
-        //            qDebug() << "================================\n";
-        //            qDebug() << (*iterator).toAscii().data();
+        //            //qDebug() << "================================\n";
+        //            //qDebug() << (*iterator).toAscii().data();
         //            ++iterator;
         //        }
 #endif
@@ -1734,15 +1780,18 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
         return;
     }
 
-    LanguageType langtype = getLanguageType(lanaugetype);
+    LanguageType langtype = gbs.getLanguageType(lanaugetype);
     sets = get_table_sets_bytype(langtype);
-    if(!sets){
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        //qDebug() << "bad err sets!!!!!";
         *ret = 1;
         return;
     }
 
+
     QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0 order by ID desc")
-            .arg(sets->talbename)
+            .arg(sets.talbename)
             .arg(lanaugetype)
             .arg(content)
             .arg(vartype);
@@ -1750,7 +1799,7 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
 
     clr_selectresult(selectresult);
     str_print(select_express);
-    b.selectdatabase(sets->databasename,
+    gbs.selectdatabase(sets.databasename,
                      select_express.toUtf8().data(),
                      selectresult,
                      ASPECT_NONE);
@@ -1790,15 +1839,15 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
 
     InsertCon insertcontent;
     insertcontent.content = content;
-    insertcontent.languagetype = getLanguageType(lanaugetype);
+    insertcontent.languagetype = gbs.getLanguageType(lanaugetype);
     insertcontent.keyword   = index_keyword;
     insertcontent.note      = note;
     insertcontent.vartype   = vartype;
     insertcontent.aspect    = aspect;
 
 
-    b.creatable(&insertcontent);
-    b.inserttable(&insertcontent);
+    gbs.creatable(&insertcontent);
+    gbs.inserttable(&insertcontent);
 
     //#ifndef DEBUG_V
 
@@ -1910,3 +1959,4 @@ int autoCCode::getLimitNum()
 {
     return ui_autoindb->spinBox_notenumber->text().toInt()?ui_autoindb->spinBox_notenumber->text().toInt():10;
 }
+

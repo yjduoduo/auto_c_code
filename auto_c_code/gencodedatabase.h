@@ -3,8 +3,22 @@
 
 #include "sqlite3.h"
 #include "prefix_string.h"
+#include "md5.h"
 #include <QtGui>
+#include <QVector>
 
+#ifndef CODE_TRUE
+#define CODE_TRUE TRUE
+#endif
+
+#ifndef CODE_FALSE
+#define CODE_FALSE FALSE
+#endif
+
+#define STRSELF(A) #A
+
+
+#if 0
 enum LanguageType{
     languagetype_Err_,
     languagetype_C_ ,
@@ -22,16 +36,32 @@ enum LanguageType{
     languagetype_JavaScript_,
     languagetype_Debug_,
 
-    languagetype_Aspect_,
+    languagetype_Aspect_
 };
+#else
+typedef struct{
+    unsigned char con[16];
+}LanguageType;
+#endif
+
+typedef struct{
+    const char *name;
+}CodeSet;
+
+
 
 typedef struct
 {
+#if 0
     LanguageType langtype;
-    const char *talbename;
-    const char *databasename;
-    const char *creat_table_express;
-    const char *insert_table_express;
+#else
+    LanguageType langtype;
+#endif
+    char name[64];
+    char talbename[64];
+    char databasename[64];
+    char creat_table_express[512];
+    char *insert_table_express;
 }codestructSets;
 
 
@@ -69,6 +99,7 @@ class GenCodeDatabase
 {
 public:
     GenCodeDatabase();
+    void InitCodeSets(); /* initial code sets*/
     void creatable(InsertCon *cont);
     void inserttable(InsertCon *cont );
     void updatetable(LanguageType languagetype,QString &insertexpress);
@@ -84,9 +115,21 @@ public:
                        SelectResult &selectres,
                        const QString &searchtext);
     QString getLanguageStr(LanguageType type);
+    qint8 addcodesets(codestructSets &elm);//添加内容到集合
+    void getLanguageErr(LanguageType langtype);//language err type
+    LanguageType getLanguageType(QString &name);
+    qint8 IsLanguageTypeInScope(LanguageType &type);
+    LanguageType getLanguageAspect();
+    qint8 IsLanguageTypeSame(LanguageType lan1,LanguageType lan2);
+    void GetLanList(QStringList &strlist);//显示语言列表
 protected:
-    codestructSets* get_table_sets_bytype(LanguageType type);
+    codestructSets get_table_sets_bytype(LanguageType type);
     const char * get_tablename_bytype(LanguageType type);
+    codestructSets getDefaultcodestructSets();
+
+protected:
+    QVector<codestructSets> codesets;
+    Md5 md5;
 };
 
 #endif // GENCODEDATABASE_H

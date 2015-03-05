@@ -32,7 +32,7 @@ public:
     QDialog *dialog_selectdb;
     QDialog *dialog_autoindb;
 
-    GenCodeDatabase b;
+    GenCodeDatabase gbs;
 
     QString selecttext;
 
@@ -42,7 +42,6 @@ protected://function declared
 
     int get_CurrentIndex_comboBox_vartype(const QString &vartype);
     int get_aspect_list_index(const QString &index_str);
-
 private slots:
     void on_save_btn_clicked();
 
@@ -83,6 +82,8 @@ private slots:
     void listWidget_codeview_scroll_sync(QListWidgetItem* item);
 
     void delete_btn_clicked_selfdefine(void);
+
+    void CalcInterValTime(const QString &searchStr);//计算改变时间间隔
 
     void SearchText(const QString &searchStr);
 
@@ -210,7 +211,7 @@ private:
     void show_OutBtn(void);
     void show_InBtn(void);
 
-    LanguageType getLanguageType(QString &type);
+    LanguageType getLanguageType(QString &name);
     //    QString getTablename(QString &type);
     QString GetVersion(void);
 
@@ -265,7 +266,7 @@ private://QString
     unsigned int index_note_color_tmp;
 
 
-    codestructSets* sets;
+    codestructSets sets;
 
     int index_key_color;//记录上次点击的位置，并注意再次点击时取消
     int index_note_color;
@@ -276,7 +277,7 @@ private://QString
 
     int CurrentIndex_comboBox_aspect;
     int CurrentIndex_comboBox_vartype;
-    int CurrentIndex_comboBox_langtype;
+    LanguageType CurrentIndex_comboBox_langtype;
 
 
     QStringList aspect_list_mem;
@@ -291,6 +292,14 @@ private://QString
     QTimer *lineEdit_search_timer;
     QTimer *checkbox_getcliptext_timer;
     QTimer *checkbox_AutoGetCon_timer;
+
+
+    float time_total;
+    qint64 firstenterflag;
+    qint64 firstentrtime;
+    qint64 curms;
+    qint64 inputnums;
+    int lookFlag;//查询标志
 public:
 
     QTextCodec *codec;

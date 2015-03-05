@@ -8,6 +8,8 @@ INPUT(
 ./release/qxtglobalshortcut_win.o
 ./release/qxtglobalshortcut.o
 ./release/autoindb.o
+./release/md5.o
+./release/md5_test.o
 ./release/moc_autoccode.o
 ./release/moc_dialog_select_database.o
 ./release/moc_qxtglobalshortcut.o

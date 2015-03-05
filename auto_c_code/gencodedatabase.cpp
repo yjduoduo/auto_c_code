@@ -1,10 +1,11 @@
 #include "gencodedatabase.h"
 
+
 #define ARRAY_SIZE(A)  (sizeof(A)/sizeof(A[0]))
 
 #define DB_NAME "all.db"
 
-
+#if 0
 #define CREATTABLE(A) "CREATE TABLE  "#A \
     "([ID] INTEGER PRIMARY KEY,"\
     "[content] varchar(100),"\
@@ -17,35 +18,69 @@
     "[delflag] integer DEFAULT 0," \
     "[lowercase_keyworks] varchar(100)" \
     ");"
+#else
+void CREATTABLE(const char *name,char *buf,unsigned int len)
+{
+    memset(buf,0,len);
+    snprintf(buf,len,"CREATE TABLE  %s"
+    "([ID] INTEGER PRIMARY KEY,"
+    "[content] varchar(100),"
+    "[lantype] varchar(100),"
+    "[keywords] varchar(100),"
+    "[note] varchar(100),"
+    "[vartype] varchar(100),"
+    "[aspect_field] varchar(100),"
+    "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')),"
+    "[delflag] integer DEFAULT 0,"
+    "[lowercase_keyworks] varchar(100)"
+    ");",name);
 
+}
+#endif
+
+
+
+#if 0
 #define CREATTABLE_ASPECT(A) "CREATE TABLE  "#A \
     "([ID] INTEGER PRIMARY KEY,"\
     "[aspect_field] varchar(100),"\
     "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
+#else
+void CREATTABLE_ASPECT(const char *name,char *buf,unsigned int len)
+{
+    memset(buf,0,len);
+    snprintf(buf,len,"CREATE TABLE  %s([ID] INTEGER PRIMARY KEY,"
+             "[aspect_field] varchar(100),"
+             "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));",name);
+}
+
+#endif
 
 #define JOIN(A,B) A##B
 #define LANTY_JOIN(A) JOIN(languagetype_,A)
 
-#ifdef GENCODEDATABASE_H
-codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table),},
-                           {LANTY_JOIN(Cpp_),"cpp_table",DB_NAME,CREATTABLE(cpp_table),},
-                           {LANTY_JOIN(Qt_),"qt_table",DB_NAME,CREATTABLE(qt_table),},
-                           {LANTY_JOIN(Python_),"python_table",DB_NAME,CREATTABLE(python_table),},
-                           {LANTY_JOIN(Jave_),"java_table",DB_NAME,CREATTABLE(java_table),},
-                           {LANTY_JOIN(Shell_),"shell_table",DB_NAME,CREATTABLE(shell_table),},
-                           {LANTY_JOIN(Oracle_),"oracle_table",DB_NAME,CREATTABLE(oracle_table),},
-                           {LANTY_JOIN(Qtquick_),"qtquick_table",DB_NAME,CREATTABLE(qtquick_table),},
-                           {LANTY_JOIN(Object_C_),"object_c_table",DB_NAME,CREATTABLE(object_c_table),},
-                           {LANTY_JOIN(Php_),"php_table",DB_NAME,CREATTABLE(php_table),},
-                           {LANTY_JOIN(Mysql_),"mysql_table",DB_NAME,CREATTABLE(mysql_table),},
-                           {LANTY_JOIN(JavaScript_),"javascript_table",DB_NAME,CREATTABLE(javascript_table),},
-                           {LANTY_JOIN(Debug_),"debug_table",DB_NAME,CREATTABLE(debug_table),},
-                           {LANTY_JOIN(Sqlite3_),"sqlite3_table",DB_NAME,CREATTABLE(sqlite3_table),},
 
-                           //范围,存储哪方面的内容
-                           {LANTY_JOIN(Aspect_),"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
-                          };
-#endif
+/*  最初始的名称集合，暂时只支持英文 */
+CodeSet namesets[]={STRSELF(C),
+                    STRSELF(CPP),
+                    STRSELF(Debug),
+                    STRSELF(Erlang),
+                    STRSELF(Java),
+                    STRSELF(JavaScript),
+                    STRSELF(Mysql),
+                    STRSELF(Object_C),
+                    STRSELF(Oracle),
+                    STRSELF(Python),
+                    STRSELF(Qt),
+                    STRSELF(Qtquick),
+                    STRSELF(Php),
+                    STRSELF(Shell),
+                    STRSELF(Sqlite3_3),
+                    STRSELF(AAA),
+
+                    STRSELF(Aspect),
+                   };
+
 
 
 
@@ -53,19 +88,78 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
 GenCodeDatabase::GenCodeDatabase()
 {
     self_print(GenCodeDatabase);
+    codesets.clear();
+    InitCodeSets();
 
 }
-codestructSets* GenCodeDatabase::get_table_sets_bytype(LanguageType type)
+void GenCodeDatabase::InitCodeSets()
 {
-    for(unsigned i=0;i<ARRAY_SIZE(codesets);i++)
-        if(type == codesets[i].langtype)
-            return &codesets[i];
-    return NULL;
+    codestructSets set;
+    char buf[512];
+    int len = 0;
+
+    for(unsigned i=0;i<ARRAY_SIZE(namesets);i++)
+    {
+        memset(&set,0,sizeof(codestructSets));
+        memset(buf,0,sizeof(buf));
+        /* name */
+        len = sizeof(set.name) < strlen(namesets[i].name)?sizeof(set.name):strlen(namesets[i].name);
+        memcpy(set.name,QString::fromLocal8Bit(namesets[i].name).toLower().toUtf8().data(),len);
+        //        set.name = QString::fromLocal8Bit(namesets[i].name);
+        /* table name*/
+        snprintf(buf,sizeof(buf),"%s_table",namesets[i].name);
+        memcpy(set.talbename,QString::fromLocal8Bit(buf).toLower().toLocal8Bit().data(),sizeof(set.talbename));
+        /* language type */
+        snprintf(buf,sizeof(buf),"languagetype_%s",namesets[i].name);
+        md5.Md5Sum((unsigned char*)buf,set.langtype.con);
+        /* databasename */
+        memcpy(set.databasename,QString::fromLocal8Bit(DB_NAME).toLower().toLocal8Bit().data(),sizeof(set.databasename));
+        /* create table express */
+        CREATTABLE(set.talbename,
+                          set.creat_table_express,
+                          sizeof(set.creat_table_express));
+        //////qDebug()<< "add list :=========="<<endl;
+        //////qDebug()<< "name          :"<<set.name;
+        //////qDebug()<< "tablename     :" <<set.talbename ;
+        //        //////qDebug()<< "langu type    :";
+        //        for(int i=0;i<16;i++)
+        //        {
+        //            //////qDebug() << set.langtype.con[i];
+        ////            fprintf(stdout,"%02x",set.langtype.con[i]);
+        //        }
+        qDebug()<< "create express:"<<set.creat_table_express ;
+        //////qDebug()<< "databasename  :"<<set.databasename ;
+        addcodesets(set);
+    }
+}
+
+codestructSets GenCodeDatabase::get_table_sets_bytype(LanguageType type)
+{
+    int len = sizeof(LanguageType);
+    int succnum = 0;
+    //    //////qDebug() << "LanguageType len::"<<len;
+    for(unsigned i=0;i<codesets.count();i++)
+    {
+        succnum = 0;
+        for(int j=0;j<16;j++)
+        {
+            if(type.con,codesets.at(i).langtype.con[j] == type.con[j])
+            {
+                succnum++;
+            }
+
+        }
+        //        //////qDebug() << "succnum ::"<<succnum;
+        if(16 == succnum)
+            return (codesets.at(i));
+    }
+    //////qDebug() << "getDefaultcodestructSets ::";
+    return getDefaultcodestructSets();
 }
 const char * GenCodeDatabase::get_tablename_bytype(LanguageType type)
 {
-    for(unsigned i=0;i<ARRAY_SIZE(codesets);i++)
-        if(type == codesets[i].langtype)
+    for(unsigned i=0;i<codesets.count();i++)
+        if(!memcmp(&type,&codesets.at(i).langtype,sizeof(LanguageType)))
             return codesets[i].talbename;
     return NULL;
 }
@@ -75,6 +169,7 @@ int GenCodeDatabase::opendatabase(const char *databases_name,
     sqlite3 * db = 0;
     char * pErrMsg = 0;
     int ret = 0;
+    //////qDebug() << "databases_name:"<<databases_name;
     // 连接数据库
     ret = sqlite3_open(databases_name, &db);
     if ( ret != SQLITE_OK ){
@@ -108,6 +203,7 @@ int GenCodeDatabase::insertdatabase(const char *databases_name,
     sqlite3 * db = 0;
     char * pErrMsg = 0;
     int ret = 0;
+    //////qDebug() << "databases_name:"<<databases_name;
     // 连接数据库
     ret = sqlite3_open(databases_name, &db);
     if ( ret != SQLITE_OK ){
@@ -147,6 +243,7 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
     int nRow=0, nColumn;
     char **dbResult; //是 char ** 类型，两个*号
     int index;
+    ////qDebug() << "databases_name:"<<databases_name;
     // 连接数据库
     ret = sqlite3_open(databases_name, &db);
     if ( ret != SQLITE_OK ){
@@ -233,6 +330,7 @@ int GenCodeDatabase::searchdatabase(const char *databases_name,
     int nRow=0, nColumn;
     char **dbResult; //是 char ** 类型，两个*号
     int index;
+    ////qDebug() << "databases_name:"<<databases_name;
     // 连接数据库
     ret = sqlite3_open(databases_name, &db);
     if ( ret != SQLITE_OK ){
@@ -316,42 +414,54 @@ int GenCodeDatabase::searchdatabase(const char *databases_name,
 void GenCodeDatabase::creatable(InsertCon *cont)
 {
     self_print(creatable);
-    codestructSets *sets = get_table_sets_bytype(cont->languagetype);
-    if(!sets)
-        return;
-    //    self_print(tablename);
-    str_print(sets->talbename);
-    switch(cont->languagetype)
+    codestructSets sets = get_table_sets_bytype(cont->languagetype);
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
     {
-    case    languagetype_C_:
-    case    languagetype_Cpp_:
-    case    languagetype_Qt_:
-    case    languagetype_Python_:
-    case    languagetype_Jave_:
-    case    languagetype_Shell_:
-    case    languagetype_Aspect_:
-    case    languagetype_Oracle_:
-    case    languagetype_Object_C_:
-    case    languagetype_Qtquick_:
-    case    languagetype_Php_:
-    case    languagetype_Mysql_:
-    case    languagetype_Sqlite3_:
-    case    languagetype_JavaScript_:
-    case    languagetype_Debug_:
-
-        opendatabase(sets->databasename,sets->creat_table_express);
-    default:
-        break;
+        ////qDebug() << "bad err sets!!!!!";
+        return;
     }
+    //    self_print(tablename);
+    str_print(sets.talbename);
+    if(CODE_TRUE == IsLanguageTypeInScope(cont->languagetype))
+    {
+        opendatabase(sets.databasename,sets.creat_table_express);
+    }
+
+
+    //    switch(cont->languagetype)
+    //    {
+    //    case    languagetype_C_:
+    //    case    languagetype_Cpp_:
+    //    case    languagetype_Qt_:
+    //    case    languagetype_Python_:
+    //    case    languagetype_Jave_:
+    //    case    languagetype_Shell_:
+    //    case    languagetype_Aspect_:
+    //    case    languagetype_Oracle_:
+    //    case    languagetype_Object_C_:
+    //    case    languagetype_Qtquick_:
+    //    case    languagetype_Php_:
+    //    case    languagetype_Mysql_:
+    //    case    languagetype_Sqlite3_:
+    //    case    languagetype_JavaScript_:
+    //    case    languagetype_Debug_:
+
+    //        opendatabase(sets.databasename,sets.creat_table_express);
+    //    default:
+    //        break;
+    //    }
 
 }
 
 void GenCodeDatabase::inserttable(InsertCon *cont)
 {
     self_print(creatable);
-    codestructSets *sets = get_table_sets_bytype(cont->languagetype);
-    if(!sets)
+    codestructSets sets = get_table_sets_bytype(cont->languagetype);
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
+    {
+        ////qDebug() << "bad err sets!!!!!";
         return;
+    }
     QString langtype = getLanguageStr(cont->languagetype);
     str_print(langtype);
     QString insertexpress;
@@ -368,11 +478,12 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     vartype.clear();
     aspect.clear();
 
-    if(languagetype_Aspect_ == cont->languagetype)
+    //    if(getLanguageAspect() == cont->languagetype)
+    if(IsLanguageTypeSame(getLanguageAspect(), cont->languagetype))
     {
         aspect = cont->aspect.replace("\'","\'\'");
         insertexpress = QString("insert into %1([aspect_field])  VALUES('%2');")
-                .arg(sets->talbename)
+                .arg(sets.talbename)
                 .arg(aspect);
     }else{
         content = cont->content.replace("\'","\'\'");
@@ -383,7 +494,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
 
 #if 0
         insertexpress = QString("insert into %1([content],[lantype] ,[keywords] ,[note] ,[vartype], [aspect_field])  VALUES('%2','%3','%4','%5','%6','%7')")
-                .arg(sets->talbename)
+                .arg(sets.talbename)
                 .arg(content)
                 .arg(langtype)
                 .arg(keyword)
@@ -395,7 +506,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
         tempstr.clear();
 
         insertexpress += "insert into ";
-        insertexpress += sets->talbename;
+        insertexpress += sets.talbename;
         insertexpress += "([content],[lantype] ,[keywords] ,[note] ,[vartype], [aspect_field], [lowercase_keyworks])  VALUES(";
 
         tempstr = QString("'%1',").arg(content);
@@ -427,105 +538,217 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
 
 
     str_print(insertexpress);
-    str_print(sets->talbename);
+    str_print(sets.talbename);
 
-    switch(cont->languagetype)
+    if(CODE_TRUE == IsLanguageTypeInScope(cont->languagetype))
     {
-    case    languagetype_C_:
-    case    languagetype_Cpp_:
-    case    languagetype_Qt_:
-    case    languagetype_Python_:
-    case    languagetype_Jave_:
-    case    languagetype_Shell_:
-    case    languagetype_Aspect_:
-    case    languagetype_Oracle_:
-    case    languagetype_Object_C_:
-    case    languagetype_Qtquick_:
-    case    languagetype_Php_:
-    case    languagetype_Mysql_:
-    case    languagetype_Sqlite3_:
-    case    languagetype_JavaScript_:
-    case    languagetype_Debug_:
-
-        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
-        break;
-
-    default:
-        break;
+        insertdatabase(sets.databasename,insertexpress.toUtf8().data());
     }
+
+    //    switch(cont->languagetype)
+    //    {
+    //    case    languagetype_C_:
+    //    case    languagetype_Cpp_:
+    //    case    languagetype_Qt_:
+    //    case    languagetype_Python_:
+    //    case    languagetype_Jave_:
+    //    case    languagetype_Shell_:
+    //    case    languagetype_Aspect_:
+    //    case    languagetype_Oracle_:
+    //    case    languagetype_Object_C_:
+    //    case    languagetype_Qtquick_:
+    //    case    languagetype_Php_:
+    //    case    languagetype_Mysql_:
+    //    case    languagetype_Sqlite3_:
+    //    case    languagetype_JavaScript_:
+    //    case    languagetype_Debug_:
+
+
+    //        break;
+
+    //    default:
+    //        break;
+    //    }
 
 }
 void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpress)
 {
     self_print(updatetable);
-    codestructSets *sets = get_table_sets_bytype(languagetype);
-    if(!sets)
-        return;
-    str_print(insertexpress);
-    str_print(sets->talbename);
-
-    switch(languagetype)
+    codestructSets sets = get_table_sets_bytype(languagetype);
+    if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
     {
-    case    languagetype_C_:
-    case    languagetype_Cpp_:
-    case    languagetype_Qt_:
-    case    languagetype_Python_:
-    case    languagetype_Jave_:
-    case    languagetype_Shell_:
-    case    languagetype_Aspect_:
-    case    languagetype_Oracle_:
-    case    languagetype_Object_C_:
-    case    languagetype_Qtquick_:
-    case    languagetype_Php_:
-    case    languagetype_Mysql_:
-    case    languagetype_Sqlite3_:
-    case    languagetype_JavaScript_:
-    case    languagetype_Debug_:
-
-        insertdatabase(sets->databasename,insertexpress.toUtf8().data());
-        break;
-
-    default:
-        break;
+        ////qDebug() << "bad err sets!!!!!";
+        return;
     }
+    str_print(insertexpress);
+    str_print(sets.talbename);
+
+    if(CODE_TRUE == IsLanguageTypeInScope(languagetype))
+    {
+        insertdatabase(sets.databasename,insertexpress.toUtf8().data());
+    }
+
+    //    switch(languagetype)
+    //    {
+    //    case    languagetype_C_:
+    //    case    languagetype_Cpp_:
+    //    case    languagetype_Qt_:
+    //    case    languagetype_Python_:
+    //    case    languagetype_Jave_:
+    //    case    languagetype_Shell_:
+    //    case    languagetype_Aspect_:
+    //    case    languagetype_Oracle_:
+    //    case    languagetype_Object_C_:
+    //    case    languagetype_Qtquick_:
+    //    case    languagetype_Php_:
+    //    case    languagetype_Mysql_:
+    //    case    languagetype_Sqlite3_:
+    //    case    languagetype_JavaScript_:
+    //    case    languagetype_Debug_:
+
+    //        insertdatabase(sets.databasename,insertexpress.toUtf8().data());
+    //        break;
+
+    //    default:
+    //        break;
+    //    }
 
 }
 
 
 QString GenCodeDatabase::getLanguageStr(LanguageType type)
 {
-    switch(type)
-    {
-    case languagetype_C_:
-        return "C";
-    case languagetype_Qt_:
-        return "Qt";
-    case languagetype_Python_:
-        return "Python";
-    case languagetype_Shell_:
-        return "shell";
-    case languagetype_Jave_:
-        return "Jave";
-    case languagetype_Cpp_:
-        return "C++";
-    case languagetype_Oracle_:
-        return "Oracle";
-    case    languagetype_Object_C_:
-        return "Object_C";
-    case    languagetype_Qtquick_:
-        return "Qtquick";
-    case    languagetype_Php_:
-        return "Php";
-    case    languagetype_Mysql_:
-        return "Mysql";
-    case    languagetype_Sqlite3_:
-        return "Sqlite3";
-    case    languagetype_JavaScript_:
-        return "JavaScript";
-    case    languagetype_Debug_:
-        return "Debug";
 
-    default:
-        return "Err";
+    for(int i=0;i<codesets.count();i++)
+    {
+        //        if(codesets[i].talbename == name)
+        if(!memcmp(&type, &codesets.at(i).langtype,sizeof(LanguageType)))
+            return codesets.at(i).name;
+    }
+    return "ERR";
+
+    //    switch(type)
+    //    {
+    //    case languagetype_C_:
+    //        return "C";
+    //    case languagetype_Qt_:
+    //        return "Qt";
+    //    case languagetype_Python_:
+    //        return "Python";
+    //    case languagetype_Shell_:
+    //        return "shell";
+    //    case languagetype_Jave_:
+    //        return "Jave";
+    //    case languagetype_Cpp_:
+    //        return "C++";
+    //    case languagetype_Oracle_:
+    //        return "Oracle";
+    //    case    languagetype_Object_C_:
+    //        return "Object_C";
+    //    case    languagetype_Qtquick_:
+    //        return "Qtquick";
+    //    case    languagetype_Php_:
+    //        return "Php";
+    //    case    languagetype_Mysql_:
+    //        return "Mysql";
+    //    case    languagetype_Sqlite3_:
+    //        return "Sqlite3";
+    //    case    languagetype_JavaScript_:
+    //        return "JavaScript";
+    //    case    languagetype_Debug_:
+    //        return "Debug";
+
+    //    default:
+    //        return "Err";
+    //    }
+}
+
+qint8 GenCodeDatabase::addcodesets(codestructSets &elm)
+{
+
+    codesets.append(elm);
+}
+void GenCodeDatabase::getLanguageErr(LanguageType langtype)
+{
+    //    md5.Md5Sum((unsigned char *)"languagetype_Err",langtype.con);
+    unsigned char temp[16];/*=986b7da7792a03ac8b9fe6b587ff6332;*/
+    temp[0] = 0x98;
+    temp[1] = 0x6b;
+    temp[2] = 0x7d;
+    temp[3] = 0xa7;
+    temp[4] = 0x79;
+    temp[5] = 0x2a;
+    temp[6] = 0x03;
+    temp[7] = 0xac;
+    temp[8] = 0x8b;
+    temp[9] = 0x9f;
+    temp[10] = 0xe6;
+    temp[11] = 0xb5;
+    temp[12] = 0x87;
+    temp[13] = 0xff;
+    temp[14] = 0x63;
+    temp[15] = 0x32;
+    memcpy(langtype.con,temp,sizeof(temp));
+}
+
+LanguageType GenCodeDatabase::getLanguageType(QString &name)
+{
+    LanguageType lantype;
+    getLanguageErr(lantype);
+    //////qDebug() << "==========>>>>>>>>>>>";
+    for(int i=0;i<codesets.count();i++)
+    {
+        //////qDebug() << "codesets.at(i).name:"<<codesets.at(i).name;
+        //////qDebug() << "codesets.at(i).len:"<<strlen(codesets.at(i).name);
+        if(name.toLower() == QString::fromLocal8Bit(codesets.at(i).name))
+        {
+            //////qDebug()<< "igotit::!" << name.toLower();
+            return codesets[i].langtype;
+        }
+    }
+    //////qDebug()<<"Err Language Type!!!!!!";
+    return lantype;
+}
+
+codestructSets GenCodeDatabase::getDefaultcodestructSets()
+{
+    codestructSets set;
+    memset(&set,0,sizeof(codestructSets));
+    return set;
+}
+
+qint8 GenCodeDatabase::IsLanguageTypeInScope(LanguageType &type)
+{
+    for(int i=0;i<codesets.count();i++)
+    {
+        if(!memcmp(&type,&codesets.at(i).langtype,sizeof(LanguageType)))
+            return CODE_TRUE;
+    }
+    return CODE_FALSE;
+}
+
+LanguageType GenCodeDatabase::getLanguageAspect()
+{
+    QString str;
+    str.clear();
+    str = STRSELF(Aspect);
+    return getLanguageType(str);
+}
+
+qint8 GenCodeDatabase::IsLanguageTypeSame(LanguageType lan1,LanguageType lan2)
+{
+    if(!memcmp(&lan1,&lan2,sizeof(LanguageType)))
+        return CODE_TRUE;
+
+    return CODE_FALSE;
+}
+
+void GenCodeDatabase::GetLanList(QStringList &strlist)
+{
+    for(unsigned i=0;i<ARRAY_SIZE(namesets);i++)
+    {
+        if(QString("Aspect") == QString(namesets[i].name))
+            continue;
+        strlist<< namesets[i].name;
     }
 }
