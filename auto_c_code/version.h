@@ -2,7 +2,7 @@
 #define VERSION_H
 
 //发布正式版，定义它
-#if 1
+#if 0
 #define RELEASE_VERSION
 #else
 #define DEBUG_V

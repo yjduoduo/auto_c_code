@@ -3,7 +3,7 @@
 
 #define ARRAY_SIZE(A)  (sizeof(A)/sizeof(A[0]))
 
-#define DB_NAME "all.db"
+
 
 #if 0
 #define CREATTABLE(A) "CREATE TABLE  "#A \
@@ -127,7 +127,7 @@ void GenCodeDatabase::InitCodeSets()
         //            //////qDebug() << set.langtype.con[i];
         ////            fprintf(stdout,"%02x",set.langtype.con[i]);
         //        }
-        qDebug()<< "create express:"<<set.creat_table_express ;
+//        qDebug()<< "create express:"<<set.creat_table_express ;
         //////qDebug()<< "databasename  :"<<set.databasename ;
         addcodesets(set);
     }
@@ -135,9 +135,9 @@ void GenCodeDatabase::InitCodeSets()
 
 codestructSets GenCodeDatabase::get_table_sets_bytype(LanguageType type)
 {
-    int len = sizeof(LanguageType);
     int succnum = 0;
     //    //////qDebug() << "LanguageType len::"<<len;
+    qDebug() << "codesets.count:" << codesets.count();
     for(unsigned i=0;i<codesets.count();i++)
     {
         succnum = 0;
@@ -149,11 +149,11 @@ codestructSets GenCodeDatabase::get_table_sets_bytype(LanguageType type)
             }
 
         }
-        //        //////qDebug() << "succnum ::"<<succnum;
+        qDebug() << "succnum ::"<<succnum;
         if(16 == succnum)
             return (codesets.at(i));
     }
-    //////qDebug() << "getDefaultcodestructSets ::";
+    qDebug() << "usring getDefaultcodestructSets ::";
     return getDefaultcodestructSets();
 }
 const char * GenCodeDatabase::get_tablename_bytype(LanguageType type)
@@ -243,7 +243,7 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
     int nRow=0, nColumn;
     char **dbResult; //是 char ** 类型，两个*号
     int index;
-    ////qDebug() << "databases_name:"<<databases_name;
+    qDebug() << "databases_name:"<<databases_name;
     // 连接数据库
     ret = sqlite3_open(databases_name, &db);
     if ( ret != SQLITE_OK ){

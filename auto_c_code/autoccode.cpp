@@ -76,6 +76,10 @@ autoCCode::autoCCode(QWidget *parent) :
     dialog_autoindb =  new QDialog(this);
     ui_autoindb->setupUi(dialog_autoindb);
 
+    gbs.InitCodeSets();
+    strncpy(sets.name,QString::fromLocal8Bit(DB_NAME).toLower().toLocal8Bit().data(),
+            sizeof(sets.name));
+
     QTimerSet();
     pushButtonSet();
     textEditSet();
@@ -378,6 +382,7 @@ void autoCCode::maxSize_ui_dialog()
 void autoCCode::comboBoxSet(void)
 {
     self_print(comboBoxSet);
+
     QObject::connect(this->ui_dia_selectdb->comboBox_selectdb,SIGNAL(currentIndexChanged(QString)),
                      this,SLOT(comboBox_selectdb_currentIndexChanged(QString)));
     QObject::connect(this->ui->comboBox_vartype,SIGNAL(currentIndexChanged(QString)),
@@ -420,10 +425,20 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
            sizeof(LanguageType));
 
 
+//    char dbname[64] = "all.db";
+//    memcpy(sets.name,dbname,sizeof(dbname));
+
+    qDebug() << "getDefaultcodestructSets().name:" <<getDefaultcodestructSets().name;
+    qDebug() << "sets.name:" <<sets.name;
+
     sets = get_table_sets_bytype(langtype);
+
+    qDebug() << "-->>getDefaultcodestructSets().name:" <<getDefaultcodestructSets().name;
+    qDebug() << "sets.name:" <<sets.name;
     if(!memcmp(getDefaultcodestructSets().name,sets.name,sizeof(sets.name)))
     {
-        //qDebug() << "bad err sets!!!!!";
+        qDebug() << "bad err sets!!!!!";
+        qDebug() << "sets.name:" <<sets.name;
         return;
     }
 //    if(NULL == sets.databasename)
@@ -463,7 +478,7 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     str_print(select_express);
     //gencode str clear
     GenCode_str.clear();
-
+    qDebug() << "sets.databasename:" << sets.databasename;
     gbs.selectdatabase(sets.databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);

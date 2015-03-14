@@ -17,6 +17,7 @@
 
 #define STRSELF(A) #A
 
+#define DB_NAME "all.db"
 
 #if 0
 enum LanguageType{
