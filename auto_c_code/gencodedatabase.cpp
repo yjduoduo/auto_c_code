@@ -29,6 +29,7 @@
 #ifdef GENCODEDATABASE_H
 codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table),},
                            {LANTY_JOIN(Cpp_),"cpp_table",DB_NAME,CREATTABLE(cpp_table),},
+                           {LANTY_JOIN(Erlang_),"erlang_table",DB_NAME,CREATTABLE(erlang_table),},
                            {LANTY_JOIN(Qt_),"qt_table",DB_NAME,CREATTABLE(qt_table),},
                            {LANTY_JOIN(Python_),"python_table",DB_NAME,CREATTABLE(python_table),},
                            {LANTY_JOIN(Jave_),"java_table",DB_NAME,CREATTABLE(java_table),},
@@ -324,6 +325,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     {
     case    languagetype_C_:
     case    languagetype_Cpp_:
+    case    languagetype_Erlang_:
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
@@ -431,6 +433,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     {
     case    languagetype_C_:
     case    languagetype_Cpp_:
+    case    languagetype_Erlang_:
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
@@ -465,6 +468,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     {
     case    languagetype_C_:
     case    languagetype_Cpp_:
+    case    languagetype_Erlang_:
     case    languagetype_Qt_:
     case    languagetype_Python_:
     case    languagetype_Jave_:
@@ -504,6 +508,8 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "Jave";
     case languagetype_Cpp_:
         return "C++";
+    case languagetype_Erlang_:
+        return "Erlang";
     case languagetype_Oracle_:
         return "Oracle";
     case    languagetype_Qtquick_:

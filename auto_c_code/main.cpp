@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     autoCCode w;
     w.show();
     
-    qDebug()<<"auto c code\n";
+//    qDebug()<<"auto c code\n";
     return a.exec();
 }
 

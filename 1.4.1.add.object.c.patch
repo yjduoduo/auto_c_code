@@ -1,0 +1,96 @@
+diff --git a/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/all.db b/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/all.db
+index 8b7bbee..e2a7452 100644
+Binary files a/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/all.db and b/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/all.db differ
+diff --git a/auto_c_code/auto_c_code.pro.user.345195f.2.5pre1 b/auto_c_code/auto_c_code.pro.user.345195f.2.5pre1
+index 65294f6..0455b90 100644
+--- a/auto_c_code/auto_c_code.pro.user.345195f.2.5pre1
++++ b/auto_c_code/auto_c_code.pro.user.345195f.2.5pre1
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE QtCreatorProject>
+-<!-- Written by Qt Creator 2.4.1, 2014-11-24T23:02:02. -->
++<!-- Written by Qt Creator 2.4.1, 2014-11-29T21:58:52. -->
+ <qtcreator>
+  <data>
+   <variable>ProjectExplorer.Project.ActiveTarget</variable>
+diff --git a/auto_c_code/autoccode.cpp b/auto_c_code/autoccode.cpp
+index 3c943d3..d69a53e 100644
+--- a/auto_c_code/autoccode.cpp
++++ b/auto_c_code/autoccode.cpp
+@@ -517,6 +517,7 @@ void autoCCode::addstr_comboBox(void)
+        <<str_china(Jave)
+       <<str_china(JavaScript)
+      <<str_china(Mysql)
++    <<str_china(Object_C)
+     <<str_china(Oracle)
+     <<str_china(Sqlite3)
+     <<str_china(shell)
+@@ -707,7 +708,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
+     {
+         return languagetype_Debug_;
+     }
+-
++    else if(type == "Object_C")
++    {
++        return languagetype_Object_C_;
++    }
+     else{
+         return languagetype_Err_;
+     }
+diff --git a/auto_c_code/gencodedatabase.cpp b/auto_c_code/gencodedatabase.cpp
+index 2c97479..08d8adb 100644
+--- a/auto_c_code/gencodedatabase.cpp
++++ b/auto_c_code/gencodedatabase.cpp
+@@ -35,6 +35,7 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
+                            {LANTY_JOIN(Shell_),"shell_table",DB_NAME,CREATTABLE(shell_table),},
+                            {LANTY_JOIN(Oracle_),"oracle_table",DB_NAME,CREATTABLE(oracle_table),},
+                            {LANTY_JOIN(Qtquick_),"qtquick_table",DB_NAME,CREATTABLE(qtquick_table),},
++                           {LANTY_JOIN(Object_C_),"object_c_table",DB_NAME,CREATTABLE(object_c_table),},
+                            {LANTY_JOIN(Php_),"php_table",DB_NAME,CREATTABLE(php_table),},
+                            {LANTY_JOIN(Mysql_),"mysql_table",DB_NAME,CREATTABLE(mysql_table),},
+                            {LANTY_JOIN(JavaScript_),"javascript_table",DB_NAME,CREATTABLE(javascript_table),},
+@@ -330,6 +331,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
+     case    languagetype_Shell_:
+     case    languagetype_Aspect_:
+     case    languagetype_Oracle_:
++    case    languagetype_Object_C_:
+     case    languagetype_Qtquick_:
+     case    languagetype_Php_:
+     case    languagetype_Mysql_:
+@@ -437,6 +439,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
+     case    languagetype_Shell_:
+     case    languagetype_Aspect_:
+     case    languagetype_Oracle_:
++    case    languagetype_Object_C_:
+     case    languagetype_Qtquick_:
+     case    languagetype_Php_:
+     case    languagetype_Mysql_:
+@@ -471,6 +474,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
+     case    languagetype_Shell_:
+     case    languagetype_Aspect_:
+     case    languagetype_Oracle_:
++    case    languagetype_Object_C_:
+     case    languagetype_Qtquick_:
+     case    languagetype_Php_:
+     case    languagetype_Mysql_:
+@@ -506,6 +510,8 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
+         return "C++";
+     case languagetype_Oracle_:
+         return "Oracle";
++    case    languagetype_Object_C_:
++        return "Object_C";
+     case    languagetype_Qtquick_:
+         return "Qtquick";
+     case    languagetype_Php_:
+diff --git a/auto_c_code/gencodedatabase.h b/auto_c_code/gencodedatabase.h
+index 6bcded0..df94f15 100644
+--- a/auto_c_code/gencodedatabase.h
++++ b/auto_c_code/gencodedatabase.h
+@@ -14,6 +14,7 @@ enum LanguageType{
+     languagetype_Shell_,
+     languagetype_Jave_,
+     languagetype_Oracle_,
++    languagetype_Object_C_,
+     languagetype_Qtquick_,
+     languagetype_Php_,
+     languagetype_Mysql_,

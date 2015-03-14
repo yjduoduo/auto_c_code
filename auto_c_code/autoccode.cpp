@@ -353,7 +353,7 @@ void autoCCode::widthSize_ui_dialog()
 
     InDb_Dialog->resize(QSize(QApplication::desktop()->width(),Qt::MinimumSize));
     QDesktopWidget *desk=QApplication::desktop();
-    int wd=desk->width();
+//    int wd=desk->width();
     int ht=desk->height();
     InDb_Dialog->move(0,(ht-height()/2)/2);
 }
@@ -514,6 +514,7 @@ void autoCCode::addstr_comboBox(void)
           <<str_china(C)
          <<str_china(C++)
         <<str_china(Debug)
+       <<str_china(Erlang)
        <<str_china(Jave)
       <<str_china(JavaScript)
      <<str_china(Mysql)
@@ -689,6 +690,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Oracle")
     {
         return languagetype_Oracle_;
+    }
+    else if(type == "Erlang")
+    {
+        return languagetype_Erlang_;
     }
 
     else if(type == "Mysql")
