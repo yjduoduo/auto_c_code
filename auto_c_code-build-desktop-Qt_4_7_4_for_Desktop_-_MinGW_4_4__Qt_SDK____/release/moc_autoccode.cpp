@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'autoccode.h'
 **
-** Created: Sat Mar 14 22:42:09 2015
+** Created: Sat Mar 21 13:10:24 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_autoCCode[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      57,   14, // methods
+      59,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -86,8 +86,10 @@ static const uint qt_meta_data_autoCCode[] = {
     1557, 1515,   10,   10, 0x08,
     1584,   10,   10,   10, 0x08,
     1626,   10, 1622,   10, 0x08,
-    1640,   10,   10,   10, 0x0a,
-    1666,   10,   10,   10, 0x0a,
+    1640,   10,   10,   10, 0x08,
+    1659,   10, 1652,   10, 0x08,
+    1680,   10,   10,   10, 0x0a,
+    1706,   10,   10,   10, 0x0a,
 
        0        // eod
 };
@@ -136,7 +138,8 @@ static const char qt_meta_stringdata_autoCCode[] = {
     "isCheckBox_cliptext_checked(bool)\0"
     "ui_dialog_AutoGetCon(bool)\0"
     "pasteClicpTextToAutoGetCon_UiDialog()\0"
-    "int\0getLimitNum()\0ok_btn_dia_clicked_self()\0"
+    "int\0getLimitNum()\0PopInDbUi()\0quint8\0"
+    "IsClipboardChanged()\0ok_btn_dia_clicked_self()\0"
     "cancel_btn_dia_clicked_self()\0"
 };
 
@@ -202,8 +205,11 @@ void autoCCode::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 53: _t->pasteClicpTextToAutoGetCon_UiDialog(); break;
         case 54: { int _r = _t->getLimitNum();
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
-        case 55: _t->ok_btn_dia_clicked_self(); break;
-        case 56: _t->cancel_btn_dia_clicked_self(); break;
+        case 55: _t->PopInDbUi(); break;
+        case 56: { quint8 _r = _t->IsClipboardChanged();
+            if (_a[0]) *reinterpret_cast< quint8*>(_a[0]) = _r; }  break;
+        case 57: _t->ok_btn_dia_clicked_self(); break;
+        case 58: _t->cancel_btn_dia_clicked_self(); break;
         default: ;
         }
     }
@@ -243,9 +249,9 @@ int autoCCode::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 57)
+        if (_id < 59)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 57;
+        _id -= 59;
     }
     return _id;
 }

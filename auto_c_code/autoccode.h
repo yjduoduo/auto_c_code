@@ -28,13 +28,19 @@ public:
     ~autoCCode();
 
 public:
-    QDialog *InDb_Dialog;
-    QDialog *dialog_selectdb;
-    QDialog *dialog_autoindb;
+    QDialog *InDb_Dialog;//手动入库界面
+    QDialog *dialog_selectdb;//选择数据库界面
+    QDialog *dialog_autoindb;//自动入库界面
 
     GenCodeDatabase b;
 
     QString selecttext;
+
+    enum{
+        STATE_CLIPBORD_CHAGED,
+        STATE_CLIPBORD_NOCHAGED,
+        STATE_CLIPBORD_UNKOWN
+    };
 
 protected://function declared
     void SetlistWidget_codeview_row(int row);
@@ -187,6 +193,8 @@ private slots:
     void pasteClicpTextToAutoGetCon_UiDialog();
 
     int getLimitNum();//获取limit数据查询限制的大小
+    void PopInDbUi();//弹出入库对话框
+    quint8 IsClipboardChanged();//判断剪切板内容改变否
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -291,6 +299,7 @@ private://QString
     QTimer *lineEdit_search_timer;
     QTimer *checkbox_getcliptext_timer;
     QTimer *checkbox_AutoGetCon_timer;
+    QTimer *timer_datachangedpopui;//数据发生变化，弹出入库框
 public:
 
     QTextCodec *codec;

@@ -159,6 +159,12 @@ void autoCCode::QTimerSet(void)
     checkbox_AutoGetCon_timer = new QTimer(this);
     checkbox_AutoGetCon_timer->start(500);
     QObject::connect(checkbox_AutoGetCon_timer,SIGNAL(timeout()),this,SLOT(pasteClicpTextToAutoGetCon_UiDialog()));
+
+
+    timer_datachangedpopui = new QTimer(this);
+    timer_datachangedpopui->start(500);
+    QObject::connect(timer_datachangedpopui,SIGNAL(timeout()),this,SLOT(PopInDbUi()));
+
 }
 void autoCCode::keyPressEventSet()
 {
@@ -353,7 +359,7 @@ void autoCCode::widthSize_ui_dialog()
 
     InDb_Dialog->resize(QSize(QApplication::desktop()->width(),Qt::MinimumSize));
     QDesktopWidget *desk=QApplication::desktop();
-//    int wd=desk->width();
+    //    int wd=desk->width();
     int ht=desk->height();
     InDb_Dialog->move(0,(ht-height()/2)/2);
 }
@@ -515,9 +521,9 @@ void autoCCode::addstr_comboBox(void)
          <<str_china(C++)
         <<str_china(Debug)
        <<str_china(Erlang)
-       <<str_china(Jave)
-      <<str_china(JavaScript)
-     <<str_china(Mysql)
+      <<str_china(Jave)
+     <<str_china(JavaScript)
+    <<str_china(Mysql)
     <<str_china(Oracle)
     <<str_china(Sqlite3)
     <<str_china(shell)
@@ -1905,6 +1911,40 @@ void autoCCode::pasteClicpTextToAutoGetCon_UiDialog()
 
     if(linetext.isEmpty()&& cliptext != selecttext)
         ui_dialog->content_textEdit_dia->setText(cliptext);
+}
+
+quint8 autoCCode::IsClipboardChanged()
+{
+    static QString text;
+    QClipboard *clipboard = QApplication::clipboard();
+    if(text != clipboard->text())
+    {
+        text = clipboard->text();
+        return STATE_CLIPBORD_CHAGED;
+    }else{
+        return STATE_CLIPBORD_NOCHAGED;
+    }
+}
+
+void autoCCode::PopInDbUi()
+{
+    if(ui->checkBox_popupindb->isChecked())
+    {
+        if(STATE_CLIPBORD_CHAGED == IsClipboardChanged())
+        {
+            if(!this->isHidden())
+            {
+                qDebug() << "PopInDbUi";
+                if(InDb_Dialog->isHidden() &&
+                        (!ui_dialog->langtype_comboBox->currentText().isEmpty()))
+                {
+                    ui_dialog->content_textEdit_dia->clear();
+                    InDb_Dialog->show();
+                }
+            }
+        }
+    }
+
 }
 
 int autoCCode::getLimitNum()
