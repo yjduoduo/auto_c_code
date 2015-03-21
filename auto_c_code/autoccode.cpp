@@ -1932,14 +1932,19 @@ void autoCCode::PopInDbUi()
     {
         if(STATE_CLIPBORD_CHAGED == IsClipboardChanged())
         {
-            if(!this->isHidden())
+            if(!this->isHidden())//Ö÷´°¿ÚÏÔÊ¾
             {
-                qDebug() << "PopInDbUi";
+//                qDebug() << "PopInDbUi";
                 if(InDb_Dialog->isHidden() &&
                         (!ui_dialog->langtype_comboBox->currentText().isEmpty()))
                 {
-                    ui_dialog->content_textEdit_dia->clear();
-                    InDb_Dialog->show();
+                    if(!ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
+                    {
+                        ui_dialog->content_textEdit_dia->clear();
+                        InDb_Dialog->show();
+                    }else{
+                        InDb_Dialog->hide();
+                    }
                 }
             }
         }
