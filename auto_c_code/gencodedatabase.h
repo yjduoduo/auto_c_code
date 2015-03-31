@@ -19,6 +19,7 @@ enum LanguageType{
     languagetype_Php_,
     languagetype_Mysql_,
     languagetype_Sqlite3_,
+    languagetype_Postgresql_,
     languagetype_JavaScript_,
     languagetype_Debug_,
 

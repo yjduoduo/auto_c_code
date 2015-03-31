@@ -41,6 +41,7 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
                            {LANTY_JOIN(JavaScript_),"javascript_table",DB_NAME,CREATTABLE(javascript_table),},
                            {LANTY_JOIN(Debug_),"debug_table",DB_NAME,CREATTABLE(debug_table),},
                            {LANTY_JOIN(Sqlite3_),"sqlite3_table",DB_NAME,CREATTABLE(sqlite3_table),},
+                           {LANTY_JOIN(Postgresql_),"postgresql_table",DB_NAME,CREATTABLE(postgresql_table),},
 
                            //范围,存储哪方面的内容
                            {LANTY_JOIN(Aspect_),"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
@@ -336,6 +337,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Php_:
     case    languagetype_Mysql_:
     case    languagetype_Sqlite3_:
+    case    languagetype_Postgresql_:
     case    languagetype_JavaScript_:
     case    languagetype_Debug_:
 
@@ -444,6 +446,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Php_:
     case    languagetype_Mysql_:
     case    languagetype_Sqlite3_:
+    case    languagetype_Postgresql_:
     case    languagetype_JavaScript_:
     case    languagetype_Debug_:
 
@@ -479,6 +482,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     case    languagetype_Php_:
     case    languagetype_Mysql_:
     case    languagetype_Sqlite3_:
+    case    languagetype_Postgresql_:
     case    languagetype_JavaScript_:
     case    languagetype_Debug_:
 
@@ -520,6 +524,8 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "Mysql";
     case    languagetype_Sqlite3_:
         return "Sqlite3";
+    case    languagetype_Postgresql_:
+        return "Postgresql";
     case    languagetype_JavaScript_:
         return "JavaScript";
     case    languagetype_Debug_:

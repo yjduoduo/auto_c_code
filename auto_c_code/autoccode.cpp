@@ -525,6 +525,7 @@ void autoCCode::addstr_comboBox(void)
      <<str_china(JavaScript)
     <<str_china(Mysql)
     <<str_china(Oracle)
+    <<str_china(Postgresql)
     <<str_china(Sqlite3)
     <<str_china(shell)
     <<str_china(Php)
@@ -709,6 +710,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Sqlite3")
     {
         return languagetype_Sqlite3_;
+    }
+    else if(type == "Postgresql")
+    {
+        return languagetype_Postgresql_;
     }
     else if(type == "JavaScript")
     {
