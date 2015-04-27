@@ -1,13 +1,13 @@
 INPUT(
 ./release/main.o
 ./release/autoccode.o
-./release/sqlite3.o
 ./release/prefix_string.o
 ./release/gencodedatabase.o
 ./release/dialog_select_database.o
 ./release/qxtglobalshortcut_win.o
 ./release/qxtglobalshortcut.o
 ./release/autoindb.o
+./release/sqlite3.o
 ./release/moc_autoccode.o
 ./release/moc_dialog_select_database.o
 ./release/moc_qxtglobalshortcut.o

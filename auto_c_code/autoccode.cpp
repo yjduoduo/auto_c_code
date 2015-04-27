@@ -34,8 +34,6 @@ using namespace std;
 #endif
 
 
-
-
 autoCCode::autoCCode(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::autoCCode),
@@ -46,7 +44,6 @@ autoCCode::autoCCode(QWidget *parent) :
     index_key_color(0),
     index_note_color(0),
     flag_selectLeft(1),
-    codec(NULL),
     listWidget_codeview_row(0),
     CurrentIndex_comboBox_aspect(0),
     CurrentIndex_comboBox_vartype(0),

@@ -12,17 +12,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         autoccode.cpp \
-    sqlite-3080403/sqlite3.c \
     prefix_string.cpp \
     gencodedatabase.cpp \
     dialog_select_database.cpp \
     qxtglobalshortcut/qxtglobalshortcut_win.cpp \
     qxtglobalshortcut/qxtglobalshortcut.cpp \
-    autoindb.cpp
+    autoindb.cpp \
+    sqlite-autoconf-3080900/sqlite3.c
 
 HEADERS  += autoccode.h \
-    sqlite-3080403/sqlite3ext.h \
-    sqlite-3080403/sqlite3.h \
     prefix_string.h \
     version.h \
     gencodedatabase.h \
@@ -30,7 +28,9 @@ HEADERS  += autoccode.h \
     qxtglobalshortcut/qxtglobalshortcut_p.h \
     qxtglobalshortcut/qxtglobalshortcut.h \
     qxtglobalshortcut/qxtglobal.h \
-    autoindb.h
+    autoindb.h \
+    sqlite-autoconf-3080900/sqlite3ext.h \
+    sqlite-autoconf-3080900/sqlite3.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \

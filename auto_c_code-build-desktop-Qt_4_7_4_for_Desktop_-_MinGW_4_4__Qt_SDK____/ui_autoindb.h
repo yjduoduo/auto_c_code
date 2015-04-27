@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoindb.ui'
 **
-** Created: Sun Nov 30 00:31:09 2014
-**      by: Qt User Interface Compiler version 4.7.4
+** Created: Mon Apr 27 21:36:44 2015
+**      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
