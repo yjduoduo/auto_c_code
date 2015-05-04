@@ -540,6 +540,15 @@ void autoCCode::addstr_comboBox(void)
     //范畴
     addstr_aspect_comboBox();
 
+    //默认内容
+    ui_dialog->comboBox_vartype->setCurrentIndex(4);  //入库 变量类型
+    ui_dialog->langtype_comboBox->setCurrentIndex(1); //入库 选择语言，C，C++，Python etc.
+//    ui_dialog->comboBox_aspect->setCurrentIndex();  //入库 范畴 ，默认为linux
+//    if(ui_dialog->comboBox_aspect->currentText() == "linux")
+//    {
+
+//    }
+
 }
 
 autoCCode::~autoCCode()
