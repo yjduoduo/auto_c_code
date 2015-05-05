@@ -543,11 +543,11 @@ void autoCCode::addstr_comboBox(void)
     //默认内容
     ui_dialog->comboBox_vartype->setCurrentIndex(4);  //入库 变量类型
     ui_dialog->langtype_comboBox->setCurrentIndex(1); //入库 选择语言，C，C++，Python etc.
-//    ui_dialog->comboBox_aspect->setCurrentIndex();  //入库 范畴 ，默认为linux
-//    if(ui_dialog->comboBox_aspect->currentText() == "linux")
-//    {
+    //    ui_dialog->comboBox_aspect->setCurrentIndex();  //入库 范畴 ，默认为linux
+    //    if(ui_dialog->comboBox_aspect->currentText() == "linux")
+    //    {
 
-//    }
+    //    }
 
 }
 
@@ -1939,24 +1939,47 @@ quint8 autoCCode::IsClipboardChanged()
 
 void autoCCode::PopInDbUi()
 {
+    static uint8_t firstin = FLAG_YES;
     if(ui->checkBox_popupindb->isChecked())
     {
         if(STATE_CLIPBORD_CHAGED == IsClipboardChanged())
         {
-            if(!this->isHidden())//主窗口显示
+            if(!isMinimized())//主窗口最小化时不操作任何数据写入
             {
-//                qDebug() << "PopInDbUi";
+
+//                qDebug() << "isMinimized " <<this->isMinimized();
+                //                qDebug() << "visual " <<this->isVisible();
+                //                qDebug() << "main ui show!!";
+                //                qDebug() << "InDb_Dialog->isHidden() " <<InDb_Dialog->isHidden();
+                //                qDebug() << "ui_dialog->langtype_comboBox->currentText().isEmpty() " <<ui_dialog->langtype_comboBox->currentText().isEmpty();
                 if(InDb_Dialog->isHidden() &&
                         (!ui_dialog->langtype_comboBox->currentText().isEmpty()))
                 {
-                    if(!ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
-                    {
-                        ui_dialog->content_textEdit_dia->clear();
-                        InDb_Dialog->show();
-                    }else{
-                        InDb_Dialog->hide();
-                    }
+//                    if(FLAG_YES == firstin)//first time entry
+//                    {
+//                        if(ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
+//                        {
+//                            ui_dialog->content_textEdit_dia->clear();
+//                            InDb_Dialog->show();
+//                        }
+//                        firstin = FLAG_NO;
+//                    }
+//                    else
+//                    {
+                        if(!ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
+                        {
+                            ui_dialog->content_textEdit_dia->clear();
+                            InDb_Dialog->show();
+                        }else{
+                            InDb_Dialog->hide();
+                        }
+//                    }
+
                 }
+            }
+            else
+            {
+//                qDebug() << "main ui hide!!";
             }
         }
     }

@@ -41,6 +41,11 @@ public:
         STATE_CLIPBORD_NOCHAGED,
         STATE_CLIPBORD_UNKOWN
     };
+    enum{
+        FLAG_NO,
+        FLAG_YES,
+        FLAG_UNKNOWN
+    };
 
 protected://function declared
     void SetlistWidget_codeview_row(int row);
