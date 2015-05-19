@@ -9,6 +9,7 @@ enum LanguageType{
     languagetype_Err_,
     languagetype_C_ ,
     languagetype_Cpp_,
+    languagetype_Android_,
     languagetype_Erlang_,
     languagetype_Qt_,
     languagetype_Python_,

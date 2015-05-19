@@ -514,6 +514,7 @@ void autoCCode::addstr_comboBox(void)
 
     strlist.clear();
     strlist<<str_china()
+          <<str_china(Android)
           <<str_china(C)
          <<str_china(C++)
         <<str_china(Debug)
@@ -720,6 +721,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Postgresql")
     {
         return languagetype_Postgresql_;
+    }
+    else if(type == "Android")
+    {
+        return languagetype_Android_;
     }
     else if(type == "JavaScript")
     {
