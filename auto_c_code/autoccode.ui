@@ -147,6 +147,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkBox_ResWithColor">
+         <property name="text">
+          <string>颜色</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QRadioButton" name="radioButton_showall">
          <property name="text">
           <string>显示全部</string>

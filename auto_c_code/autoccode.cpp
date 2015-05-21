@@ -543,7 +543,7 @@ void autoCCode::addstr_comboBox(void)
 
     //默认内容
     ui_dialog->comboBox_vartype->setCurrentIndex(4);  //入库 变量类型
-    ui_dialog->langtype_comboBox->setCurrentIndex(1); //入库 选择语言，C，C++，Python etc.
+    ui_dialog->langtype_comboBox->setCurrentIndex(2); //入库 选择语言，C，C++，Python etc.
     //    ui_dialog->comboBox_aspect->setCurrentIndex();  //入库 范畴 ，默认为linux
     //    if(ui_dialog->comboBox_aspect->currentText() == "linux")
     //    {
@@ -940,6 +940,8 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     GenCode_str+=selectresult.content_list.at(index);
     GenCode_str+="\n";
     GenCode_str+="\n";
+
+    SearchTextResWithColor(GenCode_str);
     ui->genshow_textEdit->setText(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
@@ -966,6 +968,8 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
     GenCode_str+=selectresult.content_list.at(index);
     GenCode_str+="\n";
     GenCode_str+="\n";
+
+    SearchTextResWithColor(GenCode_str);
     ui->genshow_textEdit->setText(GenCode_str);
 
 }
@@ -1442,12 +1446,35 @@ int autoCCode::GetlistWidget_codeview_row(void)
     return listWidget_codeview_row;
 }
 
+void autoCCode::SearchTextResWithColor(QString &resStr)
+{
+    //颜色框是否选中
+    if(!ui->checkBox_ResWithColor->isChecked())
+    {
+        return;
+    }
+    QString searchText = ui->lineEdit_search->text();
+    if(searchText.isEmpty())
+    {
+        return;
+    }
+    QString searchTextWithColor = QString::fromLocal8Bit("<font color=red size=4>%1"
+                                                         "</font>").arg(searchText);
+    QString resStrWithHtml = QString::fromLocal8Bit("<html>%1</html>").arg(resStr);
+    if(resStrWithHtml.contains(searchText, Qt::CaseInsensitive)) //不管大小写
+    {
+        resStrWithHtml.replace(searchText, searchTextWithColor);
+        resStr = resStrWithHtml;
+    }
+}
+
 void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 {
     self_print(listWidget_note_with_enter);
     rightTextShowClear_oncheched();
     //    qDebug()<<"index:"<<modelindex.row();
     unsigned int index = GetlistWidget_codeview_row();
+
 
 
     GenCode_str+="/*  ";
@@ -1457,6 +1484,8 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
     GenCode_str+=selectresult.content_list.at(index);
     GenCode_str+="\n";
     GenCode_str+="\n";
+
+    SearchTextResWithColor(GenCode_str);
     ui->genshow_textEdit->setText(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();

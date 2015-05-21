@@ -54,6 +54,8 @@ protected://function declared
     int get_CurrentIndex_comboBox_vartype(const QString &vartype);
     int get_aspect_list_index(const QString &index_str);
 
+    void SearchTextResWithColor(QString &resStr);//带颜色的文本处理
+
 private slots:
     void on_save_btn_clicked();
 

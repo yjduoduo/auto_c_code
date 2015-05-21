@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Mon Apr 27 21:36:44 2015
+** Created: Thu May 21 23:05:05 2015
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -56,6 +56,7 @@ public:
     QCheckBox *checkBox_same;
     QCheckBox *checkBox_rightTextClean;
     QCheckBox *checkBox_popupindb;
+    QCheckBox *checkBox_ResWithColor;
     QRadioButton *radioButton_showall;
     QPushButton *rightclear_btn;
     QSpacerItem *verticalSpacer;
@@ -190,6 +191,12 @@ public:
 
         verticalLayout_3->addWidget(checkBox_popupindb);
 
+        checkBox_ResWithColor = new QCheckBox(autoCCode);
+        checkBox_ResWithColor->setObjectName(QString::fromUtf8("checkBox_ResWithColor"));
+        checkBox_ResWithColor->setChecked(true);
+
+        verticalLayout_3->addWidget(checkBox_ResWithColor);
+
         radioButton_showall = new QRadioButton(autoCCode);
         radioButton_showall->setObjectName(QString::fromUtf8("radioButton_showall"));
 
@@ -300,6 +307,7 @@ public:
         checkBox_popupindb->setToolTip(QApplication::translate("autoCCode", "\346\225\260\346\215\256\345\217\230\345\214\226\350\207\252\345\212\250\345\274\271\345\207\272\345\205\245\345\272\223\346\241\206", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         checkBox_popupindb->setText(QApplication::translate("autoCCode", "\350\207\252\345\212\250\345\274\271\346\241\206", 0, QApplication::UnicodeUTF8));
+        checkBox_ResWithColor->setText(QApplication::translate("autoCCode", "\351\242\234\350\211\262", 0, QApplication::UnicodeUTF8));
         radioButton_showall->setText(QApplication::translate("autoCCode", "\346\230\276\347\244\272\345\205\250\351\203\250", 0, QApplication::UnicodeUTF8));
         rightclear_btn->setText(QApplication::translate("autoCCode", "\345\217\263\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
         pushButton_getpaste->setText(QApplication::translate("autoCCode", "\347\262\230\344\270\212", 0, QApplication::UnicodeUTF8));
