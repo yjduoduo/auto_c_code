@@ -55,6 +55,8 @@ protected://function declared
     int get_aspect_list_index(const QString &index_str);
 
     void SearchTextResWithColor(QString &resStr);//带颜色的文本处理
+    void setCharColor(unsigned int pos);/*  QT:设置textedit文本框中某个字符的格式 */
+    void setStringColor(unsigned int pos,unsigned int len);/*  QT:设置textedit文本框中某个字符串的格式 */
 
 private slots:
     void on_save_btn_clicked();

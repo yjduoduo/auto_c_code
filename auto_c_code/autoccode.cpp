@@ -515,12 +515,12 @@ void autoCCode::addstr_comboBox(void)
     strlist.clear();
     strlist<<str_china()
           <<str_china(Android)
-          <<str_china(C)
-         <<str_china(C++)
-        <<str_china(Debug)
-       <<str_china(Erlang)
-      <<str_china(Jave)
-     <<str_china(JavaScript)
+         <<str_china(C)
+        <<str_china(C++)
+       <<str_china(Debug)
+      <<str_china(Erlang)
+     <<str_china(Jave)
+    <<str_china(JavaScript)
     <<str_china(Mysql)
     <<str_china(Oracle)
     <<str_china(Postgresql)
@@ -941,8 +941,9 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     GenCode_str+="\n";
     GenCode_str+="\n";
 
-    SearchTextResWithColor(GenCode_str);
+
     ui->genshow_textEdit->setText(GenCode_str);
+    SearchTextResWithColor(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
 }
@@ -969,9 +970,9 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
     GenCode_str+="\n";
     GenCode_str+="\n";
 
-    SearchTextResWithColor(GenCode_str);
-    ui->genshow_textEdit->setText(GenCode_str);
 
+    ui->genshow_textEdit->setText(GenCode_str);
+    SearchTextResWithColor(GenCode_str);
 }
 
 
@@ -1446,6 +1447,53 @@ int autoCCode::GetlistWidget_codeview_row(void)
     return listWidget_codeview_row;
 }
 
+/*  QT:设置textedit文本框中某个字符的格式 */
+void autoCCode::setCharColor(unsigned int pos)
+{
+    if(pos <= 0)return ;
+    QTextCursor cursor = ui->genshow_textEdit->textCursor();//ui->view1->textCursor();
+    cursor.movePosition( QTextCursor::StartOfLine );//行首
+    cursor.movePosition( QTextCursor::Right, QTextCursor::MoveAnchor, pos-1);//向右移动到Pos
+    cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
+    ui->genshow_textEdit->setTextCursor( cursor ); // added
+    QTextCharFormat defcharfmt = ui->genshow_textEdit->currentCharFormat();
+    QTextCharFormat newcharfmt = defcharfmt;
+    newcharfmt.setFontUnderline( true );
+    newcharfmt.setUnderlineColor( QColor( Qt::red ) );
+    newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
+    ui->genshow_textEdit->setCurrentCharFormat( newcharfmt );
+
+    cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
+    ui->genshow_textEdit->setTextCursor( cursor ); // added
+    // ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
+    ui->genshow_textEdit->setFocus();
+}
+
+/*  QT:设置textedit文本框中某个字符串的格式 */
+void autoCCode::setStringColor(unsigned int pos,unsigned int len)
+{
+    int i = 0;
+    if(pos <= 0)return ;
+    QTextCursor cursor = ui->genshow_textEdit->textCursor();//ui->view1->textCursor();
+    cursor.movePosition( QTextCursor::StartOfLine);//行首
+    cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos-1);//向右移动到Pos
+    for(i = 0;i < len;i++){
+        cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
+    }
+    ui->genshow_textEdit->setTextCursor( cursor ); // added
+    QTextCharFormat defcharfmt = ui->genshow_textEdit->currentCharFormat();
+    QTextCharFormat newcharfmt = defcharfmt;
+    newcharfmt.setFontUnderline( true );
+    newcharfmt.setUnderlineColor( QColor( Qt::red ) );
+    newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
+    ui->genshow_textEdit->setCurrentCharFormat( newcharfmt );
+
+    cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
+    ui->genshow_textEdit->setTextCursor( cursor ); // added
+    // ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
+    ui->genshow_textEdit->setFocus();
+}
+
 void autoCCode::SearchTextResWithColor(QString &resStr)
 {
     //颜色框是否选中
@@ -1458,21 +1506,58 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     {
         return;
     }
-    QString searchTextWithColor = QString::fromLocal8Bit("<font color=red size=4>%1"
-                                                         "</font>").arg(searchText);
-    QString resStrWithHtml = QString::fromLocal8Bit("<html>%1</html>").arg(resStr);
-    if(resStrWithHtml.contains(searchText, Qt::CaseInsensitive)) //不管大小写
+#if 1
+//    if(resStr.contains(searchText))
+//    {
+//        int pos = resStr.indexOf(searchText);
+//        qDebug() <<"pos:" << pos;
+//        setStringColor(pos + 1, searchText.length());
+//    }
+
+    //    QString str = "We must be <b>bold</b>, very <b>bold</b>";
+    int j = 0;
+    if(resStr.contains(searchText))
     {
-        resStrWithHtml.replace(searchText, searchTextWithColor);
-        resStr = resStrWithHtml;
+        while ((j = resStr.indexOf(searchText, j, Qt::CaseInsensitive)) != -1) {
+            qDebug() << "Found "+ searchText + " tag at index position" << j;
+            qDebug() << "searchText len: " <<  searchText.length();
+            setStringColor(j + 1, searchText.length());
+            ++j;
+        }
     }
+
+#else
+
+    QString str = "We must be <b>bold</b>, very <b>bold</b>";
+    int j = 0;
+
+    while ((j = str.indexOf("<b>", j)) != -1) {
+        qDebug() << "Found <b> tag at index position" << j;
+        ++j;
+    }
+#endif
+
+    return;
+
+    //    QString searchTextWithColor = "<font color=blue size=4>" + searchText +"</font>";
+    //    QString resStrWithHtml = QString::fromLocal8Bit("<html><body>%1</body></html>").arg(resStr);
+    //    //    QString resStrWithHtml = resStr;
+    //    if(resStrWithHtml.contains(searchText, Qt::CaseInsensitive)) //不管大小写
+    //    {
+    //        resStrWithHtml.replace(searchText, searchTextWithColor);
+    //        resStrWithHtml.replace("\r", "<p>");
+    //        int pos = resStrWithHtml.indexOf(searchText);
+    //        qDebug() <<"pos:" << pos;
+    //        setCharColor(pos);
+    //        resStr = resStrWithHtml;
+    //    }
 }
 
 void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 {
     self_print(listWidget_note_with_enter);
     rightTextShowClear_oncheched();
-    //    qDebug()<<"index:"<<modelindex.row();
+    qDebug()<<"index:"<<modelindex.row();
     unsigned int index = GetlistWidget_codeview_row();
 
 
@@ -1485,8 +1570,10 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
     GenCode_str+="\n";
     GenCode_str+="\n";
 
-    SearchTextResWithColor(GenCode_str);
     ui->genshow_textEdit->setText(GenCode_str);
+    SearchTextResWithColor(GenCode_str);
+    //    setCharColor(10);
+    //    ui->genshow_textEdit->setHtml(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
 
@@ -1981,7 +2068,7 @@ void autoCCode::PopInDbUi()
             if(!isMinimized())//主窗口最小化时不操作任何数据写入
             {
 
-//                qDebug() << "isMinimized " <<this->isMinimized();
+                //                qDebug() << "isMinimized " <<this->isMinimized();
                 //                qDebug() << "visual " <<this->isVisible();
                 //                qDebug() << "main ui show!!";
                 //                qDebug() << "InDb_Dialog->isHidden() " <<InDb_Dialog->isHidden();
@@ -1989,31 +2076,31 @@ void autoCCode::PopInDbUi()
                 if(InDb_Dialog->isHidden() &&
                         (!ui_dialog->langtype_comboBox->currentText().isEmpty()))
                 {
-//                    if(FLAG_YES == firstin)//first time entry
-//                    {
-//                        if(ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
-//                        {
-//                            ui_dialog->content_textEdit_dia->clear();
-//                            InDb_Dialog->show();
-//                        }
-//                        firstin = FLAG_NO;
-//                    }
-//                    else
-//                    {
-                        if(!ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
-                        {
-                            ui_dialog->content_textEdit_dia->clear();
-                            InDb_Dialog->show();
-                        }else{
-                            InDb_Dialog->hide();
-                        }
-//                    }
+                    //                    if(FLAG_YES == firstin)//first time entry
+                    //                    {
+                    //                        if(ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
+                    //                        {
+                    //                            ui_dialog->content_textEdit_dia->clear();
+                    //                            InDb_Dialog->show();
+                    //                        }
+                    //                        firstin = FLAG_NO;
+                    //                    }
+                    //                    else
+                    //                    {
+                    if(!ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
+                    {
+                        ui_dialog->content_textEdit_dia->clear();
+                        InDb_Dialog->show();
+                    }else{
+                        InDb_Dialog->hide();
+                    }
+                    //                    }
 
                 }
             }
             else
             {
-//                qDebug() << "main ui hide!!";
+                //                qDebug() << "main ui hide!!";
             }
         }
     }
