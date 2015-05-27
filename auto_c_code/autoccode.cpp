@@ -847,10 +847,6 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     insertcontent.vartype   = vartype;
     insertcontent.aspect    = aspect;
 
-
-    b.creatable(&insertcontent);
-    b.inserttable(&insertcontent);
-
 #ifndef DEBUG_V
 
     if(ui_dialog->checkBox_EOR->isChecked())
@@ -869,6 +865,10 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     //对话框不关闭
     ui_dialog->content_textEdit_dia->clear();
 #endif
+
+    b.creatable(&insertcontent);
+    b.inserttable(&insertcontent);
+
 
     //内容添加后，更新控件中内容的相关显示
     update_show_after_insert();
@@ -1515,6 +1515,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
 //    }
 
     //    QString str = "We must be <b>bold</b>, very <b>bold</b>";
+    qDebug() <<"defaultCursorMoveStyle" << ui->genshow_textEdit->document()->defaultCursorMoveStyle();
     int j = 0;
     if(resStr.contains(searchText))
     {
