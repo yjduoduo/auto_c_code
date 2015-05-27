@@ -15,6 +15,8 @@
 #include <QMessageBox>
 #include <iostream>
 #include <QString>
+#include <QTime>
+#include <QElapsedTimer>
 
 #include "qxtglobalshortcut/qxtglobalshortcut.h"   //add shortcut
 
@@ -32,6 +34,8 @@ using namespace std;
 #else
 #define str_china(A)     codec->toUnicode(#A)
 #endif
+
+#define UNUSEDVAR(A) (void)A;
 
 
 autoCCode::autoCCode(QWidget *parent) :
@@ -52,8 +56,7 @@ autoCCode::autoCCode(QWidget *parent) :
     timer_checkbox_sel(NULL),
     lineEdit_search_timer(NULL),
     checkbox_getcliptext_timer(NULL),
-    checkbox_AutoGetCon_timer(NULL),
-    textline_total(0)
+    checkbox_AutoGetCon_timer(NULL)
 
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
@@ -342,6 +345,7 @@ void autoCCode::setDesktop_center(QDialog *dialog)
     QDesktopWidget *desk=QApplication::desktop();
     int wd=desk->width();
     int ht=desk->height();
+    UNUSEDVAR(wd);
     dialog->move(0,(ht-height()/2)/2);
 }
 
@@ -494,6 +498,7 @@ void autoCCode::addstr_aspect_comboBox(void)
 
     //
     aspect_list_mem = selectresult.aspect_list;
+    //    update();
 
 }
 
@@ -857,6 +862,7 @@ void autoCCode::ok_btn_dia_clicked_self(void)
         //对话框不关闭
         ui_dialog->content_textEdit_dia->clear();
     }else{
+        InDb_Dialog->update();
         InDb_Dialog->close();
     }
 
@@ -946,6 +952,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     SearchTextResWithColor(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
+    //    update();
 }
 //添加到右边的内容中
 void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
@@ -973,6 +980,7 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
 
     ui->genshow_textEdit->setText(GenCode_str);
     SearchTextResWithColor(GenCode_str);
+    //    update();
 }
 
 
@@ -980,6 +988,7 @@ void autoCCode::rightClear_textedit(void)
 {
     GenCode_str.clear();
     ui->genshow_textEdit->clear();
+    //    update();
 }
 void autoCCode::clr_selectresult(SelectResult &result)
 {
@@ -1002,16 +1011,19 @@ void autoCCode::clear_listWidget_beforecall(void)
 {
     ui->listWidget_codeview->clear();
     ui->listWidget_note->clear();
+    //    update();
 }
 void autoCCode::listWidget_scrollToBottom(void)
 {
     ui->listWidget_codeview->scrollToBottom();
     ui->listWidget_note->scrollToBottom();
+    //    update();
 }
 void autoCCode::listWidget_scrollToTop(void)
 {
     ui->listWidget_codeview->scrollToTop();
     ui->listWidget_note->scrollToTop();
+    //    update();
 }
 void autoCCode::select_db_by_vartype(QString &select_express)
 {
@@ -1034,6 +1046,7 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     ui->listWidget_note->addItems(selectresult.note_list);
 
     listWidget_scrollToTop();
+    //    update();
 }
 
 void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
@@ -1150,6 +1163,7 @@ void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
 
     ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
     flag_selectLeft = 0 ;
+    //    update();
 }
 //note滚动点击
 void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
@@ -1179,6 +1193,7 @@ void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
 
     flag_selectLeft = 1 ;
     str_print( flag_selectLeft );
+    //    update();
 }
 
 void autoCCode::update_show_after_insert(void)
@@ -1414,23 +1429,68 @@ void autoCCode::SearchEnter()
 
 void autoCCode::listWidget_note_with_currentRowChanged(int row)
 {
-    self_print(listWidget_note_with_currentRowChanged);
-    //    qDebug()<<"row:"<<row<<endl;
-    SetlistWidget_codeview_row(row);
-    //change color
-    unsigned int index = GetlistWidget_codeview_row();
-    if(selectresult.content_list.size() == 0)
-        return;
-    judge_color_index();
+    //    qt计算耗时
+    static QElapsedTimer elapseTimer;
+    static quint8 IsTimerStarted = FALSE;
+    static qint64 time_begin = 0; //返回从上次start()或restart()开始以来的时间差，单位ms
+    static qint64 time_end   = 0; //返回从上次start()或restart()开始以来的时间差，单位ms;
 
-    ui->listWidget_note->setCurrentRow(index);
-    ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
-    ui->listWidget_note->item(index)->setBackgroundColor(Qt::green);
-    index_key_color = index; //
-    str_print(index_key_color);
+    if(!IsTimerStarted)
+    {
+        elapseTimer.start();
+        IsTimerStarted = TRUE;
+    }
 
-    ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
-    flag_selectLeft = 0 ;
+    //开始记录时间
+    time_begin = elapseTimer.elapsed();
+    qint64 time_interval = (time_end > time_begin)?(time_end - time_begin):(time_begin - time_end);
+//    qDebug() << "time_begin :" << time_begin;
+//    qDebug() << "time_end   :" << time_end;
+    qDebug() << "time diff:" << time_interval;
+    if(time_interval > 100)
+    {
+//        qDebug() << "time_begin :" << time_begin;
+
+
+        self_print(listWidget_note_with_currentRowChanged);
+        //    qDebug()<<"row:"<<row<<endl;
+        SetlistWidget_codeview_row(row);
+        //change color
+        unsigned int index = GetlistWidget_codeview_row();
+        if(selectresult.content_list.size() == 0)
+            return;
+        judge_color_index();
+
+        ui->listWidget_note->setCurrentRow(index);
+        ui->listWidget_note->item(index_key_color)->setBackgroundColor(Qt::white);
+        ui->listWidget_note->item(index)->setBackgroundColor(Qt::green);
+        index_key_color = index; //
+        str_print(index_key_color);
+
+        ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
+        flag_selectLeft = 0 ;
+
+        GenCode_str+="/*  ";
+        GenCode_str+=selectresult.note_list.at(index);
+        GenCode_str+="   */";
+        GenCode_str+="\n";
+        GenCode_str+=selectresult.content_list.at(index);
+        GenCode_str+="\n";
+        GenCode_str+="\n";
+
+        ui->genshow_textEdit->setText(GenCode_str);
+        SearchTextResWithColor(GenCode_str);
+        //    setCharColor(10);
+        //    ui->genshow_textEdit->setHtml(GenCode_str);
+        ui->genshow_textEdit->moveCursor(QTextCursor::End);
+        ui->listWidget_codeview->setFocus();
+    }
+    /* 记录结束时间 */
+    if(elapseTimer.isValid())
+    {
+        time_end = elapseTimer.elapsed(); //返回从上次start()或restart()开始以来的时间差，单位ms;
+//        qDebug() << "time_end   :" << time_end;
+    }
 
 }
 
@@ -1472,8 +1532,8 @@ void autoCCode::setCharColor(unsigned int pos)
 /*  QT:设置textedit文本框中某个字符串的格式 */
 void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 {
-    int i = 0;
-    if(pos <= 0)return ;
+    unsigned int i = 0;
+
     QTextCursor cursor = ui->genshow_textEdit->textCursor();//ui->view1->textCursor();
     cursor.movePosition( QTextCursor::StartOfLine);//行首
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos-1);//向右移动到Pos
@@ -1507,15 +1567,15 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
         return;
     }
 #if 1
-//    if(resStr.contains(searchText))
-//    {
-//        int pos = resStr.indexOf(searchText);
-//        qDebug() <<"pos:" << pos;
-//        setStringColor(pos + 1, searchText.length());
-//    }
+    //    if(resStr.contains(searchText))
+    //    {
+    //        int pos = resStr.indexOf(searchText);
+    //        qDebug() <<"pos:" << pos;
+    //        setStringColor(pos + 1, searchText.length());
+    //    }
 
     //    QString str = "We must be <b>bold</b>, very <b>bold</b>";
-    qDebug() <<"defaultCursorMoveStyle" << ui->genshow_textEdit->document()->defaultCursorMoveStyle();
+    //    qDebug() <<"defaultCursorMoveStyle" << ui->genshow_textEdit->document()->defaultCursorMoveStyle();
     int j = 0;
     if(resStr.contains(searchText))
     {
@@ -1662,7 +1722,7 @@ int autoCCode::get_aspect_list_index(const QString &index_str)
         ++iterator;
         index++;
     }
-
+    return 0;
 }
 
 void autoCCode::rightTextShowClear_oncheched()
@@ -1801,6 +1861,7 @@ void autoCCode::get_autoindb_textedit_cursor_postion()
         //        str_print(text_tmp);
         int stringlistsize = textlist_indb_content.count();
         str_print(stringlistsize);
+        UNUSEDVAR(stringlistsize);
         ProgressBarSetValue(0);
         linenumber_old = linenumber;
     }
@@ -2062,6 +2123,7 @@ quint8 autoCCode::IsClipboardChanged()
 void autoCCode::PopInDbUi()
 {
     static uint8_t firstin = FLAG_YES;
+    UNUSEDVAR(firstin);
     if(ui->checkBox_popupindb->isChecked())
     {
         if(STATE_CLIPBORD_CHAGED == IsClipboardChanged())

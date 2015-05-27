@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Thu May 21 23:05:05 2015
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Wed May 27 22:59:50 2015
+**      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
