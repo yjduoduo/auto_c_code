@@ -1470,6 +1470,7 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
         ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
         flag_selectLeft = 0 ;
 
+        GenCode_str.clear();
         GenCode_str+="/*  ";
         GenCode_str+=selectresult.note_list.at(index);
         GenCode_str+="   */";
@@ -1482,8 +1483,8 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
         SearchTextResWithColor(GenCode_str);
         //    setCharColor(10);
         //    ui->genshow_textEdit->setHtml(GenCode_str);
-        ui->genshow_textEdit->moveCursor(QTextCursor::End);
-        ui->listWidget_codeview->setFocus();
+//        ui->genshow_textEdit->moveCursor(QTextCursor::End);
+//        ui->listWidget_codeview->setFocus();
     }
     /* 记录结束时间 */
     if(elapseTimer.isValid())
@@ -1550,7 +1551,7 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 
     cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
     ui->genshow_textEdit->setTextCursor( cursor ); // added
-    // ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
+    ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
     ui->genshow_textEdit->setFocus();
 }
 
@@ -1559,8 +1560,12 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //颜色框是否选中
     if(!ui->checkBox_ResWithColor->isChecked())
     {
+        //背景白色，前景黑色
+        ui->genshow_textEdit->setStyleSheet("background-color: rgb(255, 255, 255);color: rgb(0, 0, 0);");
         return;
     }
+    //背景浅绿色，前景黑色
+    ui->genshow_textEdit->setStyleSheet("background-color: rgb(60, 243, 243);color: rgb(0, 0, 0);");
     QString searchText = ui->lineEdit_search->text();
     if(searchText.isEmpty())
     {
@@ -1579,7 +1584,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     int j = 0;
     if(resStr.contains(searchText))
     {
-        while ((j = resStr.indexOf(searchText, j, Qt::CaseInsensitive)) != -1) {
+        while ((j = resStr.indexOf(searchText.toLatin1(), j, Qt::CaseInsensitive)) != -1) {
             qDebug() << "Found "+ searchText + " tag at index position" << j;
             qDebug() << "searchText len: " <<  searchText.length();
             setStringColor(j + 1, searchText.length());
