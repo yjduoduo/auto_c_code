@@ -162,7 +162,7 @@ void autoCCode::QTimerSet(void)
 
 
     timer_datachangedpopui = new QTimer(this);
-    timer_datachangedpopui->start(500);
+    timer_datachangedpopui->start(300);
     QObject::connect(timer_datachangedpopui,SIGNAL(timeout()),this,SLOT(PopInDbUi()));
 
 }
@@ -2135,27 +2135,10 @@ void autoCCode::PopInDbUi()
         if(STATE_CLIPBORD_CHAGED == IsClipboardChanged())
         {
             if(!isMinimized())//主窗口最小化时不操作任何数据写入
-            {
-
-                //                qDebug() << "isMinimized " <<this->isMinimized();
-                //                qDebug() << "visual " <<this->isVisible();
-                //                qDebug() << "main ui show!!";
-                //                qDebug() << "InDb_Dialog->isHidden() " <<InDb_Dialog->isHidden();
-                //                qDebug() << "ui_dialog->langtype_comboBox->currentText().isEmpty() " <<ui_dialog->langtype_comboBox->currentText().isEmpty();
-                if(InDb_Dialog->isHidden() &&
+            {//窗口显示后，如果剪切板内容有变化，则进行窗口显示
+                if(InDb_Dialog->isHidden() && //窗口为隐藏状态，则弹出
                         (!ui_dialog->langtype_comboBox->currentText().isEmpty()))
                 {
-                    //                    if(FLAG_YES == firstin)//first time entry
-                    //                    {
-                    //                        if(ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
-                    //                        {
-                    //                            ui_dialog->content_textEdit_dia->clear();
-                    //                            InDb_Dialog->show();
-                    //                        }
-                    //                        firstin = FLAG_NO;
-                    //                    }
-                    //                    else
-                    //                    {
                     if(!ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
                     {
                         ui_dialog->content_textEdit_dia->clear();
@@ -2165,15 +2148,25 @@ void autoCCode::PopInDbUi()
                     }
                     //                    }
 
+                }else{//窗口为显示状态
+                    if(ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
+                    {//如果其内容为空，则隐藏
+                       InDb_Dialog->hide();
+                    }
                 }
             }
             else
             {
+                InDb_Dialog->hide();
                 //                qDebug() << "main ui hide!!";
             }
         }
     }
-
+    else
+    {
+        InDb_Dialog->hide();
+        //                qDebug() << "main ui hide!!";
+    }
 }
 
 int autoCCode::getLimitNum()
