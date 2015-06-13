@@ -209,6 +209,7 @@ void autoCCode::dragDropSet(void)
 {
     //允许拖放的文字添加到编辑框中
     ui->codeshow_textEdit->setAcceptDrops(true);
+//    ui->codeshow_textEdit->setHidden(true);
 }
 
 
@@ -1537,7 +1538,7 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 
     QTextCursor cursor = ui->genshow_textEdit->textCursor();//ui->view1->textCursor();
     cursor.movePosition( QTextCursor::StartOfLine);//行首
-    cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos-1);//向右移动到Pos
+    cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos >=1? (pos-1):0);//向右移动到Pos
     for(i = 0;i < len;i++){
         cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
     }
@@ -1560,12 +1561,12 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //颜色框是否选中
     if(!ui->checkBox_ResWithColor->isChecked())
     {
-        //背景白色，前景黑色
-        ui->genshow_textEdit->setStyleSheet("background-color: rgb(255, 255, 255);color: rgb(0, 0, 0);");
+//        //背景白色，前景黑色
+//        ui->genshow_textEdit->setStyleSheet("background-color: rgb(255, 255, 255);color: rgb(0, 0, 0);");
         return;
     }
-    //背景浅绿色，前景黑色
-    ui->genshow_textEdit->setStyleSheet("background-color: rgb(60, 243, 243);color: rgb(0, 0, 0);");
+//    //背景浅绿色，前景黑色
+//    ui->genshow_textEdit->setStyleSheet("background-color: rgb(60, 243, 243);color: rgb(0, 0, 0);");
     QString searchText = ui->lineEdit_search->text();
     if(searchText.isEmpty())
     {
