@@ -1535,7 +1535,6 @@ void autoCCode::setCharColor(unsigned int pos)
 void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 {
     unsigned int i = 0;
-
     QTextCursor cursor = ui->genshow_textEdit->textCursor();//ui->view1->textCursor();
     cursor.movePosition( QTextCursor::StartOfLine);//行首
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos >=1? (pos-1):0);//向右移动到Pos
@@ -1543,11 +1542,27 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
         cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
     }
     ui->genshow_textEdit->setTextCursor( cursor ); // added
+
     QTextCharFormat defcharfmt = ui->genshow_textEdit->currentCharFormat();
     QTextCharFormat newcharfmt = defcharfmt;
-    newcharfmt.setFontUnderline( true );
-    newcharfmt.setUnderlineColor( QColor( Qt::red ) );
-    newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
+
+
+    if(len >0)
+    {
+
+        newcharfmt.setFontUnderline( true );
+        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
+        newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
+    }
+    else
+    {
+
+        newcharfmt.setFontUnderline( false );
+//        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
+//        newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
+    }
+
+
     ui->genshow_textEdit->setCurrentCharFormat( newcharfmt );
 
     cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
@@ -1563,6 +1578,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     {
 //        //背景白色，前景黑色
 //        ui->genshow_textEdit->setStyleSheet("background-color: rgb(255, 255, 255);color: rgb(0, 0, 0);");
+        setStringColor(0, 0);
         return;
     }
 //    //背景浅绿色，前景黑色
@@ -1585,9 +1601,10 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     int j = 0;
     if(resStr.contains(searchText))
     {
+        qDebug() << "-->>>> ";
+        qDebug() << "searchText len: " <<  searchText.length();
         while ((j = resStr.indexOf(searchText.toLatin1(), j, Qt::CaseInsensitive)) != -1) {
-            qDebug() << "Found "+ searchText + " tag at index position" << j;
-            qDebug() << "searchText len: " <<  searchText.length();
+            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
             setStringColor(j + 1, searchText.length());
             ++j;
         }
