@@ -75,7 +75,7 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="QListWidget" name="listWidget_codeview">
+          <widget class="QListWidget" name="listWidget_note">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -83,7 +83,7 @@
             <bool>false</bool>
            </property>
           </widget>
-          <widget class="QListWidget" name="listWidget_note"/>
+          <widget class="QListWidget" name="listWidget_codeview"/>
          </widget>
          <widget class="QTextEdit" name="codeshow_textEdit">
           <property name="sizePolicy">

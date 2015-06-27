@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Sat Jun 13 21:54:31 2015
+** Created: Tue Jun 30 21:34:01 2015
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -47,8 +47,8 @@ public:
     QPushButton *choseCodeDB_btn;
     QSplitter *splitter_2;
     QSplitter *splitter;
-    QListWidget *listWidget_codeview;
     QListWidget *listWidget_note;
+    QListWidget *listWidget_codeview;
     QTextEdit *codeshow_textEdit;
     QVBoxLayout *verticalLayout_3;
     QPushButton *indb_btn;
@@ -137,14 +137,14 @@ public:
         splitter = new QSplitter(splitter_2);
         splitter->setObjectName(QString::fromUtf8("splitter"));
         splitter->setOrientation(Qt::Horizontal);
-        listWidget_codeview = new QListWidget(splitter);
-        listWidget_codeview->setObjectName(QString::fromUtf8("listWidget_codeview"));
-        listWidget_codeview->setStyleSheet(QString::fromUtf8(""));
-        listWidget_codeview->setWordWrap(false);
-        splitter->addWidget(listWidget_codeview);
         listWidget_note = new QListWidget(splitter);
         listWidget_note->setObjectName(QString::fromUtf8("listWidget_note"));
+        listWidget_note->setStyleSheet(QString::fromUtf8(""));
+        listWidget_note->setWordWrap(false);
         splitter->addWidget(listWidget_note);
+        listWidget_codeview = new QListWidget(splitter);
+        listWidget_codeview->setObjectName(QString::fromUtf8("listWidget_codeview"));
+        splitter->addWidget(listWidget_codeview);
         splitter_2->addWidget(splitter);
         codeshow_textEdit = new QTextEdit(splitter_2);
         codeshow_textEdit->setObjectName(QString::fromUtf8("codeshow_textEdit"));
