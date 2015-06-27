@@ -18,7 +18,7 @@ SOURCES += main.cpp\
     qxtglobalshortcut/qxtglobalshortcut_win.cpp \
     qxtglobalshortcut/qxtglobalshortcut.cpp \
     autoindb.cpp \
-    sqlite-autoconf-3080900/sqlite3.c
+    sqlite-autoconf/sqlite3.c
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -29,8 +29,8 @@ HEADERS  += autoccode.h \
     qxtglobalshortcut/qxtglobalshortcut.h \
     qxtglobalshortcut/qxtglobal.h \
     autoindb.h \
-    sqlite-autoconf-3080900/sqlite3ext.h \
-    sqlite-autoconf-3080900/sqlite3.h
+    sqlite-autoconf/sqlite3ext.h \
+    sqlite-autoconf/sqlite3.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
@@ -39,7 +39,7 @@ FORMS    += autoccode.ui \
 
 
 INCLUDEPATH +=\
-./sqlite-autoconf-3080900
+./sqlite-autoconf
 
 RC_FILE = autoapp.rc
 
