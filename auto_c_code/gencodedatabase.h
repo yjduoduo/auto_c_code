@@ -21,6 +21,7 @@ enum LanguageType{
     languagetype_Mysql_,
     languagetype_Sqlite3_,
     languagetype_Postgresql_,
+    languagetype_Rust_,
     languagetype_JavaScript_,
     languagetype_Debug_,
 
