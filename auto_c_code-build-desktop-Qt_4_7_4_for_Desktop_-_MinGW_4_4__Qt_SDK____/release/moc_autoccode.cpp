@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'autoccode.h'
 **
-** Created: Thu Jul 2 00:34:02 2015
+** Created: Thu Jul 9 22:30:46 2015
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_autoCCode[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      59,   14, // methods
+      60,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -86,10 +86,11 @@ static const uint qt_meta_data_autoCCode[] = {
     1557, 1515,   10,   10, 0x08,
     1584,   10,   10,   10, 0x08,
     1626,   10, 1622,   10, 0x08,
-    1640,   10,   10,   10, 0x08,
-    1659,   10, 1652,   10, 0x08,
-    1680,   10,   10,   10, 0x0a,
-    1706,   10,   10,   10, 0x0a,
+    1640,   10, 1622,   10, 0x08,
+    1669,   10,   10,   10, 0x08,
+    1688,   10, 1681,   10, 0x08,
+    1709,   10,   10,   10, 0x0a,
+    1735,   10,   10,   10, 0x0a,
 
        0        // eod
 };
@@ -138,8 +139,9 @@ static const char qt_meta_stringdata_autoCCode[] = {
     "isCheckBox_cliptext_checked(bool)\0"
     "ui_dialog_AutoGetCon(bool)\0"
     "pasteClicpTextToAutoGetCon_UiDialog()\0"
-    "int\0getLimitNum()\0PopInDbUi()\0quint8\0"
-    "IsClipboardChanged()\0ok_btn_dia_clicked_self()\0"
+    "int\0getLimitNum()\0showcode_textEdit_AtBotton()\0"
+    "PopInDbUi()\0quint8\0IsClipboardChanged()\0"
+    "ok_btn_dia_clicked_self()\0"
     "cancel_btn_dia_clicked_self()\0"
 };
 
@@ -230,14 +232,16 @@ int autoCCode::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 53: pasteClicpTextToAutoGetCon_UiDialog(); break;
         case 54: { int _r = getLimitNum();
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
-        case 55: PopInDbUi(); break;
-        case 56: { quint8 _r = IsClipboardChanged();
+        case 55: { int _r = showcode_textEdit_AtBotton();
+            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
+        case 56: PopInDbUi(); break;
+        case 57: { quint8 _r = IsClipboardChanged();
             if (_a[0]) *reinterpret_cast< quint8*>(_a[0]) = _r; }  break;
-        case 57: ok_btn_dia_clicked_self(); break;
-        case 58: cancel_btn_dia_clicked_self(); break;
+        case 58: ok_btn_dia_clicked_self(); break;
+        case 59: cancel_btn_dia_clicked_self(); break;
         default: ;
         }
-        _id -= 59;
+        _id -= 60;
     }
     return _id;
 }

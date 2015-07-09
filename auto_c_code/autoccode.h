@@ -202,6 +202,8 @@ private slots:
     void pasteClicpTextToAutoGetCon_UiDialog();
 
     int getLimitNum();//获取limit数据查询限制的大小
+
+    int showcode_textEdit_AtBotton();//是否显示界面左侧的内容了
     void PopInDbUi();//弹出入库对话框
     quint8 IsClipboardChanged();//判断剪切板内容改变否
 public slots:

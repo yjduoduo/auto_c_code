@@ -460,8 +460,10 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);
-
-    ui->codeshow_textEdit->setText(selectresult.contentstr);
+    if(showcode_textEdit_AtBotton())
+    {
+        ui->codeshow_textEdit->setText(selectresult.contentstr);
+    }
     clear_listWidget_beforecall();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
@@ -624,7 +626,10 @@ void autoCCode::on_gencode_btn_clicked(void)
     //    QString text_file = file.readAll();
     QString text_china = QString::fromLocal8Bit(file.readAll().data());
 
-    ui->codeshow_textEdit->setText(text_china);
+    if(showcode_textEdit_AtBotton())
+    {
+        ui->codeshow_textEdit->setText(text_china);
+    }
 
     //    QTextStream out(&file);
     //    out << "Thomas M. Disch: " << 334 << endl;
@@ -1044,8 +1049,10 @@ void autoCCode::select_db_by_vartype(QString &select_express)
                      ASPECT_NONE);
 
 
-
-    ui->codeshow_textEdit->setText(selectresult.contentstr);
+    if(showcode_textEdit_AtBotton())
+    {
+        ui->codeshow_textEdit->setText(selectresult.contentstr);
+    }
 
     clear_listWidget_beforecall();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
@@ -1235,7 +1242,7 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
     {
         /*  标准对话框——警示消息框   */
         QMessageBox::warning(NULL,"Warning",
-                             str_china(请选择左侧进行删除),
+                             str_china(请选择右侧进行删除),
                              QMessageBox::Yes,QMessageBox::Yes);
         //        /*  标准对话框——警示消息框   */
         //        QMessageBox::warning(NULL,"Warning",
@@ -1311,8 +1318,10 @@ void autoCCode::SearchText(const QString &searchStr)
     b.searchdatabase(sets->databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      searchStr.toLower());
-
-    ui->codeshow_textEdit->setText(selectresult.contentstr);
+    if(showcode_textEdit_AtBotton())
+    {
+        ui->codeshow_textEdit->setText(selectresult.contentstr);
+    }
 
     clear_listWidget_beforecall();
     if(0 == selectresult.keyword_list.length()){
@@ -1356,8 +1365,10 @@ void autoCCode::add_column_lowercase_keywords_content(void)
     b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);
-
-    ui->codeshow_textEdit->setText(selectresult.contentstr);
+    if(showcode_textEdit_AtBotton())
+    {
+        ui->codeshow_textEdit->setText(selectresult.contentstr);
+    }
 
     clear_listWidget_beforecall();
     ui->listWidget_codeview->addItems(selectresult.keyword_list);
@@ -1540,6 +1551,12 @@ void autoCCode::setCharColor(unsigned int pos)
 void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 {
     unsigned int i = 0;
+
+    if((0 == len)||(0 == pos))
+    {
+        return;
+    }
+
     QTextCursor cursor = ui->genshow_textEdit->textCursor();//ui->view1->textCursor();
     cursor.movePosition( QTextCursor::StartOfLine);//行首
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos >=1? (pos-1):0);//向右移动到Pos
@@ -1573,7 +1590,7 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
     ui->genshow_textEdit->setTextCursor( cursor ); // added
     ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
-    ui->genshow_textEdit->setFocus();
+    //    ui->genshow_textEdit->setFocus();
 }
 
 void autoCCode::SearchTextResWithColor(QString &resStr)
@@ -2152,6 +2169,14 @@ void autoCCode::PopInDbUi()
 {
     static uint8_t firstin = FLAG_YES;
     UNUSEDVAR(firstin);
+
+	//如果选中连续输入，则下面不处理
+    if(ui->checkBox_inbox->isChecked())
+    {
+        return;
+    }
+
+
     if(ui->checkBox_popupindb->isChecked())
     {
         if(STATE_CLIPBORD_CHAGED == IsClipboardChanged())
@@ -2194,4 +2219,15 @@ void autoCCode::PopInDbUi()
 int autoCCode::getLimitNum()
 {
     return ui_autoindb->spinBox_notenumber->text().toInt()?ui_autoindb->spinBox_notenumber->text().toInt():10;
+}
+//是否显示界面左侧的内容了
+int autoCCode::showcode_textEdit_AtBotton()
+{
+    //codeshow_textEdit
+    if(ui->radioButton_showall->isChecked())
+    {
+        return TRUE;
+    }
+    //如果自动入库下面的里的数字为1，则显示，否则不显示
+    return (ui_autoindb->spinBox_notenumber->text().toInt() == 1);
 }
