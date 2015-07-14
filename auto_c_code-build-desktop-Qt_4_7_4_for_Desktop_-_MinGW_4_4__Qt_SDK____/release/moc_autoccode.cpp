@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'autoccode.h'
 **
-** Created: Thu Jul 9 22:30:46 2015
+** Created: Wed Jul 15 00:12:44 2015
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!

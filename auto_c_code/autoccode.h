@@ -47,6 +47,7 @@ public:
         FLAG_UNKNOWN
     };
 
+    virtual bool eventFilter ( QObject * watched, QEvent *event );
 protected://function declared
     void SetlistWidget_codeview_row(int row);
     int GetlistWidget_codeview_row(void);
@@ -222,6 +223,8 @@ private:
 
     void shortCutSet(void);
     void ProgressBarSet(void);
+    //在创建了过滤器之后，下面要做的是安装这个过滤器。安装过滤器需要调用installEventFilter()函数。
+    void InstallEventFilterSets(void);
     void ProgressBarSetValue(int value);
     void QTimerSet(void);
     void hide_inBtn(void);

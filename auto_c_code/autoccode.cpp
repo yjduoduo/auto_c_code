@@ -82,6 +82,7 @@ autoCCode::autoCCode(QWidget *parent) :
     keyPressEventSet();
     shortCutSet();
     ProgressBarSet();
+    InstallEventFilterSets();
 
 }
 void autoCCode::shortCutSet(void)
@@ -130,6 +131,14 @@ void autoCCode::ProgressBarSet(void)
         ui_autoindb->progressBar->setValue(0);
 
 }
+//在创建了过滤器之后，下面要做的是安装这个过滤器。安装过滤器需要调用installEventFilter()函数。
+void autoCCode::InstallEventFilterSets(void)
+{
+    ui->lineEdit_search->installEventFilter(this);
+
+
+}
+
 void autoCCode::ProgressBarSetValue(int value)
 {
     self_print(ProgressBarSetValue);
@@ -1500,14 +1509,14 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
         SearchTextResWithColor(GenCode_str);
         //    setCharColor(10);
         //    ui->genshow_textEdit->setHtml(GenCode_str);
-//        ui->genshow_textEdit->moveCursor(QTextCursor::End);
-//        ui->listWidget_codeview->setFocus();
+        //        ui->genshow_textEdit->moveCursor(QTextCursor::End);
+        //        ui->listWidget_codeview->setFocus();
     }
     /* 记录结束时间 */
     if(elapseTimer.isValid())
     {
         time_end = elapseTimer.elapsed(); //返回从上次start()或restart()开始以来的时间差，单位ms;
-//        qDebug() << "time_end   :" << time_end;
+        //        qDebug() << "time_end   :" << time_end;
     }
 
 }
@@ -1580,8 +1589,8 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     {
 
         newcharfmt.setFontUnderline( false );
-//        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
-//        newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
+        //        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
+        //        newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
     }
 
 
@@ -1598,13 +1607,13 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //颜色框是否选中
     if(!ui->checkBox_ResWithColor->isChecked())
     {
-//        //背景白色，前景黑色
-//        ui->genshow_textEdit->setStyleSheet("background-color: rgb(255, 255, 255);color: rgb(0, 0, 0);");
+        //        //背景白色，前景黑色
+        //        ui->genshow_textEdit->setStyleSheet("background-color: rgb(255, 255, 255);color: rgb(0, 0, 0);");
         setStringColor(0, 0);
         return;
     }
-//    //背景浅绿色，前景黑色
-//    ui->genshow_textEdit->setStyleSheet("background-color: rgb(60, 243, 243);color: rgb(0, 0, 0);");
+    //    //背景浅绿色，前景黑色
+    //    ui->genshow_textEdit->setStyleSheet("background-color: rgb(60, 243, 243);color: rgb(0, 0, 0);");
     QString searchText = ui->lineEdit_search->text();
     if(searchText.isEmpty())
     {
@@ -1626,7 +1635,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
         qDebug() << "-->>>> ";
         qDebug() << "searchText len: " <<  searchText.length();
         while ((j = resStr.indexOf(searchText.toLatin1(), j, Qt::CaseInsensitive)) != -1) {
-            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
+            //            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
             setStringColor(j + 1, searchText.length());
             ++j;
         }
@@ -1663,7 +1672,7 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 {
     self_print(listWidget_note_with_enter);
     rightTextShowClear_oncheched();
-    qDebug()<<"index:"<<modelindex.row();
+    //    qDebug()<<"index:"<<modelindex.row();
     unsigned int index = GetlistWidget_codeview_row();
 
 
@@ -2170,7 +2179,7 @@ void autoCCode::PopInDbUi()
     static uint8_t firstin = FLAG_YES;
     UNUSEDVAR(firstin);
 
-	//如果选中连续输入，则下面不处理
+    //如果选中连续输入，则下面不处理
     if(ui->checkBox_inbox->isChecked())
     {
         return;
@@ -2198,7 +2207,7 @@ void autoCCode::PopInDbUi()
                 }else{//窗口为显示状态
                     if(ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
                     {//如果其内容为空，则隐藏
-                       InDb_Dialog->hide();
+                        InDb_Dialog->hide();
                     }
                 }
             }
@@ -2230,4 +2239,23 @@ int autoCCode::showcode_textEdit_AtBotton()
     }
     //如果自动入库下面的里的数字为1，则显示，否则不显示
     return (ui_autoindb->spinBox_notenumber->text().toInt() == 1);
+}
+
+
+bool autoCCode::eventFilter(QObject *obj, QEvent *event)
+{
+//    qDebug() << "eventFilter";
+    if (obj == ui->lineEdit_search) {
+        if (event->type() == QEvent::MouseButtonDblClick) {
+////            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+//            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+//            if (mouseEvent->KeyPress == ) {
+////                focusNextChild();
+//                return true;
+//            }
+            qDebug()<<"double clicked!!";
+            return true;
+        }
+    }
+    return QObject::eventFilter(obj, event);
 }
