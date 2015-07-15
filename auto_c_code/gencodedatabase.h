@@ -26,6 +26,7 @@ enum LanguageType{
     languagetype_Debug_,
 
     languagetype_Aspect_,
+    languagetype_LookTextHis_,
 };
 
 typedef struct
@@ -60,6 +61,13 @@ typedef struct
     QStringList aspect_field;//自定义区域
 }SelectResult;
 
+//查找文本信息数据查询结果 数据库查找入参
+typedef struct
+{
+    int looktimes;//关键字出现次数
+    QStringList looktextarry;
+}LookTextHistoryResult;
+
 enum aspect{
     ASPECT_HAVE,
     ASPECT_NONE
@@ -86,6 +94,10 @@ public:
                        char *selecttableexpress,
                        SelectResult &selectres,
                        const QString &searchtext);
+    int searchdatabase_lookTextHisTbl(const char *databases_name,
+                                        char *selecttableexpress,
+                                        LookTextHistoryResult &selectres,
+                                        const QString &searchtext);
     QString getLanguageStr(LanguageType type);
 protected:
     codestructSets* get_table_sets_bytype(LanguageType type);

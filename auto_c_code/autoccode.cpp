@@ -1041,6 +1041,12 @@ void autoCCode::clr_selectresult(SelectResult &result)
 
 
 }
+void autoCCode::clr_looktexthisresult(LookTextHistoryResult &result)
+{
+    result.looktextarry.clear();
+    result.looktimes = 0;
+}
+
 void autoCCode::clear_listWidget_beforecall(void)
 {
     ui->listWidget_codeview->clear();
@@ -1327,6 +1333,66 @@ void autoCCode::SearchText(const QString &searchStr)
     judge_color_index();
     str_print(selectresult.content_list.size());
 
+    clr_selectresult(selectresult);
+
+    //保存查找关键字 begin
+    codestructSets *setsLookHis = get_table_sets_bytype(languagetype_LookTextHis_);
+    if(!setsLookHis)
+        return;
+
+    LookTextHistoryResult looktexthistoryres;
+    clr_looktexthisresult(looktexthistoryres);
+
+    QString looktexthis_express;
+    looktexthis_express.clear();
+    looktexthis_express = QString("select * from %1 order by ID desc")
+            .arg(setsLookHis->talbename);
+
+    b.searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
+                     looktexthistoryres,
+                     searchStr);
+
+    if(0 == looktexthistoryres.looktimes)
+    {//插入一条数据
+        //qDebug() << "insert looktimes:" << looktexthistoryres.looktimes;
+        looktexthis_express.clear();
+        looktexthis_express = QString("insert into %1([looktextname],[lowercase_looktextname] ,[looktimes])  VALUES('%2','%3','%4')")
+                .arg(TBL_LOOKTEXTHIS)
+                .arg(searchStr)
+                .arg(searchStr.toLower())
+                .arg(looktexthistoryres.looktimes+1);
+
+//        //qDebug() << "databasename:" << setsLookHis->databasename;
+//        //qDebug() << "express:" << setsLookHis->creat_table_express;
+
+        b.opendatabase(setsLookHis->databasename,setsLookHis->creat_table_express);
+        b.insertdatabase(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data());
+    }
+    else
+    {//更新数据
+        //qDebug() << "else branch";
+        //qDebug() << "insert looktimes:" << looktexthistoryres.looktimes;
+
+        looktexthis_express = QString("update %1 set looktimes=%2 where looktextname='%3'")
+                .arg(setsLookHis->talbename)
+                .arg(looktexthistoryres.looktimes+1)
+                .arg(searchStr);
+
+        //qDebug() << "databasename:" << setsLookHis->databasename;
+        //qDebug() << "express:" << setsLookHis->creat_table_express;
+
+        b.opendatabase(setsLookHis->databasename,setsLookHis->creat_table_express);
+        b.insertdatabase(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data());
+    }
+
+
+    qDebug() << "looktimes:" << looktexthistoryres.looktimes;
+
+    //保存查找关键字 end
+
+
+
+    //查找并插入数据
     QString select_express;
     select_express.clear();
     select_express = QString("select lowercase_keyworks,keywords,content,lantype,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc")
@@ -2261,28 +2327,28 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     //    qDebug() << "eventFilter";
     if (obj == ui->lineEdit_search) {
         if (event->type() == QEvent::MouseButtonDblClick) {
-            qDebug()<<"double clicked!!";
+            //qDebug()<<"double clicked!!";
             on_lineEdit_search_MouseButtonDblClick();
             return true;
         }
         else if(event->type() == QEvent::KeyPress)
         {
-            qDebug()<<"KeyPress ed!!";
+            //qDebug()<<"KeyPress ed!!";
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
             int key = keyEvent->key();
             if (Qt::Key_Down == key) {
-                qDebug()<<"Key_Down !!";
+                //qDebug()<<"Key_Down !!";
             } else if (Qt::Key_Up == key) {
-                qDebug()<<"Key_Up !!";
+                //qDebug()<<"Key_Up !!";
 
             } else if (Qt::Key_Escape == key) {
-                qDebug()<<"Key_Escape !!";
+                //qDebug()<<"Key_Escape !!";
                 on_lineEdit_search_Key_Escape();
 
             } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
-                qDebug()<<"Key_Enter   Key_Return!!";
+                //qDebug()<<"Key_Enter   Key_Return!!";
             } else {
-                qDebug()<<"else Key !!";
+                //qDebug()<<"else Key !!";
 
             }
 
@@ -2305,14 +2371,38 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
     listView->setMaximumWidth(setWidth);
 
     int lineeditH = ui->lineEdit_search->height();
-    QPoint p(ui->lineEdit_search->mapToGlobal(QPoint(0,0+lineeditH)));
+    QPoint p(ui->lineEdit_search->mapToGlobal(QPoint(0,0+lineeditH)));//弹出列表listView的位置
 
-    // 如果完整的完成列表中的某个单词包含输入的文本，则加入要显示的完成列表串中
-    QStringList sl;
-    sl<<"abcd"
-     <<"egefg";
 
-    model->setStringList(sl);
+
+    #if 1//从数据库表looktexthis_table中查找前10个最常用的数据 begin
+    //保存查找关键字 begin
+    codestructSets *setsLookHis = get_table_sets_bytype(languagetype_LookTextHis_);
+    if(!setsLookHis)
+        return;
+    LookTextHistoryResult looktexthistoryres;
+    clr_looktexthisresult(looktexthistoryres);
+
+    QString looktexthis_express;
+    looktexthis_express.clear();
+    looktexthis_express = QString("select * from %1 order by looktimes desc limit 10")
+            .arg(setsLookHis->talbename);
+
+    b.searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
+                     looktexthistoryres,
+                                    "");//searchStr置空，表示所有全查询
+
+    qDebug() << "count:"<< looktexthistoryres.looktextarry.count();
+    for(int i=0;i< looktexthistoryres.looktextarry.count();i++)
+    {
+        qDebug() << "arry:"<< looktexthistoryres.looktextarry.at(i);
+    }
+
+
+    #endif //从数据库表looktexthis_table中查找前10个最常用的数据 begin
+
+
+    model->setStringList(looktexthistoryres.looktextarry);
     listView->setModel(model);
     if (model->rowCount() == 0)
     {

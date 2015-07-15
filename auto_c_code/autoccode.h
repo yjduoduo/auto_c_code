@@ -250,6 +250,8 @@ private:
 
     void clr_selectresult(SelectResult &result);
 
+    void clr_looktexthisresult(LookTextHistoryResult &result);
+
     void update_show_after_insert(void);
 
     void lineTextEditSet(void);

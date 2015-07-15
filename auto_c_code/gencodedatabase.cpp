@@ -23,6 +23,16 @@
     "[aspect_field] varchar(100),"\
     "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
 
+#define CREATTABLE_LOOKTEXTHIS(A) "CREATE TABLE  "#A \
+    "([ID] INTEGER PRIMARY KEY,"\
+    "[looktextname] varchar(100),"\
+    "[lowercase_looktextname] varchar(100)," \
+    "[looktimes] INTEGER,"\
+    "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
+
+
+//lowercase_keyworks,keywords
+
 #define JOIN(A,B) A##B
 #define LANTY_JOIN(A) JOIN(languagetype_,A)
 
@@ -47,6 +57,8 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
 
                            //范围,存储哪方面的内容
                            {LANTY_JOIN(Aspect_),"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
+                           //查找文本历史
+                           {LANTY_JOIN(LookTextHis_),"looktexthis_table",DB_NAME,CREATTABLE_LOOKTEXTHIS(looktexthis_table),},
                           };
 #endif
 
@@ -314,7 +326,110 @@ int GenCodeDatabase::searchdatabase(const char *databases_name,
     return(0);
 }
 
+//#define CREATTABLE_LOOKTEXTHIS(A) "CREATE TABLE  "#A \
+//    "([ID] INTEGER PRIMARY KEY,"\
+//    "[looktextname] varchar(100),"\
+//    "[lowercase_looktextname] varchar(100)" \
+//    "[looktimes] INTEGER,"\
+//    "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
+//looktextname,looktimes 查找顺序
+int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
+                                    char *selecttableexpress,
+                                    LookTextHistoryResult &selectres,
+                                    const QString &searchtext)
+{
+    sqlite3 * db = 0;
+    int result;
+    char * pErrMsg = 0;
+    int ret = 0;
+    int nRow=0, nColumn;
+    char **dbResult; //是 char ** 类型，两个*号
+    int index;
+    // 连接数据库
+    ret = sqlite3_open(databases_name, &db);
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
+        return(1);
+    }
+    //    str_print(databases_name);
+    //    printf("connect database success!\n");
 
+
+    //    fprintf(stdout,"express:%s\n",selecttableexpress);
+    result = sqlite3_get_table( db, selecttableexpress, &dbResult, &nRow, &nColumn, &pErrMsg );
+    if( SQLITE_OK == result )
+    {
+        //查询成功
+
+        index = nColumn; //前面说过 dbResult 前面第一行数据是字段名称，从 nColumn 索引开始才是真正的数据
+        int searchflag = 0;
+        //        printf( "查到%d条记录\n", nRow );
+        for(  int i = 0; i < nRow ; i++ )
+
+        {
+            //           printf( "第 %d 条记录\n", i+1 );
+            for( int j = 0 ; j < nColumn; j++ )
+            {//查询顺序表
+                /*     "([ID] INTEGER PRIMARY KEY,"\
+                        "[looktextname] varchar(100),"\
+                        "[lowercase_looktextname] varchar(100)" \
+                        "[looktimes] INTEGER,"\
+                        "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));" */
+                if(0==j){
+                    if(searchtext.isEmpty())
+                    {
+                        searchflag = 1;
+                    }
+                }else if(1==j){ //looktextname
+                    if(searchtext.isEmpty())
+                    {
+                        searchflag = 1;
+                        selectres.looktextarry << QString::fromUtf8(dbResult [index]);
+                    }
+                    else if(QString::fromUtf8(dbResult [index]).contains(searchtext)){
+                        searchflag = 1;
+                        selectres.looktextarry << QString::fromUtf8(dbResult [index]);
+                    }
+
+                }
+                else if(2==j){ // lowercase_looktextname
+//                    if(searchflag){
+//                        selectres.looktimes = atoi(dbResult [index]);
+//                        //                        printf( " look result:%s-------\n", dbResult [index]);
+//                        //                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+
+//                    }
+                }//looktimes
+                else if(3==j){ // lowercase_looktextname
+                    if(searchflag){
+                        selectres.looktimes = atoi(dbResult [index]);
+                        //                        printf( " look result:%s-------\n", dbResult [index]);
+                        //                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+
+                    }
+                }
+
+
+                if(nColumn-1 == j)
+                    searchflag = 0;
+
+                //                selectres.existflag = 1;
+
+                printf( " look result:%d:%s-------\n",j, dbResult [index]);
+                ++index;
+            }
+                        printf( "-------\n" );
+        }
+
+    }
+
+    sqlite3_free_table(dbResult);
+    //关闭数据库，释放内存
+    sqlite3_close(db);
+
+
+    return(0);
+}
 
 void GenCodeDatabase::creatable(InsertCon *cont)
 {
@@ -334,6 +449,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Jave_:
     case    languagetype_Shell_:
     case    languagetype_Aspect_:
+    case    languagetype_LookTextHis_:
     case    languagetype_Oracle_:
     case    languagetype_Qtquick_:
     case    languagetype_Php_:
@@ -445,6 +561,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Jave_:
     case    languagetype_Shell_:
     case    languagetype_Aspect_:
+    case    languagetype_LookTextHis_:
     case    languagetype_Oracle_:
     case    languagetype_Qtquick_:
     case    languagetype_Php_:
@@ -483,6 +600,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     case    languagetype_Jave_:
     case    languagetype_Shell_:
     case    languagetype_Aspect_:
+    case    languagetype_LookTextHis_:
     case    languagetype_Oracle_:
     case    languagetype_Qtquick_:
     case    languagetype_Php_:
