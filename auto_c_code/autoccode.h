@@ -6,6 +6,7 @@
 #include "prefix_string.h"
 #include <QDialog>
 #include <QListWidgetItem>
+#include <QListView>
 #include "gencodedatabase.h"
 
 namespace Ui {
@@ -47,7 +48,7 @@ public:
         FLAG_UNKNOWN
     };
 
-    virtual bool eventFilter ( QObject * watched, QEvent *event );
+
 protected://function declared
     void SetlistWidget_codeview_row(int row);
     int GetlistWidget_codeview_row(void);
@@ -58,6 +59,8 @@ protected://function declared
     void SearchTextResWithColor(QString &resStr);//带颜色的文本处理
     void setCharColor(unsigned int pos);/*  QT:设置textedit文本框中某个字符的格式 */
     void setStringColor(unsigned int pos,unsigned int len);/*  QT:设置textedit文本框中某个字符串的格式 */
+    //安装事件过滤器
+    virtual bool eventFilter ( QObject * watched, QEvent *event );
 
 private slots:
     void on_save_btn_clicked();
@@ -207,6 +210,9 @@ private slots:
     int showcode_textEdit_AtBotton();//是否显示界面左侧的内容了
     void PopInDbUi();//弹出入库对话框
     quint8 IsClipboardChanged();//判断剪切板内容改变否
+
+    void on_lineEdit_search_MouseButtonDblClick();
+    void on_lineEdit_search_Key_Escape();
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -225,6 +231,7 @@ private:
     void ProgressBarSet(void);
     //在创建了过滤器之后，下面要做的是安装这个过滤器。安装过滤器需要调用installEventFilter()函数。
     void InstallEventFilterSets(void);
+    void ListViewSets();
     void ProgressBarSetValue(int value);
     void QTimerSet(void);
     void hide_inBtn(void);
@@ -314,6 +321,9 @@ private://QString
     QTimer *checkbox_getcliptext_timer;
     QTimer *checkbox_AutoGetCon_timer;
     QTimer *timer_datachangedpopui;//数据发生变化，弹出入库框
+
+    QListView *listView; // lineEdit Search Text显示列表
+    QStringListModel *model; // 完成列表的model
 public:
 
     QTextCodec *codec;

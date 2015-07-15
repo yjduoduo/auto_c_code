@@ -83,6 +83,7 @@ autoCCode::autoCCode(QWidget *parent) :
     shortCutSet();
     ProgressBarSet();
     InstallEventFilterSets();
+    ListViewSets();
 
 }
 void autoCCode::shortCutSet(void)
@@ -136,6 +137,19 @@ void autoCCode::InstallEventFilterSets(void)
 {
     ui->lineEdit_search->installEventFilter(this);
 
+    ui->listWidget_codeview->installEventFilter(this);
+    ui->listWidget_note->installEventFilter(this);
+
+
+}
+
+void autoCCode::ListViewSets()
+{
+    listView = new QListView(this);
+    model = new QStringListModel(this);
+    listView->setWindowFlags(Qt::ToolTip);
+    //    connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(setCompleter(const QString &)));
+    //    connect(listView, SIGNAL(clicked(QModelIndex)), this, SLOT(completeText(const QModelIndex &)));
 
 }
 
@@ -218,7 +232,7 @@ void autoCCode::dragDropSet(void)
 {
     //允许拖放的文字添加到编辑框中
     ui->codeshow_textEdit->setAcceptDrops(true);
-//    ui->codeshow_textEdit->setHidden(true);
+    //    ui->codeshow_textEdit->setHidden(true);
 }
 
 
@@ -1470,12 +1484,12 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
     //开始记录时间
     time_begin = elapseTimer.elapsed();
     qint64 time_interval = (time_end > time_begin)?(time_end - time_begin):(time_begin - time_end);
-//    qDebug() << "time_begin :" << time_begin;
-//    qDebug() << "time_end   :" << time_end;
+    //    qDebug() << "time_begin :" << time_begin;
+    //    qDebug() << "time_end   :" << time_end;
     qDebug() << "time diff:" << time_interval;
     if(time_interval > 100)
     {
-//        qDebug() << "time_begin :" << time_begin;
+        //        qDebug() << "time_begin :" << time_begin;
 
 
         self_print(listWidget_note_with_currentRowChanged);
@@ -2244,18 +2258,74 @@ int autoCCode::showcode_textEdit_AtBotton()
 
 bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 {
-//    qDebug() << "eventFilter";
+    //    qDebug() << "eventFilter";
     if (obj == ui->lineEdit_search) {
         if (event->type() == QEvent::MouseButtonDblClick) {
-////            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-//            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-//            if (mouseEvent->KeyPress == ) {
-////                focusNextChild();
-//                return true;
-//            }
             qDebug()<<"double clicked!!";
+            on_lineEdit_search_MouseButtonDblClick();
             return true;
         }
+        else if(event->type() == QEvent::KeyPress)
+        {
+            qDebug()<<"KeyPress ed!!";
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            int key = keyEvent->key();
+            if (Qt::Key_Down == key) {
+                qDebug()<<"Key_Down !!";
+            } else if (Qt::Key_Up == key) {
+                qDebug()<<"Key_Up !!";
+
+            } else if (Qt::Key_Escape == key) {
+                qDebug()<<"Key_Escape !!";
+                on_lineEdit_search_Key_Escape();
+
+            } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
+                qDebug()<<"Key_Enter   Key_Return!!";
+            } else {
+                qDebug()<<"else Key !!";
+
+            }
+
+        }
+
+    }
+    else
+    {
+        on_lineEdit_search_Key_Escape();
     }
     return QObject::eventFilter(obj, event);
 }
+
+void autoCCode::on_lineEdit_search_MouseButtonDblClick()
+{
+    qDebug() << "on_lineEdit_search_MouseButtonDblClick";
+
+    int setWidth = 150;
+    listView->setMinimumWidth(setWidth);
+    listView->setMaximumWidth(setWidth);
+
+    int lineeditH = ui->lineEdit_search->height();
+    QPoint p(ui->lineEdit_search->mapToGlobal(QPoint(0,0+lineeditH)));
+
+    // 如果完整的完成列表中的某个单词包含输入的文本，则加入要显示的完成列表串中
+    QStringList sl;
+    sl<<"abcd"
+     <<"egefg";
+
+    model->setStringList(sl);
+    listView->setModel(model);
+    if (model->rowCount() == 0)
+    {
+        return;
+    }
+
+    listView->move(p);
+    listView->show();
+}
+
+void autoCCode::on_lineEdit_search_Key_Escape()
+{
+    if(listView->isVisible())
+        listView->hide();
+}
+

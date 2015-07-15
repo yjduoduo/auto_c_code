@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'autoccode.h'
 **
-** Created: Wed Jul 15 00:12:44 2015
+** Created: Wed Jul 15 21:50:12 2015
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_autoCCode[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      60,   14, // methods
+      62,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -89,8 +89,10 @@ static const uint qt_meta_data_autoCCode[] = {
     1640,   10, 1622,   10, 0x08,
     1669,   10,   10,   10, 0x08,
     1688,   10, 1681,   10, 0x08,
-    1709,   10,   10,   10, 0x0a,
-    1735,   10,   10,   10, 0x0a,
+    1709,   10,   10,   10, 0x08,
+    1750,   10,   10,   10, 0x08,
+    1782,   10,   10,   10, 0x0a,
+    1808,   10,   10,   10, 0x0a,
 
        0        // eod
 };
@@ -141,6 +143,8 @@ static const char qt_meta_stringdata_autoCCode[] = {
     "pasteClicpTextToAutoGetCon_UiDialog()\0"
     "int\0getLimitNum()\0showcode_textEdit_AtBotton()\0"
     "PopInDbUi()\0quint8\0IsClipboardChanged()\0"
+    "on_lineEdit_search_MouseButtonDblClick()\0"
+    "on_lineEdit_search_Key_Escape()\0"
     "ok_btn_dia_clicked_self()\0"
     "cancel_btn_dia_clicked_self()\0"
 };
@@ -237,11 +241,13 @@ int autoCCode::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 56: PopInDbUi(); break;
         case 57: { quint8 _r = IsClipboardChanged();
             if (_a[0]) *reinterpret_cast< quint8*>(_a[0]) = _r; }  break;
-        case 58: ok_btn_dia_clicked_self(); break;
-        case 59: cancel_btn_dia_clicked_self(); break;
+        case 58: on_lineEdit_search_MouseButtonDblClick(); break;
+        case 59: on_lineEdit_search_Key_Escape(); break;
+        case 60: ok_btn_dia_clicked_self(); break;
+        case 61: cancel_btn_dia_clicked_self(); break;
         default: ;
         }
-        _id -= 60;
+        _id -= 62;
     }
     return _id;
 }
