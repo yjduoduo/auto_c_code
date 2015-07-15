@@ -1357,7 +1357,7 @@ void autoCCode::SearchText(const QString &searchStr)
         //qDebug() << "insert looktimes:" << looktexthistoryres.looktimes;
         looktexthis_express.clear();
         looktexthis_express = QString("insert into %1([looktextname],[lowercase_looktextname] ,[looktimes])  VALUES('%2','%3','%4')")
-                .arg(TBL_LOOKTEXTHIS)
+                .arg(setsLookHis->talbename)
                 .arg(searchStr)
                 .arg(searchStr.toLower())
                 .arg(looktexthistoryres.looktimes+1);
