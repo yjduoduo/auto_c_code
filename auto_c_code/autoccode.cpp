@@ -2461,9 +2461,9 @@ void autoCCode::completeText(QModelIndex index)
     //    qDebug() << index.data().string();
     qDebug() << index.data().toString();
 
-
-
-
+    QString lookText = index.data().toString();
+    ui->lineEdit_search->clear();
+    ui->lineEdit_search->setText(lookText);
 
     //完成后关闭显示view
     listView->hide();
