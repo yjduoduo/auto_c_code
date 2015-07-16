@@ -582,6 +582,11 @@ void autoCCode::addstr_comboBox(void)
 
     //    }
 
+    //解决当前数据库选择或者插入时存在的不一致问题。
+    connect(ui_dialog->langtype_comboBox,SIGNAL(currentIndexChanged(int)),
+            ui_dia_selectdb->comboBox_selectdb,SLOT(setCurrentIndex(int)));
+    connect(ui_dia_selectdb->comboBox_selectdb,SIGNAL(currentIndexChanged(int)),
+            ui_dialog->langtype_comboBox,SLOT(setCurrentIndex(int)));
 }
 
 autoCCode::~autoCCode()
@@ -1825,6 +1830,7 @@ void autoCCode::modify_content()
     ui_dialog->comboBox_vartype->setCurrentIndex(get_CurrentIndex_comboBox_vartype(selectresult.vartype_list.at(index_key_color)));
 
     ui_dialog->langtype_comboBox->setCurrentIndex(CurrentIndex_comboBox_langtype);
+//    ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(CurrentIndex_comboBox_langtype);
 
 
     InDb_Dialog->show();
