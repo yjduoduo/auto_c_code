@@ -1360,11 +1360,12 @@ void autoCCode::SearchText(const QString &searchStr)
     {//插入一条数据
         //qDebug() << "insert looktimes:" << looktexthistoryres.looktimes;
         looktexthis_express.clear();
-        looktexthis_express = QString("insert into %1([looktextname],[lowercase_looktextname] ,[looktimes])  VALUES('%2','%3','%4')")
+        looktexthis_express = QString("insert into %1([looktextname],[lowercase_looktextname] ,[looktimes], [relatedtblname])  VALUES('%2','%3','%4','%5')")
                 .arg(setsLookHis->talbename)
                 .arg(searchStr)
                 .arg(searchStr.toLower())
-                .arg(looktexthistoryres.looktimes+1);
+                .arg(looktexthistoryres.looktimes+1)
+                .arg(sets->talbename);
 
         //        //qDebug() << "databasename:" << setsLookHis->databasename;
         //        //qDebug() << "express:" << setsLookHis->creat_table_express;
@@ -2421,8 +2422,9 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 
     QString looktexthis_express;
     looktexthis_express.clear();
-    looktexthis_express = QString("select * from %1 order by looktimes desc limit 10")
-            .arg(setsLookHis->talbename);
+    looktexthis_express = QString("select * from %1 where relatedtblname='%2'  order by looktimes desc limit 10")
+            .arg(setsLookHis->talbename)
+            .arg(sets->talbename);
 
     b.searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
                                     looktexthistoryres,
