@@ -51,7 +51,7 @@ autoCCode::autoCCode(QWidget *parent) :
     listWidget_codeview_row(0),
     CurrentIndex_comboBox_aspect(0),
     CurrentIndex_comboBox_vartype(0),
-    CurrentIndex_comboBox_langtype(0),
+    CurrentIndex_comboBox_langtype(languagetype_Err_),
     timer(NULL),
     timer_checkbox_sel(NULL),
     lineEdit_search_timer(NULL),
@@ -150,7 +150,7 @@ void autoCCode::ListViewSets()
     listView->setWindowFlags(Qt::ToolTip);
     //    connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(setCompleter(const QString &)));
     //    connect(listView, SIGNAL(clicked(QModelIndex)), this, SLOT(completeText(const QModelIndex &)));
-
+    QObject::connect(listView,SIGNAL(clicked(QModelIndex)),this,SLOT(completeText(QModelIndex)));
 }
 
 void autoCCode::ProgressBarSetValue(int value)
@@ -1324,8 +1324,12 @@ void autoCCode::SearchText(const QString &searchStr)
     self_print(SearchText);
     str_print(searchStr);
 
-    if(!sets)
+    //添加，当前是否有选中库，如果没有则直接返回，可当作一个函数接口。
+    if(!currentDbHaved())
+    {
         return;
+    }
+
     if(searchStr.isEmpty()){
         update_show_after_insert();
         return;
@@ -1349,8 +1353,8 @@ void autoCCode::SearchText(const QString &searchStr)
             .arg(setsLookHis->talbename);
 
     b.searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
-                     looktexthistoryres,
-                     searchStr);
+                                    looktexthistoryres,
+                                    searchStr);
 
     if(0 == looktexthistoryres.looktimes)
     {//插入一条数据
@@ -1362,8 +1366,8 @@ void autoCCode::SearchText(const QString &searchStr)
                 .arg(searchStr.toLower())
                 .arg(looktexthistoryres.looktimes+1);
 
-//        //qDebug() << "databasename:" << setsLookHis->databasename;
-//        //qDebug() << "express:" << setsLookHis->creat_table_express;
+        //        //qDebug() << "databasename:" << setsLookHis->databasename;
+        //        //qDebug() << "express:" << setsLookHis->creat_table_express;
 
         b.opendatabase(setsLookHis->databasename,setsLookHis->creat_table_express);
         b.insertdatabase(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data());
@@ -2326,12 +2330,35 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 {
     //    qDebug() << "eventFilter";
     if (obj == ui->lineEdit_search) {
+
+        //双击出现listView界面
         if (event->type() == QEvent::MouseButtonDblClick) {
             //qDebug()<<"double clicked!!";
-            on_lineEdit_search_MouseButtonDblClick();
+            if(listView->isHidden())
+            {
+                on_lineEdit_search_MouseButtonDblClick();
+            }
+            else
+            {
+            }
             return true;
         }
-        else if(event->type() == QEvent::KeyPress)
+        //单击隐藏listView界面
+        if (event->type() == QEvent::MouseButtonPress) {
+//            qDebug()<<" clicked!!";
+
+            if(listView->isHidden())
+            {
+
+            }
+            else
+            {
+                qDebug()<<"lose focus,so  hidden!!";
+                on_lineEdit_search_Key_Escape();
+            }
+            return true;
+        }
+        if(event->type() == QEvent::KeyPress)
         {
             //qDebug()<<"KeyPress ed!!";
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
@@ -2353,11 +2380,12 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
             }
 
         }
-
     }
     else
     {
-        on_lineEdit_search_Key_Escape();
+        //        qDebug()<<"else hidden!!";
+        //        on_lineEdit_search_Key_Escape();
+
     }
     return QObject::eventFilter(obj, event);
 }
@@ -2365,6 +2393,14 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 {
     qDebug() << "on_lineEdit_search_MouseButtonDblClick";
+
+
+    //添加，当前是否有选中库，如果没有则直接返回，可当作一个函数接口。
+    if(!currentDbHaved())
+    {
+        return;
+    }
+
 
     int setWidth = 150;
     listView->setMinimumWidth(setWidth);
@@ -2375,7 +2411,7 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 
 
 
-    #if 1//从数据库表looktexthis_table中查找前10个最常用的数据 begin
+#if 1//从数据库表looktexthis_table中查找前10个最常用的数据 begin
     //保存查找关键字 begin
     codestructSets *setsLookHis = get_table_sets_bytype(languagetype_LookTextHis_);
     if(!setsLookHis)
@@ -2389,7 +2425,7 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
             .arg(setsLookHis->talbename);
 
     b.searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
-                     looktexthistoryres,
+                                    looktexthistoryres,
                                     "");//searchStr置空，表示所有全查询
 
     qDebug() << "count:"<< looktexthistoryres.looktextarry.count();
@@ -2397,9 +2433,9 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
     {
         qDebug() << "arry:"<< looktexthistoryres.looktextarry.at(i);
     }
+    qDebug() << "";
 
-
-    #endif //从数据库表looktexthis_table中查找前10个最常用的数据 begin
+#endif //从数据库表looktexthis_table中查找前10个最常用的数据 begin
 
 
     model->setStringList(looktexthistoryres.looktextarry);
@@ -2419,3 +2455,29 @@ void autoCCode::on_lineEdit_search_Key_Escape()
         listView->hide();
 }
 
+void autoCCode::completeText(QModelIndex index)
+{
+    qDebug() << "completeText";
+    //    qDebug() << index.data().string();
+    qDebug() << index.data().toString();
+
+
+
+
+
+    //完成后关闭显示view
+    listView->hide();
+}
+
+//当前是否有选中库，如果没有则直接返回，可当作一个函数接口。
+bool autoCCode::currentDbHaved(void)
+{
+    str_print(CurrentIndex_comboBox_langtype);
+    sets = get_table_sets_bytype(CurrentIndex_comboBox_langtype);
+    if(!sets)
+    {
+        return FALSE;
+    }
+
+    return TRUE;
+}

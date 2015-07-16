@@ -61,7 +61,8 @@ protected://function declared
     void setStringColor(unsigned int pos,unsigned int len);/*  QT:设置textedit文本框中某个字符串的格式 */
     //安装事件过滤器
     virtual bool eventFilter ( QObject * watched, QEvent *event );
-
+    //当前是否有选中库，如果没有则直接返回，可当作一个函数接口。
+    bool currentDbHaved(void);
 private slots:
     void on_save_btn_clicked();
 
@@ -213,6 +214,8 @@ private slots:
 
     void on_lineEdit_search_MouseButtonDblClick();
     void on_lineEdit_search_Key_Escape();
+
+    void completeText(QModelIndex index);
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -307,7 +310,7 @@ private://QString
 
     int CurrentIndex_comboBox_aspect;
     int CurrentIndex_comboBox_vartype;
-    int CurrentIndex_comboBox_langtype;
+    LanguageType CurrentIndex_comboBox_langtype;
 
 
     QStringList aspect_list_mem;
@@ -326,6 +329,7 @@ private://QString
 
     QListView *listView; // lineEdit Search Text显示列表
     QStringListModel *model; // 完成列表的model
+
 public:
 
     QTextCodec *codec;
