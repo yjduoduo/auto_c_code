@@ -28,6 +28,7 @@
     "[looktextname] varchar(100),"\
     "[lowercase_looktextname] varchar(100)," \
     "[looktimes] INTEGER,"\
+    "[relatedtblname] varchar(100)," \
     "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
 
 
@@ -384,11 +385,11 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
                     if(searchtext.isEmpty())
                     {
                         searchflag = 1;
-                        selectres.looktextarry << QString::fromUtf8(dbResult [index]);
+                        selectres.looktextarry << QString::fromLocal8Bit(dbResult [index]);
                     }
-                    else if(QString::fromUtf8(dbResult [index]).contains(searchtext)){
+                    else if(QString::fromLocal8Bit(dbResult [index]).contains(searchtext)){
                         searchflag = 1;
-                        selectres.looktextarry << QString::fromUtf8(dbResult [index]);
+                        selectres.looktextarry << QString::fromLocal8Bit(dbResult [index]);
                     }
 
                 }
@@ -396,7 +397,7 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
 //                    if(searchflag){
 //                        selectres.looktimes = atoi(dbResult [index]);
 //                        //                        printf( " look result:%s-------\n", dbResult [index]);
-//                        //                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+//                        //                        selectres.keyword_list << QString::fromLocal8Bit(dbResult [index]);
 
 //                    }
                 }//looktimes
@@ -404,7 +405,7 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
                     if(searchflag){
                         selectres.looktimes = atoi(dbResult [index]);
                         //                        printf( " look result:%s-------\n", dbResult [index]);
-                        //                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+                        //                        selectres.keyword_list << QString::fromLocal8Bit(dbResult [index]);
 
                     }
                 }
