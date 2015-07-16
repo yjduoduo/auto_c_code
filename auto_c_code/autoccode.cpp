@@ -573,6 +573,14 @@ void autoCCode::addstr_comboBox(void)
     //范畴
     addstr_aspect_comboBox();
 
+    //解决当前数据库选择或者插入时存在的不一致问题。
+    connect(ui_dialog->langtype_comboBox,SIGNAL(currentIndexChanged(int)),
+            ui_dia_selectdb->comboBox_selectdb,SLOT(setCurrentIndex(int)));
+    connect(ui_dia_selectdb->comboBox_selectdb,SIGNAL(currentIndexChanged(int)),
+            ui_dialog->langtype_comboBox,SLOT(setCurrentIndex(int)));
+
+
+
     //默认内容
     ui_dialog->comboBox_vartype->setCurrentIndex(4);  //入库 变量类型
     ui_dialog->langtype_comboBox->setCurrentIndex(2); //入库 选择语言，C，C++，Python etc.
@@ -582,11 +590,7 @@ void autoCCode::addstr_comboBox(void)
 
     //    }
 
-    //解决当前数据库选择或者插入时存在的不一致问题。
-    connect(ui_dialog->langtype_comboBox,SIGNAL(currentIndexChanged(int)),
-            ui_dia_selectdb->comboBox_selectdb,SLOT(setCurrentIndex(int)));
-    connect(ui_dia_selectdb->comboBox_selectdb,SIGNAL(currentIndexChanged(int)),
-            ui_dialog->langtype_comboBox,SLOT(setCurrentIndex(int)));
+
 }
 
 autoCCode::~autoCCode()
