@@ -375,6 +375,7 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
                         "[looktextname] varchar(100),"\
                         "[lowercase_looktextname] varchar(100)" \
                         "[looktimes] INTEGER,"\
+                        "[relatedtblname] varchar(100)," \
                         "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));" */
                 if(0==j){
                     if(searchtext.isEmpty())
@@ -385,7 +386,10 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
                     if(searchtext.isEmpty())
                     {
                         searchflag = 1;
-                        selectres.looktextarry << QString::fromLocal8Bit(dbResult [index]);
+                        if(strlen(dbResult [index]) < 30)//只取前30个字节,过长数据不作记录
+                        {
+                            selectres.looktextarry << QString::fromLocal8Bit(dbResult [index]);
+                        }
                     }
                     else if(QString::fromLocal8Bit(dbResult [index]).contains(searchtext)){
                         searchflag = 1;
@@ -416,10 +420,10 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
 
                 //                selectres.existflag = 1;
 
-                printf( " look result:%d:%s-------\n",j, dbResult [index]);
+//                printf( " look result:%d:%s-------\n",j, dbResult [index]);
                 ++index;
             }
-                        printf( "-------\n" );
+//                        printf( "-------\n" );
         }
 
     }

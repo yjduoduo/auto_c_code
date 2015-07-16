@@ -2364,11 +2364,12 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
             }
             else
             {
-                qDebug()<<"lose focus,so  hidden!!";
+//                qDebug()<<"lose focus,so  hidden!!";
                 on_lineEdit_search_Key_Escape();
             }
             return true;
         }
+        //按键处理
         if(event->type() == QEvent::KeyPress)
         {
             //qDebug()<<"KeyPress ed!!";
@@ -2394,6 +2395,46 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     }
     else
     {
+
+        //单击隐藏listView界面
+        if (event->type() == QEvent::MouseButtonPress) {
+//            qDebug()<<" clicked!!";
+
+            if(listView->isHidden())
+            {
+
+            }
+            else
+            {
+//                qDebug()<<"lose focus,so  hidden!!";
+                on_lineEdit_search_Key_Escape();
+            }
+            return true;
+        }
+
+        //按键处理
+        if(event->type() == QEvent::KeyPress)
+        {
+            //qDebug()<<"KeyPress ed!!";
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            int key = keyEvent->key();
+            if (Qt::Key_Down == key) {
+                //qDebug()<<"Key_Down !!";
+            } else if (Qt::Key_Up == key) {
+                //qDebug()<<"Key_Up !!";
+
+            } else if (Qt::Key_Escape == key) {
+                //qDebug()<<"Key_Escape !!";
+                on_lineEdit_search_Key_Escape();
+
+            } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
+                //qDebug()<<"Key_Enter   Key_Return!!";
+            } else {
+                //qDebug()<<"else Key !!";
+
+            }
+            return true;
+        }
         //        qDebug()<<"else hidden!!";
         //        on_lineEdit_search_Key_Escape();
 
@@ -2420,7 +2461,8 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
     int lineeditH = ui->lineEdit_search->height();
     QPoint p(ui->lineEdit_search->mapToGlobal(QPoint(0,0+lineeditH)));//弹出列表listView的位置
 
-
+//    QStringList s1;
+//    s1.clear();
 
 #if 1//从数据库表looktexthis_table中查找前10个最常用的数据 begin
     //保存查找关键字 begin
@@ -2432,7 +2474,7 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 
     QString looktexthis_express;
     looktexthis_express.clear();
-    looktexthis_express = QString("select * from %1 where relatedtblname='%2'  order by looktimes desc limit 10")
+    looktexthis_express = QString("select * from %1 where relatedtblname='%2'  order by looktimes desc limit 20")
             .arg(setsLookHis->talbename)
             .arg(sets->talbename);
 
@@ -2440,12 +2482,17 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
                                     looktexthistoryres,
                                     "");//searchStr置空，表示所有全查询
 
-    qDebug() << "count:"<< looktexthistoryres.looktextarry.count();
-    for(int i=0;i< looktexthistoryres.looktextarry.count();i++)
-    {
-        qDebug() << "arry:"<< looktexthistoryres.looktextarry.at(i);
-    }
-    qDebug() << "";
+//    qDebug() << "count:"<< looktexthistoryres.looktextarry.count();
+//    for(int i=0;i< looktexthistoryres.looktextarry.count();i++)
+//    {
+//        qDebug() << "arry:"<< looktexthistoryres.looktextarry.at(i);
+//        //只取前10个字节
+////        if(looktexthistoryres.looktextarry.at(i).length() > 20)
+////        {
+////            looktexthistoryres.looktextarry.at(i).clear();
+////        }
+//    }
+//    qDebug() << "";
 
 #endif //从数据库表looktexthis_table中查找前10个最常用的数据 begin
 
