@@ -139,7 +139,7 @@ void autoCCode::InstallEventFilterSets(void)
 
     ui->listWidget_codeview->installEventFilter(this);
     ui->listWidget_note->installEventFilter(this);
-
+    ui->genshow_textEdit->installEventFilter(this);
 
 }
 
@@ -2438,6 +2438,36 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
         //        qDebug()<<"else hidden!!";
         //        on_lineEdit_search_Key_Escape();
 
+    }
+
+
+
+    //想添加一个Ctrl+滚轮放大字体的功能
+    if(obj == ui->genshow_textEdit)
+    {
+        //按键处理
+        if(event->type() == QEvent::KeyPress)
+        {
+            //qDebug()<<"KeyPress ed!!";
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            int key = keyEvent->key();
+            if (Qt::Key_Down == key) {
+                //qDebug()<<"Key_Down !!";
+            } else if (Qt::Key_Up == key) {
+                //qDebug()<<"Key_Up !!";
+
+            } else if (Qt::Key_Escape == key) {
+                //qDebug()<<"Key_Escape !!";
+                on_lineEdit_search_Key_Escape();
+
+            } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
+                //qDebug()<<"Key_Enter   Key_Return!!";
+            } else {
+                //qDebug()<<"else Key !!";
+
+            }
+            return true;
+        }
     }
     return QObject::eventFilter(obj, event);
 }
