@@ -386,10 +386,8 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
                     if(searchtext.isEmpty())
                     {
                         searchflag = 1;
-                        if(strlen(dbResult [index]) < 30)//只取前30个字节,过长数据不作记录
-                        {
-                            selectres.looktextarry << QString::fromLocal8Bit(dbResult [index]);
-                        }
+                        selectres.looktextarry << QString::fromLocal8Bit(dbResult [index]);
+
                     }
                     else if(QString::fromLocal8Bit(dbResult [index]).contains(searchtext)){
                         searchflag = 1;

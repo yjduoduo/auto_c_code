@@ -2484,9 +2484,12 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
     }
 
 
-    int setWidth = 150;
+    int setWidth = 150 > ui->lineEdit_search->width() ? 150 : ui->lineEdit_search->width();
+    int setHeight = this->height()*3/4;
     listView->setMinimumWidth(setWidth);
     listView->setMaximumWidth(setWidth);
+    listView->setMinimumHeight(setHeight);
+    listView->setMaximumHeight(setHeight);
 
     int lineeditH = ui->lineEdit_search->height();
     QPoint p(ui->lineEdit_search->mapToGlobal(QPoint(0,0+lineeditH)));//弹出列表listView的位置
