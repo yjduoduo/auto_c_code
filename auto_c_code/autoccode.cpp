@@ -2494,8 +2494,8 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
     int lineeditH = ui->lineEdit_search->height();
     QPoint p(ui->lineEdit_search->mapToGlobal(QPoint(0,0+lineeditH)));//弹出列表listView的位置
 
-//    QStringList s1;
-//    s1.clear();
+    QStringList s1;
+    s1.clear();
 
 #if 1//从数据库表looktexthis_table中查找前10个最常用的数据 begin
     //保存查找关键字 begin
@@ -2516,21 +2516,27 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
                                     "");//searchStr置空，表示所有全查询
 
 //    qDebug() << "count:"<< looktexthistoryres.looktextarry.count();
-//    for(int i=0;i< looktexthistoryres.looktextarry.count();i++)
-//    {
-//        qDebug() << "arry:"<< looktexthistoryres.looktextarry.at(i);
-//        //只取前10个字节
-////        if(looktexthistoryres.looktextarry.at(i).length() > 20)
-////        {
-////            looktexthistoryres.looktextarry.at(i).clear();
-////        }
-//    }
+    for(int i=0;i< looktexthistoryres.looktextarry.count();i++)
+    {
+        //qDebug() << "arry:"<< looktexthistoryres.looktextarry.at(i);
+        //只显示记录小于30个字节的字段
+        if(looktexthistoryres.looktextarry.at(i).length() < 30)
+        {
+            s1.append(looktexthistoryres.looktextarry.at(i));
+        }
+//        looktexthistoryres.looktextarry.at(i).truncate(30);
+//        if(looktexthistoryres.looktextarry.at(i).length() > 20)
+//        {
+//            looktexthistoryres.looktextarry.at(i).clear();
+//        }
+    }
 //    qDebug() << "";
 
 #endif //从数据库表looktexthis_table中查找前10个最常用的数据 begin
 
 
-    model->setStringList(looktexthistoryres.looktextarry);
+//    model->setStringList(looktexthistoryres.looktextarry);
+    model->setStringList(s1);
     listView->setModel(model);
     if (model->rowCount() == 0)
     {
