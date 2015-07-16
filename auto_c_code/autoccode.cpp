@@ -2483,8 +2483,8 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
         return;
     }
 
-
-    int setWidth = 150 > ui->lineEdit_search->width() ? 150 : ui->lineEdit_search->width();
+    int minwidth = 200;
+    int setWidth = minwidth > ui->lineEdit_search->width() ? minwidth : ui->lineEdit_search->width();
     int setHeight = this->height()*3/4;
     listView->setMinimumWidth(setWidth);
     listView->setMaximumWidth(setWidth);
@@ -2507,7 +2507,7 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 
     QString looktexthis_express;
     looktexthis_express.clear();
-    looktexthis_express = QString("select * from %1 where relatedtblname='%2'  order by looktimes desc limit 20")
+    looktexthis_express = QString("select * from %1 where relatedtblname='%2'  order by looktimes desc limit 50")
             .arg(setsLookHis->talbename)
             .arg(sets->talbename);
 
