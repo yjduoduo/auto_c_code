@@ -2340,7 +2340,8 @@ int autoCCode::showcode_textEdit_AtBotton()
 bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 {
     //    qDebug() << "eventFilter";
-    if (obj == ui->lineEdit_search) {
+    if (obj == ui->lineEdit_search) //ui->lineEdit_search
+    {
 
         //双击出现listView界面
         if (event->type() == QEvent::MouseButtonDblClick) {
@@ -2358,15 +2359,8 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
         if (event->type() == QEvent::MouseButtonPress) {
 //            qDebug()<<" clicked!!";
 
-            if(listView->isHidden())
-            {
-
-            }
-            else
-            {
-//                qDebug()<<"lose focus,so  hidden!!";
-                on_lineEdit_search_Key_Escape();
-            }
+            //隐藏双击出来的listView列表框
+             on_lineEdit_search_Key_Escape();
             return true;
         }
         //按键处理
@@ -2393,81 +2387,59 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 
         }
     }
-    else
-    {
-
-        //单击隐藏listView界面
-        if (event->type() == QEvent::MouseButtonPress) {
-//            qDebug()<<" clicked!!";
-
-            if(listView->isHidden())
-            {
-
-            }
-            else
-            {
-//                qDebug()<<"lose focus,so  hidden!!";
-                on_lineEdit_search_Key_Escape();
-            }
-            return true;
-        }
-
-        //按键处理
-        if(event->type() == QEvent::KeyPress)
-        {
-            //qDebug()<<"KeyPress ed!!";
-            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-            int key = keyEvent->key();
-            if (Qt::Key_Down == key) {
-                //qDebug()<<"Key_Down !!";
-            } else if (Qt::Key_Up == key) {
-                //qDebug()<<"Key_Up !!";
-
-            } else if (Qt::Key_Escape == key) {
-                //qDebug()<<"Key_Escape !!";
-                on_lineEdit_search_Key_Escape();
-
-            } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
-                //qDebug()<<"Key_Enter   Key_Return!!";
-            } else {
-                //qDebug()<<"else Key !!";
-
-            }
-            return true;
-        }
-        //        qDebug()<<"else hidden!!";
-        //        on_lineEdit_search_Key_Escape();
-
-    }
-
 
 
     //想添加一个Ctrl+滚轮放大字体的功能
     if(obj == ui->genshow_textEdit)
     {
-        //按键处理
-        if(event->type() == QEvent::KeyPress)
+        if (event->type()==QEvent::FocusIn)     //然后再判断控件的具体事件 (这里指获得焦点事件)
         {
-            //qDebug()<<"KeyPress ed!!";
-            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-            int key = keyEvent->key();
-            if (Qt::Key_Down == key) {
-                //qDebug()<<"Key_Down !!";
-            } else if (Qt::Key_Up == key) {
-                //qDebug()<<"Key_Up !!";
+//            QPalette p=QPalette();
+//            p.setColor(QPalette::Base,Qt::green);
+//            ui->lineEdit1->setPalette(p);
+            //隐藏双击出来的listView列表框
+             on_lineEdit_search_Key_Escape();
+//             return true;
 
-            } else if (Qt::Key_Escape == key) {
-                //qDebug()<<"Key_Escape !!";
-                on_lineEdit_search_Key_Escape();
-
-            } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
-                //qDebug()<<"Key_Enter   Key_Return!!";
-            } else {
-                //qDebug()<<"else Key !!";
-
-            }
-            return true;
         }
+        else if (event->type()==QEvent::FocusOut)    // 这里指 lineEdit1 控件的失去焦点事件
+        {
+//            QPalette p=QPalette();
+//            p.setColor(QPalette::Base,Qt::white);
+//            ui->lineEdit1->setPalette(p);
+//            if(completeTextFlag == FLAG_YES)
+//            {
+//                return true;
+//            }
+//            qDebug()<<"lose focus,so  hidden!!";
+//            on_lineEdit_search_Key_Escape();
+//            return true;
+        }
+
+
+//        //按键处理
+//        if(event->type() == QEvent::KeyPress)
+//        {
+//            //qDebug()<<"KeyPress ed!!";
+//            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+//            int key = keyEvent->key();
+//            if (Qt::Key_Down == key) {
+//                //qDebug()<<"Key_Down !!";
+//            } else if (Qt::Key_Up == key) {
+//                //qDebug()<<"Key_Up !!";
+
+//            } else if (Qt::Key_Escape == key) {
+//                //qDebug()<<"Key_Escape !!";
+//                on_lineEdit_search_Key_Escape();
+
+//            } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
+//                //qDebug()<<"Key_Enter   Key_Return!!";
+//            } else {
+//                //qDebug()<<"else Key !!";
+
+//            }
+////            return true;
+//        }
     }
     return QObject::eventFilter(obj, event);
 }
@@ -2547,6 +2519,7 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
     listView->show();
 }
 
+//隐藏双击出来的listView列表框
 void autoCCode::on_lineEdit_search_Key_Escape()
 {
     if(listView->isVisible())
