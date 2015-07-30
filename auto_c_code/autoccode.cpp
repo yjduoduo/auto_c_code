@@ -1688,14 +1688,15 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     if(len >0)
     {
 
-        newcharfmt.setFontUnderline( true );
-        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
-        newcharfmt.setUnderlineStyle( QTextCharFormat::WaveUnderline );
+//        newcharfmt.setFontUnderline( true );
+        newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
+//        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
+//        newcharfmt.setUnderlineStyle( QTextCharFormat::WaveUnderline );
     }
     else
     {
 
-        newcharfmt.setFontUnderline( false );
+//        newcharfmt.setFontUnderline( false );
         //        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
         //        newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
     }
