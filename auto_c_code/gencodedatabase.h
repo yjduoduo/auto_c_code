@@ -54,6 +54,7 @@ typedef struct
     QString contentstr;
     QStringList content_list;
     QStringList keyword_list;
+    QStringList keyword_subshowlist;
     QStringList note_list;
     QStringList vartype_list;
     int existflag;//检测是否存在内容 标志

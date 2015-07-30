@@ -63,6 +63,9 @@ protected://function declared
     virtual bool eventFilter ( QObject * watched, QEvent *event );
     //当前是否有选中库，如果没有则直接返回，可当作一个函数接口。
     bool currentDbHaved(void);
+
+    //ui->listWidget_codeview->addItems(s1); 显示内容缩短优化
+    QStringList listWidget_codeview_subShow(QStringList &strlist);
 private slots:
     void on_save_btn_clicked();
 

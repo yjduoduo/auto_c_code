@@ -232,6 +232,7 @@ void autoCCode::dragDropSet(void)
 {
     //允许拖放的文字添加到编辑框中
     ui->codeshow_textEdit->setAcceptDrops(true);
+    ui->codeshow_textEdit->hide();
     //    ui->codeshow_textEdit->setHidden(true);
 }
 
@@ -488,7 +489,10 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
         ui->codeshow_textEdit->setText(selectresult.contentstr);
     }
     clear_listWidget_beforecall();
-    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
+    ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
+//    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+
     ui->listWidget_note->addItems(selectresult.note_list);
     dialog_selectdb->close();
 }
@@ -975,7 +979,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     QString str = item->text();
     unsigned int index = 0;
     for(int i=0;i<selectresult.content_list.size();i++){
-        if(str == selectresult.keyword_list.at(i))
+        if(str == selectresult.keyword_subshowlist.at(i))
             index = i;
         //        qDebug()<<"note list:"<<selectresult.note_list.at(i);
     }
@@ -1038,6 +1042,7 @@ void autoCCode::clr_selectresult(SelectResult &result)
     result.content_list.clear();
     result.contentstr.clear();
     result.keyword_list.clear();
+    result.keyword_subshowlist.clear();
     result.note_list.clear();
     result.vartype_list.clear();
     result.existflag = 0;
@@ -1093,7 +1098,9 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     }
 
     clear_listWidget_beforecall();
-    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
+    ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
+//    ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
 
     listWidget_scrollToTop();
@@ -1430,7 +1437,9 @@ void autoCCode::SearchText(const QString &searchStr)
     if(0 == selectresult.keyword_list.length()){
         alert();
     }else{
-        ui->listWidget_codeview->addItems(selectresult.keyword_list);
+        selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
+        ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
+//        ui->listWidget_codeview->addItems(selectresult.keyword_list);
         ui->listWidget_note->addItems(selectresult.note_list);
     }
 }
@@ -1474,7 +1483,9 @@ void autoCCode::add_column_lowercase_keywords_content(void)
     }
 
     clear_listWidget_beforecall();
-    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
+    ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
+//    ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
 
     //    return;
@@ -2469,7 +2480,9 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
     QStringList s1;
     s1.clear();
 
-#if 1//从数据库表looktexthis_table中查找前10个最常用的数据 begin
+#define LIMITDATA_MAX 100
+
+#if 1//从数据库表looktexthis_table中查找前LIMITDATA_MAX个最常用的数据 begin
     //保存查找关键字 begin
     codestructSets *setsLookHis = get_table_sets_bytype(languagetype_LookTextHis_);
     if(!setsLookHis)
@@ -2479,9 +2492,10 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 
     QString looktexthis_express;
     looktexthis_express.clear();
-    looktexthis_express = QString("select * from %1 where relatedtblname='%2'  order by looktimes desc limit 50")
+    looktexthis_express = QString("select * from %1 where relatedtblname='%2'  order by looktimes desc limit %3")
             .arg(setsLookHis->talbename)
-            .arg(sets->talbename);
+            .arg(sets->talbename)
+            .arg(LIMITDATA_MAX);
 
     b.searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
                                     looktexthistoryres,
@@ -2496,13 +2510,7 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
         {
             s1.append(looktexthistoryres.looktextarry.at(i));
         }
-//        looktexthistoryres.looktextarry.at(i).truncate(30);
-//        if(looktexthistoryres.looktextarry.at(i).length() > 20)
-//        {
-//            looktexthistoryres.looktextarry.at(i).clear();
-//        }
     }
-//    qDebug() << "";
 
 #endif //从数据库表looktexthis_table中查找前10个最常用的数据 begin
 
@@ -2552,3 +2560,28 @@ bool autoCCode::currentDbHaved(void)
 
     return TRUE;
 }
+
+//ui->listWidget_codeview->addItems(s1); 显示内容缩短优化
+QStringList autoCCode::listWidget_codeview_subShow(QStringList &strlist)
+{
+#define SHOW_MAX_CHARS 60
+    QStringList s1;
+    s1.clear();
+    for(int i=0;i< strlist.count();i++)
+    {
+        //qDebug() << "arry:"<< looktexthistoryres.looktextarry.at(i);
+        //只显示记录小于30个字节的字段
+        if(strlist.at(i).length() > SHOW_MAX_CHARS)
+        {
+            s1.append(strlist.at(i).left(SHOW_MAX_CHARS)+" ...");
+        }
+        else
+        {
+           s1.append(strlist.at(i));
+        }
+
+    }
+    return s1;
+}
+
+
