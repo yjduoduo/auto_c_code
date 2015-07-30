@@ -1672,7 +1672,9 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     }
 
     QTextCursor cursor = ui->genshow_textEdit->textCursor();//ui->view1->textCursor();
-    cursor.movePosition( QTextCursor::StartOfLine);//行首
+    cursor.movePosition(QTextCursor::Start);//整体首
+//    cursor.movePosition(QTextCursor::StartOfBlock);
+//    cursor.movePosition( QTextCursor::StartOfLine);//行首
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos >=1? (pos-1):0);//向右移动到Pos
     for(i = 0;i < len;i++){
         cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
@@ -1688,7 +1690,7 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 
         newcharfmt.setFontUnderline( true );
         newcharfmt.setUnderlineColor( QColor( Qt::red ) );
-        newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
+        newcharfmt.setUnderlineStyle( QTextCharFormat::WaveUnderline );
     }
     else
     {
@@ -1737,9 +1739,9 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     int j = 0;
     if(resStr.contains(searchText))
     {
-        qDebug() << "-->>>> ";
-        qDebug() << "searchText len: " <<  searchText.length();
-        while ((j = resStr.indexOf(searchText.toLatin1(), j, Qt::CaseInsensitive)) != -1) {
+//        qDebug() << "-->>>> ";
+//        qDebug() << "searchText len: " <<  searchText.length();
+        while ((j = resStr.indexOf(searchText.toLatin1().data(), j, Qt::CaseInsensitive)) != -1) {
             //            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
             setStringColor(j + 1, searchText.length());
             ++j;
