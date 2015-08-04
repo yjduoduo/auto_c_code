@@ -1732,8 +1732,15 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     //    ui->genshow_textEdit->setFocus();
 }
 
+enum
+{
+    CHAR_ENGLISH,
+    CHAR_LOCA8Bit,
+    CHAR_NONE
+};
 void autoCCode::SearchTextResWithColor(QString &resStr)
 {
+
     //颜色框是否选中
     if(!ui->checkBox_ResWithColor->isChecked())
     {
@@ -1760,13 +1767,16 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //    QString str = "We must be <b>bold</b>, very <b>bold</b>";
     //    qDebug() <<"defaultCursorMoveStyle" << ui->genshow_textEdit->document()->defaultCursorMoveStyle();
     int j = 0;
+    int goflat = CHAR_ENGLISH;
     if(resStr.contains(searchText))
     {
-        qDebug() << "-->>>> :"<< searchText;
-        qDebug() << "searchText len: " <<  searchText.length();
-        qDebug() << "searchText toAscii     strlen(text):" << strlen(searchText.toAscii().data());
-        qDebug() << "searchText toUtf8      strlen(text):" << strlen(searchText.toUtf8().data());
-        qDebug() << "searchText toLocal8Bit strlen(text):" << strlen(searchText.toLocal8Bit().data());
+        int strutf8len = strlen(searchText.toUtf8().data());
+        int strlocal8bitlen = strlen(searchText.toLocal8Bit().data());
+//        qDebug() << "-->>>> :"<< searchText;
+//        qDebug() << "searchText len: " <<  searchText.length();
+//        qDebug() << "searchText toAscii     strlen(text):" << strlen(searchText.toAscii().data());
+//        qDebug() << "searchText toUtf8      strlen(text):" << strutf8len;
+//        qDebug() << "searchText toLocal8Bit strlen(text):" << strlocal8bitlen;
 #if 0
         while ((j = resStr.indexOf(searchText.toLatin1().data(), j, Qt::CaseInsensitive)) != -1) {
             //            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
@@ -1775,28 +1785,93 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
         }
 
 #else
-        QChar c;
-//        QString str = searchText.unicode();
-        QChar *pws = (QChar *)searchText.unicode();
-        c = *pws;
-        quint16 length = searchText.toAscii().length();
-        qDebug() << "lenth:"<< length;
-        qDebug() << "c:"<< c;
+//        QChar c;
+////        QString str = searchText.unicode();
+//        QChar *pws = (QChar *)searchText.unicode();
+//        c = *pws;
+//        quint16 length = searchText.toAscii().length();
+//        qDebug() << "lenth:"<< length;
+//        qDebug() << "c:"<< c;
 
-//        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
+//        qDebug() << "str format:" <<resStr;
 
-        while ((j = resStr.indexOf(c, j, Qt::CaseInsensitive)) != -1) {
-            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
-            setStringColor(j + 1, length);
-            ++j;
+//        QLatin1String latinstr(searchText.toLatin1().data());
+
+////        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
+
+//        while ((j = resStr.indexOf(latinstr, j, Qt::CaseInsensitive)) != -1) {
+//            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
+//            setStringColor(j + 1, length);
+//            ++j;
+//        }
+
+
+//根据引用的内容来判断吧，既然无法同时满足，只能这样了，根据字符是否为汉字来走不同的路径
+        if(strutf8len == strlocal8bitlen)
+        {
+            goflat = CHAR_ENGLISH;
+            //qDebug() << "english letter!!!";
         }
+        else
+        {
+            goflat = CHAR_LOCA8Bit;
+            //qDebug() << "!!!not english letter";
+        }
+
+        if( goflat == CHAR_ENGLISH)
+        {
+            QLatin1String latinstr(searchText.toLatin1().data());
+            quint16 length = searchText.toAscii().length();
+
+            while ((j = resStr.indexOf(latinstr, j, Qt::CaseInsensitive)) != -1) {
+                //qDebug() << "Found "+ searchText + " tag at index position:  " << j;
+                setStringColor(j + 1, length);
+                ++j;
+            }
+
+        }else{
+            //汉字
+            QChar c;
+            QChar *pws = (QChar *)searchText.unicode();
+            c = *pws;
+            quint16 length = searchText.toAscii().length();
+            //qDebug() << "lenth:"<< length;
+            //qDebug() << "c:"<< c;
+
+    //        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
+
+            while ((j = resStr.indexOf(c, j, Qt::CaseInsensitive)) != -1) {
+                //qDebug() << "Found "+ searchText + " tag at index position:  " << j;
+                setStringColor(j + 1, length);
+                ++j;
+            }
+        }
+
+
+
+
+
+
+////        qDebug() << "str format:" <<resStr;
+
+//        QLatin1String latinstr(searchText.toLatin1().data());
+
+////        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
+
+//        while ((j = resStr.indexOf(latinstr, j, Qt::CaseInsensitive)) != -1) {
+//            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
+//            setStringColor(j + 1, length);
+//            ++j;
+//        }
+
+
 #endif
 
 
     }
     else
     {
-        qDebug() << "-->>>> not found";
+        //qDebug() << "-->>>> not found";
     }
 
 #else
