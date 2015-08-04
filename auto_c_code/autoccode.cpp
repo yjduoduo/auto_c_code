@@ -1698,9 +1698,8 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos >=1? (pos-1):0);//向右移动到Pos
     for(i = 0;i < len;i++){
         cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
-        newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
+
     }
-    ui->genshow_textEdit->setTextCursor( cursor ); // added
 
 
 
@@ -1708,6 +1707,8 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 
     if(len >0)
     {
+        ui->genshow_textEdit->setTextCursor( cursor ); // added
+        newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
 
 //        newcharfmt.setFontUnderline( true );
 //        newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
@@ -1726,10 +1727,28 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     ui->genshow_textEdit->setCurrentCharFormat( newcharfmt );
 
     cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
+//    cursor.movePosition( QTextCursor::End);
     ui->genshow_textEdit->setTextCursor( cursor ); // added
 //    ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
     ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
-    //    ui->genshow_textEdit->setFocus();
+
+//    cursor = ui->genshow_textEdit->textCursor();
+//    cursor.movePosition(QTextCursor::End);
+//    ui->genshow_textEdit->setTextCursor(cursor);
+//    //    ui->genshow_textEdit->setFocus();
+    ui->genshow_textEdit->updateGeometry();
+    ui->genshow_textEdit->updatesEnabled();
+    ui->genshow_textEdit->update();
+
+
+//修改数据显示不全的问题，为啥更改下大小就可以了？
+    int h = ui->genshow_textEdit->height();
+    int w = ui->genshow_textEdit->width();
+//    QPoint p();
+    ui->genshow_textEdit->resize(w/2,h/2);
+    ui->genshow_textEdit->resize(w,h);
+    ui->genshow_textEdit->update();
+
 }
 
 enum
@@ -1820,12 +1839,9 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
 
         if( goflat == CHAR_ENGLISH)
         {
-            QLatin1String latinstr(searchText.toLatin1().data());
-            quint16 length = searchText.toAscii().length();
-
-            while ((j = resStr.indexOf(latinstr, j, Qt::CaseInsensitive)) != -1) {
+            while ((j = resStr.indexOf(searchText.toLatin1().data(), j, Qt::CaseInsensitive)) != -1) {
                 //qDebug() << "Found "+ searchText + " tag at index position:  " << j;
-                setStringColor(j + 1, length);
+                setStringColor(j + 1, searchText.length());
                 ++j;
             }
 
@@ -1918,11 +1934,14 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
     GenCode_str+="\n";
     GenCode_str+="\n";
 
-    QString resStrUnicode = G2U(GenCode_str.toLocal8Bit().data());
-    ui->genshow_textEdit->setText(resStrUnicode);
+//    QString resStrUnicode = G2U(GenCode_str.toLocal8Bit().data());
+//    ui->genshow_textEdit->setText(resStrUnicode);
 
-//    ui->genshow_textEdit->setText(GenCode_str);
-    SearchTextResWithColor(resStrUnicode);
+
+
+    ui->genshow_textEdit->setText(GenCode_str);
+    SearchTextResWithColor(GenCode_str);
+
     //    setCharColor(10);
     //    ui->genshow_textEdit->setHtml(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
