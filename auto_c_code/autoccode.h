@@ -66,6 +66,8 @@ protected://function declared
 
     //ui->listWidget_codeview->addItems(s1); 显示内容缩短优化
     QStringList listWidget_codeview_subShow(QStringList &strlist);
+
+    void CharFormat(void);//文本显示格式
 private slots:
     void on_save_btn_clicked();
 
@@ -332,6 +334,8 @@ private://QString
 
     QListView *listView; // lineEdit Search Text显示列表
     QStringListModel *model; // 完成列表的model
+
+    QTextCharFormat defcharfmt;//当前显示字符格式
 
 public:
 

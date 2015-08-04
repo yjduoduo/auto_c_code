@@ -24,6 +24,18 @@
 using namespace std;
 
 
+//中文Windows的缺省内码是GBK
+// ASCII、GB2312、GBK到GB18030的编码方法是向下兼容的。而Unicode只与ASCII兼容（更准确地说，是与
+// ISO-8859-1兼容），与GB码不兼容。例如“汉”字的Unicode编码是6C49，而GB码是BABA。
+#define G2U(s) ( QTextCodec::codecForName("GBK")->toUnicode(s) )
+#define U2G(s) ( QTextCodec::codecForName("GBK")->fromUnicode(s) )
+//QString str;
+//QCString cstr;
+//str = G2U("中文输入");
+//cstr = U2G(str);
+
+
+
 #define LIMIT_SHOW_SIZE getLimitNum()/*60*/
 
 
@@ -84,6 +96,7 @@ autoCCode::autoCCode(QWidget *parent) :
     ProgressBarSet();
     InstallEventFilterSets();
     ListViewSets();
+    CharFormat();
 
 }
 void autoCCode::shortCutSet(void)
@@ -1668,28 +1681,36 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 
     if((0 == len)||(0 == pos))
     {
+//        cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
+//        ui->genshow_textEdit->setTextCursor( cursor ); // added
+    //    ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
+        ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
         return;
     }
 
     QTextCursor cursor = ui->genshow_textEdit->textCursor();//ui->view1->textCursor();
+
+    QTextCharFormat newcharfmt = defcharfmt;
+
     cursor.movePosition(QTextCursor::Start);//整体首
 //    cursor.movePosition(QTextCursor::StartOfBlock);
 //    cursor.movePosition( QTextCursor::StartOfLine);//行首
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos >=1? (pos-1):0);//向右移动到Pos
     for(i = 0;i < len;i++){
         cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
+        newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
     }
     ui->genshow_textEdit->setTextCursor( cursor ); // added
 
-    QTextCharFormat defcharfmt = ui->genshow_textEdit->currentCharFormat();
-    QTextCharFormat newcharfmt = defcharfmt;
+
+
 
 
     if(len >0)
     {
 
 //        newcharfmt.setFontUnderline( true );
-        newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
+//        newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
 //        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
 //        newcharfmt.setUnderlineStyle( QTextCharFormat::WaveUnderline );
     }
@@ -1700,12 +1721,13 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
         //        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
         //        newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
     }
-
+//    cursor.mergeCharFormat(newcharfmt);
 
     ui->genshow_textEdit->setCurrentCharFormat( newcharfmt );
 
     cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
     ui->genshow_textEdit->setTextCursor( cursor ); // added
+//    ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
     ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
     //    ui->genshow_textEdit->setFocus();
 }
@@ -1740,13 +1762,41 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     int j = 0;
     if(resStr.contains(searchText))
     {
-//        qDebug() << "-->>>> ";
-//        qDebug() << "searchText len: " <<  searchText.length();
+        qDebug() << "-->>>> :"<< searchText;
+        qDebug() << "searchText len: " <<  searchText.length();
+        qDebug() << "searchText toAscii     strlen(text):" << strlen(searchText.toAscii().data());
+        qDebug() << "searchText toUtf8      strlen(text):" << strlen(searchText.toUtf8().data());
+        qDebug() << "searchText toLocal8Bit strlen(text):" << strlen(searchText.toLocal8Bit().data());
+#if 0
         while ((j = resStr.indexOf(searchText.toLatin1().data(), j, Qt::CaseInsensitive)) != -1) {
             //            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
             setStringColor(j + 1, searchText.length());
             ++j;
         }
+
+#else
+        QChar c;
+//        QString str = searchText.unicode();
+        QChar *pws = (QChar *)searchText.unicode();
+        c = *pws;
+        quint16 length = searchText.toAscii().length();
+        qDebug() << "lenth:"<< length;
+        qDebug() << "c:"<< c;
+
+//        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
+
+        while ((j = resStr.indexOf(c, j, Qt::CaseInsensitive)) != -1) {
+            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
+            setStringColor(j + 1, length);
+            ++j;
+        }
+#endif
+
+
+    }
+    else
+    {
+        qDebug() << "-->>>> not found";
     }
 
 #else
@@ -1793,8 +1843,11 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
     GenCode_str+="\n";
     GenCode_str+="\n";
 
-    ui->genshow_textEdit->setText(GenCode_str);
-    SearchTextResWithColor(GenCode_str);
+    QString resStrUnicode = G2U(GenCode_str.toLocal8Bit().data());
+    ui->genshow_textEdit->setText(resStrUnicode);
+
+//    ui->genshow_textEdit->setText(GenCode_str);
+    SearchTextResWithColor(resStrUnicode);
     //    setCharColor(10);
     //    ui->genshow_textEdit->setHtml(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
@@ -2588,3 +2641,7 @@ QStringList autoCCode::listWidget_codeview_subShow(QStringList &strlist)
 }
 
 
+void autoCCode::CharFormat(void)
+{
+    defcharfmt = ui->genshow_textEdit->currentCharFormat();
+}
