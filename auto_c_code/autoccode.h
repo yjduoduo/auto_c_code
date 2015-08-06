@@ -68,6 +68,8 @@ protected://function declared
     QStringList listWidget_codeview_subShow(QStringList &strlist);
 
     void CharFormat(void);//文本显示格式
+
+    void setWindowTitle_Main(const QString &arg1);
 private slots:
     void on_save_btn_clicked();
 

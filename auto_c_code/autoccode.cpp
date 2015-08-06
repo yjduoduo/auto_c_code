@@ -447,6 +447,13 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     self_print(comboBox_selectdb_currentIndexChanged);
     str_print(arg1);
 
+    if(arg1.isEmpty())
+    {
+        setWindowTitle_Main("AutoCCode");
+    }else{
+        setWindowTitle_Main(arg1);
+    }
+
     selected_langtype = arg1;
     str_print(selected_langtype);
     LanguageType langtype = getLanguageType(selected_langtype);
@@ -2738,4 +2745,9 @@ QStringList autoCCode::listWidget_codeview_subShow(QStringList &strlist)
 void autoCCode::CharFormat(void)
 {
     defcharfmt = ui->genshow_textEdit->currentCharFormat();
+}
+
+void autoCCode::setWindowTitle_Main(const QString &arg1)
+{
+    setWindowTitle(arg1);
 }
