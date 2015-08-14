@@ -12,4 +12,5 @@ INPUT(
 ./debug/moc_dialog_select_database.o
 ./debug/moc_qxtglobalshortcut.o
 ./debug/moc_autoindb.o
+./debug/qrc_imgsrc.o
 );

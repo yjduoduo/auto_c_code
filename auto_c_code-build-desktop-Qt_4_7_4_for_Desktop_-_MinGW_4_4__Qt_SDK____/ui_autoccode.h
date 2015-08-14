@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Tue Jul 14 23:14:42 2015
+** Created: Fri Aug 14 22:29:30 2015
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -79,6 +79,9 @@ public:
         if (autoCCode->objectName().isEmpty())
             autoCCode->setObjectName(QString::fromUtf8("autoCCode"));
         autoCCode->resize(936, 438);
+        autoCCode->setWindowOpacity(1);
+        autoCCode->setAutoFillBackground(false);
+        autoCCode->setStyleSheet(QString::fromUtf8("background-image: url(:/images/gezi.png);"));
         horizontalLayout_4 = new QHBoxLayout(autoCCode);
         horizontalLayout_4->setSpacing(6);
         horizontalLayout_4->setContentsMargins(11, 11, 11, 11);

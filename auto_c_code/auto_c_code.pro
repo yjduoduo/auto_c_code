@@ -43,7 +43,8 @@ INCLUDEPATH +=\
 
 RC_FILE = autoapp.rc
 
-RESOURCES +=
+RESOURCES += \
+    imgsrc.qrc
 
 OTHER_FILES += \
     qxtglobalshortcut/qxtglobalshortcut.pri
