@@ -627,7 +627,7 @@ void autoCCode::on_save_btn_clicked()
 {
     self_print(on_save_btn_clicked);
     QString savefileName = QFileDialog::getSaveFileName(this,
-                                                        tr("Open Files"), "", tr("All Files (*.*)"));
+                                                        tr("Open Files"), getCurrentDateTimeTxt(), tr("All Files (*.*);;Txt(*.txt);;Img Files(*.png);;Code Files(*.c)"));
 
     if (savefileName.isNull())
     {
@@ -2755,4 +2755,16 @@ void autoCCode::CharFormat(void)
 void autoCCode::setWindowTitle_Main(const QString &arg1)
 {
     setWindowTitle(arg1);
+}
+
+QString autoCCode::getCurrentDateTimeTxt()
+{
+    QDate date;
+    QTime time;
+    QString logfilename;
+    logfilename.clear();
+    logfilename = date.currentDate().toString("sclogyyyy-MM-dd");
+    logfilename += time.currentTime().toString("_HH-mm-ss");
+    logfilename +=".txt";
+    return logfilename;
 }

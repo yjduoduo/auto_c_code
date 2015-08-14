@@ -70,6 +70,8 @@ protected://function declared
     void CharFormat(void);//文本显示格式
 
     void setWindowTitle_Main(const QString &arg1);
+
+    QString getCurrentDateTimeTxt();//取名称为时间的文件字符串
 private slots:
     void on_save_btn_clicked();
 
