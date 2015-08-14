@@ -1365,6 +1365,10 @@ void autoCCode::SearchText(const QString &searchStr)
     self_print(SearchText);
     str_print(searchStr);
 
+    /* 长度为1不搜索 */
+    if(searchStr.length() <= 1)
+        return;
+
     //添加，当前是否有选中库，如果没有则直接返回，可当作一个函数接口。
     if(!currentDbHaved())
     {
@@ -1783,7 +1787,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //    //背景浅绿色，前景黑色
     //    ui->genshow_textEdit->setStyleSheet("background-color: rgb(60, 243, 243);color: rgb(0, 0, 0);");
     QString searchText = ui->lineEdit_search->text();
-    if(searchText.isEmpty())
+    if(searchText.isEmpty() && (searchText.length() <= 1))     /* 长度为1不搜索 */
     {
         return;
     }
