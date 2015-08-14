@@ -578,6 +578,7 @@ void autoCCode::addstr_comboBox(void)
     <<str_china(JavaScript)
     <<str_china(Mysql)
     <<str_china(Oracle)
+    <<str_china(Patchs)
     <<str_china(Postgresql)
     <<str_china(Rust)
     <<str_china(Sqlite3)
@@ -789,6 +790,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Postgresql")
     {
         return languagetype_Postgresql_;
+    }
+    else if(type == "Patchs")
+    {
+        return languagetype_Patchs_;
     }
     else if(type == "Rust")
     {
