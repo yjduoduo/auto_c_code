@@ -511,7 +511,7 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     clear_listWidget_beforecall();
     selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
     ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
-//    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    //    ui->listWidget_codeview->addItems(selectresult.keyword_list);
 
     ui->listWidget_note->addItems(selectresult.note_list);
     dialog_selectdb->close();
@@ -1125,7 +1125,7 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     clear_listWidget_beforecall();
     selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
     ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
-//    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    //    ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
 
     listWidget_scrollToTop();
@@ -1468,7 +1468,7 @@ void autoCCode::SearchText(const QString &searchStr)
     }else{
         selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
         ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
-//        ui->listWidget_codeview->addItems(selectresult.keyword_list);
+        //        ui->listWidget_codeview->addItems(selectresult.keyword_list);
         ui->listWidget_note->addItems(selectresult.note_list);
     }
 }
@@ -1521,7 +1521,7 @@ void autoCCode::add_column_lowercase_keywords_content(void)
     clear_listWidget_beforecall();
     selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
     ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
-//    ui->listWidget_codeview->addItems(selectresult.keyword_list);
+    //    ui->listWidget_codeview->addItems(selectresult.keyword_list);
     ui->listWidget_note->addItems(selectresult.note_list);
 
     //    return;
@@ -1704,9 +1704,9 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 
     if((0 == len)||(0 == pos))
     {
-//        cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
-//        ui->genshow_textEdit->setTextCursor( cursor ); // added
-    //    ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
+        //        cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
+        //        ui->genshow_textEdit->setTextCursor( cursor ); // added
+        //    ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
         ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
         return;
     }
@@ -1716,8 +1716,8 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     QTextCharFormat newcharfmt = defcharfmt;
 
     cursor.movePosition(QTextCursor::Start);//整体首
-//    cursor.movePosition(QTextCursor::StartOfBlock);
-//    cursor.movePosition( QTextCursor::StartOfLine);//行首
+    //    cursor.movePosition(QTextCursor::StartOfBlock);
+    //    cursor.movePosition( QTextCursor::StartOfLine);//行首
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos >=1? (pos-1):0);//向右移动到Pos
     for(i = 0;i < len;i++){
         cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
@@ -1733,41 +1733,41 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
         ui->genshow_textEdit->setTextCursor( cursor ); // added
         newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
 
-//        newcharfmt.setFontUnderline( true );
-//        newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
-//        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
-//        newcharfmt.setUnderlineStyle( QTextCharFormat::WaveUnderline );
+        //        newcharfmt.setFontUnderline( true );
+        //        newcharfmt.setBackground(QBrush(Qt::cyan,Qt::SolidPattern));
+        //        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
+        //        newcharfmt.setUnderlineStyle( QTextCharFormat::WaveUnderline );
     }
     else
     {
 
-//        newcharfmt.setFontUnderline( false );
+        //        newcharfmt.setFontUnderline( false );
         //        newcharfmt.setUnderlineColor( QColor( Qt::red ) );
         //        newcharfmt.setUnderlineStyle( QTextCharFormat::SingleUnderline );
     }
-//    cursor.mergeCharFormat(newcharfmt);
+    //    cursor.mergeCharFormat(newcharfmt);
 
     ui->genshow_textEdit->setCurrentCharFormat( newcharfmt );
 
     cursor.movePosition( QTextCursor::PreviousCharacter );//加上这句是为了去除光标selected
-//    cursor.movePosition( QTextCursor::End);
+    //    cursor.movePosition( QTextCursor::End);
     ui->genshow_textEdit->setTextCursor( cursor ); // added
-//    ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
+    //    ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
     ui->genshow_textEdit->setCurrentCharFormat( defcharfmt );
 
-//    cursor = ui->genshow_textEdit->textCursor();
-//    cursor.movePosition(QTextCursor::End);
-//    ui->genshow_textEdit->setTextCursor(cursor);
-//    //    ui->genshow_textEdit->setFocus();
+    //    cursor = ui->genshow_textEdit->textCursor();
+    //    cursor.movePosition(QTextCursor::End);
+    //    ui->genshow_textEdit->setTextCursor(cursor);
+    //    //    ui->genshow_textEdit->setFocus();
     ui->genshow_textEdit->updateGeometry();
     ui->genshow_textEdit->updatesEnabled();
     ui->genshow_textEdit->update();
 
 
-//修改数据显示不全的问题，为啥更改下大小就可以了？
+    //修改数据显示不全的问题，为啥更改下大小就可以了？
     int h = ui->genshow_textEdit->height();
     int w = ui->genshow_textEdit->width();
-//    QPoint p();
+    //    QPoint p();
     ui->genshow_textEdit->resize(w/2,h/2);
     ui->genshow_textEdit->resize(w,h);
     ui->genshow_textEdit->update();
@@ -1809,16 +1809,18 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //    QString str = "We must be <b>bold</b>, very <b>bold</b>";
     //    qDebug() <<"defaultCursorMoveStyle" << ui->genshow_textEdit->document()->defaultCursorMoveStyle();
     int j = 0;
+    int k = 0;
+    int q = 0;
     int goflat = CHAR_ENGLISH;
     if(resStr.contains(searchText))
     {
         int strutf8len = strlen(searchText.toUtf8().data());
         int strlocal8bitlen = strlen(searchText.toLocal8Bit().data());
-//        qDebug() << "-->>>> :"<< searchText;
-//        qDebug() << "searchText len: " <<  searchText.length();
-//        qDebug() << "searchText toAscii     strlen(text):" << strlen(searchText.toAscii().data());
-//        qDebug() << "searchText toUtf8      strlen(text):" << strutf8len;
-//        qDebug() << "searchText toLocal8Bit strlen(text):" << strlocal8bitlen;
+        //        qDebug() << "-->>>> :"<< searchText;
+        //        qDebug() << "searchText len: " <<  searchText.length();
+        //        qDebug() << "searchText toAscii     strlen(text):" << strlen(searchText.toAscii().data());
+        //        qDebug() << "searchText toUtf8      strlen(text):" << strutf8len;
+        //        qDebug() << "searchText toLocal8Bit strlen(text):" << strlocal8bitlen;
 #if 0
         while ((j = resStr.indexOf(searchText.toLatin1().data(), j, Qt::CaseInsensitive)) != -1) {
             //            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
@@ -1827,28 +1829,28 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
         }
 
 #else
-//        QChar c;
-////        QString str = searchText.unicode();
-//        QChar *pws = (QChar *)searchText.unicode();
-//        c = *pws;
-//        quint16 length = searchText.toAscii().length();
-//        qDebug() << "lenth:"<< length;
-//        qDebug() << "c:"<< c;
+        //        QChar c;
+        ////        QString str = searchText.unicode();
+        //        QChar *pws = (QChar *)searchText.unicode();
+        //        c = *pws;
+        //        quint16 length = searchText.toAscii().length();
+        //        qDebug() << "lenth:"<< length;
+        //        qDebug() << "c:"<< c;
 
-//        qDebug() << "str format:" <<resStr;
+        //        qDebug() << "str format:" <<resStr;
 
-//        QLatin1String latinstr(searchText.toLatin1().data());
+        //        QLatin1String latinstr(searchText.toLatin1().data());
 
-////        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
+        ////        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
 
-//        while ((j = resStr.indexOf(latinstr, j, Qt::CaseInsensitive)) != -1) {
-//            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
-//            setStringColor(j + 1, length);
-//            ++j;
-//        }
+        //        while ((j = resStr.indexOf(latinstr, j, Qt::CaseInsensitive)) != -1) {
+        //            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
+        //            setStringColor(j + 1, length);
+        //            ++j;
+        //        }
 
 
-//根据引用的内容来判断吧，既然无法同时满足，只能这样了，根据字符是否为汉字来走不同的路径
+        //根据引用的内容来判断吧，既然无法同时满足，只能这样了，根据字符是否为汉字来走不同的路径
         if(strutf8len == strlocal8bitlen)
         {
             goflat = CHAR_ENGLISH;
@@ -1874,16 +1876,97 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
             QChar *pws = (QChar *)searchText.unicode();
             c = *pws;
             quint16 length = searchText.toAscii().length();
-            //qDebug() << "lenth:"<< length;
-            //qDebug() << "c:"<< c;
+            qDebug() << "lenth:"<< length;
+            //            qDebug() << "c:"<< c;
 
-    //        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
-
-            while ((j = resStr.indexOf(c, j, Qt::CaseInsensitive)) != -1) {
-                //qDebug() << "Found "+ searchText + " tag at index position:  " << j;
-                setStringColor(j + 1, length);
+            //打印所有搜索的字符
+            int i;
+            for(i = 0;i< length;i++){
+                qDebug() << "c:"<< *(pws + i);
+            }
+            //思路:按汉字的位置依次获取一下。
+            /*
+  1.比如搜索“外文名”
+  2.先搜索‘外’，获取位置
+  3.再搜索‘文’，依次获取
+  4.最后再把内容进行处理，确认哪些显示哪些不显示
+*/
+            QVector<int> firstcharposvec;
+            firstcharposvec.clear();
+            //查找第一个字符位置
+            while (((j = resStr.indexOf(*(pws + 0), j, Qt::CaseInsensitive)) != -1))
+            {
+                qDebug() << "Found "+ searchText + " tag at index jjjjjjjj:  " << j;
+//                setStringColor(j + 1, length);
+                firstcharposvec.push_back(j);
                 ++j;
             }
+            qDebug()<< "\n";
+            QVector<int> seccharposvec;
+            seccharposvec.clear();
+            //查找第二个字符位置
+            j = 0;
+            while (((j = resStr.indexOf(*(pws + 1), j, Qt::CaseInsensitive)) != -1))
+            {
+                qDebug() << "Found "+ searchText + " tag at index jjjjjjjj:  " << j;
+//                setStringColor(j + 1, length);
+                seccharposvec.push_back(j);
+                ++j;
+            }
+            QVector<int> reltposvec;
+            reltposvec.clear();
+
+            //比较两次所得，查找首字符在其中的位置
+            for(QVector<int>::iterator iter=firstcharposvec.begin(); iter!=firstcharposvec.end(); iter++)
+            {
+//                  if( *iter == 3)
+//                         veci.erase(iter);
+                for (QVector<int>::iterator siter=seccharposvec.begin(); siter!=seccharposvec.end(); siter++)
+                {
+                    qDebug() << "firstcharposvec pos:" << *iter;
+                    qDebug() << "seccharposvec   pos:" << *siter;
+                    if(*iter + 1 == *siter)
+                    {
+                        reltposvec.push_back(*iter);
+                        qDebug() << "find pos:" << *iter;
+                        seccharposvec.erase(siter);
+                        break;
+                    }
+                }
+            }
+
+            firstcharposvec.clear();
+            seccharposvec.clear();
+
+
+            for (int i = 0; i < reltposvec.size(); ++i)
+            {
+//                qDebug() << "last pos:" << reltposvec.at(i);
+                setStringColor(reltposvec.at(i) + 1, length);
+            }
+            reltposvec.clear();
+
+
+//            while (((j = resStr.indexOf(*(pws + 0), j, Qt::CaseInsensitive)) != -1)
+//                   &&((k = resStr.indexOf(*(pws + 1), k, Qt::CaseInsensitive)) != -1))
+//            {
+//                //                for(i = 0;i< length;i++){
+//                //                    qDebug() << "c:"<< *(pws + i);
+//                //                }
+//                qDebug() << "Found "+ searchText + " tag at index jjjjjjjj:  " << j;
+//                qDebug() << "Found "+ searchText + " tag at index kkkkkkkk:  " << k;
+//                if(j + 1 == k)
+//                {
+//                    setStringColor(j + 1, length);
+//                    ++j;
+//                    k=j;
+//                    //                    ++k;
+//                }else{
+//                    ++j;
+//                    k=j;
+//                    //                    ++k;
+//                }
+//            }
         }
 
 
@@ -1891,17 +1974,17 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
 
 
 
-////        qDebug() << "str format:" <<resStr;
+        ////        qDebug() << "str format:" <<resStr;
 
-//        QLatin1String latinstr(searchText.toLatin1().data());
+        //        QLatin1String latinstr(searchText.toLatin1().data());
 
-////        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
+        ////        QString resStrUnicode = G2U(resStr.toLocal8Bit().data());
 
-//        while ((j = resStr.indexOf(latinstr, j, Qt::CaseInsensitive)) != -1) {
-//            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
-//            setStringColor(j + 1, length);
-//            ++j;
-//        }
+        //        while ((j = resStr.indexOf(latinstr, j, Qt::CaseInsensitive)) != -1) {
+        //            qDebug() << "Found "+ searchText + " tag at index position:  " << j;
+        //            setStringColor(j + 1, length);
+        //            ++j;
+        //        }
 
 
 #endif
@@ -1957,8 +2040,8 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
     GenCode_str+="\n";
     GenCode_str+="\n";
 
-//    QString resStrUnicode = G2U(GenCode_str.toLocal8Bit().data());
-//    ui->genshow_textEdit->setText(resStrUnicode);
+    //    QString resStrUnicode = G2U(GenCode_str.toLocal8Bit().data());
+    //    ui->genshow_textEdit->setText(resStrUnicode);
 
 
 
@@ -2018,7 +2101,7 @@ void autoCCode::modify_content()
     ui_dialog->comboBox_vartype->setCurrentIndex(get_CurrentIndex_comboBox_vartype(selectresult.vartype_list.at(index_key_color)));
 
     ui_dialog->langtype_comboBox->setCurrentIndex(CurrentIndex_comboBox_langtype);
-//    ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(CurrentIndex_comboBox_langtype);
+    //    ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(CurrentIndex_comboBox_langtype);
 
 
     InDb_Dialog->show();
@@ -2541,10 +2624,10 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
         }
         //单击隐藏listView界面
         if (event->type() == QEvent::MouseButtonPress) {
-//            qDebug()<<" clicked!!";
+            //            qDebug()<<" clicked!!";
 
             //隐藏双击出来的listView列表框
-             on_lineEdit_search_Key_Escape();
+            on_lineEdit_search_Key_Escape();
             return true;
         }
         //按键处理
@@ -2578,52 +2661,52 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     {
         if (event->type()==QEvent::FocusIn)     //然后再判断控件的具体事件 (这里指获得焦点事件)
         {
-//            QPalette p=QPalette();
-//            p.setColor(QPalette::Base,Qt::green);
-//            ui->lineEdit1->setPalette(p);
+            //            QPalette p=QPalette();
+            //            p.setColor(QPalette::Base,Qt::green);
+            //            ui->lineEdit1->setPalette(p);
             //隐藏双击出来的listView列表框
-             on_lineEdit_search_Key_Escape();
-//             return true;
+            on_lineEdit_search_Key_Escape();
+            //             return true;
 
         }
         else if (event->type()==QEvent::FocusOut)    // 这里指 lineEdit1 控件的失去焦点事件
         {
-//            QPalette p=QPalette();
-//            p.setColor(QPalette::Base,Qt::white);
-//            ui->lineEdit1->setPalette(p);
-//            if(completeTextFlag == FLAG_YES)
-//            {
-//                return true;
-//            }
-//            qDebug()<<"lose focus,so  hidden!!";
-//            on_lineEdit_search_Key_Escape();
-//            return true;
+            //            QPalette p=QPalette();
+            //            p.setColor(QPalette::Base,Qt::white);
+            //            ui->lineEdit1->setPalette(p);
+            //            if(completeTextFlag == FLAG_YES)
+            //            {
+            //                return true;
+            //            }
+            //            qDebug()<<"lose focus,so  hidden!!";
+            //            on_lineEdit_search_Key_Escape();
+            //            return true;
         }
 
 
-//        //按键处理
-//        if(event->type() == QEvent::KeyPress)
-//        {
-//            //qDebug()<<"KeyPress ed!!";
-//            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-//            int key = keyEvent->key();
-//            if (Qt::Key_Down == key) {
-//                //qDebug()<<"Key_Down !!";
-//            } else if (Qt::Key_Up == key) {
-//                //qDebug()<<"Key_Up !!";
+        //        //按键处理
+        //        if(event->type() == QEvent::KeyPress)
+        //        {
+        //            //qDebug()<<"KeyPress ed!!";
+        //            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        //            int key = keyEvent->key();
+        //            if (Qt::Key_Down == key) {
+        //                //qDebug()<<"Key_Down !!";
+        //            } else if (Qt::Key_Up == key) {
+        //                //qDebug()<<"Key_Up !!";
 
-//            } else if (Qt::Key_Escape == key) {
-//                //qDebug()<<"Key_Escape !!";
-//                on_lineEdit_search_Key_Escape();
+        //            } else if (Qt::Key_Escape == key) {
+        //                //qDebug()<<"Key_Escape !!";
+        //                on_lineEdit_search_Key_Escape();
 
-//            } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
-//                //qDebug()<<"Key_Enter   Key_Return!!";
-//            } else {
-//                //qDebug()<<"else Key !!";
+        //            } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
+        //                //qDebug()<<"Key_Enter   Key_Return!!";
+        //            } else {
+        //                //qDebug()<<"else Key !!";
 
-//            }
-////            return true;
-//        }
+        //            }
+        ////            return true;
+        //        }
     }
     return QObject::eventFilter(obj, event);
 }
@@ -2674,7 +2757,7 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
                                     looktexthistoryres,
                                     "");//searchStr置空，表示所有全查询
 
-//    qDebug() << "count:"<< looktexthistoryres.looktextarry.count();
+    //    qDebug() << "count:"<< looktexthistoryres.looktextarry.count();
     for(int i=0;i< looktexthistoryres.looktextarry.count();i++)
     {
         //qDebug() << "arry:"<< looktexthistoryres.looktextarry.at(i);
@@ -2688,7 +2771,7 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 #endif //从数据库表looktexthis_table中查找前10个最常用的数据 begin
 
 
-//    model->setStringList(looktexthistoryres.looktextarry);
+    //    model->setStringList(looktexthistoryres.looktextarry);
     model->setStringList(s1);
     listView->setModel(model);
     if (model->rowCount() == 0)
@@ -2750,7 +2833,7 @@ QStringList autoCCode::listWidget_codeview_subShow(QStringList &strlist)
         }
         else
         {
-           s1.append(strlist.at(i));
+            s1.append(strlist.at(i));
         }
 
     }
