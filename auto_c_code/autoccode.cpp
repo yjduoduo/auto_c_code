@@ -1476,7 +1476,14 @@ void autoCCode::cleanLineTextEditSearch(void)
 {
     ui->lineEdit_search->setFocus();
     if(ui->lineEdit_search->text().isEmpty())
+    {
         return;
+    }
+    if(ui->lineEdit_search->text().length() <= 1)
+    {
+        ui->lineEdit_search->clear();
+        return;
+    }
     ui->lineEdit_search->clear();
     update_show_after_insert();
 }
@@ -1787,7 +1794,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //    //背景浅绿色，前景黑色
     //    ui->genshow_textEdit->setStyleSheet("background-color: rgb(60, 243, 243);color: rgb(0, 0, 0);");
     QString searchText = ui->lineEdit_search->text();
-    if(searchText.isEmpty() && (searchText.length() <= 1))     /* 长度为1不搜索 */
+    if(searchText.isEmpty() || (searchText.length() <= 1))     /* 长度为1不搜索 */
     {
         return;
     }
