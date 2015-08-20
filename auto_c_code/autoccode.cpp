@@ -1849,6 +1849,10 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
         //            ++j;
         //        }
 
+#define SHOWMAXCHARNUMS_ENG 20   /* 英文最多颜色显示的个数 */
+#define SHOWMAXCHARNUMS_CHI 40   /* 汉语最多颜色显示的个数 */
+
+        int showmaxnums = 0;
 
         //根据引用的内容来判断吧，既然无法同时满足，只能这样了，根据字符是否为汉字来走不同的路径
         if(strutf8len == strlocal8bitlen)
@@ -1868,6 +1872,11 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
                 //qDebug() << "Found "+ searchText + " tag at index position:  " << j;
                 setStringColor(j + 1, searchText.length());
                 ++j;
+                if(showmaxnums > SHOWMAXCHARNUMS_ENG)
+                {
+                    break;
+                }
+                showmaxnums++;
             }
 
         }else{
@@ -1891,6 +1900,8 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
   3.再搜索‘文’，依次获取
   4.最后再把内容进行处理，确认哪些显示哪些不显示
 */
+
+            showmaxnums = 0;
             QVector<int> firstcharposvec;
             firstcharposvec.clear();
             //查找第一个字符位置
@@ -1900,8 +1911,15 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
 //                setStringColor(j + 1, length);
                 firstcharposvec.push_back(j);
                 ++j;
+                if(showmaxnums > SHOWMAXCHARNUMS_CHI)
+                {
+                    break;
+                }
+                showmaxnums++;
             }
             qDebug()<< "\n";
+
+            showmaxnums = 0;
             QVector<int> seccharposvec;
             seccharposvec.clear();
             //查找第二个字符位置
@@ -1912,6 +1930,11 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
 //                setStringColor(j + 1, length);
                 seccharposvec.push_back(j);
                 ++j;
+                if(showmaxnums > SHOWMAXCHARNUMS_CHI)
+                {
+                    break;
+                }
+                showmaxnums++;
             }
             QVector<int> reltposvec;
             reltposvec.clear();
