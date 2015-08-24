@@ -1900,6 +1900,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
   3.再搜索‘文’，依次获取
   4.最后再把内容进行处理，确认哪些显示哪些不显示
   5.如果字符串大于3个，则按搜索一、三个来计算
+  6.按首字符、最后一个字符来计算，效果不佳
 */
             showmaxnums = 0;
             QVector<int> firstcharposvec;
@@ -1924,9 +1925,9 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
             seccharposvec.clear();
 
             int searchCharPos = 0;
-            if(searchText.length() >=3)
+            if(length >=3)
             {
-                searchCharPos = 2;
+                searchCharPos = /*length -*/ 2;
             }else{
                 searchCharPos = 1;
             }
