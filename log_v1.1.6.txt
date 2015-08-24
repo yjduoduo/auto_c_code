@@ -1,4 +1,4 @@
-commit baaa548a0cd3f1c39f965422209e86650de58403
+﻿commit baaa548a0cd3f1c39f965422209e86650de58403
 Author: yjduoduo <wxjlmr@126.com>
 Date:   Fri May 23 08:28:34 2014 +0800
 
@@ -150,3 +150,6 @@ Author: yjduoduo <yjduoduo@users.noreply.github.com>
 Date:   Thu May 15 00:36:54 2014 -0700
 
     Initial commit
+
+
+test for http:gitpasswd
