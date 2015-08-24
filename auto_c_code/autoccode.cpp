@@ -1899,8 +1899,8 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
   2.先搜索‘外’，获取位置
   3.再搜索‘文’，依次获取
   4.最后再把内容进行处理，确认哪些显示哪些不显示
+  5.如果字符串大于3个，则按搜索一、三个来计算
 */
-
             showmaxnums = 0;
             QVector<int> firstcharposvec;
             firstcharposvec.clear();
@@ -1922,9 +1922,19 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
             showmaxnums = 0;
             QVector<int> seccharposvec;
             seccharposvec.clear();
+
+            int searchCharPos = 0;
+            if(searchText.length() >=3)
+            {
+                searchCharPos = 2;
+            }else{
+                searchCharPos = 1;
+            }
+
+
             //查找第二个字符位置
             j = 0;
-            while (((j = resStr.indexOf(*(pws + 1), j, Qt::CaseInsensitive)) != -1))
+            while (((j = resStr.indexOf(*(pws + searchCharPos), j, Qt::CaseInsensitive)) != -1))
             {
                 qDebug() << "Found "+ searchText + " tag at index jjjjjjjj:  " << j;
 //                setStringColor(j + 1, length);
@@ -1948,7 +1958,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
                 {
                     qDebug() << "firstcharposvec pos:" << *iter;
                     qDebug() << "seccharposvec   pos:" << *siter;
-                    if(*iter + 1 == *siter)
+                    if(*iter + searchCharPos == *siter)
                     {
                         reltposvec.push_back(*iter);
                         qDebug() << "find pos:" << *iter;
