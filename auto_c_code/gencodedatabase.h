@@ -22,6 +22,7 @@ enum LanguageType{
     languagetype_Sqlite3_,
     languagetype_Postgresql_,
     languagetype_Patchs_,
+    languagetype_Unittest_,
     languagetype_Rust_,
     languagetype_JavaScript_,
     languagetype_Debug_,

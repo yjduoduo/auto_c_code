@@ -586,7 +586,8 @@ void autoCCode::addstr_comboBox(void)
     <<str_china(Php)
     <<str_china(Python)
     <<str_china(Qt)
-    <<str_china(Qtquick);
+    <<str_china(Qtquick)
+    <<str_china(Unittest);
 
 
 
@@ -794,6 +795,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Patchs")
     {
         return languagetype_Patchs_;
+    }
+    else if(type == "Unittest")
+    {
+        return languagetype_Unittest_;
     }
     else if(type == "Rust")
     {
