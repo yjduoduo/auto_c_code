@@ -3,12 +3,12 @@
 #include "ui_PushDbdialog.h"
 #include "ui_dialog_select_database.h"
 #include "ui_autoindb.h"
+#include "ui_setup1.h"
 #include <QtGui>
 #include "prefix_string.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "version.h"
 #include "gencodedatabase.h"
 #include <QFileDialog>
 #include <QInputDialog>
@@ -56,6 +56,7 @@ autoCCode::autoCCode(QWidget *parent) :
     ui_dialog(new Ui::Dialog),
     ui_dia_selectdb(new Ui::Dialog_select_database),
     ui_autoindb(new Ui::AutoIndb),
+    ui_setup(new Ui::SetUpDialog),
     sets(NULL),
     index_key_color(0),
     index_note_color(0),
@@ -81,6 +82,9 @@ autoCCode::autoCCode(QWidget *parent) :
 
     dialog_autoindb =  new QDialog(this);
     ui_autoindb->setupUi(dialog_autoindb);
+    /* set up menu */
+    SetUp_Dialog = new QDialog(this);
+    ui_setup->setupUi(SetUp_Dialog);
 
     QTimerSet();
     pushButtonSet();
@@ -97,6 +101,7 @@ autoCCode::autoCCode(QWidget *parent) :
     InstallEventFilterSets();
     ListViewSets();
     CharFormat();
+    setDefaultColor();
 
 }
 void autoCCode::shortCutSet(void)
@@ -248,11 +253,22 @@ void autoCCode::dragDropSet(void)
     ui->codeshow_textEdit->hide();
     //    ui->codeshow_textEdit->setHidden(true);
 }
+void autoCCode::pushButton_setup()
+{
+    QObject::connect(ui_setup->pushButton_backColor,SIGNAL(clicked()),
+                     this,SLOT(on_pushButton_backColor_clicked2()));
+    QObject::connect(ui_setup->pushButton_foreColor,SIGNAL(clicked()),
+                     this,SLOT(on_pushButton_foreColor_clicked2()));
 
+    QObject::connect(ui_setup->pushButton_font,SIGNAL(clicked()),
+                     this,SLOT(setFont()));
+}
 
 void autoCCode::pushButtonSet(void)
 {
     self_print(pushButtonSet);
+
+    pushButton_setup();
     //btn list
     //ui
     QObject::connect(ui->close_btn,SIGNAL(clicked()),this,SLOT(close()));
@@ -296,6 +312,8 @@ void autoCCode::pushButtonSet(void)
                      this,SLOT(note_clear()));
     QObject::connect(ui->pushButton_search_fromClip,SIGNAL(clicked()),
                      this,SLOT(set_search_text()));
+    QObject::connect(ui->pushButton_setUp,SIGNAL(clicked()),
+                     this,SLOT(MainSetUp()));
 
     /*  content按钮操作   */
     QObject::connect(ui_dialog->pushButton_content_paste,SIGNAL(clicked()),
@@ -332,6 +350,8 @@ void autoCCode::pushButtonSet(void)
 
     //入库，选择左侧的内容，添加到右侧
     QObject::connect(timer_checkbox_sel,SIGNAL(timeout()),this,SLOT(pushdb_checkbox_if_selected()));
+
+
 
 
 }
@@ -1814,8 +1834,8 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //    QString str = "We must be <b>bold</b>, very <b>bold</b>";
     //    qDebug() <<"defaultCursorMoveStyle" << ui->genshow_textEdit->document()->defaultCursorMoveStyle();
     int j = 0;
-    int k = 0;
-    int q = 0;
+//    int k = 0;
+//    int q = 0;
     int goflat = CHAR_ENGLISH;
     if(resStr.contains(searchText))
     {
@@ -2481,7 +2501,7 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
 
 void autoCCode::pushdb_checkbox_if_selected()
 {
-    self_print(pushdb_checkbox_if_selected);
+//    self_print(pushdb_checkbox_if_selected);
     if(InDb_Dialog->isHidden())
         return;
     if(!ui_dialog->checkBox_SEL->isChecked())
@@ -2509,7 +2529,7 @@ void autoCCode::pushdb_checkbox_if_selected()
 
 void autoCCode::pasteClicpTextToSearchEdit()
 {
-    self_print(pasteClicpTextToSearchEdit);
+//    self_print(pasteClicpTextToSearchEdit);
     if(!ui->checkBox_autogetclipboxtext->isChecked())
         return;
     QString linetext = ui->lineEdit_search->text();
@@ -2550,7 +2570,7 @@ void autoCCode::ui_dialog_AutoGetCon(bool checked)
 }
 void autoCCode::pasteClicpTextToAutoGetCon_UiDialog()
 {
-    self_print(pasteClicpTextToAutoGetCon_UiDialog);
+//    self_print(pasteClicpTextToAutoGetCon_UiDialog);
     if((!ui_dialog->checkBox_AutoGet_Con->isChecked()) || InDb_Dialog->isHidden())
         return;
     QString linetext = ui_dialog->content_textEdit_dia->toPlainText();
@@ -2900,4 +2920,81 @@ QString autoCCode::getCurrentDateTimeTxt()
     logfilename += time.currentTime().toString("_HH-mm-ss");
     logfilename +=".txt";
     return logfilename;
+}
+
+void autoCCode::MainSetUp()
+{
+    self_print(MainSetUp);
+    SetUp_Dialog->show();
+}
+
+void autoCCode::on_pushButton_foreColor_clicked2()
+{
+    self_print(on_pushButton_foreColor_clicked);
+    setforegroudColor();
+}
+
+void autoCCode::on_pushButton_backColor_clicked2()
+{
+    self_print(on_pushButton_backColor_clicked);
+    setbackgroudColor();
+}
+//颜色对话框设置-前景色
+void autoCCode::setforegroudColor()
+{
+    QPalette palette    = ui->genshow_textEdit->palette();
+    QPalette palettebtn = ui_setup->pushButton_foreColor->palette();
+    const QColor &color=QColorDialog::getColor(palette.color(QPalette::Base),this);
+    if(color.isValid()){
+        qDebug() <<"textedit set color";
+        palette.setColor(QPalette::Text,color);
+        palettebtn.setColor(QPalette::Button,color);
+        ui->genshow_textEdit->setPalette(palette);
+        ui_setup->pushButton_foreColor->setPalette(palettebtn);
+
+    }
+    update();
+}
+//颜色对话框设置-背景色
+void autoCCode::setbackgroudColor()
+{
+    QPalette palette=ui->genshow_textEdit->palette();
+    QPalette palettebtn = ui_setup->pushButton_backColor->palette();
+    const QColor &color=QColorDialog::getColor(palette.color(QPalette::Base),this);
+    if(color.isValid()){
+        palette.setColor(QPalette::Base,color);
+        palettebtn.setColor(QPalette::Button,color);
+        ui->genshow_textEdit->setPalette(palette);
+        ui_setup->pushButton_backColor->setPalette(palettebtn);
+    }
+
+}
+//setup 界面，默认设置的前景色和背景色
+void autoCCode::setDefaultColor()
+{
+    QPalette palette=ui->genshow_textEdit->palette();
+    QPalette palette_backcolorbtn = ui_setup->pushButton_backColor->palette();
+    QPalette palette_foreColorbtn = ui_setup->pushButton_foreColor->palette();
+    palette.setColor(QPalette::Base,Qt::white);//背景色
+    palette.setColor(QPalette::Text,Qt::black);//前景色
+    palette_backcolorbtn.setColor(QPalette::Button,Qt::black);
+    palette_foreColorbtn.setColor(QPalette::Button,Qt::white);
+    ui->genshow_textEdit->setPalette(palette);
+    ui_setup->pushButton_backColor->setPalette(palette_backcolorbtn);
+    ui_setup->pushButton_foreColor->setPalette(palette_foreColorbtn);
+    ui->genshow_textEdit->setFont(QFont("Times",18,QFont::Bold));
+    ui_setup->pushButton_font->setText("Times");
+}
+//设置字体对话框
+void autoCCode::setFont()
+{
+    bool ok;
+    const QFont& font = QFontDialog::getFont(&ok,
+                                             ui->genshow_textEdit->font(),
+                                             this,
+                                             tr("字体对话框"));
+    if(ok) {// 如果<确定>,设置字体.
+        ui->genshow_textEdit->setFont(font);
+        ui_setup->pushButton_font->setText(font.family());
+    }
 }

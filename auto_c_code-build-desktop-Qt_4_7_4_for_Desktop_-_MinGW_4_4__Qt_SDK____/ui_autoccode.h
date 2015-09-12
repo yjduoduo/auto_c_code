@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Sat Sep 12 23:16:14 2015
+** Created: Sun Sep 13 00:26:30 2015
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -66,6 +66,7 @@ public:
     QSpacerItem *verticalSpacer_3;
     QPushButton *modify_btn;
     QPushButton *delete_btn;
+    QPushButton *pushButton_setUp;
     QPushButton *about_btn;
     QPushButton *close_btn;
     QVBoxLayout *verticalLayout_2;
@@ -81,7 +82,7 @@ public:
         autoCCode->resize(936, 438);
         autoCCode->setWindowOpacity(1);
         autoCCode->setAutoFillBackground(false);
-        autoCCode->setStyleSheet(QString::fromUtf8("background-image: url(:/images/gezi.png);"));
+        autoCCode->setStyleSheet(QString::fromUtf8(""));
         horizontalLayout_4 = new QHBoxLayout(autoCCode);
         horizontalLayout_4->setSpacing(6);
         horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
@@ -243,6 +244,14 @@ public:
 
         verticalLayout_3->addWidget(delete_btn);
 
+        pushButton_setUp = new QPushButton(autoCCode);
+        pushButton_setUp->setObjectName(QString::fromUtf8("pushButton_setUp"));
+        pushButton_setUp->setAutoDefault(true);
+        pushButton_setUp->setDefault(false);
+        pushButton_setUp->setFlat(true);
+
+        verticalLayout_3->addWidget(pushButton_setUp);
+
         about_btn = new QPushButton(autoCCode);
         about_btn->setObjectName(QString::fromUtf8("about_btn"));
 
@@ -279,6 +288,7 @@ public:
 
         genshow_textEdit = new QTextEdit(autoCCode);
         genshow_textEdit->setObjectName(QString::fromUtf8("genshow_textEdit"));
+        genshow_textEdit->setAutoFillBackground(true);
 
         verticalLayout_2->addWidget(genshow_textEdit);
 
@@ -318,6 +328,7 @@ public:
         pushbtn_autoindb->setText(QApplication::translate("autoCCode", "\350\207\252\345\212\250\345\205\245\345\272\223", 0, QApplication::UnicodeUTF8));
         modify_btn->setText(QApplication::translate("autoCCode", "\344\277\256\346\224\271", 0, QApplication::UnicodeUTF8));
         delete_btn->setText(QApplication::translate("autoCCode", "\345\210\240\351\231\244", 0, QApplication::UnicodeUTF8));
+        pushButton_setUp->setText(QApplication::translate("autoCCode", "\350\256\276\347\275\256", 0, QApplication::UnicodeUTF8));
         about_btn->setText(QApplication::translate("autoCCode", "\345\205\263\344\272\216", 0, QApplication::UnicodeUTF8));
         close_btn->setText(QApplication::translate("autoCCode", "close", 0, QApplication::UnicodeUTF8));
         save_btn->setText(QApplication::translate("autoCCode", "save", 0, QApplication::UnicodeUTF8));

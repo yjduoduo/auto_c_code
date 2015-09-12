@@ -8,12 +8,14 @@
 #include <QListWidgetItem>
 #include <QListView>
 #include "gencodedatabase.h"
+#include "version.h"
 
 namespace Ui {
 class autoCCode;
 class Dialog;
 class Dialog_select_database;
 class AutoIndb;//自动入库界面
+class SetUpDialog;
 }
 
 
@@ -32,6 +34,7 @@ public:
     QDialog *InDb_Dialog;//手动入库界面
     QDialog *dialog_selectdb;//选择数据库界面
     QDialog *dialog_autoindb;//自动入库界面
+    QDialog *SetUp_Dialog;//设置界面,操作函数的实体
 
     GenCodeDatabase b;
 
@@ -72,7 +75,10 @@ protected://function declared
     void setWindowTitle_Main(const QString &arg1);
 
     QString getCurrentDateTimeTxt();//取名称为时间的文件字符串
+
 private slots:
+    void MainSetUp();//主界面设置
+
     void on_save_btn_clicked();
 
     void db_comboBox_activated(const QString &arg1);
@@ -225,6 +231,17 @@ private slots:
     void on_lineEdit_search_Key_Escape();
 
     void completeText(QModelIndex index);
+    void on_pushButton_foreColor_clicked2();
+
+    void on_pushButton_backColor_clicked2();
+    //颜色对话框设置-前景色
+    void setforegroudColor();
+    //颜色对话框设置
+    void setbackgroudColor();
+    //默认对话框颜色
+    void setDefaultColor();
+    //设置字体
+    void setFont();
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -234,6 +251,7 @@ public slots:
 
 private:
     void pushButtonSet(void);//按钮集合
+    void pushButton_setup();
 
     void keyPressEventSet();
     void textEditSet(void);
@@ -289,6 +307,7 @@ private:
     Ui::Dialog *ui_dialog;//入库
     Ui::Dialog_select_database *ui_dia_selectdb;//选择数据库
     Ui::AutoIndb *ui_autoindb;//自动入库界面
+    Ui::SetUpDialog *ui_setup;//设置界面
 
 private:
     void dragEnterEvent(QDragEnterEvent *event);

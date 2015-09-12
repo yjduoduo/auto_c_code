@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'qxtglobalshortcut.h'
 **
-** Created: Sat Sep 12 23:17:10 2015
+** Created: Sat Sep 12 23:55:13 2015
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!

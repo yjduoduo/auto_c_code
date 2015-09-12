@@ -35,7 +35,8 @@ HEADERS  += autoccode.h \
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
     dialog_select_database.ui \
-    autoindb.ui
+    autoindb.ui \
+    setup1.ui
 
 
 INCLUDEPATH +=\
