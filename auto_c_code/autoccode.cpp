@@ -2977,12 +2977,12 @@ void autoCCode::setDefaultColor()
     QPalette palette_foreColorbtn = ui_setup->pushButton_foreColor->palette();
     palette.setColor(QPalette::Base,Qt::white);//背景色
     palette.setColor(QPalette::Text,Qt::black);//前景色
-    palette_backcolorbtn.setColor(QPalette::Button,Qt::black);
-    palette_foreColorbtn.setColor(QPalette::Button,Qt::white);
+    palette_backcolorbtn.setColor(QPalette::Button,Qt::white);
+    palette_foreColorbtn.setColor(QPalette::Button,Qt::black);
     ui->genshow_textEdit->setPalette(palette);
     ui_setup->pushButton_backColor->setPalette(palette_backcolorbtn);
     ui_setup->pushButton_foreColor->setPalette(palette_foreColorbtn);
-    ui->genshow_textEdit->setFont(QFont("Times",18,QFont::Bold));
+    ui->genshow_textEdit->setFont(QFont("Times",14,QFont::Bold));
     ui_setup->pushButton_font->setText("Times");
 }
 //设置字体对话框
