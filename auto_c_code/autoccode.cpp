@@ -1351,7 +1351,8 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
     QString text = QInputDialog::getText(this,"Input Dialog",
                                          "Please Press Ok to delete",
                                          QLineEdit::Normal,
-                                         selectresult.keyword_list.at(index_key_color),
+                                         selectresult.keyword_list.at(index_key_color)
+                                         .left(100),
                                          &isOK);
     if(isOK)
     {
