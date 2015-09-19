@@ -648,7 +648,7 @@ void autoCCode::on_save_btn_clicked()
 {
     self_print(on_save_btn_clicked);
     QString savefileName = QFileDialog::getSaveFileName(this,
-                                                        tr("Open Files"), getCurrentDateTimeTxt(), tr("All Files (*.*);;Txt(*.txt);;Img Files(*.png);;Code Files(*.c)"));
+                                                        tr("Save File"), getCurrentDateTimeTxt(), tr("All Files (*.*);;Txt(*.txt);;Img Files(*.png);;Code Files(*.c)"));
 
     if (savefileName.isNull())
     {
@@ -2910,16 +2910,26 @@ void autoCCode::setWindowTitle_Main(const QString &arg1)
 {
     setWindowTitle(arg1);
 }
-
+//    logfilename +="C:/";
+//    logfilename +=QDesktopServices::storageLocation(QDesktopServices::DesktopLocation);
+//    logfilename +=QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+//    logfilename +=QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
+//    logfilename +=QDesktopServices::storageLocation(QDesktopServices::ApplicationsLocation);
+//    QDesktopServices::storageLocation(QDesktopServices::HomeLocation)
+//    QDesktopServices::storageLocation(QDesktopServices::ApplicationsLocation)
+//    QDesktopServices::storageLocation(QDesktopServices::TempLocation)
 QString autoCCode::getCurrentDateTimeTxt()
 {
     QDate date;
     QTime time;
     QString logfilename;
     logfilename.clear();
-    logfilename = date.currentDate().toString("sclogyyyy-MM-dd");
+    /* 默认保存到桌面上 */
+    logfilename +=QDesktopServices::storageLocation(QDesktopServices::DesktopLocation) + "/";
+    logfilename += date.currentDate().toString("sclogyyyy-MM-dd");
     logfilename += time.currentTime().toString("_HH-mm-ss");
     logfilename +=".txt";
+//    qDebug() << "save path:" << logfilename;
     return logfilename;
 }
 
