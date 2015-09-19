@@ -723,12 +723,23 @@ void autoCCode::show_InBtn(void)
 {
     ui->indb_btn->show();
 }
+void autoCCode::SaveUiMove()
+{
+    quint16 usWidth = (this->width() - InDb_Dialog->width())/2;
+    quint16 usHeight = abs(this->height() - InDb_Dialog->height())/2;
+    usHeight = usHeight > 80 ? usHeight:80;
+    InDb_Dialog->move(this->pos().x() + usWidth,
+                      this->pos().y() + usHeight);
+}
+
 //Èë¿âº¯Êı
 void autoCCode::on_indb_btn_clicked(void)
 {
     self_print(on_indb_btn_clicked);
     QString select_text = ui->codeshow_textEdit->textCursor().selectedText();
     ui_dialog->content_textEdit_dia->setText(select_text);
+
+    SaveUiMove();
 
     if(ui->checkBox_inbox->isChecked())
     {
@@ -748,13 +759,19 @@ void autoCCode::on_indb_window_show_hide()
     if(ui->checkBox_inbox->isChecked())
     {
         if(InDb_Dialog->isHidden())
+        {
+            SaveUiMove();
             InDb_Dialog->show();
+        }
         else
             InDb_Dialog->hide();
         //        InDb_Dialog->exec();
     }else{
         if(InDb_Dialog->isHidden())
+        {
+            SaveUiMove();
             InDb_Dialog->show();
+        }
         else
             InDb_Dialog->hide();
     }
@@ -2163,7 +2180,7 @@ void autoCCode::modify_content()
     ui_dialog->langtype_comboBox->setCurrentIndex(CurrentIndex_comboBox_langtype);
     //    ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(CurrentIndex_comboBox_langtype);
 
-
+    SaveUiMove();
     InDb_Dialog->show();
 
 }
@@ -2620,6 +2637,7 @@ void autoCCode::PopInDbUi()
                     if(!ui_dialog->content_textEdit_dia->toPlainText().isEmpty())
                     {
                         ui_dialog->content_textEdit_dia->clear();
+                        SaveUiMove();
                         InDb_Dialog->show();
                     }else{
                         InDb_Dialog->hide();

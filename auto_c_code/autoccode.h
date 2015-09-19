@@ -76,6 +76,7 @@ protected://function declared
 
     QString getCurrentDateTimeTxt();//取名称为时间的文件字符串
 
+    void SaveUiMove();
 private slots:
     void MainSetUp();//主界面设置
 
