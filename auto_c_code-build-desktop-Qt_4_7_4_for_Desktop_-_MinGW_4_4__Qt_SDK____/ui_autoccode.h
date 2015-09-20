@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Sun Sep 13 00:26:30 2015
+** Created: Mon Sep 21 00:23:17 2015
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -28,6 +28,7 @@
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include "codeeditor.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -73,13 +74,13 @@ public:
     QHBoxLayout *horizontalLayout;
     QPushButton *save_btn;
     QPushButton *gencode_btn;
-    QTextEdit *genshow_textEdit;
+    codeEditor *genshow_textEdit;
 
     void setupUi(QWidget *autoCCode)
     {
         if (autoCCode->objectName().isEmpty())
             autoCCode->setObjectName(QString::fromUtf8("autoCCode"));
-        autoCCode->resize(936, 438);
+        autoCCode->resize(936, 458);
         autoCCode->setWindowOpacity(1);
         autoCCode->setAutoFillBackground(false);
         autoCCode->setStyleSheet(QString::fromUtf8(""));
@@ -286,9 +287,8 @@ public:
 
         verticalLayout_2->addLayout(horizontalLayout);
 
-        genshow_textEdit = new QTextEdit(autoCCode);
+        genshow_textEdit = new codeEditor(autoCCode);
         genshow_textEdit->setObjectName(QString::fromUtf8("genshow_textEdit"));
-        genshow_textEdit->setAutoFillBackground(true);
 
         verticalLayout_2->addWidget(genshow_textEdit);
 
@@ -333,6 +333,7 @@ public:
         close_btn->setText(QApplication::translate("autoCCode", "close", 0, QApplication::UnicodeUTF8));
         save_btn->setText(QApplication::translate("autoCCode", "save", 0, QApplication::UnicodeUTF8));
         gencode_btn->setText(QApplication::translate("autoCCode", "\347\224\237\346\210\220\344\273\243\347\240\201\345\272\223", 0, QApplication::UnicodeUTF8));
+        genshow_textEdit->setPlainText(QString());
     } // retranslateUi
 
 };

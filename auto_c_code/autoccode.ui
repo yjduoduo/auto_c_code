@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>936</width>
-    <height>438</height>
+    <height>458</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -305,9 +305,9 @@
         </layout>
        </item>
        <item>
-        <widget class="QTextEdit" name="genshow_textEdit">
-         <property name="autoFillBackground">
-          <bool>true</bool>
+        <widget class="codeEditor" name="genshow_textEdit">
+         <property name="plainText">
+          <string/>
          </property>
         </widget>
        </item>
@@ -318,6 +318,13 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>codeEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header>codeeditor.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

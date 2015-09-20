@@ -1062,7 +1062,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     GenCode_str+="\n";
 
 
-    ui->genshow_textEdit->setText(GenCode_str);
+    ui->genshow_textEdit->setPlainText(GenCode_str);
     SearchTextResWithColor(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
@@ -1092,7 +1092,7 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
     GenCode_str+="\n";
 
 
-    ui->genshow_textEdit->setText(GenCode_str);
+    ui->genshow_textEdit->setPlainText(GenCode_str);
     SearchTextResWithColor(GenCode_str);
     //    update();
 }
@@ -1689,7 +1689,7 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
         GenCode_str+="\n";
         GenCode_str+="\n";
 
-        ui->genshow_textEdit->setText(GenCode_str);
+        ui->genshow_textEdit->setPlainText(GenCode_str);
         SearchTextResWithColor(GenCode_str);
         //    setCharColor(10);
         //    ui->genshow_textEdit->setHtml(GenCode_str);
@@ -2122,7 +2122,7 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 
 
 
-    ui->genshow_textEdit->setText(GenCode_str);
+    ui->genshow_textEdit->setPlainText(GenCode_str);
     SearchTextResWithColor(GenCode_str);
 
     //    setCharColor(10);

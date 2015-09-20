@@ -18,6 +18,7 @@ class AutoIndb;//自动入库界面
 class SetUpDialog;
 }
 
+class codeEditor;
 
 
 
