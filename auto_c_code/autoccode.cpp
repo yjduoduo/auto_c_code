@@ -1615,13 +1615,17 @@ void autoCCode::dropEvent(QDropEvent *event)
 
 void autoCCode::readTextFile(const QString &fileName)
 {
+#define MAXREADFILESIZE 10*1024*1024  /* 最大读取文件10M */
     str_print(fileName);
     /*  读取文件 只读   */
     QFile file(fileName);
-    if(file.open(QIODevice::ReadOnly))
+    if(file.open(QIODevice::ReadOnly) && file.size() < MAXREADFILESIZE)
     {
+//        qDebug() << "file opend!!";
         QTextStream stream(&file);
-        ui->codeshow_textEdit->setText(stream.readAll());
+//        ui->codeshow_textEdit->setText(stream.readAll());
+        ui->genshow_textEdit->setPlainText(stream.readAll());
+//        qDebug() << "content:" << stream.readAll();
     }
     file.close();
 }
