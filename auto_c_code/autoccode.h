@@ -65,6 +65,11 @@ protected://function declared
     void setStringColor(unsigned int pos,unsigned int len);/*  QT:设置textedit文本框中某个字符串的格式 */
     //安装事件过滤器
     virtual bool eventFilter ( QObject * watched, QEvent *event );
+    //安装鼠标滚动过滤器
+    void wheelEvent(QWheelEvent *event);
+    //鼠标是否在控件genshow_textEdit之中
+    int IsCursorInGenShowUi(void);
+    int isCTRLKeyPressed;//Ctrl键是否按下
     //当前是否有选中库，如果没有则直接返回，可当作一个函数接口。
     bool currentDbHaved(void);
 
@@ -79,6 +84,9 @@ protected://function declared
 
     void SaveUiMove();
 private slots:
+    void ZoomInFont();//放大字体
+    void ZoomOutFont();//缩小字体
+
     void MainSetUp();//主界面设置
 
     void on_save_btn_clicked();

@@ -1621,11 +1621,11 @@ void autoCCode::readTextFile(const QString &fileName)
     QFile file(fileName);
     if(file.open(QIODevice::ReadOnly) && file.size() < MAXREADFILESIZE)
     {
-//        qDebug() << "file opend!!";
+        //        qDebug() << "file opend!!";
         QTextStream stream(&file);
-//        ui->codeshow_textEdit->setText(stream.readAll());
+        //        ui->codeshow_textEdit->setText(stream.readAll());
         ui->genshow_textEdit->setPlainText(stream.readAll());
-//        qDebug() << "content:" << stream.readAll();
+        //        qDebug() << "content:" << stream.readAll();
     }
     file.close();
 }
@@ -1856,8 +1856,8 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //    QString str = "We must be <b>bold</b>, very <b>bold</b>";
     //    qDebug() <<"defaultCursorMoveStyle" << ui->genshow_textEdit->document()->defaultCursorMoveStyle();
     int j = 0;
-//    int k = 0;
-//    int q = 0;
+    //    int k = 0;
+    //    int q = 0;
     int goflat = CHAR_ENGLISH;
     if(resStr.contains(searchText))
     {
@@ -1956,7 +1956,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
             while (((j = resStr.indexOf(*(pws + 0), j, Qt::CaseInsensitive)) != -1))
             {
                 qDebug() << "Found "+ searchText + " tag at index jjjjjjjj:  " << j;
-//                setStringColor(j + 1, length);
+                //                setStringColor(j + 1, length);
                 firstcharposvec.push_back(j);
                 ++j;
                 if(showmaxnums > SHOWMAXCHARNUMS_CHI)
@@ -1985,7 +1985,7 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
             while (((j = resStr.indexOf(*(pws + searchCharPos), j, Qt::CaseInsensitive)) != -1))
             {
                 qDebug() << "Found "+ searchText + " tag at index jjjjjjjj:  " << j;
-//                setStringColor(j + 1, length);
+                //                setStringColor(j + 1, length);
                 seccharposvec.push_back(j);
                 ++j;
                 if(showmaxnums > SHOWMAXCHARNUMS_CHI)
@@ -2000,8 +2000,8 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
             //比较两次所得，查找首字符在其中的位置
             for(QVector<int>::iterator iter=firstcharposvec.begin(); iter!=firstcharposvec.end(); iter++)
             {
-//                  if( *iter == 3)
-//                         veci.erase(iter);
+                //                  if( *iter == 3)
+                //                         veci.erase(iter);
                 for (QVector<int>::iterator siter=seccharposvec.begin(); siter!=seccharposvec.end(); siter++)
                 {
                     qDebug() << "firstcharposvec pos:" << *iter;
@@ -2022,32 +2022,32 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
 
             for (int i = 0; i < reltposvec.size(); ++i)
             {
-//                qDebug() << "last pos:" << reltposvec.at(i);
+                //                qDebug() << "last pos:" << reltposvec.at(i);
                 setStringColor(reltposvec.at(i) + 1, length);
             }
             reltposvec.clear();
 
 
-//            while (((j = resStr.indexOf(*(pws + 0), j, Qt::CaseInsensitive)) != -1)
-//                   &&((k = resStr.indexOf(*(pws + 1), k, Qt::CaseInsensitive)) != -1))
-//            {
-//                //                for(i = 0;i< length;i++){
-//                //                    qDebug() << "c:"<< *(pws + i);
-//                //                }
-//                qDebug() << "Found "+ searchText + " tag at index jjjjjjjj:  " << j;
-//                qDebug() << "Found "+ searchText + " tag at index kkkkkkkk:  " << k;
-//                if(j + 1 == k)
-//                {
-//                    setStringColor(j + 1, length);
-//                    ++j;
-//                    k=j;
-//                    //                    ++k;
-//                }else{
-//                    ++j;
-//                    k=j;
-//                    //                    ++k;
-//                }
-//            }
+            //            while (((j = resStr.indexOf(*(pws + 0), j, Qt::CaseInsensitive)) != -1)
+            //                   &&((k = resStr.indexOf(*(pws + 1), k, Qt::CaseInsensitive)) != -1))
+            //            {
+            //                //                for(i = 0;i< length;i++){
+            //                //                    qDebug() << "c:"<< *(pws + i);
+            //                //                }
+            //                qDebug() << "Found "+ searchText + " tag at index jjjjjjjj:  " << j;
+            //                qDebug() << "Found "+ searchText + " tag at index kkkkkkkk:  " << k;
+            //                if(j + 1 == k)
+            //                {
+            //                    setStringColor(j + 1, length);
+            //                    ++j;
+            //                    k=j;
+            //                    //                    ++k;
+            //                }else{
+            //                    ++j;
+            //                    k=j;
+            //                    //                    ++k;
+            //                }
+            //            }
         }
 
 
@@ -2523,7 +2523,7 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
 
 void autoCCode::pushdb_checkbox_if_selected()
 {
-//    self_print(pushdb_checkbox_if_selected);
+    //    self_print(pushdb_checkbox_if_selected);
     if(InDb_Dialog->isHidden())
         return;
     if(!ui_dialog->checkBox_SEL->isChecked())
@@ -2551,7 +2551,7 @@ void autoCCode::pushdb_checkbox_if_selected()
 
 void autoCCode::pasteClicpTextToSearchEdit()
 {
-//    self_print(pasteClicpTextToSearchEdit);
+    //    self_print(pasteClicpTextToSearchEdit);
     if(!ui->checkBox_autogetclipboxtext->isChecked())
         return;
     QString linetext = ui->lineEdit_search->text();
@@ -2592,7 +2592,7 @@ void autoCCode::ui_dialog_AutoGetCon(bool checked)
 }
 void autoCCode::pasteClicpTextToAutoGetCon_UiDialog()
 {
-//    self_print(pasteClicpTextToAutoGetCon_UiDialog);
+    //    self_print(pasteClicpTextToAutoGetCon_UiDialog);
     if((!ui_dialog->checkBox_AutoGet_Con->isChecked()) || InDb_Dialog->isHidden())
         return;
     QString linetext = ui_dialog->content_textEdit_dia->toPlainText();
@@ -2685,6 +2685,31 @@ int autoCCode::showcode_textEdit_AtBotton()
     return (ui_autoindb->spinBox_notenumber->text().toInt() == 1);
 }
 
+void autoCCode::wheelEvent(QWheelEvent *event)
+{
+    int numDegrees = event->delta() / 8;//滚动的角度，*8就是鼠标滚动的距离
+    int numSteps = numDegrees / 15;//滚动的步数，*15就是鼠标滚动的角度
+    if (event->orientation() == Qt::Horizontal) {
+        //        scrollHorizontally(numSteps);       //水平滚动
+//        qDebug() << "horizontal";
+    } else {
+        //        scrollVertically(numSteps);       //垂直滚动
+//        qDebug() << "vectorial numSteps:" <<numSteps << ",numDegrees:" << numDegrees;
+    }
+
+    if(isCTRLKeyPressed && IsCursorInGenShowUi())
+    {
+        if(numSteps > 0)
+        {
+            ZoomInFont();
+        }
+        else if(numSteps < 0)
+        {
+            ZoomOutFont();
+        }
+    }
+    event->accept();      //接收该事件
+}
 
 bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 {
@@ -2729,7 +2754,8 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 
             } else if (Qt::Key_Enter == key || Qt::Key_Return == key) {
                 //qDebug()<<"Key_Enter   Key_Return!!";
-            } else {
+            }
+            else {
                 //qDebug()<<"else Key !!";
 
             }
@@ -2737,7 +2763,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
         }
     }
 
-
+//    qDebug()<<"isCTRLKeyPressed:" << isCTRLKeyPressed;
     //想添加一个Ctrl+滚轮放大字体的功能
     if(obj == ui->genshow_textEdit)
     {
@@ -2763,6 +2789,26 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
             //            qDebug()<<"lose focus,so  hidden!!";
             //            on_lineEdit_search_Key_Escape();
             //            return true;
+        }
+
+        //按键处理
+        if(event->type() == QEvent::KeyRelease)
+        {
+            isCTRLKeyPressed = FALSE;
+        }
+        //按键处理
+        if(event->type() == QEvent::KeyPress)
+        {
+            //qDebug()<<"KeyPress ed!!";
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            int key = keyEvent->key();
+            if (Qt::Key_Control == key){
+                qDebug()<<"Key_Control   Pressed";
+                isCTRLKeyPressed = TRUE;
+            }
+            else {
+                //qDebug()<<"else Key !!";
+            }
         }
 
 
@@ -2951,7 +2997,7 @@ QString autoCCode::getCurrentDateTimeTxt()
     logfilename += date.currentDate().toString("sclogyyyy-MM-dd");
     logfilename += time.currentTime().toString("_HH-mm-ss");
     logfilename +=".txt";
-//    qDebug() << "save path:" << logfilename;
+    //    qDebug() << "save path:" << logfilename;
     return logfilename;
 }
 
@@ -3029,5 +3075,63 @@ void autoCCode::setFont()
     if(ok) {// 如果<确定>,设置字体.
         ui->genshow_textEdit->setFont(font);
         ui_setup->pushButton_font->setText(font.family());
+    }
+}
+#define MAXFONTSIZE 72
+#define MINFONTSIZE 1
+void autoCCode::ZoomInFont()
+{
+
+    qDebug() << "ZoomInFont";
+    QFont font = ui->genshow_textEdit->font();
+    int fontsize = font.pointSize();
+//    qDebug() << "OldFontFamily:" << OldFontFamily;
+    qDebug() << "fontsize:" << fontsize;
+    fontsize += 1;
+    if(fontsize > MAXFONTSIZE)
+        fontsize = MAXFONTSIZE;
+
+    ui->genshow_textEdit->setFont(QFont(font.family(),fontsize,font.weight()));
+}
+
+void autoCCode::ZoomOutFont()
+{
+    qDebug() << "ZoomOutFont";
+    QFont font = ui->genshow_textEdit->font();
+    int fontsize = font.pointSize();
+//    qDebug() << "OldFontFamily:" << OldFontFamily;
+    qDebug() << "fontsize:" << fontsize;
+    fontsize -= 1;
+    if(fontsize < MINFONTSIZE)
+        fontsize = MINFONTSIZE;
+
+    ui->genshow_textEdit->setFont(QFont(font.family(),fontsize,font.weight()));
+}
+
+int autoCCode::IsCursorInGenShowUi(void)
+{
+    int x = ui->genshow_textEdit->x();
+    int y = ui->genshow_textEdit->y();
+    int w = ui->genshow_textEdit->width();
+    int h = ui->genshow_textEdit->height();
+    int left = x;
+    int right = x + w;
+    int top = y;
+    int bot = y + h;
+    qDebug() << "x:" <<x << " y:" <<y;
+    qDebug() << "w:" <<x << " h:" <<y;
+    qDebug() << "left:" <<left << " right:" <<right;
+    qDebug() << "top:" <<top << " bot:" <<bot;
+    QPoint a = QCursor::pos();
+    qDebug() << "QCursor x:" <<a.x() << " y:" <<a.y();
+    if(a.x() < right && a.x() > left && a.y() > top && a.y() < bot)
+    {
+        qDebug() << "in scope!!!!!!!!!!!!!!!";
+        return TRUE;
+    }
+    else
+    {
+        qDebug() << "out scope";
+        return FALSE;
     }
 }
