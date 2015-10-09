@@ -173,6 +173,7 @@ void* thread_func_selectdatabase(void* args)
     const char *databases_name = pPara->databases_name;
     char *selecttableexpress = pPara->selecttableexpress;
     SelectResult selectres;
+    selectres.existflag = 0;
     int aspeactflag = pPara->aspeactflag;
 
 //    QString searchtext = pPara->searchtext;
@@ -387,6 +388,7 @@ void* thread_func_searchdatabase(void* args)
     const char *databases_name = pPara->databases_name;
     char *selecttableexpress = pPara->selecttableexpress;
     SelectResult selectres;
+    selectres.existflag = 0;
     QString searchtext = pPara->searchtext;
 
     sqlite3 * db = 0;
