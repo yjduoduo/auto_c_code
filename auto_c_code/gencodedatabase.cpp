@@ -1,4 +1,5 @@
 #include "gencodedatabase.h"
+#include <pthread.h>
 
 #define ARRAY_SIZE(A)  (sizeof(A)/sizeof(A[0]))
 
@@ -154,6 +155,135 @@ int GenCodeDatabase::insertdatabase(const char *databases_name,
 
     return(0);
 }
+
+#if 1
+typedef struct SelInPara_Selectdatabase
+{
+    const char *databases_name;
+    char *selecttableexpress;
+    SelectResult selectres;
+    int aspeactflag;
+}SelInPara_Selectdatabase;
+
+SelInPara_Selectdatabase inPara_selectdatabase;
+
+void* thread_func_selectdatabase(void* args)
+{
+    SelInPara_Selectdatabase *pPara =(SelInPara_Selectdatabase *)args;
+    const char *databases_name = pPara->databases_name;
+    char *selecttableexpress = pPara->selecttableexpress;
+    SelectResult selectres;
+    int aspeactflag = pPara->aspeactflag;
+
+//    QString searchtext = pPara->searchtext;
+
+    sqlite3 * db = 0;
+    int result;
+    char * pErrMsg = 0;
+    int ret = 0;
+    int nRow=0, nColumn;
+    char **dbResult; //是 char ** 类型，两个*号
+    int index;
+    // 连接数据库
+    ret = sqlite3_open(databases_name, &db);
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
+        return NULL;
+    }
+    //    str_print(databases_name);
+    //    printf("connect database success!\n");
+
+
+    //    fprintf(stdout,"express:%s\n",selecttableexpress);
+    result = sqlite3_get_table( db, selecttableexpress, &dbResult, &nRow, &nColumn, &pErrMsg );
+    if( SQLITE_OK == result )
+    {
+        //查询成功
+
+        index = nColumn; //前面说过 dbResult 前面第一行数据是字段名称，从 nColumn 索引开始才是真正的数据
+
+        //        printf( "查到%d条记录\n", nRow );
+        for(  int i = 0; i < nRow ; i++ )
+
+        {
+            //           printf( "第 %d 条记录\n", i+1 );
+            for( int j = 0 ; j < nColumn; j++ )
+            {
+                if(ASPECT_HAVE == aspeactflag){
+                    selectres.aspect_list <<QString::fromUtf8(dbResult [index]);
+                }else{
+#if 0
+                    //                printf( "字段名:%s  ?> 字段值:%s\n",  dbResult[j], dbResult [index] );
+                    if(0==j){
+                        selectres.contentstr+= QString::fromUtf8(dbResult [index]);
+                        selectres.content_list << QString::fromUtf8(dbResult [index]);
+                    }else if(2==j)
+                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+                    else if(3==j)
+                        selectres.note_list<< QString::fromUtf8(dbResult [index]);
+                    else if(4==j)
+                        selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
+#else
+                    if(0==j){
+                        selectres.contentstr+= QString::fromUtf8(dbResult [index]);
+                        selectres.content_list << QString::fromUtf8(dbResult [index]);
+                    }else if(2==j)
+                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+                    else if(3==j)
+                        selectres.note_list<< QString::fromUtf8(dbResult [index]);
+                    else if(4==j)
+                        selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
+                    else if(5 == j){
+                        selectres.aspect_field << QString::fromUtf8(dbResult [index]);
+                        str_print(QString::fromUtf8(dbResult [index]));
+                    }
+
+#endif
+                    selectres.existflag = 1;
+                }
+
+                ++index;
+            }
+            //            printf( "-------\n" );
+        }
+
+    }
+
+    sqlite3_free_table(dbResult);
+    //关闭数据库，释放内存
+    sqlite3_close(db);
+
+    inPara_selectdatabase.selectres =  selectres;
+
+    return NULL;
+}
+
+int GenCodeDatabase::selectdatabase(const char *databases_name,
+                                    char *selecttableexpress,
+                                    SelectResult &selectres,int aspeactflag)
+{
+    inPara_selectdatabase.databases_name = databases_name;
+    inPara_selectdatabase.selecttableexpress = selecttableexpress;
+    inPara_selectdatabase.aspeactflag = aspeactflag;
+//    inPara_selectdatabase.selectres = selectres;
+#define THREADNUMS 1
+    int i;
+    /*  线程 ID   */
+    pthread_t threads[THREADNUMS];
+//    /* Create a key to associate thread_log file pointer in thread-specific data. Use close_thread_log to clean up the file pointers. */
+//    pthread_key_create(&thread_log_key,close_thread_log);
+    /* Create threads to do the work. */
+    for(i = 0;i<THREADNUMS;i++){
+        pthread_create(&threads[i],NULL,&thread_func_selectdatabase,&inPara_selectdatabase);
+    }
+    for(i = 0;i<THREADNUMS;i++){
+        pthread_join(threads[i],NULL);
+    }
+
+    selectres = inPara_selectdatabase.selectres;
+    return 0;
+}
+#else
 int GenCodeDatabase::selectdatabase(const char *databases_name,
                                     char *selecttableexpress,
                                     SelectResult &selectres,int aspeactflag)
@@ -238,7 +368,142 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
     return(0);
 }
 
+#endif
 
+#if 1
+typedef struct SelInPara
+{
+    const char *databases_name;
+    char *selecttableexpress;
+    SelectResult selectres;
+    QString searchtext;
+}SelInPara;
+
+SelInPara inPara;
+
+void* thread_func_searchdatabase(void* args)
+{
+    SelInPara *pPara =(SelInPara *)args;
+    const char *databases_name = pPara->databases_name;
+    char *selecttableexpress = pPara->selecttableexpress;
+    SelectResult selectres;
+    QString searchtext = pPara->searchtext;
+
+    sqlite3 * db = 0;
+    int result;
+    char * pErrMsg = 0;
+    int ret = 0;
+    int nRow=0, nColumn;
+    char **dbResult; //是 char ** 类型，两个*号
+    int index;
+    // 连接数据库
+    ret = sqlite3_open(databases_name, &db);
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
+        return NULL;
+    }
+    //    str_print(databases_name);
+    //    printf("connect database success!\n");
+
+
+    //    fprintf(stdout,"express:%s\n",selecttableexpress);
+    result = sqlite3_get_table( db, selecttableexpress, &dbResult, &nRow, &nColumn, &pErrMsg );
+    if( SQLITE_OK == result )
+    {
+        //查询成功
+
+        index = nColumn; //前面说过 dbResult 前面第一行数据是字段名称，从 nColumn 索引开始才是真正的数据
+        int searchflag = 0;
+        //        printf( "查到%d条记录\n", nRow );
+        for(  int i = 0; i < nRow ; i++ )
+
+        {
+            //           printf( "第 %d 条记录\n", i+1 );
+            for( int j = 0 ; j < nColumn; j++ )
+            {//查询顺序表
+                /* lowercase_keyworks,keywords,content,lantype,note,vartype */
+                if(0==j){
+                    if(QString::fromUtf8(dbResult [index]).contains(searchtext)){
+                        searchflag = 1;
+                    }
+                }else if(1==j){
+                    if(searchflag){
+                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+
+                    }
+                    else if(QString::fromUtf8(dbResult [index]).contains(searchtext)){
+                        searchflag = 1;
+                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+                    }
+
+                }
+                else if(2==j){
+                    if(searchflag){
+                        selectres.contentstr+= QString::fromUtf8(dbResult [index]);
+                        selectres.content_list << QString::fromUtf8(dbResult [index]);
+                    }
+
+                }
+                else if(4==j){
+                    if(searchflag)
+                        selectres.note_list<< QString::fromUtf8(dbResult [index]);
+                }
+                else if(5==j){
+                    if(searchflag)
+                        selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
+                }
+
+                if(nColumn-1 == j)
+                    searchflag = 0;
+
+                selectres.existflag = 1;
+
+
+                ++index;
+            }
+            //            printf( "-------\n" );
+        }
+
+    }
+
+    sqlite3_free_table(dbResult);
+    //关闭数据库，释放内存
+    sqlite3_close(db);
+
+    inPara.selectres =  selectres;
+
+    return NULL;
+}
+
+
+/*  main函数   */
+int GenCodeDatabase::searchdatabase(const char *databases_name,
+                                    char *selecttableexpress,
+                                    SelectResult &selectres,
+                                    const QString &searchtext)
+{
+    inPara.databases_name = databases_name;
+    inPara.searchtext = searchtext;
+    inPara.selecttableexpress = selecttableexpress;
+//    inPara.selectres = selectres;
+#define THREADNUMS 1
+    int i;
+    /*  线程 ID   */
+    pthread_t threads[THREADNUMS];
+//    /* Create a key to associate thread_log file pointer in thread-specific data. Use close_thread_log to clean up the file pointers. */
+//    pthread_key_create(&thread_log_key,close_thread_log);
+    /* Create threads to do the work. */
+    for(i = 0;i<THREADNUMS;i++){
+        pthread_create(&threads[i],NULL,&thread_func_searchdatabase,&inPara);
+    }
+    for(i = 0;i<THREADNUMS;i++){
+        pthread_join(threads[i],NULL);
+    }
+
+    selectres = inPara.selectres;
+    return 0;
+}
+#else
 int GenCodeDatabase::searchdatabase(const char *databases_name,
                                     char *selecttableexpress,
                                     SelectResult &selectres,
@@ -328,6 +593,154 @@ int GenCodeDatabase::searchdatabase(const char *databases_name,
 
     return(0);
 }
+#endif
+
+
+#if 1
+typedef struct SelInPara_lookTextHisTbl
+{
+    const char *databases_name;
+    char *selecttableexpress;
+    LookTextHistoryResult selectres;
+    QString searchtext;
+
+}SelInPara_lookTextHisTbl;
+
+SelInPara_lookTextHisTbl inPara_lookTextHisTbl;
+
+void* thread_func_searchdatabase_lookTextHisTbl(void* args)
+{
+    SelInPara_lookTextHisTbl *pPara =(SelInPara_lookTextHisTbl *)args;
+    const char *databases_name = pPara->databases_name;
+    char *selecttableexpress = pPara->selecttableexpress;
+    LookTextHistoryResult selectres;
+    QString searchtext = pPara->searchtext;
+
+    sqlite3 * db = 0;
+    int result;
+    char * pErrMsg = 0;
+    int ret = 0;
+    int nRow=0, nColumn;
+    char **dbResult; //是 char ** 类型，两个*号
+    int index;
+    // 连接数据库
+    ret = sqlite3_open(databases_name, &db);
+    if ( ret != SQLITE_OK ){
+        fprintf(stderr, "无法打开数据库: %s", sqlite3_errmsg(db));
+        return NULL;
+    }
+    //    str_print(databases_name);
+    //    printf("connect database success!\n");
+
+
+    //    fprintf(stdout,"express:%s\n",selecttableexpress);
+    result = sqlite3_get_table( db, selecttableexpress, &dbResult, &nRow, &nColumn, &pErrMsg );
+    if( SQLITE_OK == result )
+    {
+        //查询成功
+
+        index = nColumn; //前面说过 dbResult 前面第一行数据是字段名称，从 nColumn 索引开始才是真正的数据
+        int searchflag = 0;
+        //        printf( "查到%d条记录\n", nRow );
+        for(  int i = 0; i < nRow ; i++ )
+
+        {
+            //           printf( "第 %d 条记录\n", i+1 );
+            for( int j = 0 ; j < nColumn; j++ )
+            {//查询顺序表
+                /*     "([ID] INTEGER PRIMARY KEY,"\
+                        "[looktextname] varchar(100),"\
+                        "[lowercase_looktextname] varchar(100)" \
+                        "[looktimes] INTEGER,"\
+                        "[relatedtblname] varchar(100)," \
+                        "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));" */
+                if(0==j){
+                    if(searchtext.isEmpty())
+                    {
+                        searchflag = 1;
+                    }
+                }else if(1==j){ //looktextname
+                    if(searchtext.isEmpty())
+                    {
+                        searchflag = 1;
+                        selectres.looktextarry << QString::fromLocal8Bit(dbResult [index]);
+
+                    }
+                    else if(QString::fromLocal8Bit(dbResult [index]).contains(searchtext)){
+                        searchflag = 1;
+                        selectres.looktextarry << QString::fromLocal8Bit(dbResult [index]);
+                    }
+
+                }
+                else if(2==j){ // lowercase_looktextname
+//                    if(searchflag){
+//                        selectres.looktimes = atoi(dbResult [index]);
+//                        //                        printf( " look result:%s-------\n", dbResult [index]);
+//                        //                        selectres.keyword_list << QString::fromLocal8Bit(dbResult [index]);
+
+//                    }
+                }//looktimes
+                else if(3==j){ // lowercase_looktextname
+                    if(searchflag){
+                        selectres.looktimes = atoi(dbResult [index]);
+                        //                        printf( " look result:%s-------\n", dbResult [index]);
+                        //                        selectres.keyword_list << QString::fromLocal8Bit(dbResult [index]);
+
+                    }
+                }
+
+
+                if(nColumn-1 == j)
+                    searchflag = 0;
+
+                //                selectres.existflag = 1;
+
+//                printf( " look result:%d:%s-------\n",j, dbResult [index]);
+                ++index;
+            }
+//                        printf( "-------\n" );
+        }
+
+    }
+
+    sqlite3_free_table(dbResult);
+    //关闭数据库，释放内存
+    sqlite3_close(db);
+
+    inPara_lookTextHisTbl.selectres =  selectres;
+
+    return NULL;
+}
+
+
+/*  main函数   */
+int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
+                                    char *selecttableexpress,
+                                    LookTextHistoryResult &selectres,
+                                    const QString &searchtext)
+{
+    inPara_lookTextHisTbl.databases_name = databases_name;
+    inPara_lookTextHisTbl.searchtext = searchtext;
+    inPara_lookTextHisTbl.selecttableexpress = selecttableexpress;
+//    inPara.selectres = selectres;
+#define THREADNUMS 1
+    int i;
+    /*  线程 ID   */
+    pthread_t threads[THREADNUMS];
+//    /* Create a key to associate thread_log file pointer in thread-specific data. Use close_thread_log to clean up the file pointers. */
+//    pthread_key_create(&thread_log_key,close_thread_log);
+    /* Create threads to do the work. */
+    for(i = 0;i<THREADNUMS;i++){
+        pthread_create(&threads[i],NULL,&thread_func_searchdatabase_lookTextHisTbl,&inPara_lookTextHisTbl);
+    }
+    for(i = 0;i<THREADNUMS;i++){
+        pthread_join(threads[i],NULL);
+    }
+
+    selectres = inPara_lookTextHisTbl.selectres;
+    return 0;
+}
+#else
 
 //#define CREATTABLE_LOOKTEXTHIS(A) "CREATE TABLE  "#A \
 //    "([ID] INTEGER PRIMARY KEY,"\
@@ -435,6 +848,7 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
 
     return(0);
 }
+#endif
 
 void GenCodeDatabase::creatable(InsertCon *cont)
 {

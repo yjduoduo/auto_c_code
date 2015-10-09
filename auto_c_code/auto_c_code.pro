@@ -46,6 +46,7 @@ INCLUDEPATH +=\
 ./sqlite-autoconf\
 ./codeEditor
 
+LIBS += -lpthread
 RC_FILE = autoapp.rc
 
 RESOURCES += \

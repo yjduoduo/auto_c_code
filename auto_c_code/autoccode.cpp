@@ -510,7 +510,7 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
                     .arg(selected_langtype)
                     .arg(aspect);
         else
-            select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0 order by ID desc limit %3")
+            select_express = QString("select content,lantype,keywords,note,vartype,aspect_field from %1 where lantype='%2' and aspect_field='%3' and delflag=0 order by ID desc limit %4")
                     .arg(sets->talbename)
                     .arg(selected_langtype)
                     .arg(aspect)
@@ -554,11 +554,12 @@ void autoCCode::addstr_aspect_comboBox(void)
     QString select_express = QString("select distinct aspect_field from aspect_table;");
     clr_selectresult(selectresult);
     str_print(select_express);
-    selectresult.aspect_list<<str_china();
+//    selectresult.aspect_list<<str_china();
     b.selectdatabase(sets->databasename,
                      select_express.toUtf8().data(),
                      selectresult,
                      ASPECT_HAVE);
+    selectresult.aspect_list.push_front(str_china());//·¶³ëÊ×Î»ÌîÐ´Îª¿Õ
     ui_dia_selectdb->comboBox_aspect->clear();
     ui_dia_selectdb->comboBox_aspect->addItems(selectresult.aspect_list);
 
