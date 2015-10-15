@@ -69,7 +69,8 @@ autoCCode::autoCCode(QWidget *parent) :
     timer_checkbox_sel(NULL),
     lineEdit_search_timer(NULL),
     checkbox_getcliptext_timer(NULL),
-    checkbox_AutoGetCon_timer(NULL)
+    checkbox_AutoGetCon_timer(NULL),
+    isCTRLKeyPressed(FALSE)
 
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
@@ -1042,7 +1043,7 @@ void autoCCode::listWidgetSet(void)
 //添加到右边的内容中
 void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
 {
-    self_print(add_to_gen_code_textedit);
+    self_print(add_to_gen_code_textedit_by_keyword);
     rightTextShowClear_oncheched();
     QString str = item->text();
     unsigned int index = 0;
@@ -1072,7 +1073,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
 //添加到右边的内容中
 void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
 {
-    self_print(add_to_gen_code_textedit);
+    self_print(add_to_gen_code_textedit_by_note);
     rightTextShowClear_oncheched();
     QString str = item->text();
     unsigned int index = 0;
@@ -2159,7 +2160,7 @@ void autoCCode::modify_content()
     {
         /*  标准对话框——警示消息框   */
         QMessageBox::warning(NULL,"Warning",
-                             str_china(请选择左侧进行修改),
+                             str_china(请选择右侧进行修改),
                              QMessageBox::Yes,QMessageBox::Yes);
         //        /*  标准对话框——警示消息框   */
         //        QMessageBox::warning(NULL,"Warning",
@@ -2175,14 +2176,17 @@ void autoCCode::modify_content()
     ui_dialog->content_textEdit_dia->setText(selectresult.content_list.at(index_key_color));
     ui_dialog->index_textEdit_dia->setText(selectresult.keyword_list.at(index_key_color));
 
-    str_print(selectresult.vartype_list.at(index_key_color));
-    str_print(selectresult.aspect_field.at(index_key_color));
-    str_print(get_aspect_list_index(selectresult.aspect_field.at(index_key_color)));
+#if 0/* 此两处打印打挂了，为啥？ */
+//    str_print(selectresult.vartype_list.at(index_key_color));
+//    str_print(selectresult.aspect_field.at(index_key_color));
+//    str_print(get_aspect_list_index(selectresult.aspect_field.at(index_key_color)));
+#endif
+
     //    ui_dialog->comboBox_aspect->setCurrentIndex(get_aspect_list_index(selectresult.aspect_field.at(index_key_color)));
 
     ui_dialog->comboBox_vartype->setCurrentIndex(get_CurrentIndex_comboBox_vartype(selectresult.vartype_list.at(index_key_color)));
-
-    ui_dialog->langtype_comboBox->setCurrentIndex(CurrentIndex_comboBox_langtype);
+	/* 选择的数据库表往右窜呢 */
+    ui_dialog->langtype_comboBox->setCurrentIndex(CurrentIndex_comboBox_langtype + 1);
     //    ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(CurrentIndex_comboBox_langtype);
 
     SaveUiMove();

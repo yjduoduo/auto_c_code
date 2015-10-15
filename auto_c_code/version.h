@@ -2,12 +2,12 @@
 #define VERSION_H
 
 //发布正式版，定义它
-#if 0
+#if 1
 #define RELEASE_VERSION
 #else
 #define DEBUG_V
 #endif
 
-const char version_autoccode[]="v1.8.0";
+const char version_autoccode[]="v1.8.1";
 
 #endif // VERSION_H
