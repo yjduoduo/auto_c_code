@@ -220,6 +220,7 @@ void autoCCode::keyPressEventSet()
 
 void autoCCode::checkboxSet()
 {
+    ui_dialog->checkBox_SEL->setChecked(false);
     QObject::connect(ui_dialog->checkBox_AutoGet_Con,SIGNAL(toggled(bool)),
                      this,SLOT(ui_dialog_AutoGetCon(bool)));
     QObject::connect(ui->checkBox_autogetclipboxtext,SIGNAL(toggled(bool)),
@@ -229,12 +230,27 @@ void autoCCode::checkboxSet()
 
     QObject::connect(ui_dialog->content_textEdit_dia,SIGNAL(textChanged()),
                      this,SLOT(set_index_text()));
+    QObject::connect(ui_dialog->content_textEdit_dia,SIGNAL(textChanged()),
+                     this,SLOT(set_note_textEdit_firstline()));
 }
 void autoCCode::set_index_text()
 {
     if(ui->checkBox_same->isChecked())
         ui_dialog->index_textEdit_dia->setText(ui_dialog->content_textEdit_dia->toPlainText());
 }
+void autoCCode::set_note_textEdit_firstline()
+{
+    /* 复选框未选中时默认为第一行内容 */
+    if(ui_dialog->checkBox_SEL->isChecked())
+        return;
+//    int textline = ui_dialog->content_textEdit_dia->document()->lineCount();
+//    qDebug() << "content text linenums:" << textline;
+
+    QString str_firstline = ui_dialog->content_textEdit_dia->document()->findBlockByLineNumber(0).text();
+    qDebug() << "str_firstline:" << str_firstline;
+    ui_dialog->note_textEdit_dia->setText(str_firstline);
+}
+
 
 void autoCCode::lineTextEditSet(void)
 {

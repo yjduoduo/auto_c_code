@@ -138,6 +138,8 @@ private slots:
 
     void set_index_text();
 
+    void set_note_textEdit_firstline();
+
     void setCliptext();
 
     void setCliptext_content();

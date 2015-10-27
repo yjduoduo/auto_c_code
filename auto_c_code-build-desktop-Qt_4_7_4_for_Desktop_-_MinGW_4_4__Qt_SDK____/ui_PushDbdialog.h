@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PushDbdialog.ui'
 **
-** Created: Sat Sep 12 23:52:30 2015
+** Created: Tue Oct 27 22:51:38 2015
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -172,7 +172,8 @@ public:
 
         checkBox_SEL = new QCheckBox(Dialog);
         checkBox_SEL->setObjectName(QString::fromUtf8("checkBox_SEL"));
-        checkBox_SEL->setChecked(true);
+        checkBox_SEL->setEnabled(true);
+        checkBox_SEL->setChecked(false);
 
         horizontalLayout->addWidget(checkBox_SEL);
 
