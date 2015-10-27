@@ -140,6 +140,8 @@ private slots:
 
     void set_note_textEdit_firstline();
 
+    void on_checkBox_SEL_change(bool flag);
+
     void setCliptext();
 
     void setCliptext_content();

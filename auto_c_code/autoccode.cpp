@@ -221,6 +221,9 @@ void autoCCode::keyPressEventSet()
 void autoCCode::checkboxSet()
 {
     ui_dialog->checkBox_SEL->setChecked(false);
+    QObject::connect(ui_dialog->checkBox_SEL,SIGNAL(toggled(bool)),
+                     this,SLOT(on_checkBox_SEL_change(bool)));
+
     QObject::connect(ui_dialog->checkBox_AutoGet_Con,SIGNAL(toggled(bool)),
                      this,SLOT(ui_dialog_AutoGetCon(bool)));
     QObject::connect(ui->checkBox_autogetclipboxtext,SIGNAL(toggled(bool)),
@@ -233,6 +236,15 @@ void autoCCode::checkboxSet()
     QObject::connect(ui_dialog->content_textEdit_dia,SIGNAL(textChanged()),
                      this,SLOT(set_note_textEdit_firstline()));
 }
+
+void autoCCode::on_checkBox_SEL_change(bool flag)
+{
+    if(!flag)
+    {
+        set_note_textEdit_firstline();
+    }
+}
+
 void autoCCode::set_index_text()
 {
     if(ui->checkBox_same->isChecked())
