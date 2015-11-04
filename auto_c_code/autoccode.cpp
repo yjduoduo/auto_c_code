@@ -241,6 +241,7 @@ void autoCCode::on_checkBox_SEL_change(bool flag)
 {
     if(!flag)
     {
+        //如果没有选中的内容，则默认为第一行文字
         set_note_textEdit_firstline();
     }
 }
@@ -252,6 +253,27 @@ void autoCCode::set_index_text()
 }
 void autoCCode::set_note_textEdit_firstline()
 {
+    //如果有选中的内容，则默认为选中的内容
+    QString str_selected = ui_dialog->content_textEdit_dia->textCursor().selectedText();
+    QString str_index_sel = ui_dialog->index_textEdit_dia->textCursor().selectedText();
+    str_print(str_selected);
+    str_print(str_index_sel);
+    if(str_selected.length()&&ui_dialog->content_textEdit_dia->hasFocus()){
+        ui_dialog->note_textEdit_dia->setText(str_selected);
+        selecttext = str_selected;
+        return;
+//            QClipboard *clipboard = QApplication::clipboard();
+//            clipboard->setText(selecttext,QClipboard::Clipboard);
+    }else if(str_index_sel.length()&&ui_dialog->index_textEdit_dia->hasFocus()){
+        ui_dialog->note_textEdit_dia->setText(str_index_sel);
+        selecttext = str_index_sel;
+        return;
+//            QClipboard *clipboard = QApplication::clipboard();
+//            clipboard->setText(selecttext,QClipboard::Clipboard);
+    }
+
+    //如果没有选中的内容，则默认为第一行文字
+
     /* 复选框未选中时默认为第一行内容 */
     if(ui_dialog->checkBox_SEL->isChecked())
         return;
@@ -379,6 +401,7 @@ void autoCCode::pushButtonSet(void)
 
     //入库，选择左侧的内容，添加到右侧
     QObject::connect(timer_checkbox_sel,SIGNAL(timeout()),this,SLOT(pushdb_checkbox_if_selected()));
+    QObject::connect(timer_checkbox_sel,SIGNAL(timeout()),this,SLOT(set_note_textEdit_firstline()));
 
 
 
