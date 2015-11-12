@@ -290,6 +290,16 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="checkBox_AutoSave">
+           <property name="text">
+            <string>AS</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="gencode_btn">
            <property name="minimumSize">
             <size>

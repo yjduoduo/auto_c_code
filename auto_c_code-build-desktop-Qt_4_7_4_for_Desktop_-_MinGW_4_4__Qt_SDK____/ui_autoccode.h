@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Mon Sep 21 00:23:17 2015
+** Created: Thu Nov 12 21:17:25 2015
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -73,6 +73,7 @@ public:
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout;
     QPushButton *save_btn;
+    QCheckBox *checkBox_AutoSave;
     QPushButton *gencode_btn;
     codeEditor *genshow_textEdit;
 
@@ -278,6 +279,12 @@ public:
 
         horizontalLayout->addWidget(save_btn);
 
+        checkBox_AutoSave = new QCheckBox(autoCCode);
+        checkBox_AutoSave->setObjectName(QString::fromUtf8("checkBox_AutoSave"));
+        checkBox_AutoSave->setChecked(true);
+
+        horizontalLayout->addWidget(checkBox_AutoSave);
+
         gencode_btn = new QPushButton(autoCCode);
         gencode_btn->setObjectName(QString::fromUtf8("gencode_btn"));
         gencode_btn->setMinimumSize(QSize(150, 0));
@@ -332,6 +339,7 @@ public:
         about_btn->setText(QApplication::translate("autoCCode", "\345\205\263\344\272\216", 0, QApplication::UnicodeUTF8));
         close_btn->setText(QApplication::translate("autoCCode", "close", 0, QApplication::UnicodeUTF8));
         save_btn->setText(QApplication::translate("autoCCode", "save", 0, QApplication::UnicodeUTF8));
+        checkBox_AutoSave->setText(QApplication::translate("autoCCode", "AS", 0, QApplication::UnicodeUTF8));
         gencode_btn->setText(QApplication::translate("autoCCode", "\347\224\237\346\210\220\344\273\243\347\240\201\345\272\223", 0, QApplication::UnicodeUTF8));
         genshow_textEdit->setPlainText(QString());
     } // retranslateUi

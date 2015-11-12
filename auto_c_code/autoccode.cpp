@@ -262,14 +262,14 @@ void autoCCode::set_note_textEdit_firstline()
         ui_dialog->note_textEdit_dia->setText(str_selected);
         selecttext = str_selected;
         return;
-//            QClipboard *clipboard = QApplication::clipboard();
-//            clipboard->setText(selecttext,QClipboard::Clipboard);
+        //            QClipboard *clipboard = QApplication::clipboard();
+        //            clipboard->setText(selecttext,QClipboard::Clipboard);
     }else if(str_index_sel.length()&&ui_dialog->index_textEdit_dia->hasFocus()){
         ui_dialog->note_textEdit_dia->setText(str_index_sel);
         selecttext = str_index_sel;
         return;
-//            QClipboard *clipboard = QApplication::clipboard();
-//            clipboard->setText(selecttext,QClipboard::Clipboard);
+        //            QClipboard *clipboard = QApplication::clipboard();
+        //            clipboard->setText(selecttext,QClipboard::Clipboard);
     }
 
     //如果没有选中的内容，则默认为第一行文字
@@ -277,11 +277,11 @@ void autoCCode::set_note_textEdit_firstline()
     /* 复选框未选中时默认为第一行内容 */
     if(ui_dialog->checkBox_SEL->isChecked())
         return;
-//    int textline = ui_dialog->content_textEdit_dia->document()->lineCount();
-//    qDebug() << "content text linenums:" << textline;
+    //    int textline = ui_dialog->content_textEdit_dia->document()->lineCount();
+    //    qDebug() << "content text linenums:" << textline;
 
     QString str_firstline = ui_dialog->content_textEdit_dia->document()->findBlockByLineNumber(0).text();
-    qDebug() << "str_firstline:" << str_firstline;
+    //    qDebug() << "str_firstline:" << str_firstline;
     ui_dialog->note_textEdit_dia->setText(str_firstline);
 }
 
@@ -606,7 +606,7 @@ void autoCCode::addstr_aspect_comboBox(void)
     QString select_express = QString("select distinct aspect_field from aspect_table;");
     clr_selectresult(selectresult);
     str_print(select_express);
-//    selectresult.aspect_list<<str_china();
+    //    selectresult.aspect_list<<str_china();
     b.selectdatabase(sets->databasename,
                      select_express.toUtf8().data(),
                      selectresult,
@@ -700,8 +700,19 @@ autoCCode::~autoCCode()
 void autoCCode::on_save_btn_clicked()
 {
     self_print(on_save_btn_clicked);
-    QString savefileName = QFileDialog::getSaveFileName(this,
-                                                        tr("Save File"), getCurrentDateTimeTxt(), tr("All Files (*.*);;Txt(*.txt);;Img Files(*.png);;Code Files(*.c)"));
+    QString savefileName;
+    savefileName.clear();
+
+    if(!ui->checkBox_AutoSave->isChecked())//自动保存未被选中
+    {
+        savefileName = QFileDialog::getSaveFileName(this,
+                                                            tr("Save File"), getCurrentDateTimeTxt(), tr("All Files (*.*);;Txt(*.txt);;Img Files(*.png);;Code Files(*.c)"));
+
+    }
+    else //自动保存选中
+    {
+        savefileName = getCurrentDateTimeTxt() +QString::fromLocal8Bit(".txt");
+    }
 
     if (savefileName.isNull())
     {
@@ -2228,15 +2239,15 @@ void autoCCode::modify_content()
     ui_dialog->index_textEdit_dia->setText(selectresult.keyword_list.at(index_key_color));
 
 #if 0/* 此两处打印打挂了，为啥？ */
-//    str_print(selectresult.vartype_list.at(index_key_color));
-//    str_print(selectresult.aspect_field.at(index_key_color));
-//    str_print(get_aspect_list_index(selectresult.aspect_field.at(index_key_color)));
+    //    str_print(selectresult.vartype_list.at(index_key_color));
+    //    str_print(selectresult.aspect_field.at(index_key_color));
+    //    str_print(get_aspect_list_index(selectresult.aspect_field.at(index_key_color)));
 #endif
 
     //    ui_dialog->comboBox_aspect->setCurrentIndex(get_aspect_list_index(selectresult.aspect_field.at(index_key_color)));
 
     ui_dialog->comboBox_vartype->setCurrentIndex(get_CurrentIndex_comboBox_vartype(selectresult.vartype_list.at(index_key_color)));
-	/* 选择的数据库表往右窜呢 */
+    /* 选择的数据库表往右窜呢 */
     ui_dialog->langtype_comboBox->setCurrentIndex(CurrentIndex_comboBox_langtype + 1);
     //    ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(CurrentIndex_comboBox_langtype);
 
@@ -2747,10 +2758,10 @@ void autoCCode::wheelEvent(QWheelEvent *event)
     int numSteps = numDegrees / 15;//滚动的步数，*15就是鼠标滚动的角度
     if (event->orientation() == Qt::Horizontal) {
         //        scrollHorizontally(numSteps);       //水平滚动
-//        qDebug() << "horizontal";
+        //        qDebug() << "horizontal";
     } else {
         //        scrollVertically(numSteps);       //垂直滚动
-//        qDebug() << "vectorial numSteps:" <<numSteps << ",numDegrees:" << numDegrees;
+        //        qDebug() << "vectorial numSteps:" <<numSteps << ",numDegrees:" << numDegrees;
     }
 
     if(isCTRLKeyPressed && IsCursorInGenShowUi())
@@ -2819,7 +2830,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
         }
     }
 
-//    qDebug()<<"isCTRLKeyPressed:" << isCTRLKeyPressed;
+    //    qDebug()<<"isCTRLKeyPressed:" << isCTRLKeyPressed;
     //想添加一个Ctrl+滚轮放大字体的功能
     if(obj == ui->genshow_textEdit)
     {
@@ -3141,7 +3152,7 @@ void autoCCode::ZoomInFont()
     qDebug() << "ZoomInFont";
     QFont font = ui->genshow_textEdit->font();
     int fontsize = font.pointSize();
-//    qDebug() << "OldFontFamily:" << OldFontFamily;
+    //    qDebug() << "OldFontFamily:" << OldFontFamily;
     qDebug() << "fontsize:" << fontsize;
     fontsize += 1;
     if(fontsize > MAXFONTSIZE)
@@ -3155,7 +3166,7 @@ void autoCCode::ZoomOutFont()
     qDebug() << "ZoomOutFont";
     QFont font = ui->genshow_textEdit->font();
     int fontsize = font.pointSize();
-//    qDebug() << "OldFontFamily:" << OldFontFamily;
+    //    qDebug() << "OldFontFamily:" << OldFontFamily;
     qDebug() << "fontsize:" << fontsize;
     fontsize -= 1;
     if(fontsize < MINFONTSIZE)
