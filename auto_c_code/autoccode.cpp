@@ -282,7 +282,10 @@ void autoCCode::set_note_textEdit_firstline()
 
     QString str_firstline = ui_dialog->content_textEdit_dia->document()->findBlockByLineNumber(0).text();
     //    qDebug() << "str_firstline:" << str_firstline;
-    ui_dialog->note_textEdit_dia->setText(str_firstline);
+    if(str_firstline.length())
+    {
+        ui_dialog->note_textEdit_dia->setText(str_firstline);
+    }
 }
 
 
