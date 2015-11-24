@@ -70,7 +70,8 @@ autoCCode::autoCCode(QWidget *parent) :
     lineEdit_search_timer(NULL),
     checkbox_getcliptext_timer(NULL),
     checkbox_AutoGetCon_timer(NULL),
-    isCTRLKeyPressed(FALSE)
+    isCTRLKeyPressed(FALSE),
+    is_selected(FALSE)
 
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
@@ -258,6 +259,15 @@ void autoCCode::set_note_textEdit_firstline()
     QString str_index_sel = ui_dialog->index_textEdit_dia->textCursor().selectedText();
     str_print(str_selected);
     str_print(str_index_sel);
+    if(str_selected.length() > 0)
+    {
+        is_selected = TRUE;
+    }
+    else
+    {
+        is_selected = FALSE;
+    }
+
     if(str_selected.length()&&ui_dialog->content_textEdit_dia->hasFocus()){
         ui_dialog->note_textEdit_dia->setText(str_selected);
         selecttext = str_selected;
@@ -272,6 +282,10 @@ void autoCCode::set_note_textEdit_firstline()
         //            clipboard->setText(selecttext,QClipboard::Clipboard);
     }
 
+    if(is_selected)
+    {
+        return;
+    }
     //如果没有选中的内容，则默认为第一行文字
 
     /* 复选框未选中时默认为第一行内容 */
@@ -514,6 +528,8 @@ void autoCCode::comboBoxSet(void)
 
     QObject::connect(this->ui->listWidget_note,SIGNAL(itemClicked(QListWidgetItem*)),
                      this,SLOT(listWidget_codeview_scroll_sync(QListWidgetItem*)));
+//    QObject::connect(this->ui->listWidget_note,SIGNAL(activated(QModelIndex)),
+//                     this,SLOT(listWidget_note_with_enter(QModelIndex)));
 }
 
 
@@ -1059,6 +1075,8 @@ void autoCCode::ok_btn_dia_clicked_self(void)
 
     //内容添加后，更新控件中内容的相关显示
     update_show_after_insert();
+
+    is_selected = FALSE;//插入数据后，把此置为FALSE
 }
 
 void autoCCode::cancel_btn_dia_clicked_self(void)
@@ -1134,6 +1152,8 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
     //    update();
+//    ui->listWidget_codeview->update();
+    ui->genshow_textEdit->update();
 }
 //添加到右边的内容中
 void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
@@ -1884,6 +1904,7 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     //    QPoint p();
     ui->genshow_textEdit->resize(w/2,h/2);
     ui->genshow_textEdit->resize(w,h);
+    ui->genshow_textEdit->setFocus();
     ui->genshow_textEdit->update();
 
 }
@@ -2154,7 +2175,6 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
         ++j;
     }
 #endif
-
     return;
 
     //    QString searchTextWithColor = "<font color=blue size=4>" + searchText +"</font>";
@@ -2198,7 +2218,7 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 
     //    setCharColor(10);
     //    ui->genshow_textEdit->setHtml(GenCode_str);
-    ui->genshow_textEdit->moveCursor(QTextCursor::End);
+//    ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
 
 }

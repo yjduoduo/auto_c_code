@@ -374,6 +374,7 @@ private://QString
 
     QTextCharFormat defcharfmt;//当前显示字符格式
 
+    int is_selected; //推送内容是否选择
 public:
 
     QTextCodec *codec;
