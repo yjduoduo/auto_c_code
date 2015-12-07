@@ -142,6 +142,12 @@ private slots:
 
     void on_checkBox_SEL_change(bool flag);
 
+    void on_checkBox_rightTextSelectIndb_change(bool flag);
+
+    void on_checkBox_rtQuery_change(bool flag);
+
+    quint8 get_rtQuery_enable();//判断是否支持实时查询
+
     void setCliptext();
 
     void setCliptext_content();
@@ -226,6 +232,8 @@ private slots:
     void pushdb_checkbox_if_selected();
 
     void SearchText_WithTimer(void);
+
+    void SearchText_WithTimer_Enter(void);
 
     void pasteClicpTextToSearchEdit();
 

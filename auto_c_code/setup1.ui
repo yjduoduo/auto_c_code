@@ -134,6 +134,38 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox_rightTextSelectIndb">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>150</y>
+     <width>72</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>右选入库</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_rtQuery">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>180</y>
+     <width>72</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>实时查询</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>

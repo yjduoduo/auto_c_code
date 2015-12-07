@@ -248,7 +248,39 @@ void autoCCode::checkboxSet()
                      this,SLOT(set_index_text()));
     QObject::connect(ui_dialog->content_textEdit_dia,SIGNAL(textChanged()),
                      this,SLOT(set_note_textEdit_firstline()));
+
+//右选入库处理
+    QObject::connect(ui_setup->checkBox_rightTextSelectIndb,SIGNAL(toggled(bool)),
+                     this,SLOT(on_checkBox_rightTextSelectIndb_change(bool)));
+//实时查询处理
+    QObject::connect(ui_setup->checkBox_rtQuery,SIGNAL(toggled(bool)),
+                     this,SLOT(on_checkBox_rtQuery_change(bool)));
 }
+
+void autoCCode::on_checkBox_rightTextSelectIndb_change(bool flag)
+{
+    if(flag)
+    {
+        ui->pushButton_rightTextSelectIndb->setEnabled(TRUE);
+        ui->pushButton_rightTextSelectIndb->show();
+    }else{
+        ui->pushButton_rightTextSelectIndb->setEnabled(FALSE);
+        ui->pushButton_rightTextSelectIndb->hide();
+    }
+    update();
+}
+
+void autoCCode::on_checkBox_rtQuery_change(bool flag)
+{
+
+}
+
+quint8 autoCCode::get_rtQuery_enable()
+{
+    return (Qt::Checked == ui_setup->checkBox_rtQuery->checkState());
+}
+
+
 
 void autoCCode::on_checkBox_SEL_change(bool flag)
 {
@@ -321,7 +353,9 @@ void autoCCode::lineTextEditSet(void)
     QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
                      this,SLOT(SearchText(QString)));
 #else//定时搜索
-    QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer()));
+//    QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer()));
+    //是否支持实时查询
+    QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer_Enter()));
 
 #endif
 }
@@ -444,6 +478,7 @@ void autoCCode::set_search_text()
 }
 void autoCCode::search_text_clear()
 {
+    cleanLineTextEditSearch();
     ui->lineEdit_search->clear();
     ui->lineEdit_search->setFocus();
 }
@@ -1501,6 +1536,21 @@ void autoCCode::SearchText_WithTimer(void)
 
 }
 
+void autoCCode::SearchText_WithTimer_Enter(void)
+{
+//    qDebug() << "get_rtQuery_enable():" << get_rtQuery_enable();
+    if(!get_rtQuery_enable())
+    {
+        return;
+    }
+    QString searchStr = ui->lineEdit_search->text();
+    static QString oldStr;
+    if(oldStr != searchStr)
+        SearchText(searchStr);
+    oldStr = searchStr;
+
+}
+
 
 void autoCCode::SearchText(const QString &searchStr)
 {
@@ -1731,12 +1781,15 @@ void autoCCode::readTextFile(const QString &fileName)
 
 void autoCCode::SearchEnter()
 {
+//    qDebug() << "search enter!!";
     self_print(SearchEnter);
-    SetlistWidget_codeview_row(0);
-    this->ui->listWidget_codeview->setFocus();
-    this->ui->listWidget_codeview->setModelColumn(GetlistWidget_codeview_row());
-
-
+//    if(get_rtQuery_enable()) //如果支持实时查询，屏蔽此功能
+//        return;
+//    SearchText_WithTimer();
+    SearchText(ui->lineEdit_search->text());
+//    SetlistWidget_codeview_row(0);
+//    this->ui->listWidget_codeview->setFocus();
+//    this->ui->listWidget_codeview->setModelColumn(GetlistWidget_codeview_row());
 }
 
 

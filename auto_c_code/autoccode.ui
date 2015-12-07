@@ -193,6 +193,13 @@
         </spacer>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButton_rightTextSelectIndb">
+         <property name="text">
+          <string>右选入库</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButton_getpaste">
          <property name="text">
           <string>粘上</string>

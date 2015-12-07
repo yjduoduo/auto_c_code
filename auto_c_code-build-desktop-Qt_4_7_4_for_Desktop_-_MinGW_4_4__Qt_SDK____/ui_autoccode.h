@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Thu Nov 12 21:17:25 2015
+** Created: Mon Dec 7 20:52:51 2015
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -61,6 +61,7 @@ public:
     QRadioButton *radioButton_showall;
     QPushButton *rightclear_btn;
     QSpacerItem *verticalSpacer;
+    QPushButton *pushButton_rightTextSelectIndb;
     QPushButton *pushButton_getpaste;
     QPushButton *pushButton_updatedb;
     QPushButton *pushbtn_autoindb;
@@ -217,6 +218,11 @@ public:
 
         verticalLayout_3->addItem(verticalSpacer);
 
+        pushButton_rightTextSelectIndb = new QPushButton(autoCCode);
+        pushButton_rightTextSelectIndb->setObjectName(QString::fromUtf8("pushButton_rightTextSelectIndb"));
+
+        verticalLayout_3->addWidget(pushButton_rightTextSelectIndb);
+
         pushButton_getpaste = new QPushButton(autoCCode);
         pushButton_getpaste->setObjectName(QString::fromUtf8("pushButton_getpaste"));
 
@@ -330,6 +336,7 @@ public:
         checkBox_ResWithColor->setText(QApplication::translate("autoCCode", "\351\242\234\350\211\262", 0, QApplication::UnicodeUTF8));
         radioButton_showall->setText(QApplication::translate("autoCCode", "\346\230\276\347\244\272\345\205\250\351\203\250", 0, QApplication::UnicodeUTF8));
         rightclear_btn->setText(QApplication::translate("autoCCode", "\345\217\263\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
+        pushButton_rightTextSelectIndb->setText(QApplication::translate("autoCCode", "\345\217\263\351\200\211\345\205\245\345\272\223", 0, QApplication::UnicodeUTF8));
         pushButton_getpaste->setText(QApplication::translate("autoCCode", "\347\262\230\344\270\212", 0, QApplication::UnicodeUTF8));
         pushButton_updatedb->setText(QApplication::translate("autoCCode", "\346\233\264\346\226\260\345\272\223", 0, QApplication::UnicodeUTF8));
         pushbtn_autoindb->setText(QApplication::translate("autoCCode", "\350\207\252\345\212\250\345\205\245\345\272\223", 0, QApplication::UnicodeUTF8));
