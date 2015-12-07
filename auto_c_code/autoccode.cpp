@@ -104,8 +104,20 @@ autoCCode::autoCCode(QWidget *parent) :
     ListViewSets();
     CharFormat();
     setDefaultColor();
+    PopMenu();
 
 }
+
+void autoCCode::PopMenu()
+{
+    /* 右键菜单 */
+    Act_Maxsize = new QAction(tr("XML"), this);
+    Act_Normal = new QAction(tr("SHOW"), this);
+    connect(Act_Maxsize, SIGNAL(triggered()), this, SLOT(ADDChange()));
+    connect(Act_Normal, SIGNAL(triggered()), this, SLOT(XMLChange()));
+}
+
+
 void autoCCode::shortCutSet(void)
 {
     //show or hide windows
@@ -3225,3 +3237,15 @@ int autoCCode::IsCursorInGenShowUi(void)
         return FALSE;
     }
 }
+
+/* 右键菜单 */
+void autoCCode::contextMenuEvent(QContextMenuEvent *event)
+{
+    QCursor cur=this->cursor();
+    QMenu *menu=new QMenu(this);
+    menu->addAction(Act_Maxsize); //添加菜单项1
+    menu->addAction(Act_Normal); //添加菜单项2
+    menu->exec(cur.pos()); //关联到光标
+}
+
+
