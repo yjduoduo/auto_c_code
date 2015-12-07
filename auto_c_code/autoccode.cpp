@@ -817,8 +817,9 @@ void autoCCode::on_gencode_btn_clicked(void)
 {
     self_print(on_gencode_btn_clicked);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    "../",
-                                                    tr("Ctype (*.c *.C *.cc *.h)"
+                                                    QDesktopServices::storageLocation(QDesktopServices::DesktopLocation),
+                                                    tr("Txt (*.txt)"
+                                                       ";;Ctype (*.c *.C *.cc *.h)"
                                                        ";;Cpptype(*.cpp *.CPP *.h)"
                                                        ";;QTtype(*.c *.C *.cpp *.CPP *.ui *.rc *.pro *.h)"
                                                        ";;Pythontype(*.py *.PY)"
@@ -838,6 +839,8 @@ void autoCCode::on_gencode_btn_clicked(void)
     {
         ui->codeshow_textEdit->setText(text_china);
     }
+    //code Editor设置读取文本
+    ui->genshow_textEdit->setPlainText(text_china);
 
     //    QTextStream out(&file);
     //    out << "Thomas M. Disch: " << 334 << endl;
@@ -2407,8 +2410,10 @@ void autoCCode::on_ui_autoindb_pushBtn_Open_clicked()
 {
     self_print(on_ui_autoindb_pushBtn_Open_clicked);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    "../",
-                                                    tr("Ctype (*.c *.C *.cc *.h)"
+                                                    QDesktopServices::storageLocation(QDesktopServices::DesktopLocation),
+                                                    tr("Txt (*.txt)"
+                                                       ";;Ctype (*.c *.C *.cc *.h)"
+                                                       ";;Cpptype(*.cpp *.CPP *.h)"
                                                        ";;Cpptype(*.cpp *.CPP *.h)"
                                                        ";;QTtype(*.c *.C *.cpp *.CPP *.ui *.rc *.pro *.h)"
                                                        ";;Pythontype(*.py *.PY)"
@@ -3300,5 +3305,150 @@ void autoCCode::contextMenuEvent(QContextMenuEvent *event)
     menu->addAction(Act_Normal); //添加菜单项2
     menu->exec(cur.pos()); //关联到光标
 }
+
+
+//右选入库 按钮按下时
+//实现自动入库功能
+void autoCCode::on_pushButton_rightTextSelectIndb_clicked()
+{
+    QString cotext = ui->genshow_textEdit->toPlainText().trimmed();
+    if(cotext.isEmpty())
+    {
+        qDebug() << "context. empty";
+        return;
+    }
+    //光标选中的文本
+    QString str_selected = ui->genshow_textEdit->textCursor().selectedText().trimmed();
+    if(str_selected.isEmpty())
+    {
+        qDebug() << "select text. empty";
+        return;
+    }
+    ok_btn_dia_clicked_self_another(cotext, str_selected);
+}
+//根据定义的数据，直接入库并显示
+void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
+{
+    self_print(ok_btn_dia_clicked_self_another);
+
+    //获取内容
+    QString content = con;
+    QString lanaugetype = ui_dialog->langtype_comboBox->currentText();
+    QString index_keyword   = con;
+    index_keyword = index_keyword.replace("\n"," ");
+    //    index_keyword.trimmed();
+    QString note   = str_sel;
+    note = note.replace("\n"," ");
+    note += "\t\t\t\t";
+    note += QDateTime::currentDateTime().toString("yyyy MMM d ddd,hh:mm:ss");
+
+    //    QDateTime d = lo.toDateTime("Mon,26 Apr 2010, 08:21:03","ddd,d MMM yyyy, hh:mm:ss");
+    //    Q_ASSERT(d.isValid());
+
+    //    note.trimmed();
+    QString vartype = ui_dialog->comboBox_vartype->currentText();
+    QString aspect = ui_dialog->comboBox_aspect->currentText();
+
+
+    if(lanaugetype.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        return;
+    }
+    if(content.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        return;
+    }
+
+    LanguageType langtype = getLanguageType(lanaugetype);
+    sets = get_table_sets_bytype(langtype);
+    if(!sets)
+        return;
+
+    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0 order by ID desc")
+            .arg(sets->talbename)
+            .arg(lanaugetype)
+            .arg(content)
+            .arg(vartype);
+    save_before_ops();
+
+    clr_selectresult(selectresult);
+    str_print(select_express);
+    b.selectdatabase(sets->databasename,
+                     select_express.toUtf8().data(),
+                     selectresult,
+                     ASPECT_NONE);
+
+    if(selectresult.existflag)
+    {
+        restore_before_ops();
+        QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes, QMessageBox::Yes);
+        return;
+    }
+
+    if(vartype.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        return;
+    }
+
+    if(index_keyword.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        return;
+    }
+    if(note.isEmpty())
+    {
+        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        return;
+    }
+    //    if(aspect.isEmpty())
+    //    {
+    //        QMessageBox::information(NULL, str_china(范围), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+    //        return;
+    //    }
+
+
+    clr_selectresult(selectresult_tmp);
+
+    InsertCon insertcontent;
+    insertcontent.content = content;
+    insertcontent.languagetype = getLanguageType(lanaugetype);
+    insertcontent.keyword   = index_keyword;
+    insertcontent.note      = note;
+    insertcontent.vartype   = vartype;
+    insertcontent.aspect    = aspect;
+
+#ifndef DEBUG_V
+
+//    if(ui_dialog->checkBox_EOR->isChecked())
+//        ui_dialog->note_textEdit_dia->clear();
+
+//    if(ui->checkBox_inbox->isChecked())
+//    {
+//        //对话框不关闭
+//        ui_dialog->content_textEdit_dia->clear();
+//    }else{
+//        InDb_Dialog->update();
+//        InDb_Dialog->close();
+//    }
+
+
+#else
+    //对话框不关闭
+    ui_dialog->content_textEdit_dia->clear();
+#endif
+
+    b.creatable(&insertcontent);
+    b.inserttable(&insertcontent);
+
+
+    //内容添加后，更新控件中内容的相关显示
+    update_show_after_insert();
+
+//    is_selected = FALSE;//插入数据后，把此置为FALSE
+}
+
 
 

@@ -404,6 +404,8 @@ private slots:
     {
         qDebug()<<"SHOW Item Pressed.";
     }
+    void on_pushButton_rightTextSelectIndb_clicked();
+    void ok_btn_dia_clicked_self_another(QString con,QString str_sel);//根据定义的数据，直接入库并显示
 };
 
 
