@@ -143,6 +143,9 @@
      <height>17</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>在右侧界面选中关键字后，点击即可入库</string>
+   </property>
    <property name="text">
     <string>右选入库</string>
    </property>
@@ -154,16 +157,38 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>180</y>
+     <y>170</y>
      <width>72</width>
      <height>17</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>在搜索栏支持实时查询</string>
    </property>
    <property name="text">
     <string>实时查询</string>
    </property>
    <property name="checked">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_showpath">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>191</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>生成代码库添加文件时内容末尾有文件路径显示</string>
+   </property>
+   <property name="text">
+    <string>显示文件路径</string>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
    </property>
   </widget>
  </widget>

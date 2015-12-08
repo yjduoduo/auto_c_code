@@ -833,7 +833,14 @@ void autoCCode::on_gencode_btn_clicked(void)
         return;
     }
     //    QString text_file = file.readAll();
-    QString text_china = QString::fromLocal8Bit(file.readAll().data());
+    QString text_china;
+    text_china.clear();
+
+    text_china += QString::fromLocal8Bit(file.readAll().data());
+    if(ui_setup->checkBox_showpath->isChecked())
+    {
+        text_china += "\n======[end]========\n" + fileName + "\n";
+    }
 
     if(showcode_textEdit_AtBotton())
     {
