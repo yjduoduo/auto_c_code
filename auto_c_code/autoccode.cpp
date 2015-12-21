@@ -720,8 +720,9 @@ void autoCCode::addstr_comboBox(void)
     <<str_china(Patchs)
     <<str_china(Postgresql)
     <<str_china(Rust)
-    <<str_china(Sqlite3)
     <<str_china(shell)
+    <<str_china(Sqlite3)
+    <<str_china(Swift)
     <<str_china(Php)
     <<str_china(Python)
     <<str_china(Qt)
@@ -976,6 +977,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Unittest")
     {
         return languagetype_Unittest_;
+    }
+    else if(type == "Swift")
+    {
+        return languagetype_Swift_;
     }
     else if(type == "Rust")
     {

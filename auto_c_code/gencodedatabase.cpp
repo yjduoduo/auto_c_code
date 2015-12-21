@@ -56,6 +56,7 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
                            {LANTY_JOIN(Postgresql_),"postgresql_table",DB_NAME,CREATTABLE(postgresql_table),},
                            {LANTY_JOIN(Patchs_),"patchs_table",DB_NAME,CREATTABLE(patchs_table),},
                            {LANTY_JOIN(Unittest_),"unittest_table",DB_NAME,CREATTABLE(unittest_table),},
+                           {LANTY_JOIN(Swift_),"swift_table",DB_NAME,CREATTABLE(swift_table),},
                            {LANTY_JOIN(Android_),"android_table",DB_NAME,CREATTABLE(android_table),},
                            {LANTY_JOIN(Rust_),"rust_table",DB_NAME,CREATTABLE(rust_table),},
 
@@ -879,6 +880,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Postgresql_:
     case    languagetype_Patchs_:
     case    languagetype_Unittest_:
+    case    languagetype_Swift_:
     case    languagetype_Rust_:
     case    languagetype_Android_:
     case    languagetype_JavaScript_:
@@ -993,6 +995,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Postgresql_:
     case    languagetype_Patchs_:
     case    languagetype_Unittest_:
+    case    languagetype_Swift_:
     case    languagetype_Rust_:
     case    languagetype_Android_:
     case    languagetype_JavaScript_:
@@ -1034,6 +1037,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     case    languagetype_Postgresql_:
     case    languagetype_Patchs_:
     case    languagetype_Unittest_:
+    case    languagetype_Swift_:
     case    languagetype_Rust_:
     case    languagetype_Android_:
     case    languagetype_JavaScript_:
@@ -1083,6 +1087,8 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "Patchs";
     case    languagetype_Unittest_:
         return "Unittest";
+    case    languagetype_Swift_:
+        return "Swift";
     case    languagetype_Rust_:
         return "Rust";
     case    languagetype_Android_:
