@@ -9,6 +9,7 @@
 #include <QListView>
 #include "gencodedatabase.h"
 #include "version.h"
+#include "emailaddress.h"
 
 namespace Ui {
 class autoCCode;
@@ -264,6 +265,10 @@ private slots:
     void setDefaultColor();
     //设置字体
     void setFont();
+    //发送邮件
+    void SendMail(QString str);
+//    static EmailAddress * stringToEmail(const QString & str);
+    QString gettimeofCurrent();
 public slots:
 
     void ok_btn_dia_clicked_self(void);

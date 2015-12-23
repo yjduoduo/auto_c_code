@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Mon Dec 7 20:52:51 2015
+** Created: Wed Dec 23 22:12:23 2015
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -70,6 +70,7 @@ public:
     QPushButton *delete_btn;
     QPushButton *pushButton_setUp;
     QPushButton *about_btn;
+    QLabel *sendmailab;
     QPushButton *close_btn;
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout;
@@ -82,7 +83,7 @@ public:
     {
         if (autoCCode->objectName().isEmpty())
             autoCCode->setObjectName(QString::fromUtf8("autoCCode"));
-        autoCCode->resize(936, 458);
+        autoCCode->resize(936, 487);
         autoCCode->setWindowOpacity(1);
         autoCCode->setAutoFillBackground(false);
         autoCCode->setStyleSheet(QString::fromUtf8(""));
@@ -265,6 +266,11 @@ public:
 
         verticalLayout_3->addWidget(about_btn);
 
+        sendmailab = new QLabel(autoCCode);
+        sendmailab->setObjectName(QString::fromUtf8("sendmailab"));
+
+        verticalLayout_3->addWidget(sendmailab);
+
         close_btn = new QPushButton(autoCCode);
         close_btn->setObjectName(QString::fromUtf8("close_btn"));
 
@@ -344,6 +350,7 @@ public:
         delete_btn->setText(QApplication::translate("autoCCode", "\345\210\240\351\231\244", 0, QApplication::UnicodeUTF8));
         pushButton_setUp->setText(QApplication::translate("autoCCode", "\350\256\276\347\275\256", 0, QApplication::UnicodeUTF8));
         about_btn->setText(QApplication::translate("autoCCode", "\345\205\263\344\272\216", 0, QApplication::UnicodeUTF8));
+        sendmailab->setText(QString());
         close_btn->setText(QApplication::translate("autoCCode", "close", 0, QApplication::UnicodeUTF8));
         save_btn->setText(QApplication::translate("autoCCode", "save", 0, QApplication::UnicodeUTF8));
         checkBox_AutoSave->setText(QApplication::translate("autoCCode", "AS", 0, QApplication::UnicodeUTF8));

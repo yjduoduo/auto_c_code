@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += widgets
+QT       += network
 TARGET = auto_c_code
 TEMPLATE = app
 
@@ -19,7 +20,20 @@ SOURCES += main.cpp\
     qxtglobalshortcut/qxtglobalshortcut.cpp \
     autoindb.cpp \
     sqlite-autoconf/sqlite3.c \
-    codeEditor/codeeditor.cpp
+    codeEditor/codeeditor.cpp \
+    sendmail/smtpclient.cpp \
+    sendmail/sendemail.cpp \
+    sendmail/quotedprintable.cpp \
+    sendmail/mimetext.cpp \
+    sendmail/mimepart.cpp \
+    sendmail/mimemultipart.cpp \
+    sendmail/mimemessage.cpp \
+    sendmail/mimeinlinefile.cpp \
+    sendmail/mimehtml.cpp \
+    sendmail/mimefile.cpp \
+    sendmail/mimecontentformatter.cpp \
+    sendmail/mimeattachment.cpp \
+    sendmail/emailaddress.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -33,7 +47,20 @@ HEADERS  += autoccode.h \
     sqlite-autoconf/sqlite3ext.h \
     sqlite-autoconf/sqlite3.h \
     codeEditor/linenumberarea.h \
-    codeEditor/codeeditor.h
+    codeEditor/codeeditor.h \
+    sendmail/smtpclient.h \
+    sendmail/sendemail.h \
+    sendmail/quotedprintable.h \
+    sendmail/mimetext.h \
+    sendmail/mimepart.h \
+    sendmail/mimemultipart.h \
+    sendmail/mimemessage.h \
+    sendmail/mimeinlinefile.h \
+    sendmail/mimehtml.h \
+    sendmail/mimefile.h \
+    sendmail/mimecontentformatter.h \
+    sendmail/mimeattachment.h \
+    sendmail/emailaddress.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
@@ -44,7 +71,8 @@ FORMS    += autoccode.ui \
 
 INCLUDEPATH +=\
 ./sqlite-autoconf\
-./codeEditor
+./codeEditor \
+./sendmail
 
 LIBS += -lpthread
 RC_FILE = autoapp.rc

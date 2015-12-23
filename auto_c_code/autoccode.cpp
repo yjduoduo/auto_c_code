@@ -19,7 +19,10 @@
 #include <QElapsedTimer>
 
 #include "qxtglobalshortcut/qxtglobalshortcut.h"   //add shortcut
-
+#include "emailaddress.h"
+#include "sendemail.h"
+#include "smtpclient.h"
+#include "mimehtml.h"
 
 using namespace std;
 
@@ -105,7 +108,7 @@ autoCCode::autoCCode(QWidget *parent) :
     CharFormat();
     setDefaultColor();
     PopMenu();
-
+//    SendMail(str_china("i love you,xiao baobei!!!!!!!!,生命的力量"));
 }
 
 void autoCCode::PopMenu()
@@ -249,10 +252,10 @@ void autoCCode::checkboxSet()
     QObject::connect(ui_dialog->content_textEdit_dia,SIGNAL(textChanged()),
                      this,SLOT(set_note_textEdit_firstline()));
 
-//右选入库处理
+    //右选入库处理
     QObject::connect(ui_setup->checkBox_rightTextSelectIndb,SIGNAL(toggled(bool)),
                      this,SLOT(on_checkBox_rightTextSelectIndb_change(bool)));
-//实时查询处理
+    //实时查询处理
     QObject::connect(ui_setup->checkBox_rtQuery,SIGNAL(toggled(bool)),
                      this,SLOT(on_checkBox_rtQuery_change(bool)));
 }
@@ -353,7 +356,7 @@ void autoCCode::lineTextEditSet(void)
     QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
                      this,SLOT(SearchText(QString)));
 #else//定时搜索
-//    QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer()));
+    //    QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer()));
     //是否支持实时查询
     QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer_Enter()));
 
@@ -575,8 +578,8 @@ void autoCCode::comboBoxSet(void)
 
     QObject::connect(this->ui->listWidget_note,SIGNAL(itemClicked(QListWidgetItem*)),
                      this,SLOT(listWidget_codeview_scroll_sync(QListWidgetItem*)));
-//    QObject::connect(this->ui->listWidget_note,SIGNAL(activated(QModelIndex)),
-//                     this,SLOT(listWidget_note_with_enter(QModelIndex)));
+    //    QObject::connect(this->ui->listWidget_note,SIGNAL(activated(QModelIndex)),
+    //                     this,SLOT(listWidget_note_with_enter(QModelIndex)));
 }
 
 
@@ -773,7 +776,7 @@ void autoCCode::on_save_btn_clicked()
     if(!ui->checkBox_AutoSave->isChecked())//自动保存未被选中
     {
         savefileName = QFileDialog::getSaveFileName(this,
-                                                            tr("Save File"), getCurrentDateTimeTxt(), tr("All Files (*.*);;Txt(*.txt);;Img Files(*.png);;Code Files(*.c)"));
+                                                    tr("Save File"), getCurrentDateTimeTxt(), tr("All Files (*.*);;Txt(*.txt);;Img Files(*.png);;Code Files(*.c)"));
 
     }
     else //自动保存选中
@@ -1023,6 +1026,7 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     self_print(ok_btn_dia_clicked_self);
 
     //获取内容
+    QString contentHtml = ui_dialog->content_textEdit_dia->toHtml();
     QString content = ui_dialog->content_textEdit_dia->toPlainText().trimmed();
     QString lanaugetype = ui_dialog->langtype_comboBox->currentText();
     QString index_keyword   = ui_dialog->index_textEdit_dia->toPlainText().trimmed();
@@ -1139,6 +1143,12 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     update_show_after_insert();
 
     is_selected = FALSE;//插入数据后，把此置为FALSE
+
+    //插入数据是否发送
+    if(ui_setup->checkBox_email->isChecked())
+    {/* 发送HTML内容，否则为连续的内容 */
+        SendMail(contentHtml);
+    }
 }
 
 void autoCCode::cancel_btn_dia_clicked_self(void)
@@ -1214,7 +1224,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
     //    update();
-//    ui->listWidget_codeview->update();
+    //    ui->listWidget_codeview->update();
     ui->genshow_textEdit->update();
 }
 //添加到右边的内容中
@@ -1553,7 +1563,7 @@ void autoCCode::SearchText_WithTimer(void)
 
 void autoCCode::SearchText_WithTimer_Enter(void)
 {
-//    qDebug() << "get_rtQuery_enable():" << get_rtQuery_enable();
+    //    qDebug() << "get_rtQuery_enable():" << get_rtQuery_enable();
     if(!get_rtQuery_enable())
     {
         return;
@@ -1796,15 +1806,15 @@ void autoCCode::readTextFile(const QString &fileName)
 
 void autoCCode::SearchEnter()
 {
-//    qDebug() << "search enter!!";
+    //    qDebug() << "search enter!!";
     self_print(SearchEnter);
-//    if(get_rtQuery_enable()) //如果支持实时查询，屏蔽此功能
-//        return;
-//    SearchText_WithTimer();
+    //    if(get_rtQuery_enable()) //如果支持实时查询，屏蔽此功能
+    //        return;
+    //    SearchText_WithTimer();
     SearchText(ui->lineEdit_search->text());
-//    SetlistWidget_codeview_row(0);
-//    this->ui->listWidget_codeview->setFocus();
-//    this->ui->listWidget_codeview->setModelColumn(GetlistWidget_codeview_row());
+    //    SetlistWidget_codeview_row(0);
+    //    this->ui->listWidget_codeview->setFocus();
+    //    this->ui->listWidget_codeview->setModelColumn(GetlistWidget_codeview_row());
 }
 
 
@@ -2298,7 +2308,7 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 
     //    setCharColor(10);
     //    ui->genshow_textEdit->setHtml(GenCode_str);
-//    ui->genshow_textEdit->moveCursor(QTextCursor::End);
+    //    ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
 
 }
@@ -3434,17 +3444,17 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
 
 #ifndef DEBUG_V
 
-//    if(ui_dialog->checkBox_EOR->isChecked())
-//        ui_dialog->note_textEdit_dia->clear();
+    //    if(ui_dialog->checkBox_EOR->isChecked())
+    //        ui_dialog->note_textEdit_dia->clear();
 
-//    if(ui->checkBox_inbox->isChecked())
-//    {
-//        //对话框不关闭
-//        ui_dialog->content_textEdit_dia->clear();
-//    }else{
-//        InDb_Dialog->update();
-//        InDb_Dialog->close();
-//    }
+    //    if(ui->checkBox_inbox->isChecked())
+    //    {
+    //        //对话框不关闭
+    //        ui_dialog->content_textEdit_dia->clear();
+    //    }else{
+    //        InDb_Dialog->update();
+    //        InDb_Dialog->close();
+    //    }
 
 
 #else
@@ -3459,8 +3469,143 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
     //内容添加后，更新控件中内容的相关显示
     update_show_after_insert();
 
-//    is_selected = FALSE;//插入数据后，把此置为FALSE
+    //    is_selected = FALSE;//插入数据后，把此置为FALSE
 }
 
 
 
+//发送邮件
+void autoCCode::SendMail(QString str)
+{
+//    ui->sendmailab->clear();
+    //----------------------
+    //检查必要条件:
+    QMessageBox msgWarning (this);
+
+    QString defaultsend="allinfosend@126.com";
+    QString defaultpass="lmr2973194+-*/";
+    QString defaultrecv="allinfosets@126.com;wxjlmr@126.com";
+    QString host="smtp.126.com";
+    int port=25;
+    bool ssl = false;
+    bool auth = true;
+#if 1
+    QString user = defaultsend/*ui->username->text().trimmed()*/;
+    if(user.isEmpty())
+    {
+        msgWarning.setText("please set user");
+        msgWarning.exec();
+        //        ui->username->setFocus();
+        return;
+    }
+
+    QString password = defaultpass/*ui->password->text().trimmed()*/;
+    if(password.isEmpty())
+    {
+        msgWarning.setText("please set password");
+        msgWarning.exec();
+        //        ui->password->setFocus();
+        return;
+    }
+
+    //发送者，与用户名相同
+    QString strSender = defaultsend/*ui->sender->text().trimmed()*/;
+    if(strSender.isEmpty())
+    {
+        msgWarning.setText("please set sender!!!");
+        msgWarning.exec();
+        //        ui->sender->setFocus();
+        return;
+    }
+
+    //接收者
+    QString strRecipient = defaultrecv/*ui->recipients->text()*/;
+    if(strRecipient.isEmpty())
+    {
+        msgWarning.setText("please set sender!!!");
+        msgWarning.exec();
+        //        ui->recipients->setFocus();
+        return;
+    }
+#endif
+
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+
+    EmailAddress *sender = SendEmail::stringToEmail(strSender/*ui->sender->text()*/);
+
+    //主题,默认以时间为主题
+    QString subject = gettimeofCurrent();
+    //内容
+    QString &html = str;/*ui->contentText->toHtml()*/;
+
+    SmtpClient smtp (host, port, ssl ? SmtpClient::SslConnection : SmtpClient::TcpConnection);
+
+    MimeMessage message;
+
+    message.setSender(sender);
+    message.setSubject(subject);
+
+    //接收人列表
+    QStringList rcptStringList = strRecipient.trimmed().split(';');/*ui->recipients->text().trimmed().split(';')*/;
+
+    //删除空的联系人
+    while(rcptStringList.size() > 0 && rcptStringList.last().trimmed().isEmpty())
+    {
+        rcptStringList.removeLast();
+    }
+
+    for (int i = 0; i < rcptStringList.size(); ++i)
+        message.addRecipient(SendEmail::stringToEmail(rcptStringList.at(i)));
+
+    MimeHtml content;
+    content.setHtml(html);
+
+    message.addPart(&content);
+
+    if (!smtp.connectToHost())
+    {
+        ui->sendmailab->setText("SMTP link error.");
+        return;
+    }
+
+    if (auth)
+    {
+        if (!smtp.login(user, password))
+        {
+            ui->sendmailab->setText("login fail.");
+            return;
+        }
+    }
+
+    if (!smtp.sendMail(message))
+    {
+        ui->sendmailab->setText("Send Fail");
+        return;
+    }
+    else
+    {
+        ui->sendmailab->setText("Send OK");
+    }
+
+    smtp.quit();
+//不知道什么问题？如果没有下面或者上面的设置UTF-8,发送为乱码，但是此处不更改，本地显示有问题
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GB2312"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("GB2312"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("GB2312"));
+
+
+}
+
+QString autoCCode::gettimeofCurrent()
+{
+    QDateTime dt;
+    QTime time;
+    QDate date;
+    dt.setTime(time.currentTime());
+    dt.setDate(date.currentDate());
+    return dt.toString("yyyy/MM/dd  hh:mm:ss");
+}
