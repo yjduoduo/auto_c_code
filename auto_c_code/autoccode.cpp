@@ -3334,6 +3334,7 @@ void autoCCode::contextMenuEvent(QContextMenuEvent *event)
 void autoCCode::on_pushButton_rightTextSelectIndb_clicked()
 {
     QString cotext = ui->genshow_textEdit->toPlainText().trimmed();
+    QString cotextHtml = ui->genshow_textEdit->toPlainText();
     if(cotext.isEmpty())
     {
         qDebug() << "context. empty";
@@ -3347,6 +3348,11 @@ void autoCCode::on_pushButton_rightTextSelectIndb_clicked()
         return;
     }
     ok_btn_dia_clicked_self_another(cotext, str_selected);
+    //插入数据是否发送
+    if(ui_setup->checkBox_email->isChecked())
+    {/* 发送HTML内容，否则为连续的内容 */
+        SendMail(cotextHtml);
+    }
 }
 //根据定义的数据，直接入库并显示
 void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
