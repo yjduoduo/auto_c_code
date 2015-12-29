@@ -94,6 +94,9 @@
       <height>51</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>python D:test.py</string>
+    </property>
     <property name="text">
      <string>Python:DUt</string>
     </property>
