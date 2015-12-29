@@ -4,11 +4,14 @@
 #include "ui_dialog_select_database.h"
 #include "ui_autoindb.h"
 #include "ui_setup1.h"
+#include "ui_toolstabwidget.h"
 #include <QtGui>
 #include "prefix_string.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <windows.h>
+
 #include "gencodedatabase.h"
 #include <QFileDialog>
 #include <QInputDialog>
@@ -57,6 +60,7 @@ autoCCode::autoCCode(QWidget *parent) :
     ui_dia_selectdb(new Ui::Dialog_select_database),
     ui_autoindb(new Ui::AutoIndb),
     ui_setup(new Ui::SetUpDialog),
+    ui_toolsets(new Ui::ToolsTabWidget),
     sets(NULL),
     index_key_color(0),
     index_note_color(0),
@@ -87,6 +91,11 @@ autoCCode::autoCCode(QWidget *parent) :
     /* set up menu */
     SetUp_Dialog = new QDialog(this);
     ui_setup->setupUi(SetUp_Dialog);
+    /* tools sets menu */  //独立的
+    toolsTabWidget = new QTabWidget();
+    ui_toolsets->setupUi(toolsTabWidget);
+    toolsTabWidget->hide();
+
 
     QTimerSet();
     pushButtonSet();
@@ -468,7 +477,16 @@ void autoCCode::pushButtonSet(void)
 
 
 
-
+    //计算器
+    QObject::connect(ui_toolsets->pushButton_calc,SIGNAL(clicked()),this,SLOT(on_pushButton_calc_exe_clicked()));
+    //记事本
+    QObject::connect(ui_toolsets->pushButton_notepad,SIGNAL(clicked()),this,SLOT(on_pushButton_notepad_exe_clicked()));
+    //notepad++.exe
+    QObject::connect(ui_toolsets->pushButton_notepadplus,SIGNAL(clicked()),this,SLOT(on_pushButton_notepadplus_exe_clicked()));
+    //Python pushButton_python
+    QObject::connect(ui_toolsets->pushButton_python,SIGNAL(clicked()),this,SLOT(on_pushButton_python_exe_clicked()));
+    //source insight
+    QObject::connect(ui_toolsets->pushButton_sourceinsight,SIGNAL(clicked()),this,SLOT(on_pushButton_sourceinsight_exe_clicked()));
 }
 void autoCCode::set_search_text()
 {
@@ -522,6 +540,35 @@ void autoCCode::setDesktop_center(QDialog *dialog)
     UNUSEDVAR(wd);
     dialog->move(0,(ht-height()/2)/2);
 }
+
+void autoCCode::WidgetYsetDesktop_center(QWidget *widget)
+{
+    QDesktopWidget *desk=QApplication::desktop();
+    int wd=desk->width();
+    int ht=desk->height();
+    UNUSEDVAR(wd);
+    widget->move(0,(ht-height()/2)/2);
+}
+
+void autoCCode::WidgetXsetDesktop_center(QWidget *widget)
+{
+    QDesktopWidget *desk=QApplication::desktop();
+    int wd=desk->width();
+    int ht=desk->height();
+    UNUSEDVAR(wd);
+    widget->move((wd - width()/2)/2,0);
+}
+
+
+void autoCCode::WidgetXYsetDesktop_center(QWidget *widget)
+{
+    QDesktopWidget *desk=QApplication::desktop();
+    int wd=desk->width();
+    int ht=desk->height();
+    UNUSEDVAR(wd);
+    widget->move((wd - width()/2)/2,(ht-height()/2)/2);
+}
+
 
 void autoCCode::minSize_ui_dialog()
 {
@@ -3462,5 +3509,54 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
 //    is_selected = FALSE;//插入数据后，把此置为FALSE
 }
 
+
+
+
+void autoCCode::on_pushButton_toolsSets_clicked()
+{
+    WidgetXYsetDesktop_center(toolsTabWidget);//居XY中间
+    toolsTabWidget->raise(); //到上层
+    toolsTabWidget->show();
+}
+
+void autoCCode::on_pushButton_notepad_exe_clicked()
+{
+    //调用记事本
+    ShellExecuteA(NULL,"open","NOTEPAD.EXE",NULL,NULL,SW_SHOWNORMAL);
+
+    toolsTabWidget->hide();
+}
+
+void autoCCode::on_pushButton_calc_exe_clicked()
+{
+    //调用计算器
+    ShellExecuteA(NULL,"open","calc.exe",NULL,NULL,SW_SHOWNORMAL);
+}
+
+void autoCCode::on_pushButton_notepadplus_exe_clicked()
+{
+    //notepad++.exe
+    LPCSTR str2 = "notepad++.exe";
+    ShellExecuteA(NULL,"open", str2,NULL,NULL,SW_SHOWNORMAL);
+
+}
+
+
+void autoCCode::on_pushButton_python_exe_clicked()
+{
+    //python.exe
+    LPCSTR exepath = "python.exe";
+    ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
+}
+
+void autoCCode::on_pushButton_sourceinsight_exe_clicked()
+{
+//    Insight3.exe
+    LPCSTR exepath = "Insight3.exe";
+    ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
+    exepath = "C:\\Program Files (x86)\\Source Insight 3\\Insight3.exe";
+    ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
+
+}
 
 

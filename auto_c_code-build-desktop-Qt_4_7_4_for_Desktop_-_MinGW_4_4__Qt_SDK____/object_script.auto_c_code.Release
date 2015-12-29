@@ -9,10 +9,12 @@ INPUT(
 ./release/autoindb.o
 ./release/sqlite3.o
 ./release/codeeditor.o
+./release/toolstabwidget.o
 ./release/moc_autoccode.o
 ./release/moc_dialog_select_database.o
 ./release/moc_qxtglobalshortcut.o
 ./release/moc_autoindb.o
 ./release/moc_codeeditor.o
+./release/moc_toolstabwidget.o
 ./release/qrc_imgsrc.o
 );

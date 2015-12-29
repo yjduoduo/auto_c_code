@@ -16,6 +16,7 @@ class Dialog;
 class Dialog_select_database;
 class AutoIndb;//自动入库界面
 class SetUpDialog;
+class ToolsTabWidget;//工具集
 }
 
 class codeEditor;
@@ -36,6 +37,8 @@ public:
     QDialog *dialog_selectdb;//选择数据库界面
     QDialog *dialog_autoindb;//自动入库界面
     QDialog *SetUp_Dialog;//设置界面,操作函数的实体
+//    QDialog *ToolSets_Dialog;
+    QTabWidget *toolsTabWidget;//工具集界面,操作函数的实体
 
     GenCodeDatabase b;
 
@@ -171,6 +174,12 @@ private slots:
     void maxSize_ui_dialog();
 
     void setDesktop_center(QDialog *dialog);
+
+    void WidgetXsetDesktop_center(QWidget *widget);
+
+    void WidgetYsetDesktop_center(QWidget *widget);
+
+    void WidgetXYsetDesktop_center(QWidget *widget);
 
     void SearchEnter();
 
@@ -331,6 +340,7 @@ private:
     Ui::Dialog_select_database *ui_dia_selectdb;//选择数据库
     Ui::AutoIndb *ui_autoindb;//自动入库界面
     Ui::SetUpDialog *ui_setup;//设置界面
+    Ui::ToolsTabWidget *ui_toolsets;//工具集
 
 private:
     void dragEnterEvent(QDragEnterEvent *event);
@@ -406,6 +416,12 @@ private slots:
     }
     void on_pushButton_rightTextSelectIndb_clicked();
     void ok_btn_dia_clicked_self_another(QString con,QString str_sel);//根据定义的数据，直接入库并显示
+    void on_pushButton_toolsSets_clicked();
+    void on_pushButton_notepad_exe_clicked();
+    void on_pushButton_calc_exe_clicked();
+    void on_pushButton_notepadplus_exe_clicked();
+    void on_pushButton_python_exe_clicked();
+    void on_pushButton_sourceinsight_exe_clicked();
 };
 
 

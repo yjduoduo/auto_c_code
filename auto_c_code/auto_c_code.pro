@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     qxtglobalshortcut/qxtglobalshortcut.cpp \
     autoindb.cpp \
     sqlite-autoconf/sqlite3.c \
-    codeEditor/codeeditor.cpp
+    codeEditor/codeeditor.cpp \
+    toolstabwidget.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -33,13 +34,15 @@ HEADERS  += autoccode.h \
     sqlite-autoconf/sqlite3ext.h \
     sqlite-autoconf/sqlite3.h \
     codeEditor/linenumberarea.h \
-    codeEditor/codeeditor.h
+    codeEditor/codeeditor.h \
+    toolstabwidget.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
     dialog_select_database.ui \
     autoindb.ui \
-    setup1.ui
+    setup1.ui \
+    toolstabwidget.ui
 
 
 INCLUDEPATH +=\
