@@ -485,6 +485,10 @@ void autoCCode::pushButtonSet(void)
     QObject::connect(ui_toolsets->pushButton_notepadplus,SIGNAL(clicked()),this,SLOT(on_pushButton_notepadplus_exe_clicked()));
     //Python pushButton_python
     QObject::connect(ui_toolsets->pushButton_python,SIGNAL(clicked()),this,SLOT(on_pushButton_python_exe_clicked()));
+    //Python python D:\test.py
+    QObject::connect(ui_toolsets->pushButton_python_Dtest,SIGNAL(clicked()),this,SLOT(on_pushButton_python_Dpathtestfile_exe_clicked()));
+
+
     //source insight
     QObject::connect(ui_toolsets->pushButton_sourceinsight,SIGNAL(clicked()),this,SLOT(on_pushButton_sourceinsight_exe_clicked()));
 }
@@ -3548,6 +3552,16 @@ void autoCCode::on_pushButton_python_exe_clicked()
     LPCSTR exepath = "python.exe";
     ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
 }
+
+void autoCCode::on_pushButton_python_Dpathtestfile_exe_clicked()
+{
+    //python.exe
+    LPCSTR exepath = "python.exe";
+    LPCSTR para = "D:\\test.py";
+    ShellExecuteA(NULL,"open", exepath,para,NULL,SW_SHOWNORMAL);
+}
+
+
 
 void autoCCode::on_pushButton_sourceinsight_exe_clicked()
 {

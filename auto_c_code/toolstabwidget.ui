@@ -18,7 +18,7 @@
   </property>
   <widget class="QWidget" name="tab">
    <attribute name="title">
-    <string>Tab 1</string>
+    <string>EXE</string>
    </attribute>
    <widget class="QPushButton" name="pushButton_calc">
     <property name="geometry">
@@ -83,6 +83,19 @@
     </property>
     <property name="text">
      <string>SrcInsight</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_python_Dtest">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>200</y>
+      <width>71</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Python:DUt</string>
     </property>
    </widget>
   </widget>

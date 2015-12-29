@@ -421,6 +421,7 @@ private slots:
     void on_pushButton_calc_exe_clicked();
     void on_pushButton_notepadplus_exe_clicked();
     void on_pushButton_python_exe_clicked();
+    void on_pushButton_python_Dpathtestfile_exe_clicked();
     void on_pushButton_sourceinsight_exe_clicked();
 };
 
