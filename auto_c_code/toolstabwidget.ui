@@ -29,6 +29,9 @@
       <height>51</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>open calc</string>
+    </property>
     <property name="text">
      <string>计算器</string>
     </property>
@@ -41,6 +44,9 @@
       <width>71</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>open notepad</string>
     </property>
     <property name="text">
      <string>记事本</string>
@@ -55,6 +61,9 @@
       <height>51</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>open notepad++</string>
+    </property>
     <property name="text">
      <string>NotePad++</string>
     </property>
@@ -68,6 +77,9 @@
       <height>51</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>open python</string>
+    </property>
     <property name="text">
      <string>Python</string>
     </property>
@@ -80,6 +92,9 @@
       <width>71</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>open source insight</string>
     </property>
     <property name="text">
      <string>SrcInsight</string>
@@ -95,7 +110,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>python D:test.py</string>
+     <string>open python D:test.py</string>
     </property>
     <property name="text">
      <string>Python:DUt</string>

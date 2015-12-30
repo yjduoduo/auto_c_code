@@ -3555,10 +3555,42 @@ void autoCCode::on_pushButton_python_exe_clicked()
 
 void autoCCode::on_pushButton_python_Dpathtestfile_exe_clicked()
 {
+    QString headerPython =
+            QString("#!/usr/bin/env python") + "\n" +
+            "# -*- coding: utf-8 -*-" + "\n" +
+            "import time" + "\n" +
+            "from time import ctime,sleep;" + "\n"+ "\n" +
+            "print \"good,good!\""  + "\n"+
+            "print 62 *\'=\'  "+  "\n"+
+            "#write code here begin" +  "\n"+
+            + "\n"+
+            + "\n"+
+            + "\n"+
+            + "\n"+
+            "#write code here end" +  "\n"+
+            "print 62 *\'=\'  "+  "\n"+
+            "for i in range(2000000):"  + "\n"+
+            "    sleep(10)"  + "\n"+
+            "    print \"loopint at pos \" +	 str(i)"  + "\n"+
+            + "\n"+
+            "sleep(100)";
+
     //python.exe
     LPCSTR exepath = "python.exe";
-    LPCSTR para = "D:\\test.py";
-    ShellExecuteA(NULL,"open", exepath,para,NULL,SW_SHOWNORMAL);
+    LPCSTR filepath = "D:\\test.py";
+    QFile *pFile = NULL;
+    pFile = new QFile(filepath);
+    if(!pFile->exists())
+    {
+        pFile->open(QIODevice::WriteOnly);
+        pFile->write(headerPython.toLocal8Bit().data());
+    }
+    pFile->close();
+    //notepad++.exe打开此文件
+    LPCSTR notepadexe = "notepad++.exe";
+    ShellExecuteA(NULL,"open", notepadexe,filepath,NULL,SW_SHOWNORMAL);
+    ShellExecuteA(NULL,"open", exepath,filepath,NULL,SW_SHOWNORMAL);
+
 }
 
 
