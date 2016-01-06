@@ -88,7 +88,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>20</y>
+      <y>140</y>
       <width>71</width>
       <height>51</height>
      </rect>
@@ -114,6 +114,22 @@
     </property>
     <property name="text">
      <string>Python:DUt</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_cmd">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>20</y>
+      <width>71</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>open calc</string>
+    </property>
+    <property name="text">
+     <string>命令CMD</string>
     </property>
    </widget>
   </widget>

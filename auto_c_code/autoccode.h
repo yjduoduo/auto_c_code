@@ -423,6 +423,7 @@ private slots:
     void on_pushButton_python_exe_clicked();
     void on_pushButton_python_Dpathtestfile_exe_clicked();
     void on_pushButton_sourceinsight_exe_clicked();
+    void on_pushButton_cmd_exe_clicked();
 };
 
 

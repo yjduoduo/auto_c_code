@@ -191,6 +191,25 @@
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox_codec_gbk">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>214</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>生成代码库添加文件时内容末尾有文件路径显示</string>
+   </property>
+   <property name="text">
+    <string>编码GBK</string>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>

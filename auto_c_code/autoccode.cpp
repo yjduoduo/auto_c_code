@@ -12,6 +12,7 @@
 #include <stdarg.h>
 #include <windows.h>
 
+
 #include "gencodedatabase.h"
 #include <QFileDialog>
 #include <QInputDialog>
@@ -491,6 +492,9 @@ void autoCCode::pushButtonSet(void)
 
     //source insight
     QObject::connect(ui_toolsets->pushButton_sourceinsight,SIGNAL(clicked()),this,SLOT(on_pushButton_sourceinsight_exe_clicked()));
+
+    //命令行CMD
+    QObject::connect(ui_toolsets->pushButton_cmd,SIGNAL(clicked()),this,SLOT(on_pushButton_cmd_exe_clicked()));
 }
 void autoCCode::set_search_text()
 {
@@ -868,22 +872,49 @@ void autoCCode::on_choseCodeDB_btn_clicked(void)
 void autoCCode::on_gencode_btn_clicked(void)
 {
     self_print(on_gencode_btn_clicked);
+    //保存打开的路径
+    static QString savedPath = QDesktopServices::storageLocation(QDesktopServices::DesktopLocation);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    QDesktopServices::storageLocation(QDesktopServices::DesktopLocation),
-                                                    tr("Txt (*.txt)"
+                                                    savedPath,
+                                                    tr(";;All Files(*.*)"
                                                        ";;Ctype (*.c *.C *.cc *.h)"
                                                        ";;Cpptype(*.cpp *.CPP *.h)"
                                                        ";;QTtype(*.c *.C *.cpp *.CPP *.ui *.rc *.pro *.h)"
                                                        ";;Pythontype(*.py *.PY)"
                                                        ";;JavaType(*.java)"
-                                                       ";;All Files(*.*)"));
+                                                       "Txt (*.txt)"));
     //    qDebug()<<"fileName:"<<fileName;
+    QFileInfo fileinfo = QFileInfo(fileName);
+    //文件名
+    QString file_name = fileinfo.fileName();
+    //文件后缀
+    QString file_suffix = fileinfo.suffix();
+    //绝对路径
+    QString file_path = fileinfo.absolutePath();
+
+    savedPath = file_path;
+
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
         std::cerr << "Cannot open file for writing: "
                   << qPrintable(file.errorString()) << std::endl;
         return;
     }
+    //before
+    if(ui_setup->checkBox_showpath->isChecked())
+    {
+        QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
+        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
+        QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
+
+    }
+    else
+    {
+        QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+        QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    }
+
     //    QString text_file = file.readAll();
     QString text_china;
     text_china.clear();
@@ -905,6 +936,20 @@ void autoCCode::on_gencode_btn_clicked(void)
     //    out << "Thomas M. Disch: " << 334 << endl;
 
     file.close();
+
+    //after
+    if(ui_setup->checkBox_showpath->isChecked())
+    {
+        QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+        QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    }
+    else
+    {
+        QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
+        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
+        QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
+    }
 }
 void autoCCode::hide_inBtn(void)
 {
@@ -3528,7 +3573,7 @@ void autoCCode::on_pushButton_notepad_exe_clicked()
     //调用记事本
     ShellExecuteA(NULL,"open","NOTEPAD.EXE",NULL,NULL,SW_SHOWNORMAL);
 
-    toolsTabWidget->hide();
+//    toolsTabWidget->hide();
 }
 
 void autoCCode::on_pushButton_calc_exe_clicked()
@@ -3606,3 +3651,12 @@ void autoCCode::on_pushButton_sourceinsight_exe_clicked()
 }
 
 
+void autoCCode::on_pushButton_cmd_exe_clicked()
+{
+    //cmd.exe
+    LPCSTR exepath = "cmd.exe";
+    ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
+//    exepath = "C:\\Program Files (x86)\\Source Insight 3\\Insight3.exe";
+//    ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
+
+}
