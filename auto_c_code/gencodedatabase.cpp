@@ -617,6 +617,8 @@ void* thread_func_searchdatabase_lookTextHisTbl(void* args)
     const char *databases_name = pPara->databases_name;
     char *selecttableexpress = pPara->selecttableexpress;
     LookTextHistoryResult selectres;
+    selectres.looktimes = 0;
+    selectres.looktextarry.clear();
     QString searchtext = pPara->searchtext;
 
     sqlite3 * db = 0;
@@ -741,6 +743,7 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
     }
 
     selectres = inPara_lookTextHisTbl.selectres;
+//    qDebug() << "inPara_lookTextHisTbl times:" << inPara_lookTextHisTbl.selectres.looktimes;
     return 0;
 }
 #else

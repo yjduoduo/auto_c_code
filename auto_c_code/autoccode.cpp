@@ -1685,6 +1685,50 @@ void autoCCode::SearchText(const QString &searchStr)
     judge_color_index();
     str_print(selectresult.content_list.size());
 
+
+
+    //查找并插入数据
+    QString select_express;
+    select_express.clear();
+    select_express = QString("select lowercase_keyworks,keywords,content,lantype,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc")
+            .arg(sets->talbename)
+            .arg(getLanguageStr(sets->langtype));
+
+
+    clr_selectresult(selectresult);
+
+    str_print(select_express);
+
+    b.searchdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+                     selectresult,
+                     searchStr.toLower());
+
+    /* 判断查询字符和实际的字符串是否相同 */
+    if(searchStr != ui->lineEdit_search->text())
+    {
+        qDebug() << "searchstr not same with line edit text,may changeing !!";
+        qDebug() << "searchstr:" << searchStr;
+        qDebug() << "line text:" << ui->lineEdit_search->text();
+        return;
+    }
+    qDebug() << "searchstr:" << searchStr;
+    qDebug() << "line text:" << ui->lineEdit_search->text();
+
+    if(showcode_textEdit_AtBotton())
+    {
+        ui->codeshow_textEdit->setText(selectresult.contentstr);
+    }
+
+    clear_listWidget_beforecall();
+    if(0 == selectresult.keyword_list.length()){
+        alert();
+    }else{
+        selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
+        ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
+        //        ui->listWidget_codeview->addItems(selectresult.keyword_list);
+        ui->listWidget_note->addItems(selectresult.note_list);
+    }
+
     clr_selectresult(selectresult);
 
     //保存查找关键字 begin
@@ -1742,38 +1786,6 @@ void autoCCode::SearchText(const QString &searchStr)
     qDebug() << "looktimes:" << looktexthistoryres.looktimes;
 
     //保存查找关键字 end
-
-
-
-    //查找并插入数据
-    QString select_express;
-    select_express.clear();
-    select_express = QString("select lowercase_keyworks,keywords,content,lantype,note,vartype from %1 where lantype='%2' and delflag=0 order by ID desc")
-            .arg(sets->talbename)
-            .arg(getLanguageStr(sets->langtype));
-
-
-    clr_selectresult(selectresult);
-
-    str_print(select_express);
-
-    b.searchdatabase(sets->databasename,select_express.toLocal8Bit().data(),
-                     selectresult,
-                     searchStr.toLower());
-    if(showcode_textEdit_AtBotton())
-    {
-        ui->codeshow_textEdit->setText(selectresult.contentstr);
-    }
-
-    clear_listWidget_beforecall();
-    if(0 == selectresult.keyword_list.length()){
-        alert();
-    }else{
-        selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
-        ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
-        //        ui->listWidget_codeview->addItems(selectresult.keyword_list);
-        ui->listWidget_note->addItems(selectresult.note_list);
-    }
 }
 void autoCCode::cleanLineTextEditSearch(void)
 {
