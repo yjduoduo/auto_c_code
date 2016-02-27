@@ -1729,7 +1729,6 @@ void autoCCode::SearchText(const QString &searchStr)
         ui->listWidget_note->addItems(selectresult.note_list);
     }
 
-    clr_selectresult(selectresult);
 
     //±£´æ²éÕÒ¹Ø¼ü×Ö begin
     codestructSets *setsLookHis = get_table_sets_bytype(languagetype_LookTextHis_);
