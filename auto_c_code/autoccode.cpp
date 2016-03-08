@@ -183,6 +183,8 @@ void autoCCode::InstallEventFilterSets(void)
     ui->listWidget_note->installEventFilter(this);
     ui->genshow_textEdit->installEventFilter(this);
 
+    ui->choseCodeDB_btn->installEventFilter(this);
+
 }
 
 void autoCCode::ListViewSets()
@@ -2990,6 +2992,24 @@ void autoCCode::wheelEvent(QWheelEvent *event)
     event->accept();      //接收该事件
 }
 
+bool autoCCode::eventFilter_ui_choseCodeDB_btn(QObject *watched, QEvent *event)
+{
+    if(watched == ui->choseCodeDB_btn)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+//            qDebug() << "chose codedb btn focus in,coming here!!";
+            dialog_selectdb->show();
+        }
+        else if (event->type()==QEvent::Leave)    // mouse leaves widget
+        {
+//            qDebug() << "chose codedb btn focus out,leave now!!";
+//            dialog_selectdb->hide();
+        }
+    }
+}
+
+
 bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 {
     //    qDebug() << "eventFilter";
@@ -3115,6 +3135,9 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
         ////            return true;
         //        }
     }
+
+    eventFilter_ui_choseCodeDB_btn(obj, event);
+
     return QObject::eventFilter(obj, event);
 }
 
