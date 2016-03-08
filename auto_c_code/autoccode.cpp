@@ -185,6 +185,7 @@ void autoCCode::InstallEventFilterSets(void)
 
     ui->choseCodeDB_btn->installEventFilter(this);
 
+    ui_dia_selectdb->comboBox_selectdb->installEventFilter(this);
 }
 
 void autoCCode::ListViewSets()
@@ -2992,6 +2993,29 @@ void autoCCode::wheelEvent(QWheelEvent *event)
     event->accept();      //接收该事件
 }
 
+//combox产生下拉事件，弹出内容
+bool autoCCode::eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, QEvent *event)
+{
+    if(watched == ui_dia_selectdb->comboBox_selectdb)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+            qDebug() << "comboBox_selectdb,coming here!!";
+//            dialog_selectdb->show();
+            ui_dia_selectdb->comboBox_selectdb->showPopup();//combox下拉事件
+        }
+        else if (event->type()==QEvent::Leave)    // mouse leaves widget
+        {
+            qDebug() << "comboBox_selectdb,leave now!!";
+//            ui_dia_selectdb->comboBox_selectdb->showNormal();
+//            dialog_selectdb->hide();
+        }
+    }
+
+
+}
+
+
 bool autoCCode::eventFilter_ui_choseCodeDB_btn(QObject *watched, QEvent *event)
 {
     if(watched == ui->choseCodeDB_btn)
@@ -3137,6 +3161,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     }
 
     eventFilter_ui_choseCodeDB_btn(obj, event);
+    eventFilter_ui_dia_selectdb_comboBox_selectdb(obj, event);
 
     return QObject::eventFilter(obj, event);
 }
