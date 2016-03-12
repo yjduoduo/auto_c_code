@@ -186,6 +186,11 @@ void autoCCode::InstallEventFilterSets(void)
     ui->choseCodeDB_btn->installEventFilter(this);
 
     ui_dia_selectdb->comboBox_selectdb->installEventFilter(this);
+
+    ui->indb_btn->installEventFilter(this);
+
+    ui_dialog->cancel_btn_dia->installEventFilter(this);
+    ui_dialog->ok_btn_dia->installEventFilter(this);
 }
 
 void autoCCode::ListViewSets()
@@ -2993,6 +2998,89 @@ void autoCCode::wheelEvent(QWheelEvent *event)
     event->accept();      //接收该事件
 }
 
+bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
+{
+    if(!ui_setup->checkBox_indb_shortkey->isChecked())
+    {
+        return false;
+    }
+
+    //入库按钮
+    if(watched == ui->indb_btn)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+//            qDebug() << "comboBox_selectdb,coming here!!";
+//            dialog_selectdb->show();
+            InDb_Dialog->show();//入库界面弹出
+        }/*
+        else if (event->type()==QEvent::Leave)    // mouse leaves widget
+        {
+//            qDebug() << "comboBox_selectdb,leave now!!";
+//            ui_dia_selectdb->comboBox_selectdb->showNormal();
+//            dialog_selectdb->hide();
+        }
+        else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+        {
+//            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+//            ui_dia_selectdb
+//            dialog_selectdb->hide();
+        }
+//        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
+    }
+
+
+    //入库界面ok按钮
+    if(watched == ui_dialog->ok_btn_dia)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+//            qDebug() << "comboBox_selectdb,coming here!!";
+//            dialog_selectdb->show();
+//            InDb_Dialog->show();//入库界面弹出
+            ok_btn_dia_clicked_self();
+        }/*
+        else if (event->type()==QEvent::Leave)    // mouse leaves widget
+        {
+//            qDebug() << "comboBox_selectdb,leave now!!";
+//            ui_dia_selectdb->comboBox_selectdb->showNormal();
+//            dialog_selectdb->hide();
+        }
+        else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+        {
+//            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+//            ui_dia_selectdb
+//            dialog_selectdb->hide();
+        }
+//        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
+    }
+
+    //入库界面cancle按钮
+    if(watched == ui_dialog->cancel_btn_dia)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+//            qDebug() << "comboBox_selectdb,coming here!!";
+//            dialog_selectdb->show();
+            InDb_Dialog->hide();//入库界面隐藏
+        }/*
+        else if (event->type()==QEvent::Leave)    // mouse leaves widget
+        {
+//            qDebug() << "comboBox_selectdb,leave now!!";
+//            ui_dia_selectdb->comboBox_selectdb->showNormal();
+//            dialog_selectdb->hide();
+        }
+        else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+        {
+//            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+//            ui_dia_selectdb
+//            dialog_selectdb->hide();
+        }
+//        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
+    }
+
+}
+
 //combox产生下拉事件，弹出内容
 bool autoCCode::eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, QEvent *event)
 {
@@ -3000,18 +3088,24 @@ bool autoCCode::eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, 
     {
         if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
         {
-            qDebug() << "comboBox_selectdb,coming here!!";
+//            qDebug() << "comboBox_selectdb,coming here!!";
 //            dialog_selectdb->show();
             ui_dia_selectdb->comboBox_selectdb->showPopup();//combox下拉事件
         }
         else if (event->type()==QEvent::Leave)    // mouse leaves widget
         {
-            qDebug() << "comboBox_selectdb,leave now!!";
+//            qDebug() << "comboBox_selectdb,leave now!!";
 //            ui_dia_selectdb->comboBox_selectdb->showNormal();
 //            dialog_selectdb->hide();
         }
+        else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+        {
+//            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+//            ui_dia_selectdb
+            dialog_selectdb->hide();
+        }
+//        qDebug() << "comboBox_selectdb, event type:" << event->type();
     }
-
 
 }
 
@@ -3162,6 +3256,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 
     eventFilter_ui_choseCodeDB_btn(obj, event);
     eventFilter_ui_dia_selectdb_comboBox_selectdb(obj, event);
+    eventFilter_ui_dialog(obj, event);
 
     return QObject::eventFilter(obj, event);
 }

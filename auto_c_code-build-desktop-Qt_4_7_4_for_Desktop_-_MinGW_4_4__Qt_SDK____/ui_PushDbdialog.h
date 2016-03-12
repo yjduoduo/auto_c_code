@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PushDbdialog.ui'
 **
-** Created: Tue Oct 27 22:51:38 2015
+** Created: Sat Mar 12 23:27:21 2016
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -55,7 +55,6 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QTextEdit *content_textEdit_dia;
     QVBoxLayout *verticalLayout;
-    QPushButton *ok_btn_dia;
     QComboBox *langtype_comboBox;
     QLabel *label_5;
     QComboBox *comboBox_vartype;
@@ -71,6 +70,7 @@ public:
     QPushButton *pushButton_add;
     QSpacerItem *horizontalSpacer_2;
     QHBoxLayout *horizontalLayout_4;
+    QPushButton *ok_btn_dia;
     QSpacerItem *horizontalSpacer;
     QPushButton *cancel_btn_dia;
 
@@ -192,18 +192,6 @@ public:
 
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        ok_btn_dia = new QPushButton(Dialog);
-        ok_btn_dia->setObjectName(QString::fromUtf8("ok_btn_dia"));
-        ok_btn_dia->setEnabled(true);
-        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(ok_btn_dia->sizePolicy().hasHeightForWidth());
-        ok_btn_dia->setSizePolicy(sizePolicy);
-        ok_btn_dia->setMinimumSize(QSize(10, 60));
-
-        verticalLayout->addWidget(ok_btn_dia);
-
         langtype_comboBox = new QComboBox(Dialog);
         langtype_comboBox->setObjectName(QString::fromUtf8("langtype_comboBox"));
 
@@ -286,6 +274,18 @@ public:
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        ok_btn_dia = new QPushButton(Dialog);
+        ok_btn_dia->setObjectName(QString::fromUtf8("ok_btn_dia"));
+        ok_btn_dia->setEnabled(true);
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(ok_btn_dia->sizePolicy().hasHeightForWidth());
+        ok_btn_dia->setSizePolicy(sizePolicy);
+        ok_btn_dia->setMinimumSize(QSize(10, 60));
+
+        horizontalLayout_4->addWidget(ok_btn_dia);
+
         horizontalSpacer = new QSpacerItem(48, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_4->addItem(horizontalSpacer);
@@ -333,11 +333,11 @@ public:
         checkBox_SEL->setToolTip(QApplication::translate("Dialog", "\351\200\211\344\270\255\357\274\214\344\273\216\345\267\246\350\276\271\351\200\211\346\213\251\345\206\205\345\256\271\350\207\252\345\212\250\346\267\273\345\212\240\345\210\260\345\217\263\350\276\271", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         checkBox_SEL->setText(QApplication::translate("Dialog", "SEL", 0, QApplication::UnicodeUTF8));
-        ok_btn_dia->setText(QApplication::translate("Dialog", "\347\241\256\345\256\232", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("Dialog", "\345\217\230\351\207\217\347\261\273\345\236\213", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("Dialog", "\350\214\203\347\225\264", 0, QApplication::UnicodeUTF8));
         checkBox_AutoGet_Con->setText(QApplication::translate("Dialog", "\350\207\252\345\212\250\350\216\267\345\217\226", 0, QApplication::UnicodeUTF8));
         pushButton_add->setText(QApplication::translate("Dialog", "\346\267\273\345\212\240", 0, QApplication::UnicodeUTF8));
+        ok_btn_dia->setText(QApplication::translate("Dialog", "\347\241\256\345\256\232", 0, QApplication::UnicodeUTF8));
         cancel_btn_dia->setText(QApplication::translate("Dialog", "\345\217\226\346\266\210", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
