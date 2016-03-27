@@ -71,6 +71,8 @@ protected://function declared
     bool eventFilter_ui_choseCodeDB_btn(QObject *watched, QEvent *event);
     bool eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, QEvent *event);
     bool eventFilter_ui_dialog(QObject *watched, QEvent *event);
+    bool eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent *event);
+
     //安装鼠标滚动过滤器
     void wheelEvent(QWheelEvent *event);
     //鼠标是否在控件genshow_textEdit之中

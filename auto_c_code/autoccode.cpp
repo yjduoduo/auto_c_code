@@ -191,6 +191,8 @@ void autoCCode::InstallEventFilterSets(void)
 
     ui_dialog->cancel_btn_dia->installEventFilter(this);
     ui_dialog->ok_btn_dia->installEventFilter(this);
+
+    ui_dialog->langtype_comboBox->installEventFilter(this);
 }
 
 void autoCCode::ListViewSets()
@@ -2997,6 +2999,40 @@ void autoCCode::wheelEvent(QWheelEvent *event)
     }
     event->accept();      //接收该事件
 }
+//入库界面里的数据库列表弹出
+bool autoCCode::eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent *event)
+{
+   if(!ui_setup->checkBox_indb_shortkey->isChecked())
+   {
+       return false;
+   }
+
+
+   //入库按钮
+   if(watched == ui_dialog->langtype_comboBox)
+   {
+       if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+       {
+//            qDebug() << "comboBox_selectdb,coming here!!";
+           ui_dialog->langtype_comboBox->showPopup();//combox下拉事件
+       }/*
+       else if (event->type()==QEvent::Leave)    // mouse leaves widget
+       {
+//            qDebug() << "comboBox_selectdb,leave now!!";
+//            ui_dia_selectdb->comboBox_selectdb->showNormal();
+//            dialog_selectdb->hide();
+       }
+       else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+       {
+//            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+//            ui_dia_selectdb
+//            dialog_selectdb->hide();
+       }
+//        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
+   }
+}
+
+
 
 bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
 {
@@ -3257,6 +3293,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     eventFilter_ui_choseCodeDB_btn(obj, event);
     eventFilter_ui_dia_selectdb_comboBox_selectdb(obj, event);
     eventFilter_ui_dialog(obj, event);
+    eventFilter_ui_dialog_langtype_comboBox(obj, event);
 
     return QObject::eventFilter(obj, event);
 }
