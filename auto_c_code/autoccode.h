@@ -8,6 +8,7 @@
 #include <QListWidgetItem>
 #include <QListView>
 #include "gencodedatabase.h"
+#include "uithread.h"
 #include "version.h"
 
 namespace Ui {
@@ -301,6 +302,7 @@ private:
     void ListViewSets();
     void ProgressBarSetValue(int value);
     void QTimerSet(void);
+    void ThreadSets();
     void hide_inBtn(void);
     void hide_OutBtn(void);
     void show_OutBtn(void);
@@ -346,6 +348,11 @@ private:
     Ui::AutoIndb *ui_autoindb;//自动入库界面
     Ui::SetUpDialog *ui_setup;//设置界面
     Ui::ToolsTabWidget *ui_toolsets;//工具集
+
+
+    /* pthread线程，防止界面假死 */
+    UiThread *pthread_event;
+
 
 private:
     void dragEnterEvent(QDragEnterEvent *event);

@@ -115,6 +115,7 @@ autoCCode::autoCCode(QWidget *parent) :
     CharFormat();
     setDefaultColor();
     PopMenu();
+    ThreadSets();
 
 }
 
@@ -214,6 +215,17 @@ void autoCCode::ProgressBarSetValue(int value)
     }
 
 }
+
+void autoCCode::ThreadSets()
+{
+    qDebug() << "thread sets";
+    /* pthread线程，防止界面假死 */
+    pthread_event = new UiThread(this);
+    qDebug() << "thread event:" << pthread_event;
+    pthread_event->start();
+}
+
+
 void autoCCode::QTimerSet(void)
 {
     self_print(QTimerSet);

@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     autoindb.cpp \
     sqlite-autoconf/sqlite3.c \
     codeEditor/codeeditor.cpp \
-    toolstabwidget.cpp
+    toolstabwidget.cpp \
+    uithread.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -35,7 +36,8 @@ HEADERS  += autoccode.h \
     sqlite-autoconf/sqlite3.h \
     codeEditor/linenumberarea.h \
     codeEditor/codeeditor.h \
-    toolstabwidget.h
+    toolstabwidget.h \
+    uithread.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
