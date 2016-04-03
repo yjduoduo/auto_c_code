@@ -1659,6 +1659,7 @@ void autoCCode::SearchText_WithTimer(void)
 
 void autoCCode::SearchText_WithTimer_Enter(void)
 {
+    qApp->processEvents();
 //    qDebug() << "get_rtQuery_enable():" << get_rtQuery_enable();
     if(!get_rtQuery_enable())
     {
@@ -1675,6 +1676,7 @@ void autoCCode::SearchText_WithTimer_Enter(void)
 
 void autoCCode::SearchText(const QString &searchStr)
 {
+    qApp->processEvents();
     self_print(SearchText);
     str_print(searchStr);
 
