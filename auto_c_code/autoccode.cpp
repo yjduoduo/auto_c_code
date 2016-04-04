@@ -936,6 +936,11 @@ void autoCCode::on_gencode_btn_clicked(void)
                   << qPrintable(file.errorString()) << std::endl;
         return;
     }
+
+    readTextFile(fileName);
+    file.close();
+    return;
+
     //before
     if(ui_setup->checkBox_showpath->isChecked())
     {
@@ -1934,9 +1939,22 @@ void autoCCode::readTextFile(const QString &fileName)
     {
         //        qDebug() << "file opend!!";
         QTextStream stream(&file);
+        QString text_china;
+        if(ui_setup->checkBox_showpath->isChecked())
+        {
+            text_china += stream.readAll() + "\n\n\n======[end]========\n" + fileName + "\n";
+        }
+        else
+        {
+            text_china += stream.readAll();
+        }
         //        ui->codeshow_textEdit->setText(stream.readAll());
-        ui->genshow_textEdit->setPlainText(stream.readAll());
+        ui->genshow_textEdit->setPlainText(text_china);
         //        qDebug() << "content:" << stream.readAll();
+    }
+    else
+    {
+        QMessageBox::warning(NULL, str_china("提示"), str_china("文件较大"),NULL,NULL);
     }
     file.close();
 }
