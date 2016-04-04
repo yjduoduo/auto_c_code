@@ -23,6 +23,7 @@
 #include <QElapsedTimer>
 
 #include "qxtglobalshortcut/qxtglobalshortcut.h"   //add shortcut
+#include "debugsets.h"
 
 
 using namespace std;
@@ -41,6 +42,9 @@ using namespace std;
 
 
 #define LIMIT_SHOW_SIZE getLimitNum()/*60*/
+
+#define DEBUGINFO(A)  ClsDebugSets::Push(A)
+
 
 
 #if 1
@@ -76,8 +80,8 @@ autoCCode::autoCCode(QWidget *parent) :
     checkbox_getcliptext_timer(NULL),
     checkbox_AutoGetCon_timer(NULL),
     isCTRLKeyPressed(FALSE),
-    is_selected(FALSE)
-
+    is_selected(FALSE),
+    pthread_event(NULL)
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
     ui->setupUi(this);
@@ -116,7 +120,7 @@ autoCCode::autoCCode(QWidget *parent) :
     setDefaultColor();
     PopMenu();
     ThreadSets();
-
+    DebugSets();
 }
 
 void autoCCode::PopMenu()
@@ -223,7 +227,17 @@ void autoCCode::ThreadSets()
     pthread_event = new UiThread(this);
     qDebug() << "thread event:" << pthread_event;
     pthread_event->start();
+
 }
+
+void autoCCode::DebugSets()
+{
+    /* 打印信息的数据包 printfsets */
+    ClsDebugSets::Push("DebugSets");
+//    ClsDebugSets qCDebug;
+    qCDebug << "DebugSets2222222222222";
+}
+
 
 
 void autoCCode::QTimerSet(void)
@@ -1727,16 +1741,18 @@ void autoCCode::SearchText(const QString &searchStr)
                      selectresult,
                      searchStr.toLower());
 
+//    qCDebug <<"SearchText:" << searchStr;
+
     /* 判断查询字符和实际的字符串是否相同 */
     if(searchStr != ui->lineEdit_search->text())
     {
-        qDebug() << "searchstr not same with line edit text,may changeing !!";
-        qDebug() << "searchstr:" << searchStr;
-        qDebug() << "line text:" << ui->lineEdit_search->text();
+        qCDebug << "searchstr not same with line edit text,may changeing !!";
+        qCDebug << "searchstr:" << searchStr;
+        qCDebug << "line text:" << ui->lineEdit_search->text();
         return;
     }
-    qDebug() << "searchstr:" << searchStr;
-    qDebug() << "line text:" << ui->lineEdit_search->text();
+    qCDebug << "searchstr:" << searchStr;
+    qCDebug << "line text:" << ui->lineEdit_search->text();
 
     if(showcode_textEdit_AtBotton())
     {

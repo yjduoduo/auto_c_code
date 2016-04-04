@@ -11,6 +11,7 @@ INPUT(
 ./debug/codeeditor.o
 ./debug/toolstabwidget.o
 ./debug/uithread.o
+./debug/debugsets.o
 ./debug/moc_autoccode.o
 ./debug/moc_dialog_select_database.o
 ./debug/moc_qxtglobalshortcut.o

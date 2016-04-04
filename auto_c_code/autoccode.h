@@ -9,6 +9,7 @@
 #include <QListView>
 #include "gencodedatabase.h"
 #include "uithread.h"
+#include "debugsets.h"
 #include "version.h"
 
 namespace Ui {
@@ -303,6 +304,7 @@ private:
     void ProgressBarSetValue(int value);
     void QTimerSet(void);
     void ThreadSets();
+    void DebugSets();
     void hide_inBtn(void);
     void hide_OutBtn(void);
     void show_OutBtn(void);
@@ -353,6 +355,7 @@ private:
     /* pthread线程，防止界面假死 */
     UiThread *pthread_event;
 
+    ClsDebugSets qCDebug;
 
 private:
     void dragEnterEvent(QDragEnterEvent *event);
