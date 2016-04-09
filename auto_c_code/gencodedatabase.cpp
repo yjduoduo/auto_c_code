@@ -55,6 +55,8 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
                            {LANTY_JOIN(Sqlite3_),"sqlite3_table",DB_NAME,CREATTABLE(sqlite3_table),},
                            {LANTY_JOIN(Postgresql_),"postgresql_table",DB_NAME,CREATTABLE(postgresql_table),},
                            {LANTY_JOIN(Patchs_),"patchs_table",DB_NAME,CREATTABLE(patchs_table),},
+                           {LANTY_JOIN(Perl_),"perl_table",DB_NAME,CREATTABLE(perl_table),},
+                           {LANTY_JOIN(Hadoop_),"hadoop_table",DB_NAME,CREATTABLE(hadoop_table),},
                            {LANTY_JOIN(Unittest_),"unittest_table",DB_NAME,CREATTABLE(unittest_table),},
                            {LANTY_JOIN(Swift_),"swift_table",DB_NAME,CREATTABLE(swift_table),},
                            {LANTY_JOIN(Android_),"android_table",DB_NAME,CREATTABLE(android_table),},
@@ -882,6 +884,8 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Sqlite3_:
     case    languagetype_Postgresql_:
     case    languagetype_Patchs_:
+    case    languagetype_Perl_:
+    case    languagetype_Hadoop_:
     case    languagetype_Unittest_:
     case    languagetype_Swift_:
     case    languagetype_Rust_:
@@ -997,6 +1001,8 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Sqlite3_:
     case    languagetype_Postgresql_:
     case    languagetype_Patchs_:
+    case    languagetype_Perl_:
+    case    languagetype_Hadoop_:
     case    languagetype_Unittest_:
     case    languagetype_Swift_:
     case    languagetype_Rust_:
@@ -1039,6 +1045,8 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     case    languagetype_Sqlite3_:
     case    languagetype_Postgresql_:
     case    languagetype_Patchs_:
+    case    languagetype_Perl_:
+    case    languagetype_Hadoop_:
     case    languagetype_Unittest_:
     case    languagetype_Swift_:
     case    languagetype_Rust_:
@@ -1088,6 +1096,10 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "Postgresql";
     case    languagetype_Patchs_:
         return "Patchs";
+    case    languagetype_Perl_:
+        return "Perl";
+    case    languagetype_Hadoop_:
+        return "Hadoop";
     case    languagetype_Unittest_:
         return "Unittest";
     case    languagetype_Swift_:

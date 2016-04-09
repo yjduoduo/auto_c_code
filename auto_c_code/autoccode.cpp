@@ -804,11 +804,13 @@ void autoCCode::addstr_comboBox(void)
         <<str_china(C++)
        <<str_china(Debug)
       <<str_china(Erlang)
+     <<str_china(Hadoop)
      <<str_china(Jave)
     <<str_china(JavaScript)
     <<str_china(Mysql)
     <<str_china(Oracle)
     <<str_china(Patchs)
+    <<str_china(Perl)
     <<str_china(Postgresql)
     <<str_china(Rust)
     <<str_china(shell)
@@ -1110,6 +1112,14 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Patchs")
     {
         return languagetype_Patchs_;
+    }
+    else if(type == "Perl")
+    {
+        return languagetype_Perl_;
+    }
+    else if(type == "Hadoop")
+    {
+        return languagetype_Hadoop_;
     }
     else if(type == "Unittest")
     {
