@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     codeEditor/codeeditor.cpp \
     toolstabwidget.cpp \
     uithread.cpp \
-    debugsets.cpp
+    debugsets.cpp \
+    globalapplication.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -39,7 +40,8 @@ HEADERS  += autoccode.h \
     codeEditor/codeeditor.h \
     toolstabwidget.h \
     uithread.h \
-    debugsets.h
+    debugsets.h \
+    globalapplication.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \

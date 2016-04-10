@@ -70,6 +70,13 @@ protected://function declared
     void setStringColor(unsigned int pos,unsigned int len);/*  QT:设置textedit文本框中某个字符串的格式 */
     //安装事件过滤器
     virtual bool eventFilter ( QObject * watched, QEvent *event );
+    virtual void keyPressEvent(QKeyEvent *k);
+    void mouseMoveEvent ( QMouseEvent * e );
+    void mousePressEvent ( QMouseEvent * e );
+    void mouseReleaseEvent ( QMouseEvent * e );
+    void mouseDoubleClickEvent( QMouseEvent * e );
+//    void dragEnterEvent(QDragEnterEvent *event);
+//    void dropEvent(QDropEvent *event);
     bool eventFilter_ui_choseCodeDB_btn(QObject *watched, QEvent *event);
     bool eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, QEvent *event);
     bool eventFilter_ui_dialog(QObject *watched, QEvent *event);
@@ -280,6 +287,8 @@ private slots:
     void setDefaultColor();
     //设置字体
     void setFont();
+    //选择数据变化
+    void on_selectionChanged();
 public slots:
 
     void ok_btn_dia_clicked_self(void);

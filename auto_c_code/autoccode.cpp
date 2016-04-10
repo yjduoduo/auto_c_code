@@ -274,6 +274,13 @@ void autoCCode::keyPressEventSet()
 
     QObject::connect(ui->lineEdit_search,SIGNAL(editingFinished()),
                      this,SLOT(SearchEnter()));
+    //Êó±êÓÐÐ§
+    setMouseTracking(true);
+
+    QObject::connect(qApp->clipboard(),SIGNAL(selectionChanged()),
+                     this,SLOT(on_selectionChanged()));
+    QObject::connect(qApp->clipboard(),SIGNAL(dataChanged()),
+                     this,SLOT(on_selectionChanged()));
 }
 
 
@@ -3356,6 +3363,54 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     return QObject::eventFilter(obj, event);
 }
 
+
+void autoCCode::keyPressEvent(QKeyEvent *k)
+{
+//    if(k->key() == Qt::Key_A)
+//    {
+//        qDebug() << "key A is pressed";
+//    }
+
+//    if (k->key() == Qt::Key_Control)
+//    {
+//        qDebug() << "key Ctrl is pressed";
+//    }
+//    (WM_RBUTTONCLKDOWN)
+    return;
+}
+
+void autoCCode::mouseMoveEvent ( QMouseEvent * e )
+{
+    qDebug() << "mouseMoveEvent" << endl;
+    setMouseTracking(false);
+}
+void autoCCode::mousePressEvent ( QMouseEvent * e )
+{
+    qDebug() << "mousePressEvent" << endl;
+
+
+}
+void autoCCode::mouseReleaseEvent ( QMouseEvent * e )
+{
+    qDebug() << "mouseReleaseEvent" << endl;
+
+}
+void autoCCode::mouseDoubleClickEvent( QMouseEvent * e )
+{
+    qDebug() << "mouseDoubleClickEvent" << endl;
+
+}
+//void autoCCode::dragEnterEvent(QDragEnterEvent *event)
+//{
+//    qDebug() << "dragEnterEvent" << endl;
+
+//}
+//void autoCCode::dropEvent(QDropEvent *event)
+//{
+//    qDebug() << "dropEvent" << endl;
+
+//}
+
 void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 {
     qDebug() << "on_lineEdit_search_MouseButtonDblClick";
@@ -3908,4 +3963,9 @@ void autoCCode::on_pushButton_cmd_exe_clicked()
 //    exepath = "C:\\Program Files (x86)\\Source Insight 3\\Insight3.exe";
 //    ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
 
+}
+
+void autoCCode::on_selectionChanged()
+{
+    qDebug()  << "on_selectionChanged " << endl;
 }
