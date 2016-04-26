@@ -81,6 +81,7 @@ protected://function declared
     bool eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, QEvent *event);
     bool eventFilter_ui_dialog(QObject *watched, QEvent *event);
     bool eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent *event);
+    bool eventFilter_ui_setup(QObject *watched, QEvent *event);
 
     //安装鼠标滚动过滤器
     void wheelEvent(QWheelEvent *event);
@@ -162,6 +163,8 @@ private slots:
     void on_checkBox_rightTextSelectIndb_change(bool flag);
 
     void on_checkBox_rtQuery_change(bool flag);
+
+    void on_checkBox_checkBox_sendpkg_change(bool flag);
 
     quint8 get_rtQuery_enable();//判断是否支持实时查询
 

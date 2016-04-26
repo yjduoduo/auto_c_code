@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += widgets
+QT       += network
 TARGET = auto_c_code
 TEMPLATE = app
 
@@ -48,7 +49,8 @@ FORMS    += autoccode.ui \
     dialog_select_database.ui \
     autoindb.ui \
     setup1.ui \
-    toolstabwidget.ui
+    toolstabwidget.ui \
+    gotocelldialog.ui
 
 
 INCLUDEPATH +=\

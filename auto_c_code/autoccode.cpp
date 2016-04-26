@@ -25,6 +25,13 @@
 #include "qxtglobalshortcut/qxtglobalshortcut.h"   //add shortcut
 #include "debugsets.h"
 
+#include <QtNetwork/QUdpSocket>
+#include<QtNetwork/QHostAddress>
+#include <QMessageBox>
+#include <QHostInfo>
+#include <QNetworkInterface>
+#include <QTimer>
+#include "ui_gotocelldialog.h"
 
 using namespace std;
 
@@ -308,6 +315,10 @@ void autoCCode::checkboxSet()
 //实时查询处理
     QObject::connect(ui_setup->checkBox_rtQuery,SIGNAL(toggled(bool)),
                      this,SLOT(on_checkBox_rtQuery_change(bool)));
+
+    /* setup send pkg checkbox */
+    QObject::connect(ui_setup->checkBox_sendpkg,SIGNAL(toggled(bool)),
+                     this,SLOT(on_checkBox_checkBox_sendpkg_change(bool)));
 }
 
 void autoCCode::on_checkBox_rightTextSelectIndb_change(bool flag)
@@ -325,6 +336,22 @@ void autoCCode::on_checkBox_rightTextSelectIndb_change(bool flag)
 
 void autoCCode::on_checkBox_rtQuery_change(bool flag)
 {
+
+}
+
+void autoCCode::on_checkBox_checkBox_sendpkg_change(bool flag)
+{
+//    qDebug() << "checkbox sendpkg change:" << flag << endl;
+    if(!flag)
+    {
+        return;
+    }
+
+    Ui::GoToCellDialog ui;
+//    QDialog *dialog = new QDialog;
+    QWidget *dialog = new QWidget;
+    ui.setupUi(dialog);
+    dialog->show();
 
 }
 
@@ -3097,7 +3124,19 @@ bool autoCCode::eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent
    }
 }
 
+bool autoCCode::eventFilter_ui_setup(QObject *watched, QEvent *event)
+{
+//    if(!ui_setup->checkBox_sendpkg->isChecked())
+//    {
+//        return false;
+//    }
 
+//    qDebug() << "sendpkg checkbox is checked!!";
+
+
+
+
+}
 
 bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
 {
@@ -3359,6 +3398,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     eventFilter_ui_dia_selectdb_comboBox_selectdb(obj, event);
     eventFilter_ui_dialog(obj, event);
     eventFilter_ui_dialog_langtype_comboBox(obj, event);
+    eventFilter_ui_setup(obj, event);
 
     return QObject::eventFilter(obj, event);
 }
