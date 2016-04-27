@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     toolstabwidget.cpp \
     uithread.cpp \
     debugsets.cpp \
-    globalapplication.cpp
+    globalapplication.cpp \
+    udppkg.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -42,7 +43,8 @@ HEADERS  += autoccode.h \
     toolstabwidget.h \
     uithread.h \
     debugsets.h \
-    globalapplication.h
+    globalapplication.h \
+    udppkg.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
@@ -50,7 +52,7 @@ FORMS    += autoccode.ui \
     autoindb.ui \
     setup1.ui \
     toolstabwidget.ui \
-    gotocelldialog.ui
+    udppkgdialog.ui
 
 
 INCLUDEPATH +=\

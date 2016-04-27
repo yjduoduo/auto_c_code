@@ -19,6 +19,7 @@ class Dialog_select_database;
 class AutoIndb;//自动入库界面
 class SetUpDialog;
 class ToolsTabWidget;//工具集
+class UdpPkgDialog;//UDP
 }
 
 class codeEditor;
@@ -292,6 +293,8 @@ private slots:
     void setFont();
     //选择数据变化
     void on_selectionChanged();
+    //UDP界面ok按钮按下
+    void on_pUdpdialog_okBtn_clicked();
 public slots:
 
     void ok_btn_dia_clicked_self(void);
@@ -354,6 +357,8 @@ private:
     void dragDropSet(void);
 
     void checkboxSet();
+
+    QStringList getLstIp();
 private:
 
     Ui::autoCCode *ui;
@@ -362,6 +367,7 @@ private:
     Ui::AutoIndb *ui_autoindb;//自动入库界面
     Ui::SetUpDialog *ui_setup;//设置界面
     Ui::ToolsTabWidget *ui_toolsets;//工具集
+    Ui::UdpPkgDialog *pUdp_ui; //UDP
 
 
     /* pthread线程，防止界面假死 */
@@ -421,6 +427,7 @@ private://QString
     QTextCharFormat defcharfmt;//当前显示字符格式
 
     int is_selected; //推送内容是否选择
+
 public:
 
     QTextCodec *codec;

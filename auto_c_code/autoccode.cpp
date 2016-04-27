@@ -12,7 +12,6 @@
 #include <stdarg.h>
 #include <windows.h>
 
-
 #include "gencodedatabase.h"
 #include <QFileDialog>
 #include <QInputDialog>
@@ -31,7 +30,7 @@
 #include <QHostInfo>
 #include <QNetworkInterface>
 #include <QTimer>
-#include "ui_gotocelldialog.h"
+#include "ui_udppkgdialog.h"
 
 using namespace std;
 
@@ -215,6 +214,10 @@ void autoCCode::ListViewSets()
     //    connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(setCompleter(const QString &)));
     //    connect(listView, SIGNAL(clicked(QModelIndex)), this, SLOT(completeText(const QModelIndex &)));
     QObject::connect(listView,SIGNAL(clicked(QModelIndex)),this,SLOT(completeText(QModelIndex)));
+
+    ui_setup->comboBox_localIp->addItems(getLstIp());
+
+
 }
 
 void autoCCode::ProgressBarSetValue(int value)
@@ -347,11 +350,17 @@ void autoCCode::on_checkBox_checkBox_sendpkg_change(bool flag)
         return;
     }
 
-    Ui::GoToCellDialog ui;
-//    QDialog *dialog = new QDialog;
-    QWidget *dialog = new QWidget;
-    ui.setupUi(dialog);
-    dialog->show();
+//    pUdp_ui = new Ui::UdpPkgDialog;
+////    QDialog *dialog = new QDialog;
+//    QWidget *pUdpdialog = new QWidget;
+//    pUdp_ui->setupUi(pUdpdialog);
+//    pUdpdialog->show();
+//    QObject::connect(pUdp_ui->cancelButton,SIGNAL(clicked()),
+//                     pUdpdialog,SLOT(close()));
+//    QObject::connect(pUdp_ui->okButton,SIGNAL(clicked()),
+//                     this,SLOT(on_pUdpdialog_okBtn_clicked()));
+//    QObject::connect(pUdp_ui->okButton,SIGNAL(clicked()),
+//                     pUdpdialog,SLOT(close()));
 
 }
 
@@ -4008,4 +4017,36 @@ void autoCCode::on_pushButton_cmd_exe_clicked()
 void autoCCode::on_selectionChanged()
 {
     qDebug()  << "on_selectionChanged " << endl;
+}
+
+void autoCCode::on_pUdpdialog_okBtn_clicked()
+{
+    qDebug() << "on_pUdpdialog_okBtn_clicked" ;
+//    qDebug() << "Ip Addr:" << pUdp_ui->lineEdit->text();
+}
+
+QStringList autoCCode::getLstIp()
+{
+    QStringList lstIP;
+    lstIP.clear();
+    QList<QHostAddress> list = QNetworkInterface::allAddresses();
+    foreach (QHostAddress address, list)
+    {
+        if(address.protocol() == QAbstractSocket::IPv4Protocol)   //我们使用IPv4地址
+        {
+            lstIP.append(address.toString());/*
+            if(address.toString().contains("127.0."))
+                continue;
+            if(address.toString().contains("192.168.1."))
+            {
+                qDebug()<<"本机Ip："<<address.toString();
+                return address.toString();
+            }
+            else
+            {
+                continue;
+            }*/
+        }
+    }
+    return lstIP;
 }

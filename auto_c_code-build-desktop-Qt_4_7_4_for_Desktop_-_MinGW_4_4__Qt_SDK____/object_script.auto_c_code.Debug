@@ -13,6 +13,7 @@ INPUT(
 ./debug/uithread.o
 ./debug/debugsets.o
 ./debug/globalapplication.o
+./debug/udppkg.o
 ./debug/moc_autoccode.o
 ./debug/moc_dialog_select_database.o
 ./debug/moc_qxtglobalshortcut.o
@@ -20,5 +21,6 @@ INPUT(
 ./debug/moc_codeeditor.o
 ./debug/moc_toolstabwidget.o
 ./debug/moc_uithread.o
+./debug/moc_udppkg.o
 ./debug/qrc_imgsrc.o
 );
