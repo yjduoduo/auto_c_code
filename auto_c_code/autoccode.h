@@ -83,12 +83,19 @@ protected://function declared
     bool eventFilter_ui_dialog(QObject *watched, QEvent *event);
     bool eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent *event);
     bool eventFilter_ui_setup(QObject *watched, QEvent *event);
+    bool eventFilter_ui_toolsets(QObject *watched, QEvent *event);
+
 
     //安装鼠标滚动过滤器
     void wheelEvent(QWheelEvent *event);
     //鼠标是否在控件genshow_textEdit之中
-    int IsCursorInGenShowUi(void);
+    int IsCursorInGenShowUi(QObject *watched);
     int isCTRLKeyPressed;//Ctrl键是否按下
+    int Isgenshow_textEdit_Enter;
+    int isToolsContent_Enter;//Ctrl键是否按下 for tools widget
+    int isToolsSuffix_Enter;//Ctrl键是否按下 for tools widget suffix
+
+
     //当前是否有选中库，如果没有则直接返回，可当作一个函数接口。
     bool currentDbHaved(void);
 
@@ -103,8 +110,8 @@ protected://function declared
 
     void SaveUiMove();
 private slots:
-    void ZoomInFont();//放大字体
-    void ZoomOutFont();//缩小字体
+    void ZoomInFont(QObject *watched);//放大字体
+    void ZoomOutFont(QObject *watched);//缩小字体
 
     void MainSetUp();//主界面设置
 

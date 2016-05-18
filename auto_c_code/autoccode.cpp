@@ -86,6 +86,9 @@ autoCCode::autoCCode(QWidget *parent) :
     checkbox_getcliptext_timer(NULL),
     checkbox_AutoGetCon_timer(NULL),
     isCTRLKeyPressed(FALSE),
+    Isgenshow_textEdit_Enter(FALSE),
+    isToolsContent_Enter(FALSE),
+    isToolsSuffix_Enter(FALSE),
     is_selected(FALSE),
     pthread_event(NULL)
 {
@@ -193,6 +196,8 @@ void autoCCode::InstallEventFilterSets(void)
     ui->listWidget_codeview->installEventFilter(this);
     ui->listWidget_note->installEventFilter(this);
     ui->genshow_textEdit->installEventFilter(this);
+    ui_toolsets->textEdit_main_content->installEventFilter(this);
+    ui_toolsets->textEdit_suffix->installEventFilter(this);
 
     ui->choseCodeDB_btn->installEventFilter(this);
 
@@ -583,6 +588,11 @@ void autoCCode::set_search_text()
 }
 void autoCCode::search_text_clear()
 {
+    if(!InDb_Dialog->isHidden())
+    {
+        ui_dialog->content_textEdit_dia->clear();
+        return;
+    }
     cleanLineTextEditSearch();
     ui->lineEdit_search->clear();
     ui->lineEdit_search->setFocus();
@@ -3075,6 +3085,12 @@ int autoCCode::showcode_textEdit_AtBotton()
     return (ui_autoindb->spinBox_notenumber->text().toInt() == 1);
 }
 
+//void autoCCode::watchObject(QObject *watched)
+//{
+
+//}
+
+
 void autoCCode::wheelEvent(QWheelEvent *event)
 {
     int numDegrees = event->delta() / 8;//滚动的角度，*8就是鼠标滚动的距离
@@ -3086,16 +3102,65 @@ void autoCCode::wheelEvent(QWheelEvent *event)
         //        scrollVertically(numSteps);       //垂直滚动
         //        qDebug() << "vectorial numSteps:" <<numSteps << ",numDegrees:" << numDegrees;
     }
+//    qDebug() << "isCTRLKeyPressed :" << isCTRLKeyPressed;
+//    qDebug() << "windowFlags :" << this->windowFlags();
 
-    if(isCTRLKeyPressed && IsCursorInGenShowUi())
+//    if(isCTRLKeyPressed
+//            && IsCursorInGenShowUi(ui->genshow_textEdit))
+
+    qDebug() << "isCTRLKeyPressed         :" <<  isCTRLKeyPressed;
+    qDebug() << "Isgenshow_textEdit_Enter :" <<  Isgenshow_textEdit_Enter;
+    qDebug() << "isToolsContent_Enter     :" <<  isToolsContent_Enter;
+    qDebug() << "isToolsSuffix_Enter      :" <<  isToolsSuffix_Enter;
+
+
+
+    if(isCTRLKeyPressed
+            && Isgenshow_textEdit_Enter)
     {
         if(numSteps > 0)
         {
-            ZoomInFont();
+            ZoomInFont(ui->genshow_textEdit);
         }
         else if(numSteps < 0)
         {
-            ZoomOutFont();
+            ZoomOutFont(ui->genshow_textEdit);
+        }
+    }
+
+//    qDebug() << "isCTRLKeyPressed 2222:" << isCTRLKeyPressed;
+//    qDebug() << "isTopLevel 2222:" << ui_toolsets->textEdit_main_content->isTopLevel();
+//    if(isCTRLKeyPressed
+//            && IsCursorInGenShowUi(ui_toolsets->textEdit_main_content))
+    if(isCTRLKeyPressed
+            && isToolsContent_Enter)
+    {
+        qDebug() << "ui_toolsets->textEdit_main_content!!!!!!!";
+        if(numSteps > 0)
+        {
+            ZoomInFont(ui_toolsets->textEdit_main_content);
+        }
+        else if(numSteps < 0)
+        {
+            ZoomOutFont(ui_toolsets->textEdit_main_content);
+        }
+    }
+
+
+//    isCTRLKeyPressed_TOOLSsuffix
+//    if(isCTRLKeyPressed_TOOLSsuffix
+//            /*&& IsCursorInGenShowUi(ui_toolsets->textEdit_suffix) */ )
+
+    if(isCTRLKeyPressed && isToolsSuffix_Enter )
+    {
+        qDebug() << "ui_toolsets->textEdit_suffix_content!!!!!!!";
+        if(numSteps > 0)
+        {
+            ZoomInFont(ui_toolsets->textEdit_suffix);
+        }
+        else if(numSteps < 0)
+        {
+            ZoomOutFont(ui_toolsets->textEdit_suffix);
         }
     }
     event->accept();      //接收该事件
@@ -3145,6 +3210,61 @@ bool autoCCode::eventFilter_ui_setup(QObject *watched, QEvent *event)
 
 
 
+}
+
+bool autoCCode::eventFilter_ui_toolsets(QObject *watched, QEvent *event)
+{
+    qDebug() << "=========eventFilter_ui_toolsets";
+    if(watched == ui_toolsets->textEdit_main_content)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+            isToolsContent_Enter = TRUE;
+ //            qDebug() << "comboBox_selectdb,coming here!!";
+//            ui_dialog->langtype_comboBox->showPopup();//combox下拉事件
+        }
+        else if (event->type()==QEvent::Leave)    // mouse leaves widget
+        {
+            isToolsContent_Enter = FALSE;
+ //            qDebug() << "comboBox_selectdb,leave now!!";
+ //            ui_dia_selectdb->comboBox_selectdb->showNormal();
+ //            dialog_selectdb->hide();
+        }
+        /*
+        else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+        {
+ //            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+ //            ui_dia_selectdb
+ //            dialog_selectdb->hide();
+        }
+ //        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
+    }
+
+
+    if(watched == ui_toolsets->textEdit_suffix)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+            isToolsSuffix_Enter = TRUE;
+ //            qDebug() << "comboBox_selectdb,coming here!!";
+//            ui_dialog->langtype_comboBox->showPopup();//combox下拉事件
+        }
+        else if (event->type()==QEvent::Leave)    // mouse leaves widget
+        {
+            isToolsSuffix_Enter = FALSE;
+ //            qDebug() << "comboBox_selectdb,leave now!!";
+ //            ui_dia_selectdb->comboBox_selectdb->showNormal();
+ //            dialog_selectdb->hide();
+        }
+        /*
+        else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+        {
+ //            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+ //            ui_dia_selectdb
+ //            dialog_selectdb->hide();
+        }
+ //        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
+    }
 }
 
 bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
@@ -3333,6 +3453,16 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     //想添加一个Ctrl+滚轮放大字体的功能
     if(obj == ui->genshow_textEdit)
     {
+        if(event->type() == QEvent::Enter)
+        {
+            Isgenshow_textEdit_Enter = TRUE;
+        }
+        else if(event->type() ==QEvent::Leave)
+        {
+            Isgenshow_textEdit_Enter = FALSE;
+        }
+
+
         if (event->type()==QEvent::FocusIn)     //然后再判断控件的具体事件 (这里指获得焦点事件)
         {
             //            QPalette p=QPalette();
@@ -3357,25 +3487,30 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
             //            return true;
         }
 
-        //按键处理
-        if(event->type() == QEvent::KeyRelease)
-        {
-            isCTRLKeyPressed = FALSE;
-        }
-        //按键处理
-        if(event->type() == QEvent::KeyPress)
-        {
-            //qDebug()<<"KeyPress ed!!";
-            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-            int key = keyEvent->key();
-            if (Qt::Key_Control == key){
-                qDebug()<<"Key_Control   Pressed";
-                isCTRLKeyPressed = TRUE;
-            }
-            else {
-                //qDebug()<<"else Key !!";
-            }
-        }
+
+
+//        if(obj == ui_toolsets->textEdit_main_content)
+//        {
+//            //按键处理
+//            if(event->type() == QEvent::KeyRelease)
+//            {
+//                isCTRLKeyPressed = FALSE;
+//            }
+//            //按键处理
+//            if(event->type() == QEvent::KeyPress)
+//            {
+//                //qDebug()<<"KeyPress ed!!";
+//                QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+//                int key = keyEvent->key();
+//                if (Qt::Key_Control == key){
+//                    qDebug()<<"Key_Control   Pressed";
+//                    isCTRLKeyPressed = TRUE;
+//                }
+//                else {
+//                    //qDebug()<<"else Key !!";
+//                }
+//            }
+//        }
 
 
         //        //按键处理
@@ -3403,11 +3538,35 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
         //        }
     }
 
+
+    //按键处理
+
+    //按键处理
+    if(event->type() == QEvent::KeyPress)
+    {
+        //qDebug()<<"KeyPress ed!!";
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        int key = keyEvent->key();
+        if (Qt::Key_Control == key){
+            qDebug()<<"Key_Control   Pressed";
+            isCTRLKeyPressed = TRUE;
+        }
+        else {
+            //qDebug()<<"else Key !!";
+        }
+    }
+    else if(event->type() == QEvent::KeyRelease)
+    {
+        isCTRLKeyPressed = FALSE;
+    }
+
+
     eventFilter_ui_choseCodeDB_btn(obj, event);
     eventFilter_ui_dia_selectdb_comboBox_selectdb(obj, event);
     eventFilter_ui_dialog(obj, event);
     eventFilter_ui_dialog_langtype_comboBox(obj, event);
     eventFilter_ui_setup(obj, event);
+    eventFilter_ui_toolsets(obj, event);
 
     return QObject::eventFilter(obj, event);
 }
@@ -3430,8 +3589,8 @@ void autoCCode::keyPressEvent(QKeyEvent *k)
 
 void autoCCode::mouseMoveEvent ( QMouseEvent * e )
 {
-    qDebug() << "mouseMoveEvent" << endl;
-    setMouseTracking(false);
+//    qDebug() << "mouseMoveEvent" << endl;
+//    setMouseTracking(false);
 }
 void autoCCode::mousePressEvent ( QMouseEvent * e )
 {
@@ -3700,41 +3859,44 @@ void autoCCode::setFont()
 }
 #define MAXFONTSIZE 72
 #define MINFONTSIZE 1
-void autoCCode::ZoomInFont()
+void autoCCode::ZoomInFont(QObject *watched)
 {
-
-    qDebug() << "ZoomInFont";
-    QFont font = ui->genshow_textEdit->font();
+    QWidget *pwnd =(QWidget *)watched;
+//    qDebug() << "ZoomInFont";
+    QFont font = pwnd->font();
     int fontsize = font.pointSize();
     //    qDebug() << "OldFontFamily:" << OldFontFamily;
-    qDebug() << "fontsize:" << fontsize;
+//    qDebug() << "fontsize:" << fontsize;
     fontsize += 1;
     if(fontsize > MAXFONTSIZE)
         fontsize = MAXFONTSIZE;
 
-    ui->genshow_textEdit->setFont(QFont(font.family(),fontsize,font.weight()));
+    pwnd->setFont(QFont(font.family(),fontsize,font.weight()));
 }
 
-void autoCCode::ZoomOutFont()
+void autoCCode::ZoomOutFont(QObject *watched)
 {
-    qDebug() << "ZoomOutFont";
-    QFont font = ui->genshow_textEdit->font();
+    QWidget *pwnd =(QWidget *)watched;
+//    qDebug() << "ZoomOutFont";
+    QFont font = pwnd->font();
     int fontsize = font.pointSize();
     //    qDebug() << "OldFontFamily:" << OldFontFamily;
-    qDebug() << "fontsize:" << fontsize;
+//    qDebug() << "fontsize:" << fontsize;
     fontsize -= 1;
     if(fontsize < MINFONTSIZE)
         fontsize = MINFONTSIZE;
 
-    ui->genshow_textEdit->setFont(QFont(font.family(),fontsize,font.weight()));
+    pwnd->setFont(QFont(font.family(),fontsize,font.weight()));
 }
 
-int autoCCode::IsCursorInGenShowUi(void)
+int autoCCode::IsCursorInGenShowUi(QObject *watched)
 {
-    int x = ui->genshow_textEdit->x();
-    int y = ui->genshow_textEdit->y();
-    int w = ui->genshow_textEdit->width();
-    int h = ui->genshow_textEdit->height();
+    QWidget *pwdn = (QWidget *)watched;
+
+    int x = pwdn->x();
+    int y = pwdn->y();
+    int w = pwdn->width();
+    int h = pwdn->height();
     int left = x;
     int right = x + w;
     int top = y;

@@ -39,8 +39,8 @@ bool GlobalApplication::notify(QObject *obj, QEvent *e)
     else if(e->type() == QEvent::MouseButtonPress)
     {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(e);
-        if(mouseEvent->buttons() == Qt::LeftButton)
-            QDBG << "left";
+//        if(mouseEvent->buttons() == Qt::LeftButton)
+//            QDBG << "left";
     }
 ////    SendMessage(WM_COPY,0, 0, 0);
 //    LPGUITHREADINFO lpgui = NULL;
