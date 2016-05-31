@@ -21,6 +21,5 @@ INPUT(
 ./release/moc_codeeditor.o
 ./release/moc_toolstabwidget.o
 ./release/moc_uithread.o
-./release/moc_udppkg.o
 ./release/qrc_imgsrc.o
 );

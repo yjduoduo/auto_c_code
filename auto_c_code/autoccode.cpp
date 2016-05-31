@@ -5,6 +5,7 @@
 #include "ui_autoindb.h"
 #include "ui_setup1.h"
 #include "ui_toolstabwidget.h"
+#include "ui_codetools.h"
 #include <QtGui>
 #include "prefix_string.h"
 #include <stdio.h>
@@ -64,6 +65,13 @@ using namespace std;
 #define UNUSEDVAR(A) (void)A;
 
 
+
+//ui tools界面下Ctrl按键是否按下
+static bool isCTRLKeyPressed_uitools = FALSE;
+
+
+
+
 autoCCode::autoCCode(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::autoCCode),
@@ -72,6 +80,7 @@ autoCCode::autoCCode(QWidget *parent) :
     ui_autoindb(new Ui::AutoIndb),
     ui_setup(new Ui::SetUpDialog),
     ui_toolsets(new Ui::ToolsTabWidget),
+    ui_codetool(new Ui::WizardPage),
     sets(NULL),
     index_key_color(0),
     index_note_color(0),
@@ -108,7 +117,14 @@ autoCCode::autoCCode(QWidget *parent) :
     /* tools sets menu */  //独立的
     toolsTabWidget = new QTabWidget();
     ui_toolsets->setupUi(toolsTabWidget);
+//    ui_toolsets->textEdit_main_content->installEventFilter(NULL);
+//    ui_toolsets->textEdit_suffix->installEventFilter(NULL);
     toolsTabWidget->hide();
+
+    codetool = new QWizardPage();
+    ui_codetool->setupUi(codetool);
+//    codetool->show();
+
 
 
     QTimerSet();
@@ -196,8 +212,8 @@ void autoCCode::InstallEventFilterSets(void)
     ui->listWidget_codeview->installEventFilter(this);
     ui->listWidget_note->installEventFilter(this);
     ui->genshow_textEdit->installEventFilter(this);
-    ui_toolsets->textEdit_main_content->installEventFilter(this);
-    ui_toolsets->textEdit_suffix->installEventFilter(this);
+//    ui_toolsets->textEdit_main_content->installEventFilter(this);
+//    ui_toolsets->textEdit_suffix->installEventFilter(this);
 
     ui->choseCodeDB_btn->installEventFilter(this);
 
@@ -749,6 +765,13 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     if(!sets)
         return;
 
+    if(!ui->lineEdit_search->text().replace(" ","").isEmpty())
+    {
+        SearchText(ui->lineEdit_search->text());
+        dialog_selectdb->close();
+        return;
+    }
+
     QString select_express;
     select_express.clear();
     //str_print(sets->talbename);
@@ -805,6 +828,9 @@ void autoCCode::textEditSet(void)
 
     //    QObject::connect(ui->db_comboBox,SIGNAL(activated(QString)),
     //                     this,SLOT(on_db_comboBox_activated(QString)));
+
+
+//    QObject::connect(ui_toolsset)
 
 }
 void autoCCode::addstr_aspect_comboBox(void)
@@ -3128,41 +3154,43 @@ void autoCCode::wheelEvent(QWheelEvent *event)
         }
     }
 
-//    qDebug() << "isCTRLKeyPressed 2222:" << isCTRLKeyPressed;
-//    qDebug() << "isTopLevel 2222:" << ui_toolsets->textEdit_main_content->isTopLevel();
+////    qDebug() << "isCTRLKeyPressed 2222:" << isCTRLKeyPressed;
+////    qDebug() << "isTopLevel 2222:" << ui_toolsets->textEdit_main_content->isTopLevel();
+////    if(isCTRLKeyPressed
+////            && IsCursorInGenShowUi(ui_toolsets->textEdit_main_content))
 //    if(isCTRLKeyPressed
-//            && IsCursorInGenShowUi(ui_toolsets->textEdit_main_content))
-    if(isCTRLKeyPressed
-            && isToolsContent_Enter)
-    {
-        qDebug() << "ui_toolsets->textEdit_main_content!!!!!!!";
-        if(numSteps > 0)
-        {
-            ZoomInFont(ui_toolsets->textEdit_main_content);
-        }
-        else if(numSteps < 0)
-        {
-            ZoomOutFont(ui_toolsets->textEdit_main_content);
-        }
-    }
+//            && isToolsContent_Enter)
+//    {
+//        qDebug() << "ui_toolsets->textEdit_main_content!!!!!!!";
+//        if(numSteps > 0)
+//        {
+//            ZoomInFont(ui_toolsets->textEdit_main_content);
+//        }
+//        else if(numSteps < 0)
+//        {
+//            ZoomOutFont(ui_toolsets->textEdit_main_content);
+//        }
+//    }
 
 
-//    isCTRLKeyPressed_TOOLSsuffix
-//    if(isCTRLKeyPressed_TOOLSsuffix
-//            /*&& IsCursorInGenShowUi(ui_toolsets->textEdit_suffix) */ )
+////    isCTRLKeyPressed_TOOLSsuffix
+////    if(isCTRLKeyPressed_TOOLSsuffix
+////            /*&& IsCursorInGenShowUi(ui_toolsets->textEdit_suffix) */ )
 
-    if(isCTRLKeyPressed && isToolsSuffix_Enter )
-    {
-        qDebug() << "ui_toolsets->textEdit_suffix_content!!!!!!!";
-        if(numSteps > 0)
-        {
-            ZoomInFont(ui_toolsets->textEdit_suffix);
-        }
-        else if(numSteps < 0)
-        {
-            ZoomOutFont(ui_toolsets->textEdit_suffix);
-        }
-    }
+//    if(isCTRLKeyPressed && isToolsSuffix_Enter )
+//    {
+//        qDebug() << "ui_toolsets->textEdit_suffix_content!!!!!!!";
+//        if(numSteps > 0)
+//        {
+//            ZoomInFont(ui_toolsets->textEdit_suffix);
+//        }
+//        else if(numSteps < 0)
+//        {
+//            ZoomOutFont(ui_toolsets->textEdit_suffix);
+//        }
+//    }
+
+
     event->accept();      //接收该事件
 }
 //入库界面里的数据库列表弹出
@@ -3212,60 +3240,10 @@ bool autoCCode::eventFilter_ui_setup(QObject *watched, QEvent *event)
 
 }
 
-bool autoCCode::eventFilter_ui_toolsets(QObject *watched, QEvent *event)
-{
-    qDebug() << "=========eventFilter_ui_toolsets";
-    if(watched == ui_toolsets->textEdit_main_content)
-    {
-        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
-        {
-            isToolsContent_Enter = TRUE;
- //            qDebug() << "comboBox_selectdb,coming here!!";
-//            ui_dialog->langtype_comboBox->showPopup();//combox下拉事件
-        }
-        else if (event->type()==QEvent::Leave)    // mouse leaves widget
-        {
-            isToolsContent_Enter = FALSE;
- //            qDebug() << "comboBox_selectdb,leave now!!";
- //            ui_dia_selectdb->comboBox_selectdb->showNormal();
- //            dialog_selectdb->hide();
-        }
-        /*
-        else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
-        {
- //            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
- //            ui_dia_selectdb
- //            dialog_selectdb->hide();
-        }
- //        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
-    }
+//bool autoCCode::eventFilter_ui_toolsets(QObject *watched, QEvent *event)
+//{
 
-
-    if(watched == ui_toolsets->textEdit_suffix)
-    {
-        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
-        {
-            isToolsSuffix_Enter = TRUE;
- //            qDebug() << "comboBox_selectdb,coming here!!";
-//            ui_dialog->langtype_comboBox->showPopup();//combox下拉事件
-        }
-        else if (event->type()==QEvent::Leave)    // mouse leaves widget
-        {
-            isToolsSuffix_Enter = FALSE;
- //            qDebug() << "comboBox_selectdb,leave now!!";
- //            ui_dia_selectdb->comboBox_selectdb->showNormal();
- //            dialog_selectdb->hide();
-        }
-        /*
-        else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
-        {
- //            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
- //            ui_dia_selectdb
- //            dialog_selectdb->hide();
-        }
- //        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
-    }
-}
+//}
 
 bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
 {
@@ -3566,7 +3544,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     eventFilter_ui_dialog(obj, event);
     eventFilter_ui_dialog_langtype_comboBox(obj, event);
     eventFilter_ui_setup(obj, event);
-    eventFilter_ui_toolsets(obj, event);
+//    eventFilter_ui_toolsets(obj, event);
 
     return QObject::eventFilter(obj, event);
 }
@@ -4211,4 +4189,199 @@ QStringList autoCCode::getLstIp()
         }
     }
     return lstIP;
+}
+
+
+bool QTabWidget::event(QEvent *)
+{
+
+}
+
+
+void QTabWidget::keyPressEvent(QKeyEvent *event)
+{
+    //按键处理
+
+    //按键处理
+    if(event->type() == QEvent::KeyPress)
+    {
+        //qDebug()<<"KeyPress ed!!";
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        int key = keyEvent->key();
+        if (Qt::Key_Control == key){
+            qDebug()<<"Key_Control   Pressed";
+            isCTRLKeyPressed_uitools = TRUE;
+        }
+        else {
+            //qDebug()<<"else Key !!";
+        }
+    }
+    else if(event->type() == QEvent::KeyRelease)
+    {
+        isCTRLKeyPressed_uitools = FALSE;
+    }
+
+    return ;
+}
+
+
+
+//void QTabWidget::wheelEvent(QWheelEvent *event)
+//{
+//    int numDegrees = event->delta() / 8;//滚动的角度，*8就是鼠标滚动的距离
+//    int numSteps = numDegrees / 15;//滚动的步数，*15就是鼠标滚动的角度
+//    if (event->orientation() == Qt::Horizontal) {
+//        //        scrollHorizontally(numSteps);       //水平滚动
+//        //        qDebug() << "horizontal";
+//    } else {
+//        //        scrollVertically(numSteps);       //垂直滚动
+//        //        qDebug() << "vectorial numSteps:" <<numSteps << ",numDegrees:" << numDegrees;
+//    }
+////    qDebug() << "isCTRLKeyPressed :" << isCTRLKeyPressed;
+////    qDebug() << "windowFlags :" << this->windowFlags();
+
+////    if(isCTRLKeyPressed
+////            && IsCursorInGenShowUi(ui->genshow_textEdit))
+
+//    qDebug() << "isCTRLKeyPressed         :" <<  isCTRLKeyPressed_uitools;
+////    qDebug() << "Isgenshow_textEdit_Enter :" <<  Isgenshow_textEdit_Enter;
+////    qDebug() << "isToolsContent_Enter     :" <<  isToolsContent_Enter;
+////    qDebug() << "isToolsSuffix_Enter      :" <<  isToolsSuffix_Enter;
+
+
+
+////    qDebug() << "isCTRLKeyPressed 2222:" << isCTRLKeyPressed;
+////    qDebug() << "isTopLevel 2222:" << ui_toolsets->textEdit_main_content->isTopLevel();
+////    if(isCTRLKeyPressed
+////            && IsCursorInGenShowUi(ui_toolsets->textEdit_main_content))
+//    if(isCTRLKeyPressed_uitools
+//            && isToolsContent_Enter)
+//    {
+//        qDebug() << "ui_toolsets->textEdit_main_content!!!!!!!";
+//        if(numSteps > 0)
+//        {
+//            ZoomInFont(ui_toolsets->textEdit_main_content);
+//        }
+//        else if(numSteps < 0)
+//        {
+//            ZoomOutFont(ui_toolsets->textEdit_main_content);
+//        }
+//    }
+
+
+////    isCTRLKeyPressed_TOOLSsuffix
+////    if(isCTRLKeyPressed_TOOLSsuffix
+////            /*&& IsCursorInGenShowUi(ui_toolsets->textEdit_suffix) */ )
+
+//    if(isCTRLKeyPressed_uitools && isToolsSuffix_Enter )
+//    {
+//        qDebug() << "ui_toolsets->textEdit_suffix_content!!!!!!!";
+//        if(numSteps > 0)
+//        {
+//            ZoomInFont(ui_toolsets->textEdit_suffix);
+//        }
+//        else if(numSteps < 0)
+//        {
+//            ZoomOutFont(ui_toolsets->textEdit_suffix);
+//        }
+//    }
+//    event->accept();      //接收该事件
+//}
+
+
+
+
+//bool QTabWidget::eventFilter(QObject *obj, QEvent *event)
+//{
+//    //按键处理
+
+//    //按键处理
+//    if(event->type() == QEvent::KeyPress)
+//    {
+//        //qDebug()<<"KeyPress ed!!";
+//        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+//        int key = keyEvent->key();
+//        if (Qt::Key_Control == key){
+//            qDebug()<<"Key_Control   Pressed";
+//            isCTRLKeyPressed = TRUE;
+//        }
+//        else {
+//            //qDebug()<<"else Key !!";
+//        }
+//    }
+//    else if(event->type() == QEvent::KeyRelease)
+//    {
+//        isCTRLKeyPressed = FALSE;
+//    }
+
+
+
+//    {
+//        qDebug() << "=========eventFilter_ui_toolsets";
+//        if(watched == ui_toolsets->textEdit_main_content)
+//        {
+//            if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+//            {
+//                isToolsContent_Enter = TRUE;
+//     //            qDebug() << "comboBox_selectdb,coming here!!";
+//    //            ui_dialog->langtype_comboBox->showPopup();//combox下拉事件
+//            }
+//            else if (event->type()==QEvent::Leave)    // mouse leaves widget
+//            {
+//                isToolsContent_Enter = FALSE;
+//     //            qDebug() << "comboBox_selectdb,leave now!!";
+//     //            ui_dia_selectdb->comboBox_selectdb->showNormal();
+//     //            dialog_selectdb->hide();
+//            }
+//            /*
+//            else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+//            {
+//     //            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+//     //            ui_dia_selectdb
+//     //            dialog_selectdb->hide();
+//            }
+//     //        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
+//        }
+
+
+//        if(watched == ui_toolsets->textEdit_suffix)
+//        {
+//            if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+//            {
+//                isToolsSuffix_Enter = TRUE;
+//     //            qDebug() << "comboBox_selectdb,coming here!!";
+//    //            ui_dialog->langtype_comboBox->showPopup();//combox下拉事件
+//            }
+//            else if (event->type()==QEvent::Leave)    // mouse leaves widget
+//            {
+//                isToolsSuffix_Enter = FALSE;
+//     //            qDebug() << "comboBox_selectdb,leave now!!";
+//     //            ui_dia_selectdb->comboBox_selectdb->showNormal();
+//     //            dialog_selectdb->hide();
+//            }
+//            /*
+//            else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+//            {
+//     //            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+//     //            ui_dia_selectdb
+//     //            dialog_selectdb->hide();
+//            }
+//     //        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
+//        }
+//    }
+
+//    return QObject::eventFilter(obj, event);
+//}
+
+void autoCCode::on_textEdit_main_content_textChanged()
+{
+    textEdit_main_uitools = ui_toolsets->textEdit_main_content->toPlainText();
+    qDebug() <<"textEdit_main:" << textEdit_main_uitools;
+}
+
+void autoCCode::on_textEdit_suffix_textChanged()
+{
+    textEdit_suff_uitools = ui_toolsets->textEdit_suffix->toPlainText();
+    qDebug() <<"textEdit_suff:" << textEdit_suff_uitools;
+
 }

@@ -52,7 +52,8 @@ FORMS    += autoccode.ui \
     autoindb.ui \
     setup1.ui \
     toolstabwidget.ui \
-    udppkgdialog.ui
+    udppkgdialog.ui \
+    codetools.ui
 
 
 INCLUDEPATH +=\

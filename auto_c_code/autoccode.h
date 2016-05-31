@@ -20,11 +20,12 @@ class AutoIndb;//自动入库界面
 class SetUpDialog;
 class ToolsTabWidget;//工具集
 class UdpPkgDialog;//UDP
+class WizardPage;
 }
 
 class codeEditor;
 
-
+#define VARIABLE
 
 class autoCCode : public QWidget,public GenCodeDatabase
 {
@@ -42,7 +43,7 @@ public:
     QDialog *SetUp_Dialog;//设置界面,操作函数的实体
 //    QDialog *ToolSets_Dialog;
     QTabWidget *toolsTabWidget;//工具集界面,操作函数的实体
-
+    QWizardPage *codetool;
     GenCodeDatabase b;
 
     QString selecttext;
@@ -83,7 +84,7 @@ protected://function declared
     bool eventFilter_ui_dialog(QObject *watched, QEvent *event);
     bool eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent *event);
     bool eventFilter_ui_setup(QObject *watched, QEvent *event);
-    bool eventFilter_ui_toolsets(QObject *watched, QEvent *event);
+//    bool eventFilter_ui_toolsets(QObject *watched, QEvent *event);
 
 
     //安装鼠标滚动过滤器
@@ -375,6 +376,7 @@ private:
     Ui::SetUpDialog *ui_setup;//设置界面
     Ui::ToolsTabWidget *ui_toolsets;//工具集
     Ui::UdpPkgDialog *pUdp_ui; //UDP
+    Ui::WizardPage  *ui_codetool;
 
 
     /* pthread线程，防止界面假死 */
@@ -465,6 +467,18 @@ private slots:
     void on_pushButton_python_Dpathtestfile_exe_clicked();
     void on_pushButton_sourceinsight_exe_clicked();
     void on_pushButton_cmd_exe_clicked();
+
+
+
+private slots://ui tools
+    void on_textEdit_main_content_textChanged();
+    void on_textEdit_suffix_textChanged();
+
+
+
+private VARIABLE://ui tools
+    QString textEdit_main_uitools;
+    QString textEdit_suff_uitools;
 };
 
 
