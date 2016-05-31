@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>936</width>
-    <height>487</height>
+    <height>518</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -322,6 +322,20 @@
            </property>
            <property name="checked">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_arrow_up">
+           <property name="text">
+            <string>↑</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_arrow_down">
+           <property name="text">
+            <string>↓</string>
            </property>
           </widget>
          </item>

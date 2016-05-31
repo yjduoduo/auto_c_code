@@ -369,6 +369,11 @@ private:
     void checkboxSet();
 
     QStringList getLstIp();
+
+    int getIndexNow();
+    void setIndexNow(int ulIndex);
+    void clrIndexWith();
+
 private:
 
     Ui::autoCCode *ui;
@@ -439,6 +444,11 @@ private://QString
 
     int is_selected; //推送内容是否选择
 
+    int ulIndexNow;//上下箭头查找文件时，当前显示的文本位置
+
+    QMap<int,int> mpPos_ShowPos;//第一个元素为index,0,1,2
+    //第二个元素为实际字符串的位置，如可能为12,30,49....
+
 public:
 
     QTextCodec *codec;
@@ -477,6 +487,12 @@ private slots://ui tools
     void on_textEdit_suffix_textChanged();
 
 
+
+    void on_pushButton_arrow_up_clicked();
+
+    void on_pushButton_arrow_down_clicked();
+
+    void on_genshow_textEdit_textChanged();
 
 private VARIABLE://ui tools
     QString textEdit_main_uitools;

@@ -99,7 +99,8 @@ autoCCode::autoCCode(QWidget *parent) :
     isToolsContent_Enter(FALSE),
     isToolsSuffix_Enter(FALSE),
     is_selected(FALSE),
-    pthread_event(NULL)
+    pthread_event(NULL),
+    ulIndexNow(0)
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
     ui->setupUi(this);
@@ -125,7 +126,7 @@ autoCCode::autoCCode(QWidget *parent) :
     ui_codetool->setupUi(codetool);
 //    codetool->show();
 
-
+    clrIndexWith();
 
     QTimerSet();
     pushButtonSet();
@@ -2135,6 +2136,7 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
         //        qDebug() << "time_end   :" << time_end;
     }
 
+    clrIndexWith();
 }
 
 void autoCCode::SetlistWidget_codeview_row(int row)
@@ -2562,6 +2564,7 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 //    ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
 
+    clrIndexWith();
 }
 
 void autoCCode::contentSetFocus(void)
@@ -4391,4 +4394,137 @@ void autoCCode::on_textEdit_suffix_textChanged()
     textEdit_suff_uitools = ui_toolsets->textEdit_suffix->toPlainText();
     qDebug() <<"textEdit_suff:" << textEdit_suff_uitools;
 
+}
+
+void autoCCode::on_pushButton_arrow_up_clicked()
+{
+    self_print(on_pushButton_arrow_up_clicked);
+    qDebug() << "on_pushButton_arrow_up_clicked";
+    QString text = ui->lineEdit_search->text();
+    if(text.replace(" ","").isEmpty())
+    {
+        return;
+    }
+    int pos = getIndexNow();
+
+    qDebug() << "search text:" << text;
+    QString content = ui->genshow_textEdit->toPlainText();
+    if(content.replace(" ","").isEmpty())
+    {
+        return;
+    }
+
+
+    if(0 == mpPos_ShowPos.size())
+    {
+        int i = 0;
+        int j=0;
+        //依照此接口编写，估计需要添加一个位置接口
+        while ((j = content.indexOf(text, j, Qt::CaseInsensitive)) != -1) {
+            qDebug() << "Found "+ text + " tag at index position:  " << j;
+            mpPos_ShowPos.insert(i, j);
+            ++j;
+            i++;
+
+        }
+
+        QMap<int, int>::const_iterator it;
+        for (it = mpPos_ShowPos.constBegin(); it != mpPos_ShowPos.constEnd(); ++it) {
+            qDebug() << "key:"<< it.key() << "val:"<< ":" << it.value();
+        }
+
+    }
+
+
+    qDebug() <<"--------->>getIndexNow():" << pos;
+    if(pos >= mpPos_ShowPos.size())
+    {
+        return;
+    }
+    int showpos = mpPos_ShowPos.value(pos);
+    qDebug() <<"--------->>showpos:" << showpos;
+    setStringColor(showpos + 1, text.length());
+    setIndexNow(--pos);
+
+
+
+}
+
+void autoCCode::on_pushButton_arrow_down_clicked()
+{
+    self_print(on_pushButton_arrow_down_clicked);
+    qDebug() << "on_pushButton_arrow_down_clicked";
+    QString text = ui->lineEdit_search->text();
+    if(text.replace(" ","").isEmpty())
+    {
+        return;
+    }
+    int pos = getIndexNow();
+    qDebug() << "search text:" << text;
+    QString content = ui->genshow_textEdit->toPlainText();
+    if(content.replace(" ","").isEmpty())
+    {
+        return;
+    }
+
+    qDebug() <<"--------->>getIndexNow():" << pos;
+    if(pos >= mpPos_ShowPos.size())
+    {
+        return;
+    }
+
+    if(0 == mpPos_ShowPos.size())
+    {
+        int i = 0;
+        int j=0;
+        //依照此接口编写，估计需要添加一个位置接口
+        while ((j = content.indexOf(text, j, Qt::CaseInsensitive)) != -1) {
+            qDebug() << "Found "+ text + " tag at index position:  " << j;
+            mpPos_ShowPos.insert(i, j);
+            ++j;
+            i++;
+
+        }
+
+        QMap<int, int>::const_iterator it;
+        for (it = mpPos_ShowPos.constBegin(); it != mpPos_ShowPos.constEnd(); ++it) {
+            qDebug() << "key:"<< it.key() << "val:"<< ":" << it.value();
+        }
+
+    }
+
+
+    int showpos = mpPos_ShowPos.value(pos);
+    setStringColor(showpos + 1, text.length());
+    qDebug() <<"--------->>showpos:" << showpos;
+
+
+    setIndexNow(++pos);
+
+
+}
+
+int autoCCode::getIndexNow()
+{
+    return ulIndexNow;
+}
+
+
+void autoCCode::setIndexNow(int ulIndex)
+{
+    if(ulIndex < 0 )
+        ulIndex = 0;
+    ulIndexNow = ulIndex;
+}
+
+void autoCCode::clrIndexWith()
+{
+    setIndexNow(0);
+    mpPos_ShowPos.clear();
+}
+
+void autoCCode::on_genshow_textEdit_textChanged()
+{
+//    qDebug() << "on_genshow_textEdit_textChanged";
+//    mpPos_ShowPos.clear();
 }
