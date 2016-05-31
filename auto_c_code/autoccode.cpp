@@ -623,6 +623,12 @@ void autoCCode::note_focus()
     if(!InDb_Dialog->isHidden())
         ui_dialog->note_textEdit_dia->setFocus();
 }
+void autoCCode::content_focus()
+{
+    if(!InDb_Dialog->isHidden())
+        ui_dialog->content_textEdit_dia->setFocus();
+}
+
 void autoCCode::note_clear_focus()
 {
     note_clear();
@@ -1089,6 +1095,7 @@ void autoCCode::SaveUiMove()
     usHeight = usHeight > 80 ? usHeight:80;
     InDb_Dialog->move(this->pos().x() + usWidth,
                       this->pos().y() + usHeight);
+    content_focus();
 }
 
 //入库函数
@@ -2318,8 +2325,8 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
         //            ++j;
         //        }
 
-#define SHOWMAXCHARNUMS_ENG 20   /* 英文最多颜色显示的个数 */
-#define SHOWMAXCHARNUMS_CHI 40   /* 汉语最多颜色显示的个数 */
+#define SHOWMAXCHARNUMS_ENG 10   /* 英文最多颜色显示的个数 */
+#define SHOWMAXCHARNUMS_CHI 20   /* 汉语最多颜色显示的个数 */
 
         int showmaxnums = 0;
 

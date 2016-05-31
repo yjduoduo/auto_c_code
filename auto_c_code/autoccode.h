@@ -189,6 +189,8 @@ private slots:
 
     void content_clear();
 
+    void content_focus();
+
     void set_search_text();
 
     void search_text_clear();
