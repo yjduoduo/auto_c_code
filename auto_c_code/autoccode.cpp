@@ -4104,6 +4104,8 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
     if(selectresult.existflag)
     {
         restore_before_ops();
+        if(isMainServer())
+            return;
         QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
@@ -4800,14 +4802,19 @@ void autoCCode::readfromremote(QString recvBigMsg)
 //        return;
 //    }
 
+    if(!isMainServer())//非主服务端时不存储数据
+    {
+        return;
+    }
+
+    //    bigmsg
+    //讲到的数据入库
+
     qDebug() << "i can read somethig:\n" << recvBigMsg.toLocal8Bit();
     ui->genshow_textEdit->clear();
     ui->genshow_textEdit->setPlainText(QString::fromLocal8Bit(recvBigMsg.toAscii()));
 
-//    bigmsg
-    //讲到的数据入库
-    if(!isMainServer())
-        return;
+
     on_pushButton_rightTextSelectIndb_clicked();
 }
 
