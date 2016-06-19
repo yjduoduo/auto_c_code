@@ -30,8 +30,26 @@
 #include <QMessageBox>
 #include <QHostInfo>
 #include <QNetworkInterface>
+#include <QAbstractSocket>
 #include <QTimer>
 #include "ui_udppkgdialog.h"
+
+#define DEFAULT_PORT 22222
+//#define DEFAULT_PORT   "16689"
+
+#define DEFAULT_HOSTADDR "192.168.1.100"
+
+enum{
+    RET_SUCESS,
+    RET_FAIL,
+};
+
+enum
+{
+    READ_DONE,
+    READING,
+    READ_OTHER
+};
 
 using namespace std;
 
@@ -99,7 +117,10 @@ autoCCode::autoCCode(QWidget *parent) :
     isToolsContent_Enter(FALSE),
     isToolsSuffix_Enter(FALSE),
     is_selected(FALSE),
-    pthread_event(NULL)
+    pthread_event(NULL),
+    socket(NULL),
+    hostaddr(NULL),
+    tcpserver(NULL)
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
     ui->setupUi(this);
@@ -125,7 +146,23 @@ autoCCode::autoCCode(QWidget *parent) :
     ui_codetool->setupUi(codetool);
 //    codetool->show();
 
+    //network
+    remoteip = ReadRemoteIpAddr();
+    ui_setup->lineEdit_remoteIP->setText(remoteip);
 
+    localip = ReadLocalIpAddr();
+    ui_setup->comboBox_localIp->setEditText(localip);
+
+    //network read and write
+    //写数据统计
+    TotalBytes   = 0;
+    byteWritten  = 0;
+    bytesToWrite = 0;
+
+    //读数据统计
+    TotalReadBytes = 0;
+    bytesReceived  = 0;
+    bytesNeedRecv  = 0;
 
     QTimerSet();
     pushButtonSet();
@@ -146,6 +183,7 @@ autoCCode::autoCCode(QWidget *parent) :
     PopMenu();
     ThreadSets();
     DebugSets();
+
 }
 
 void autoCCode::PopMenu()
@@ -235,9 +273,26 @@ void autoCCode::ListViewSets()
     //    connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(setCompleter(const QString &)));
     //    connect(listView, SIGNAL(clicked(QModelIndex)), this, SLOT(completeText(const QModelIndex &)));
     QObject::connect(listView,SIGNAL(clicked(QModelIndex)),this,SLOT(completeText(QModelIndex)));
-
+    //network localipaddr
+    QObject::disconnect(ui_setup->comboBox_localIp,SIGNAL(currentIndexChanged(QString)),
+                     this,SLOT(saveBindLocalIP(QString)));
     ui_setup->comboBox_localIp->addItems(getLstIp());
 
+    QStringList ipsets = getLstIp();
+    int curindex = 0;
+    foreach (QString ipaddr, ipsets) {
+        if (ipaddr == localip)
+        {
+            break;
+        }
+        curindex ++;
+    }
+    qDebug() <<"loca addr index:" << curindex;
+    //network localipaddr
+    QObject::connect(ui_setup->comboBox_localIp,SIGNAL(currentIndexChanged(QString)),
+                     this,SLOT(saveBindLocalIP(QString)));
+    //network localip
+    ui_setup->comboBox_localIp->setCurrentIndex(curindex);
 
 }
 
@@ -341,8 +396,8 @@ void autoCCode::checkboxSet()
                      this,SLOT(on_checkBox_rtQuery_change(bool)));
 
     /* setup send pkg checkbox */
-    QObject::connect(ui_setup->checkBox_sendpkg,SIGNAL(toggled(bool)),
-                     this,SLOT(on_checkBox_checkBox_sendpkg_change(bool)));
+    QObject::connect(ui_setup->checkBox_SeverFlag,SIGNAL(toggled(bool)),
+                     this,SLOT(on_checkBox_checkBox_SeverFlag_change(bool)));
 }
 
 void autoCCode::on_checkBox_rightTextSelectIndb_change(bool flag)
@@ -363,13 +418,15 @@ void autoCCode::on_checkBox_rtQuery_change(bool flag)
 
 }
 
-void autoCCode::on_checkBox_checkBox_sendpkg_change(bool flag)
+void autoCCode::on_checkBox_checkBox_SeverFlag_change(bool flag)
 {
 //    qDebug() << "checkbox sendpkg change:" << flag << endl;
     if(!flag)
     {
         return;
     }
+
+    saveBindLocalIP(localip);
 
 //    pUdp_ui = new Ui::UdpPkgDialog;
 ////    QDialog *dialog = new QDialog;
@@ -468,6 +525,11 @@ void autoCCode::lineTextEditSet(void)
     QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer_Enter()));
 
 #endif
+
+
+    //ip地址
+    QObject::connect(ui_setup->lineEdit_remoteIP,SIGNAL(textChanged(QString)),
+                     this,SLOT(saveRemoteIP(QString)));
 }
 
 void autoCCode::dragDropSet(void)
@@ -743,6 +805,14 @@ void autoCCode::comboBoxSet(void)
                      this,SLOT(listWidget_codeview_scroll_sync(QListWidgetItem*)));
 //    QObject::connect(this->ui->listWidget_note,SIGNAL(activated(QModelIndex)),
 //                     this,SLOT(listWidget_note_with_enter(QModelIndex)));
+
+    //network localipaddr
+    QObject::connect(ui_setup->comboBox_localIp,SIGNAL(currentIndexChanged(QString)),
+                     this,SLOT(saveBindLocalIP(QString)));
+
+    //support remote flag
+    QObject::connect(ui_setup->checkBox_supportRemote,SIGNAL(clicked(bool)),
+                     this,SLOT(checkSupportRemote(bool)));
 }
 
 
@@ -754,7 +824,12 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     if(arg1.isEmpty())
     {
         setWindowTitle_Main("AutoCCode");
-    }else{
+    }
+    else if(ui_setup->checkBox_SeverFlag->isChecked())
+    {
+        setWindowTitle_Main(QString("Server--") + arg1);
+    }
+    else{
         setWindowTitle_Main(arg1);
     }
 
@@ -1107,6 +1182,10 @@ void autoCCode::on_indb_btn_clicked(void)
 
     SaveUiMove();
 
+    if(isMainServer())
+    {
+        return;
+    }
     if(ui->checkBox_inbox->isChecked())
     {
         InDb_Dialog->show();
@@ -1127,7 +1206,10 @@ void autoCCode::on_indb_window_show_hide()
         if(InDb_Dialog->isHidden())
         {
             SaveUiMove();
-            InDb_Dialog->show();
+            if(!isMainServer())
+            {
+                InDb_Dialog->show();
+            }
         }
         else
             InDb_Dialog->hide();
@@ -1136,7 +1218,10 @@ void autoCCode::on_indb_window_show_hide()
         if(InDb_Dialog->isHidden())
         {
             SaveUiMove();
-            InDb_Dialog->show();
+            if(!isMainServer())
+            {
+                InDb_Dialog->show();
+            }
         }
         else
             InDb_Dialog->hide();
@@ -1307,6 +1392,8 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     if(selectresult.existflag)
     {
         restore_before_ops();
+        if(isMainServer())
+            return;
         QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
@@ -2616,7 +2703,10 @@ void autoCCode::modify_content()
     //    ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(CurrentIndex_comboBox_langtype);
 
     SaveUiMove();
-    InDb_Dialog->show();
+    if(!isMainServer())
+    {
+        InDb_Dialog->show();
+    }
 
 }
 
@@ -3075,7 +3165,10 @@ void autoCCode::PopInDbUi()
                     {
                         ui_dialog->content_textEdit_dia->clear();
                         SaveUiMove();
-                        InDb_Dialog->show();
+                        if(!isMainServer())
+                        {
+                            InDb_Dialog->show();
+                        }
                     }else{
                         InDb_Dialog->hide();
                     }
@@ -3235,7 +3328,7 @@ bool autoCCode::eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent
 
 bool autoCCode::eventFilter_ui_setup(QObject *watched, QEvent *event)
 {
-//    if(!ui_setup->checkBox_sendpkg->isChecked())
+//    if(!ui_setup->checkBox_SeverFlag->isChecked())
 //    {
 //        return false;
 //    }
@@ -3266,7 +3359,11 @@ bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
         {
 //            qDebug() << "comboBox_selectdb,coming here!!";
 //            dialog_selectdb->show();
-            InDb_Dialog->show();//入库界面弹出
+            if(!isMainServer())
+            {
+                InDb_Dialog->show();//入库界面弹出
+            }
+
         }/*
         else if (event->type()==QEvent::Leave)    // mouse leaves widget
         {
@@ -3919,15 +4016,31 @@ void autoCCode::contextMenuEvent(QContextMenuEvent *event)
 //实现自动入库功能
 void autoCCode::on_pushButton_rightTextSelectIndb_clicked()
 {
+    QString str_firstline;
+    str_firstline.clear();
+
+    QString str_selected;
     QString cotext = ui->genshow_textEdit->toPlainText().trimmed();
     if(cotext.isEmpty())
     {
         qDebug() << "context. empty";
         return;
     }
-    //光标选中的文本
-    QString str_selected = ui->genshow_textEdit->textCursor().selectedText().trimmed();
-    if(str_selected.isEmpty())
+    if(isMainServer())
+    {
+        str_firstline = ui->genshow_textEdit->document()->findBlockByLineNumber(0).text();
+        if(str_firstline.isEmpty())
+            str_firstline = "no key!";
+
+        str_selected = str_firstline;
+    }
+    else
+    {
+        //光标选中的文本
+        str_selected = ui->genshow_textEdit->textCursor().selectedText().trimmed();
+    }
+
+   if(str_selected.isEmpty())
     {
         qDebug() << "select text. empty";
         return;
@@ -4390,5 +4503,448 @@ void autoCCode::on_textEdit_suffix_textChanged()
 {
     textEdit_suff_uitools = ui_toolsets->textEdit_suffix->toPlainText();
     qDebug() <<"textEdit_suff:" << textEdit_suff_uitools;
+
+}
+
+/************************************************/
+/*函 数:ReadIpAddr                                */
+/*入 参:无                                        */
+/*出 参:无                                        */
+/*返 回:无                                        */
+/*功 能:读取ip地址                                 */
+/*author :wxj                                    */
+/*version:1.0                                    */
+/*时 间:2015.8.17                                 */
+/*************************************************/
+QString autoCCode::ReadIpAddr(QString filename)
+{
+    QFile file(filename);
+
+    if(file.exists())
+    {
+        QByteArray dataFromFile;
+        QString ipaddr;
+        file.open(QIODevice::ReadOnly);
+        dataFromFile=file.readAll();
+        file.close();
+        qDebug() << "read ip:" << dataFromFile;
+        ipaddr = QString(dataFromFile);
+        qDebug() << "ipaddr :" << ipaddr;
+        return ipaddr;
+    }
+    else
+    {
+        file.open(QIODevice::WriteOnly);
+        file.write(DEFAULT_HOSTADDR);
+        file.close();
+        qDebug() << "read ip:" << DEFAULT_HOSTADDR;
+        return QString(DEFAULT_HOSTADDR);
+    }
+}
+
+/************************************************/
+/*函 数:SaveIpAddr                                */
+/*入 参:无                                        */
+/*出 参:无                                        */
+/*返 回:无                                        */
+/*功 能:保存ip地址                                 */
+/*author :wxj                                    */
+/*version:1.0                                    */
+/*时 间:2015.8.17                                 */
+/*************************************************/
+void autoCCode::SaveIpAddr(QString filename, QString ipaddr)
+{
+    QFile file("./serverip.conf");
+
+    if(file.exists())
+    {
+        file.open(QIODevice::WriteOnly);
+        file.write(ipaddr.toLocal8Bit());
+        file.close();
+    }
+}
+
+QString autoCCode::ReadLocalIpAddr()
+{
+    return ReadIpAddr("./serverip.conf");
+}
+
+void autoCCode::SaveLocalIpaddr(QString ipaddr)
+{
+    SaveIpAddr("./serverip.conf", ipaddr);
+}
+
+QString autoCCode::ReadRemoteIpAddr()
+{
+    return ReadIpAddr("./remoteip.conf");
+}
+
+void autoCCode::SaveRemoteIpaddr(QString rip)
+{
+    SaveIpAddr("./remoteip.conf", rip);
+}
+
+void autoCCode::saveRemoteIP(QString rip)
+{
+    remoteip = rip;
+    qDebug() << "remote ip:" << remoteip;
+}
+
+void autoCCode::saveBindLocalIP(QString lip)
+{
+    localip = lip;
+    qDebug() << "local ip:" << localip;
+
+    if(localip.isEmpty() ||  (RET_SUCESS != CheckIPAddr(localip)))
+    {
+        qDebug() << "local ip null or ip err!!";
+        return;
+    }
+
+    if(remoteip.isEmpty() ||  (RET_SUCESS != CheckIPAddr(remoteip)))
+    {
+        qDebug() << "remote ip null or ip err!!";
+        return;
+    }
+
+    //远端是否支持
+    if(!ui_setup->checkBox_supportRemote->isChecked())
+    {
+        return;
+    }
+
+    if(hostaddr)
+    {
+        hostaddr->setAddress(localip);
+    }
+    else
+    {
+        hostaddr = new QHostAddress();
+        hostaddr->setAddress(localip);
+    }
+    SaveRemoteIpaddr(remoteip);
+    SaveLocalIpaddr(localip);
+
+
+    if(tcpserver && tcpserver->isListening())
+    {
+        tcpserver->close();
+        tcpserver = NULL;
+        qDebug("stop listening！");
+    }
+
+    tcpserver = new QTcpServer();
+    while (!tcpserver->isListening() &&
+           !tcpserver->listen(*hostaddr, DEFAULT_PORT)) {
+        qDebug() <<"tcp err:" << tcpserver->errorString();
+        qDebug() <<"host addr:" << *hostaddr;
+        QMessageBox::StandardButton ret;
+        ret = QMessageBox::critical(this,
+                                    str_china("回环"),
+                                    str_china("无法开始测试: %1.")
+                                    .arg(tcpserver->errorString()),
+                                    QMessageBox::Retry
+                                    | QMessageBox::Cancel);
+        if (ret == QMessageBox::Cancel)
+            return;
+    }
+
+    QObject::connect(tcpserver,SIGNAL(newConnection()),this,
+                     SLOT(recvClientMsg()));
+
+    qDebug() <<"bind local ip ok," << localip;
+
+
+    if(isMainServer())//接收服务器只接收数据，不发送数据
+    {
+        QMessageBox::information(NULL, str_china(提示),
+                                 str_china(数据库服务器端！),NULL,NULL);
+        ifSeverUi();
+        return;
+    }
+
+    if(socket)
+    {
+        socket->disconnectFromHost();
+        socket->abort();
+        socket->close();
+        socket = NULL;
+    }
+    socket = new QTcpSocket;
+    socket->setSocketOption(QAbstractSocket::LowDelayOption, 1);//优化为最低延迟，后面的1代码启用该优化。
+    socket->connectToHost(remoteip, DEFAULT_PORT);
+    qDebug() <<"socket err:" << socket->errorString();
+    qDebug() <<"remote ip addr:" << remoteip;
+
+    QObject::connect(socket,SIGNAL(connected()),this,
+                     SLOT(hellosocket()));
+    QObject::connect(socket,SIGNAL(bytesWritten(qint64)),this,
+            SLOT(updateClientProgress(qint64)));
+
+    QTimer *sendtimer = new QTimer();
+    QObject::connect(sendtimer,SIGNAL(timeout()),this,
+                     SLOT(timerwritemsg()));
+    sendtimer->start(3000);
+}
+
+
+void autoCCode::hellosocket()
+{
+//    QString page = " you addr";
+//    socket->write("GET " + page.toLocal8Bit() + "\r\n");
+    QMessageBox::information(NULL, str_china(版本),
+                             str_china(连接远端成功！！),NULL,NULL);
+}
+
+void autoCCode::timerwritemsg()
+{
+    static QString oldmsg;
+    QString bigmsg = ui->genshow_textEdit->toPlainText();
+    if(bigmsg == oldmsg || bigmsg.isEmpty())
+    {
+        return;
+    }
+
+
+    outBlockFile = bigmsg.toLocal8Bit();
+#ifdef DEBUG
+    qDebug() <<"read file size:" << outBlockFile.size() ;
+#endif
+
+    TotalBytes = outBlockFile.size();
+
+//    bytesToWrite = TotalBytes - socket->write(outBlockFile);
+    qDebug() << "write msg:" << bigmsg;
+
+
+    outBlock.resize(0);
+    QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
+    sendOut.resetStatus();
+    sendOut.setVersion(QDataStream::Qt_4_0);
+
+    QString readFname("tag");
+    //发送文件名称
+//    sendOut <<qint64(0) <<readFname;
+    //占据文件大小位置
+    sendOut << TotalBytes;
+    //TotalBytes为总数据长度，即（数据量长度+文件名长度+文件名）
+    TotalBytes += outBlock.size(); //加上图片名称长度
+    sendOut.device()->seek(0);
+
+//    //总字节(文件大小 + 8字节 + 文件名) ，
+//    sendOut << TotalBytes << qint64((outBlock.size() - sizeof(qint64)*1));
+
+    //    (文件大小 [8字节])
+//    sendOut << TotalBytes;
+    bytesToWrite = TotalBytes - socket->write(outBlock);//将名称发出后，剩余图片大小
+////    ui->clientStatusLabel->setText(str_china("已连接"));
+//#ifdef DEBUG
+//    qDebug() << "TotalBytes:" << TotalBytes;
+//#endif
+
+    qDebug() << "TotalBytes:" << TotalBytes;
+    qDebug() << "bytesToWrite:" << bytesToWrite;
+
+    oldmsg = bigmsg;
+}
+
+
+//检测IP地址错误
+int autoCCode::CheckIPAddr(QString ipaddr)
+{
+    QRegExp regExp("\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b");
+    if(!regExp.exactMatch(ipaddr))
+    {
+        QMessageBox::warning(NULL, str_china("提示"), str_china("ip地址错误"),NULL,NULL);
+        return RET_FAIL;
+    }
+
+    return RET_SUCESS;
+}
+
+
+void autoCCode::readfromremote(QString recvBigMsg)
+{
+//    static bool readdone = READ_DONE;
+//    if(READ_DONE == readdone)
+//    {
+//        TotalReadBytes = clientConnection->read(sizeof(qint64)).toLongLong();
+//        readdone = READING;
+//    }
+
+//    qDebug() << "recicve byte size:" << TotalReadBytes;
+//    QString readdata = clientConnection->readAll();
+
+
+
+
+//    qDebug() << "numBytes:--------->>"<<numBytes;
+//    byteWritten += (int)numBytes;
+//    if(bytesToWrite > 0)
+//    {
+//        qDebug() <<"-->:outBlockFile size:" << outBlockFile.size();
+
+//        bytesToRead -= (int)socket->write(outBlockFile);
+//        qDebug() <<"-->:bytesToWrite size:" << bytesToWrite;
+//    }
+//    else
+//    {
+//        qDebug() << "-->: send msg done!!";
+//        TotalReadBytes = 0;
+//        byteReadden = 0;
+//        readdone = READ_DONE;
+//    }
+
+//    if(READ_DONE != readdone)
+//    {
+//        return;
+//    }
+
+    qDebug() << "i can read somethig:\n" << recvBigMsg.toLocal8Bit();
+    ui->genshow_textEdit->clear();
+    ui->genshow_textEdit->setPlainText(QString::fromLocal8Bit(recvBigMsg.toAscii()));
+
+//    bigmsg
+    //讲到的数据入库
+    if(!isMainServer())
+        return;
+    on_pushButton_rightTextSelectIndb_clicked();
+}
+
+
+void autoCCode::recvClientMsg()
+{
+    clientConnection = tcpserver->nextPendingConnection();
+    QObject::connect(clientConnection,SIGNAL(readyRead()),
+                     this,SLOT(updateReadMsgProgress()));
+    QObject::connect(clientConnection,SIGNAL(error(QAbstractSocket::SocketError)),
+                     this,SLOT(displayErr(QAbstractSocket::SocketError)));
+}
+
+void autoCCode::checkSupportRemote(bool flag)
+{
+    if(!flag)
+        return;
+
+    saveBindLocalIP(localip);
+}
+
+bool autoCCode::isMainServer()
+{
+    return ui_setup->checkBox_SeverFlag->isChecked();
+}
+
+void autoCCode::ifSeverUi()
+{
+    bool isserverflag = isMainServer();
+    if(isserverflag)
+    {
+//        ui->pushbtn_autoindb->setEnabled(false);
+        ui->indb_btn->setEnabled(false);
+    }
+    else
+    {
+//        ui->pushbtn_autoindb->setEnabled(true);
+        ui->indb_btn->setEnabled(true);
+    }
+}
+void autoCCode::displayErr(QAbstractSocket::SocketError socketError)
+{
+    if(socketError == QTcpSocket::RemoteHostClosedError)
+        return;
+    QMessageBox::information(this,str_china("网络"),
+                             str_china("产生如下错误： %1")
+                             .arg(tcpserver->errorString()));
+
+    tcpserver->close();
+    tcpserver = NULL;
+
+#ifdef SHOWCURSOR
+    QApplication::restoreOverrideCursor();
+#endif
+}
+
+
+void autoCCode::updateClientProgress(qint64 numBytes)
+{
+    qDebug() << "numBytes:--------->>"<<numBytes;
+    byteWritten += (int)numBytes;
+    if(bytesToWrite > 0)
+    {
+        qDebug() <<"-->:outBlockFile size:" << outBlockFile.size();
+
+        bytesToWrite -= (int)socket->write(outBlockFile);
+        qDebug() <<"-->:bytesToWrite size:" << bytesToWrite;
+    }
+    else
+    {
+        qDebug() << "-->: send msg done!!";
+        TotalBytes = 0;
+        byteWritten = 0;
+    }
+}
+
+
+
+void autoCCode::updateReadMsgProgress()
+{
+    QDataStream in(clientConnection);
+    in.setVersion(QDataStream::Qt_4_0);
+
+    static bool recvdone = READ_DONE;
+
+    if(bytesReceived <= sizeof(qint64)*1  && (recvdone == READ_DONE)){
+        if((clientConnection->bytesAvailable() >= sizeof(qint64)*1)){
+            in>>TotalReadBytes;
+//            bytesReceived += sizeof(qint64)*1;
+            inBlock.resize(0);
+            recvdone = READING;
+        }
+
+//        if((tcpServerConnection->bytesAvailable() >= fileNameSize)&&(fileNameSize !=0)){
+//            in>>fileName;
+//            qDebug() << "filename:" <<fileName;
+
+//            bytesReceived += fileNameSize;
+//        }else{
+//            return;
+//        }
+    }
+
+
+    if (bytesReceived < TotalReadBytes){
+        /* 实际需要接收的字节数 */
+        bytesNeedRecv = TotalReadBytes - bytesReceived;
+        bytesReceived += clientConnection->bytesAvailable();
+
+        if(bytesReceived >= TotalReadBytes){
+            inBlock.append(clientConnection->read(bytesNeedRecv));
+            bytesReceived = TotalReadBytes;
+        }else{
+            inBlock.append(clientConnection->readAll());
+        }
+
+        qDebug() << "bytesReceived:"<< bytesReceived;
+        qDebug() << "TotalReadBytes   :"<< TotalReadBytes;
+    }
+
+    if (bytesReceived == TotalReadBytes) {
+//        QBuffer buffer(&inBlock);
+//        buffer.open( QIODevice::ReadOnly );
+
+//        QImageReader reader(&buffer, STREAM_PIC_FORT);
+        QString  bigmsg = inBlock;
+        //入库
+        readfromremote(bigmsg);
+
+        TotalReadBytes = 0;
+        bytesReceived = 0;
+//        fileNameSize = 0;
+        bytesNeedRecv = 0;
+        inBlock.resize(0);
+
+        recvdone = READ_DONE;
+    }
+
 
 }

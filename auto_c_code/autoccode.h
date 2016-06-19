@@ -11,6 +11,8 @@
 #include "uithread.h"
 #include "debugsets.h"
 #include "version.h"
+#include <QTcpSocket>
+#include <QTcpServer>
 
 namespace Ui {
 class autoCCode;
@@ -173,7 +175,7 @@ private slots:
 
     void on_checkBox_rtQuery_change(bool flag);
 
-    void on_checkBox_checkBox_sendpkg_change(bool flag);
+    void on_checkBox_checkBox_SeverFlag_change(bool flag);
 
     quint8 get_rtQuery_enable();//判断是否支持实时查询
 
@@ -481,6 +483,60 @@ private slots://ui tools
 private VARIABLE://ui tools
     QString textEdit_main_uitools;
     QString textEdit_suff_uitools;
+
+
+private://network
+    int CheckIPAddr(QString ipaddr);
+    void SaveIpAddr(QString filename, QString ipaddr);
+    QString ReadIpAddr(QString filename);
+    void SaveLocalIpaddr(QString ipaddr);
+    QString ReadLocalIpAddr();
+    void SaveRemoteIpaddr(QString ipaddr);
+    QString ReadRemoteIpAddr();
+private slots://network
+    void saveRemoteIP(QString rip);
+    void saveBindLocalIP(QString lip);
+    void hellosocket();
+    void readfromremote(QString recvBigMsg);
+    void timerwritemsg();
+    void recvClientMsg();
+    void checkSupportRemote(bool flag);
+    bool isMainServer();
+    void ifSeverUi();
+
+    void displayErr(QAbstractSocket::SocketError socketError);
+    void updateClientProgress(qint64 numBytes);
+    void updateReadMsgProgress();
+
+private:
+    QString remoteip;
+    QString localip;
+    QTcpSocket *socket;
+    QHostAddress *hostaddr;
+    QTcpServer *tcpserver;
+
+    QTcpSocket *clientConnection;
+
+    //写数据统计
+    qint64 TotalBytes;
+    qint64 byteWritten;
+    qint64 bytesToWrite;
+//    QString fileName;
+//    QFile *localFile;
+    QByteArray outBlock;
+    QByteArray outBlockFile;//文件字节序列
+
+    //读数据统计
+//    qint64 TotalReadBytes;
+//    qint64 byteReadden;
+//    qint64 bytesToRead;
+//    QByteArray outReadBlock;
+
+    qint64  TotalReadBytes;
+    qint64  bytesReceived;
+//    qint64  fileNameSize;
+    qint64  bytesNeedRecv;
+    QByteArray inBlock;
 };
 
 

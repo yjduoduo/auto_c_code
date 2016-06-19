@@ -210,11 +210,11 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_sendpkg">
+  <widget class="QCheckBox" name="checkBox_SeverFlag">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>233</y>
+     <x>200</x>
+     <y>150</y>
      <width>91</width>
      <height>17</height>
     </rect>
@@ -223,10 +223,10 @@
     <string>入库按钮鼠标移动即弹出，且确定和取消也一样效果</string>
    </property>
    <property name="text">
-    <string>远端</string>
+    <string>服务端</string>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
@@ -273,6 +273,25 @@
      <width>141</width>
      <height>31</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_supportRemote">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>240</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>入库按钮鼠标移动即弹出，且确定和取消也一样效果</string>
+   </property>
+   <property name="text">
+    <string>远端</string>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
    </property>
   </widget>
  </widget>
