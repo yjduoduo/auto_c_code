@@ -487,8 +487,8 @@ private VARIABLE://ui tools
 
 private://network
     int CheckIPAddr(QString ipaddr);
-    void SaveIpAddr(QString filename, QString ipaddr);
-    QString ReadIpAddr(QString filename);
+    void SaveContent(QString filename, QString ipaddr);
+    QString ReadContent(QString filename);
     void SaveLocalIpaddr(QString ipaddr);
     QString ReadLocalIpAddr();
     void SaveRemoteIpaddr(QString ipaddr);

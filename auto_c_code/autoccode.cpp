@@ -4509,7 +4509,7 @@ void autoCCode::on_textEdit_suffix_textChanged()
 }
 
 /************************************************/
-/*函 数:ReadIpAddr                                */
+/*函 数:ReadContent                               */
 /*入 参:无                                        */
 /*出 参:无                                        */
 /*返 回:无                                        */
@@ -4518,7 +4518,7 @@ void autoCCode::on_textEdit_suffix_textChanged()
 /*version:1.0                                    */
 /*时 间:2015.8.17                                 */
 /*************************************************/
-QString autoCCode::ReadIpAddr(QString filename)
+QString autoCCode::ReadContent(QString filename)
 {
     QFile file(filename);
 
@@ -4545,7 +4545,7 @@ QString autoCCode::ReadIpAddr(QString filename)
 }
 
 /************************************************/
-/*函 数:SaveIpAddr                                */
+/*函 数:SaveContent                                */
 /*入 参:无                                        */
 /*出 参:无                                        */
 /*返 回:无                                        */
@@ -4554,9 +4554,9 @@ QString autoCCode::ReadIpAddr(QString filename)
 /*version:1.0                                    */
 /*时 间:2015.8.17                                 */
 /*************************************************/
-void autoCCode::SaveIpAddr(QString filename, QString ipaddr)
+void autoCCode::SaveContent(QString filename, QString ipaddr)
 {
-    QFile file("./serverip.conf");
+    QFile file(filename);
 
     if(file.exists())
     {
@@ -4568,28 +4568,29 @@ void autoCCode::SaveIpAddr(QString filename, QString ipaddr)
 
 QString autoCCode::ReadLocalIpAddr()
 {
-    return ReadIpAddr("./serverip.conf");
+    return ReadContent("./serverip.conf");
 }
 
 void autoCCode::SaveLocalIpaddr(QString ipaddr)
 {
-    SaveIpAddr("./serverip.conf", ipaddr);
+    SaveContent("./serverip.conf", ipaddr);
 }
 
 QString autoCCode::ReadRemoteIpAddr()
 {
-    return ReadIpAddr("./remoteip.conf");
+    return ReadContent("./remoteip.conf");
 }
 
 void autoCCode::SaveRemoteIpaddr(QString rip)
 {
-    SaveIpAddr("./remoteip.conf", rip);
+    SaveContent("./remoteip.conf", rip);
 }
 
 void autoCCode::saveRemoteIP(QString rip)
 {
     remoteip = rip;
     qDebug() << "remote ip:" << remoteip;
+    SaveRemoteIpaddr(remoteip);
 }
 
 void autoCCode::saveBindLocalIP(QString lip)
