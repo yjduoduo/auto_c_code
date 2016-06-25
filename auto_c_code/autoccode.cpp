@@ -33,6 +33,7 @@
 #include <QAbstractSocket>
 #include <QTimer>
 #include "ui_udppkgdialog.h"
+#include "sockthread.h"
 
 #define DEFAULT_PORT 22222
 //#define DEFAULT_PORT   "16689"
@@ -44,12 +45,7 @@ enum{
     RET_FAIL,
 };
 
-enum
-{
-    READ_DONE,
-    READING,
-    READ_OTHER
-};
+
 
 using namespace std;
 
@@ -159,10 +155,10 @@ autoCCode::autoCCode(QWidget *parent) :
     byteWritten  = 0;
     bytesToWrite = 0;
 
-    //读数据统计
-    TotalReadBytes = 0;
-    bytesReceived  = 0;
-    bytesNeedRecv  = 0;
+//    //读数据统计
+//    TotalReadBytes = 0;
+//    bytesReceived  = 0;
+//    bytesNeedRecv  = 0;
 
     QTimerSet();
     pushButtonSet();
@@ -4823,10 +4819,12 @@ void autoCCode::readfromremote(QString recvBigMsg)
 void autoCCode::recvClientMsg()
 {
     clientConnection = tcpserver->nextPendingConnection();
-    QObject::connect(clientConnection,SIGNAL(readyRead()),
-                     this,SLOT(updateReadMsgProgress()));
-    QObject::connect(clientConnection,SIGNAL(error(QAbstractSocket::SocketError)),
-                     this,SLOT(displayErr(QAbstractSocket::SocketError)));
+    qDebug() << "-->>client socket:" << clientConnection;
+    sockthread *pthreadsock = new sockthread(this);
+    pthreadsock->setSocketConnect(clientConnection);
+    QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString)),
+                     this,SLOT(readfromremote(QString)));
+    pthreadsock->start();
 }
 
 void autoCCode::checkSupportRemote(bool flag)
@@ -4894,65 +4892,52 @@ void autoCCode::updateClientProgress(qint64 numBytes)
 
 
 
-void autoCCode::updateReadMsgProgress()
-{
-    QDataStream in(clientConnection);
-    in.setVersion(QDataStream::Qt_4_0);
+//void autoCCode::updateReadMsgProgress()
+//{
+//    QDataStream in(clientConnection);
+//    in.setVersion(QDataStream::Qt_4_0);
 
-    static bool recvdone = READ_DONE;
+//    static bool recvdone = READ_DONE;
 
-    if(bytesReceived <= sizeof(qint64)*1  && (recvdone == READ_DONE)){
-        if((clientConnection->bytesAvailable() >= sizeof(qint64)*1)){
-            in>>TotalReadBytes;
-//            bytesReceived += sizeof(qint64)*1;
-            inBlock.resize(0);
-            recvdone = READING;
-        }
-
-//        if((tcpServerConnection->bytesAvailable() >= fileNameSize)&&(fileNameSize !=0)){
-//            in>>fileName;
-//            qDebug() << "filename:" <<fileName;
-
-//            bytesReceived += fileNameSize;
-//        }else{
-//            return;
+//    if(bytesReceived <= sizeof(qint64)*1  && (recvdone == READ_DONE)){
+//        if((clientConnection->bytesAvailable() >= sizeof(qint64)*1)){
+//            in>>TotalReadBytes;
+////            bytesReceived += sizeof(qint64)*1;
+//            inBlock.resize(0);
+//            recvdone = READING;
 //        }
-    }
+//    }
 
 
-    if (bytesReceived < TotalReadBytes){
-        /* 实际需要接收的字节数 */
-        bytesNeedRecv = TotalReadBytes - bytesReceived;
-        bytesReceived += clientConnection->bytesAvailable();
+//    if (bytesReceived < TotalReadBytes){
+//        /* 实际需要接收的字节数 */
+//        bytesNeedRecv = TotalReadBytes - bytesReceived;
+//        bytesReceived += clientConnection->bytesAvailable();
 
-        if(bytesReceived >= TotalReadBytes){
-            inBlock.append(clientConnection->read(bytesNeedRecv));
-            bytesReceived = TotalReadBytes;
-        }else{
-            inBlock.append(clientConnection->readAll());
-        }
+//        if(bytesReceived >= TotalReadBytes){
+//            inBlock.append(clientConnection->read(bytesNeedRecv));
+//            bytesReceived = TotalReadBytes;
+//        }else{
+//            inBlock.append(clientConnection->readAll());
+//        }
 
-        qDebug() << "bytesReceived:"<< bytesReceived;
-        qDebug() << "TotalReadBytes   :"<< TotalReadBytes;
-    }
+//        qDebug() << "bytesReceived:"<< bytesReceived;
+//        qDebug() << "TotalReadBytes   :"<< TotalReadBytes;
+//    }
 
-    if (bytesReceived == TotalReadBytes) {
-//        QBuffer buffer(&inBlock);
-//        buffer.open( QIODevice::ReadOnly );
+//    if (bytesReceived == TotalReadBytes) {
+//        QString  bigmsg = inBlock;
+//        //入库
+//        readfromremote(bigmsg);
 
-//        QImageReader reader(&buffer, STREAM_PIC_FORT);
-        QString  bigmsg = inBlock;
-        //入库
-        readfromremote(bigmsg);
+//        TotalReadBytes = 0;
+//        bytesReceived = 0;
+////        fileNameSize = 0;
+//        bytesNeedRecv = 0;
+//        inBlock.resize(0);
 
-        TotalReadBytes = 0;
-        bytesReceived = 0;
-//        fileNameSize = 0;
-        bytesNeedRecv = 0;
-        inBlock.resize(0);
-
-        recvdone = READ_DONE;
-    }
+//        recvdone = READ_DONE;
+//    }
 
 
-}
+//}

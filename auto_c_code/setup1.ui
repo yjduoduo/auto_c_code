@@ -188,7 +188,7 @@
     <string>显示文件路径</string>
    </property>
    <property name="checked">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox_indb_shortkey">

@@ -505,8 +505,8 @@ private slots://network
     void ifSeverUi();
 
     void displayErr(QAbstractSocket::SocketError socketError);
-    void updateClientProgress(qint64 numBytes);
-    void updateReadMsgProgress();
+    void updateClientProgress(qint64 numBytes); //write data
+//    void updateReadMsgProgress();
 
 private:
     QString remoteip;
@@ -526,17 +526,7 @@ private:
     QByteArray outBlock;
     QByteArray outBlockFile;//文件字节序列
 
-    //读数据统计
-//    qint64 TotalReadBytes;
-//    qint64 byteReadden;
-//    qint64 bytesToRead;
-//    QByteArray outReadBlock;
 
-    qint64  TotalReadBytes;
-    qint64  bytesReceived;
-//    qint64  fileNameSize;
-    qint64  bytesNeedRecv;
-    QByteArray inBlock;
 };
 
 
