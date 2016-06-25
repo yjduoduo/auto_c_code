@@ -36,7 +36,7 @@ void sockthread::run()
 {
     while(1)
     {
-        qDebug() << "emit signal.....";
+//        qDebug() << "emit signal.....";
 //        emit emitMsgBoxSignal();
         Sleep(1000);
     }
