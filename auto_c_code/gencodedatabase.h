@@ -24,6 +24,7 @@ enum LanguageType{
     languagetype_Patchs_,
     languagetype_Perl_,
     languagetype_Hadoop_,
+    languagetype_Go_,
     languagetype_Unittest_,
     languagetype_Swift_,
     languagetype_Rust_,

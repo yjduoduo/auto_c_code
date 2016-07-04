@@ -57,6 +57,7 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
                            {LANTY_JOIN(Patchs_),"patchs_table",DB_NAME,CREATTABLE(patchs_table),},
                            {LANTY_JOIN(Perl_),"perl_table",DB_NAME,CREATTABLE(perl_table),},
                            {LANTY_JOIN(Hadoop_),"hadoop_table",DB_NAME,CREATTABLE(hadoop_table),},
+                           {LANTY_JOIN(Go_),"go_table",DB_NAME,CREATTABLE(go_table),},
                            {LANTY_JOIN(Unittest_),"unittest_table",DB_NAME,CREATTABLE(unittest_table),},
                            {LANTY_JOIN(Swift_),"swift_table",DB_NAME,CREATTABLE(swift_table),},
                            {LANTY_JOIN(Android_),"android_table",DB_NAME,CREATTABLE(android_table),},
@@ -886,6 +887,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     case    languagetype_Patchs_:
     case    languagetype_Perl_:
     case    languagetype_Hadoop_:
+    case    languagetype_Go_:
     case    languagetype_Unittest_:
     case    languagetype_Swift_:
     case    languagetype_Rust_:
@@ -1003,6 +1005,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     case    languagetype_Patchs_:
     case    languagetype_Perl_:
     case    languagetype_Hadoop_:
+    case    languagetype_Go_:
     case    languagetype_Unittest_:
     case    languagetype_Swift_:
     case    languagetype_Rust_:
@@ -1047,6 +1050,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
     case    languagetype_Patchs_:
     case    languagetype_Perl_:
     case    languagetype_Hadoop_:
+    case    languagetype_Go_:
     case    languagetype_Unittest_:
     case    languagetype_Swift_:
     case    languagetype_Rust_:
@@ -1100,6 +1104,8 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "Perl";
     case    languagetype_Hadoop_:
         return "Hadoop";
+    case    languagetype_Go_:
+        return "Go";
     case    languagetype_Unittest_:
         return "Unittest";
     case    languagetype_Swift_:

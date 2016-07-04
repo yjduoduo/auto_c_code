@@ -960,6 +960,7 @@ void autoCCode::addstr_comboBox(void)
         <<str_china(C++)
        <<str_china(Debug)
       <<str_china(Erlang)
+     << str_china(Go)
      <<str_china(Hadoop)
      <<str_china(Jave)
     <<str_china(JavaScript)
@@ -968,14 +969,14 @@ void autoCCode::addstr_comboBox(void)
     <<str_china(Patchs)
     <<str_china(Perl)
     <<str_china(Postgresql)
-    <<str_china(Rust)
-    <<str_china(shell)
-    <<str_china(Sqlite3)
-    <<str_china(Swift)
     <<str_china(Php)
     <<str_china(Python)
     <<str_china(Qt)
     <<str_china(Qtquick)
+    <<str_china(Rust)
+    <<str_china(shell)
+    <<str_china(Sqlite3)
+    <<str_china(Swift)
     <<str_china(Unittest);
 
 
@@ -1287,6 +1288,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Hadoop")
     {
         return languagetype_Hadoop_;
+    }
+    else if(type == "Go")
+    {
+        return languagetype_Go_;
     }
     else if(type == "Unittest")
     {
