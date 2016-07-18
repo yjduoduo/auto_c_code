@@ -1348,7 +1348,13 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     index_keyword = index_keyword.replace("\n"," ");
     //    index_keyword.trimmed();
     QString note   = ui_dialog->note_textEdit_dia->toPlainText().trimmed();
+    note = note.replace(" ","");
     note = note.replace("\n"," ");
+    if(note.isEmpty())
+    {
+        note = "nokey!";
+    }
+
     note += "\t\t\t\t";
     note += QDateTime::currentDateTime().toString("yyyy MMM d ddd,hh:mm:ss");
 
@@ -1737,14 +1743,17 @@ void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
 {
     self_print(listWidget_note_scroll_sync);
     unsigned int index = 0;
+    unsigned int cmplen = 0;
     QString str = item->text();
     if(str.isEmpty())
         return;
     if(selectresult.content_list.size() == 0)
         return;
+
+    cmplen = str.length() <= 30 ? str.length() : 30;
     judge_color_index();
     for(int i=0;i<selectresult.content_list.size();i++){
-        if(str == selectresult.keyword_list.at(i))
+        if(str.left(cmplen) == selectresult.keyword_list.at(i).left(cmplen))
             index = i;
     }
 
@@ -1844,9 +1853,11 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
     if(isOK)
     {
         str_print(index_key_color);
+        QString keyword = selectresult.keyword_list.at(index_key_color);
+        keyword = keyword.replace("'", "''");
         QString select_express = QString("update %1 set delflag=1 where keywords='%2'")
                 .arg(sets->talbename)
-                .arg(selectresult.keyword_list.at(index_key_color));
+                .arg(keyword);
 
         b.updatetable(sets->langtype,select_express);
 
@@ -2763,7 +2774,7 @@ void autoCCode::getText_FromRight(void)
 void autoCCode::on_pushbtn_autoindb_clicked_self()
 {
     self_print(on_pushbtn_autoindb_clicked_self);
-    //    if(ui_autoindb->)
+
     if(dialog_autoindb->isHidden()){
         dialog_autoindb->show();
         dialog_autoindb->update();
