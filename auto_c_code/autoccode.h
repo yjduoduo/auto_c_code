@@ -371,6 +371,8 @@ private:
     void checkboxSet();
 
     QStringList getLstIp();
+
+    void ShowTipsInfo(QString s);
 private:
 
     Ui::autoCCode *ui;
@@ -507,6 +509,10 @@ private slots://network
     void displayErr(QAbstractSocket::SocketError socketError);
     void updateClientProgress(qint64 numBytes); //write data
 //    void updateReadMsgProgress();
+
+    void on_btn_find_down_clicked();
+
+    void on_btn_find_up_clicked();
 
 private:
     QString remoteip;

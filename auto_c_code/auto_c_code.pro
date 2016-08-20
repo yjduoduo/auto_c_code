@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     debugsets.cpp \
     globalapplication.cpp \
     udppkg.cpp \
-    sockthread.cpp
+    sockthread.cpp \
+    msgtipsautoshut.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -46,7 +47,8 @@ HEADERS  += autoccode.h \
     debugsets.h \
     globalapplication.h \
     udppkg.h \
-    sockthread.h
+    sockthread.h \
+    msgtipsautoshut.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \

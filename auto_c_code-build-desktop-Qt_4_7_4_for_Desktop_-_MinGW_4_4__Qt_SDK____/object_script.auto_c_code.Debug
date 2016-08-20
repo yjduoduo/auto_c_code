@@ -15,6 +15,7 @@ INPUT(
 ./debug/globalapplication.o
 ./debug/udppkg.o
 ./debug/sockthread.o
+./debug/msgtipsautoshut.o
 ./debug/moc_autoccode.o
 ./debug/moc_dialog_select_database.o
 ./debug/moc_qxtglobalshortcut.o
@@ -23,5 +24,6 @@ INPUT(
 ./debug/moc_toolstabwidget.o
 ./debug/moc_uithread.o
 ./debug/moc_sockthread.o
+./debug/moc_msgtipsautoshut.o
 ./debug/qrc_imgsrc.o
 );

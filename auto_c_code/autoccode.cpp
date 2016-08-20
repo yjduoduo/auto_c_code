@@ -34,6 +34,7 @@
 #include <QTimer>
 #include "ui_udppkgdialog.h"
 #include "sockthread.h"
+#include "msgtipsautoshut.h"
 
 #define DEFAULT_PORT 22222
 //#define DEFAULT_PORT   "16689"
@@ -159,6 +160,9 @@ autoCCode::autoCCode(QWidget *parent) :
 //    TotalReadBytes = 0;
 //    bytesReceived  = 0;
 //    bytesNeedRecv  = 0;
+
+    //颜色去掉
+    ui->checkBox_ResWithColor->setVisible(false);
 
     QTimerSet();
     pushButtonSet();
@@ -1962,6 +1966,7 @@ void autoCCode::SearchText(const QString &searchStr)
     clear_listWidget_beforecall();
     if(0 == selectresult.keyword_list.length()){
         alert();
+        return;
     }else{
         selectresult.keyword_subshowlist = listWidget_codeview_subShow(selectresult.keyword_list);
         ui->listWidget_codeview->addItems(selectresult.keyword_subshowlist);
@@ -4957,3 +4962,54 @@ void autoCCode::updateClientProgress(qint64 numBytes)
 
 
 //}
+
+void autoCCode::on_btn_find_down_clicked()
+{
+    if (ui->lineEdit_search->text().isEmpty())
+    {
+        ShowTipsInfo(QString::fromLocal8Bit("search text null!"));
+        return;
+    }
+    QString searchText = ui->lineEdit_search->text().trimmed();
+
+    if (!ui->genshow_textEdit->find(searchText))
+    {
+        ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+    }
+    else
+    {
+        QTextCursor cursor = ui->genshow_textEdit->textCursor();
+        setStringColor(cursor.position() - searchText.length() + 1,
+                       searchText.length());
+        ui->genshow_textEdit->update();
+    }
+}
+
+void autoCCode::on_btn_find_up_clicked()
+{
+    if (ui->lineEdit_search->text().isEmpty())
+    {
+        ShowTipsInfo(QString::fromLocal8Bit("search text null!"));
+        return;
+    }
+    QString searchText = ui->lineEdit_search->text().trimmed();
+    if (!ui->genshow_textEdit->find(searchText, QTextDocument::FindBackward))
+    {
+        ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+    }
+    else
+    {
+        //向后查找不正常
+//        QTextCursor cursor = ui->genshow_textEdit->textCursor();
+//        setStringColor(cursor.position()/* - searchText.length() + 1*/,
+//                       searchText.length());
+//        ui->genshow_textEdit->update();
+    }
+}
+
+void autoCCode::ShowTipsInfo(QString s)
+{
+    MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL);
+    tipsinfo->SetTipsInfo(s);
+    tipsinfo->show();
+}

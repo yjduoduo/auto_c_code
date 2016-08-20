@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Tue Dec 29 22:12:36 2015
+** Created: Sat Aug 20 22:47:41 2016
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -76,6 +76,8 @@ public:
     QHBoxLayout *horizontalLayout;
     QPushButton *save_btn;
     QCheckBox *checkBox_AutoSave;
+    QPushButton *btn_find_down;
+    QPushButton *btn_find_up;
     QPushButton *gencode_btn;
     codeEditor *genshow_textEdit;
 
@@ -83,7 +85,7 @@ public:
     {
         if (autoCCode->objectName().isEmpty())
             autoCCode->setObjectName(QString::fromUtf8("autoCCode"));
-        autoCCode->resize(936, 487);
+        autoCCode->resize(936, 518);
         autoCCode->setWindowOpacity(1);
         autoCCode->setAutoFillBackground(false);
         autoCCode->setStyleSheet(QString::fromUtf8(""));
@@ -108,6 +110,7 @@ public:
 
         lineEdit_search = new QLineEdit(autoCCode);
         lineEdit_search->setObjectName(QString::fromUtf8("lineEdit_search"));
+        lineEdit_search->setMinimumSize(QSize(50, 0));
 
         horizontalLayout_2->addWidget(lineEdit_search);
 
@@ -201,7 +204,7 @@ public:
 
         checkBox_ResWithColor = new QCheckBox(autoCCode);
         checkBox_ResWithColor->setObjectName(QString::fromUtf8("checkBox_ResWithColor"));
-        checkBox_ResWithColor->setChecked(true);
+        checkBox_ResWithColor->setChecked(false);
 
         verticalLayout_3->addWidget(checkBox_ResWithColor);
 
@@ -300,6 +303,23 @@ public:
 
         horizontalLayout->addWidget(checkBox_AutoSave);
 
+        btn_find_down = new QPushButton(autoCCode);
+        btn_find_down->setObjectName(QString::fromUtf8("btn_find_down"));
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(btn_find_down->sizePolicy().hasHeightForWidth());
+        btn_find_down->setSizePolicy(sizePolicy1);
+        btn_find_down->setMinimumSize(QSize(30, 0));
+
+        horizontalLayout->addWidget(btn_find_down);
+
+        btn_find_up = new QPushButton(autoCCode);
+        btn_find_up->setObjectName(QString::fromUtf8("btn_find_up"));
+        btn_find_up->setMinimumSize(QSize(30, 0));
+
+        horizontalLayout->addWidget(btn_find_up);
+
         gencode_btn = new QPushButton(autoCCode);
         gencode_btn->setObjectName(QString::fromUtf8("gencode_btn"));
         gencode_btn->setMinimumSize(QSize(150, 0));
@@ -360,6 +380,8 @@ public:
         close_btn->setText(QApplication::translate("autoCCode", "close", 0, QApplication::UnicodeUTF8));
         save_btn->setText(QApplication::translate("autoCCode", "save", 0, QApplication::UnicodeUTF8));
         checkBox_AutoSave->setText(QApplication::translate("autoCCode", "AS", 0, QApplication::UnicodeUTF8));
+        btn_find_down->setText(QApplication::translate("autoCCode", "\342\206\223", 0, QApplication::UnicodeUTF8));
+        btn_find_up->setText(QApplication::translate("autoCCode", "\342\206\221", 0, QApplication::UnicodeUTF8));
         gencode_btn->setText(QApplication::translate("autoCCode", "\347\224\237\346\210\220\344\273\243\347\240\201\345\272\223", 0, QApplication::UnicodeUTF8));
         genshow_textEdit->setPlainText(QString());
     } // retranslateUi
