@@ -2643,13 +2643,12 @@ void autoCCode::SearchTextResWithColor2(QString &resStr)
         setStringColor(0, 0);
         return;
     }
-//    setStringColor(0, 0);
     //    //±³¾°Ç³ÂÌÉ«£¬Ç°¾°ºÚÉ«
     //    ui->genshow_textEdit->setStyleSheet("background-color: rgb(60, 243, 243);color: rgb(0, 0, 0);");
     QString searchText = ui->lineEdit_search->text().trimmed();
     if(searchText.isEmpty())
     {
-        ShowTipsInfo(QString::fromLocal8Bit("search text null!"));
+//        ShowTipsInfo(QString::fromLocal8Bit("search text null!"));
         return;
     }
 

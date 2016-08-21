@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Sat Aug 20 22:47:41 2016
+** Created: Sun Aug 21 21:40:34 2016
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -85,7 +85,7 @@ public:
     {
         if (autoCCode->objectName().isEmpty())
             autoCCode->setObjectName(QString::fromUtf8("autoCCode"));
-        autoCCode->resize(936, 518);
+        autoCCode->resize(1003, 518);
         autoCCode->setWindowOpacity(1);
         autoCCode->setAutoFillBackground(false);
         autoCCode->setStyleSheet(QString::fromUtf8(""));
@@ -204,7 +204,7 @@ public:
 
         checkBox_ResWithColor = new QCheckBox(autoCCode);
         checkBox_ResWithColor->setObjectName(QString::fromUtf8("checkBox_ResWithColor"));
-        checkBox_ResWithColor->setChecked(false);
+        checkBox_ResWithColor->setChecked(true);
 
         verticalLayout_3->addWidget(checkBox_ResWithColor);
 
