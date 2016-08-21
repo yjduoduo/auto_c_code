@@ -161,9 +161,6 @@ autoCCode::autoCCode(QWidget *parent) :
 //    bytesReceived  = 0;
 //    bytesNeedRecv  = 0;
 
-    //颜色去掉
-    ui->checkBox_ResWithColor->setVisible(false);
-
     QTimerSet();
     pushButtonSet();
     textEditSet();
@@ -1541,7 +1538,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
 
 
     ui->genshow_textEdit->setPlainText(GenCode_str);
-    SearchTextResWithColor(GenCode_str);
+    SearchTextResWithColor2(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
     //    update();
@@ -1573,7 +1570,7 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
 
 
     ui->genshow_textEdit->setPlainText(GenCode_str);
-    SearchTextResWithColor(GenCode_str);
+    SearchTextResWithColor2(GenCode_str);
     //    update();
 }
 
@@ -2226,7 +2223,7 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
         GenCode_str+="\n";
 
         ui->genshow_textEdit->setPlainText(GenCode_str);
-        SearchTextResWithColor(GenCode_str);
+        SearchTextResWithColor2(GenCode_str);
         //    setCharColor(10);
         //    ui->genshow_textEdit->setHtml(GenCode_str);
         //        ui->genshow_textEdit->moveCursor(QTextCursor::End);
@@ -2338,19 +2335,19 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     //    cursor.movePosition(QTextCursor::End);
     //    ui->genshow_textEdit->setTextCursor(cursor);
     //    //    ui->genshow_textEdit->setFocus();
-    ui->genshow_textEdit->updateGeometry();
-    ui->genshow_textEdit->updatesEnabled();
-    ui->genshow_textEdit->update();
+//    ui->genshow_textEdit->updateGeometry();
+//    ui->genshow_textEdit->updatesEnabled();
+//    ui->genshow_textEdit->update();
 
 
-    //修改数据显示不全的问题，为啥更改下大小就可以了？
-    int h = ui->genshow_textEdit->height();
-    int w = ui->genshow_textEdit->width();
-    //    QPoint p();
-    ui->genshow_textEdit->resize(w/2,h/2);
-    ui->genshow_textEdit->resize(w,h);
-    ui->genshow_textEdit->setFocus();
-    ui->genshow_textEdit->update();
+//    //修改数据显示不全的问题，为啥更改下大小就可以了？
+//    int h = ui->genshow_textEdit->height();
+//    int w = ui->genshow_textEdit->width();
+//    //    QPoint p();
+//    ui->genshow_textEdit->resize(w/2,h/2);
+//    ui->genshow_textEdit->resize(w,h);
+//    ui->genshow_textEdit->setFocus();
+//    ui->genshow_textEdit->update();
 
 }
 
@@ -2636,6 +2633,53 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //    }
 }
 
+void autoCCode::SearchTextResWithColor2(QString &resStr)
+{
+
+    //颜色框是否选中
+    if(!ui->checkBox_ResWithColor->isChecked())
+    {
+        //        //背景白色，前景黑色
+        setStringColor(0, 0);
+        return;
+    }
+//    setStringColor(0, 0);
+    //    //背景浅绿色，前景黑色
+    //    ui->genshow_textEdit->setStyleSheet("background-color: rgb(60, 243, 243);color: rgb(0, 0, 0);");
+    QString searchText = ui->lineEdit_search->text().trimmed();
+    if(searchText.isEmpty())
+    {
+        ShowTipsInfo(QString::fromLocal8Bit("search text null!"));
+        return;
+    }
+
+    QTime time;
+    time.restart();
+    while(1)
+    {
+
+        //超长时间跳出 3s
+        if(time.elapsed()/1000 >= 3)
+        {
+            break;
+        }
+        if (!ui->genshow_textEdit->find(searchText))
+        {
+//            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+            break;
+        }
+        else
+        {
+            QTextCursor cursor = ui->genshow_textEdit->textCursor();
+            setStringColor(cursor.position() - searchText.length() + 1,
+                           searchText.length());
+            ui->genshow_textEdit->update();
+        }
+    }
+
+    return;
+}
+
 void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 {
     self_print(listWidget_note_with_enter);
@@ -2659,7 +2703,7 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 
 
     ui->genshow_textEdit->setPlainText(GenCode_str);
-    SearchTextResWithColor(GenCode_str);
+    SearchTextResWithColor2(GenCode_str);
 
     //    setCharColor(10);
     //    ui->genshow_textEdit->setHtml(GenCode_str);
