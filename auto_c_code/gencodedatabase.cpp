@@ -731,7 +731,7 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
     inPara_lookTextHisTbl.searchtext = searchtext;
     inPara_lookTextHisTbl.selecttableexpress = selecttableexpress;
 //    inPara.selectres = selectres;
-#define THREADNUMS 1
+#define THREADNUMS 30
     int i;
     /*  Ïß³Ì ID   */
     pthread_t threads[THREADNUMS];
@@ -739,6 +739,7 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
 //    pthread_key_create(&thread_log_key,close_thread_log);
     /* Create threads to do the work. */
     for(i = 0;i<THREADNUMS;i++){
+//        qDebug() << "!!!!!!!!!!!createing threads many " << THREADNUMS << endl;
         pthread_create(&threads[i],NULL,&thread_func_searchdatabase_lookTextHisTbl,&inPara_lookTextHisTbl);
     }
     for(i = 0;i<THREADNUMS;i++){

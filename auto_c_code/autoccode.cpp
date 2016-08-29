@@ -2656,7 +2656,6 @@ void autoCCode::SearchTextResWithColor2(QString &resStr)
     time.restart();
     while(1)
     {
-
         //超长时间跳出 3s
         if(time.elapsed()/1000 >= 3)
         {
