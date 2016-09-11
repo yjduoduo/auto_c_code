@@ -2117,13 +2117,30 @@ void autoCCode::dropEvent(QDropEvent *event)
     if(urls.isEmpty()){
         return;
     }
+    qDebug() << "-->>urls cout:" << urls.size();
 
+#if 0
     QString fileName = urls.first().toLocalFile();
     if(fileName.isEmpty()){
         return;
     }
     this->setWindowTitle(fileName);
     readTextFile(fileName);
+#else
+    QString showTitle(windowTitle() + "  ");
+    QString fileName("");
+    rightClear_textedit();//清空显示数据
+    foreach (QUrl url, urls)
+    {
+        fileName = url.toLocalFile();
+        showTitle += url.toLocalFile() + "  ";
+        if(fileName.isEmpty()){
+            continue;
+        }
+        this->setWindowTitle(showTitle);
+        readTextFileAppend(fileName);
+    }
+#endif
 }
 
 void autoCCode::readTextFile(const QString &fileName)
@@ -2140,6 +2157,40 @@ void autoCCode::readTextFile(const QString &fileName)
         if(ui_setup->checkBox_showpath->isChecked())
         {
             text_china += stream.readAll() + "\n\n\n======[end]========\n" + fileName + "\n";
+        }
+        else
+        {
+            text_china += stream.readAll();
+        }
+        //        ui->codeshow_textEdit->setText(stream.readAll());
+        ui->genshow_textEdit->setPlainText(text_china);
+        //        qDebug() << "content:" << stream.readAll();
+    }
+    else
+    {
+        QMessageBox::warning(NULL, str_china("提示"), str_china("文件较大"),NULL,NULL);
+    }
+    file.close();
+}
+
+
+void autoCCode::readTextFileAppend(const QString &fileName)
+{
+#define MAXREADFILESIZE 10*1024*1024  /* 最大读取文件10M */
+    str_print(fileName);
+    /*  读取文件 只读   */
+    QFile file(fileName);
+
+    QString text_china = ui->genshow_textEdit->toPlainText();
+
+    if(file.open(QIODevice::ReadOnly) && file.size() < MAXREADFILESIZE)
+    {
+        //        qDebug() << "file opend!!";
+        QTextStream stream(&file);
+
+        if(ui_setup->checkBox_showpath->isChecked())
+        {
+            text_china += stream.readAll() + "\n\n\n======[end]========\n" + fileName + "\n\n\n\n";
         }
         else
         {

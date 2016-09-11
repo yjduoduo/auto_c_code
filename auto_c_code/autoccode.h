@@ -395,6 +395,7 @@ private:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
     void readTextFile(const QString &fileName);
+    void readTextFileAppend(const QString &fileName);
 
 
 protected:

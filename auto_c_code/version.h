@@ -8,6 +8,6 @@
 #define DEBUG_V
 #endif
 
-const char version_autoccode[]="v2.2.3";
+const char version_autoccode[]="v2.2.4";
 
 #endif // VERSION_H
