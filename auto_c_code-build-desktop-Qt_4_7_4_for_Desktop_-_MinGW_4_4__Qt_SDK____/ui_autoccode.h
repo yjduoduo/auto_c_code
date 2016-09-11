@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Sun Aug 21 21:40:34 2016
+** Created: Sun Sep 11 18:33:40 2016
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -44,6 +44,7 @@ public:
     QPushButton *pushButton_clean;
     QPushButton *pushButton_search_fromClip;
     QCheckBox *checkBox_autogetclipboxtext;
+    QPushButton *showlarger_btn;
     QComboBox *comboBox_vartype;
     QPushButton *choseCodeDB_btn;
     QSplitter *splitter_2;
@@ -128,6 +129,11 @@ public:
         checkBox_autogetclipboxtext->setObjectName(QString::fromUtf8("checkBox_autogetclipboxtext"));
 
         horizontalLayout_2->addWidget(checkBox_autogetclipboxtext);
+
+        showlarger_btn = new QPushButton(autoCCode);
+        showlarger_btn->setObjectName(QString::fromUtf8("showlarger_btn"));
+
+        horizontalLayout_2->addWidget(showlarger_btn);
 
         comboBox_vartype = new QComboBox(autoCCode);
         comboBox_vartype->setObjectName(QString::fromUtf8("comboBox_vartype"));
@@ -353,6 +359,10 @@ public:
         pushButton_clean->setText(QApplication::translate("autoCCode", "clean", 0, QApplication::UnicodeUTF8));
         pushButton_search_fromClip->setText(QApplication::translate("autoCCode", "GetClipD", 0, QApplication::UnicodeUTF8));
         checkBox_autogetclipboxtext->setText(QApplication::translate("autoCCode", "AG", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        showlarger_btn->setToolTip(QApplication::translate("autoCCode", "\346\211\251\345\244\247\346\230\276\347\244\272", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        showlarger_btn->setText(QApplication::translate("autoCCode", "\342\206\220", 0, QApplication::UnicodeUTF8));
         choseCodeDB_btn->setText(QApplication::translate("autoCCode", "\351\200\211\346\213\251\344\273\243\347\240\201\345\272\223", 0, QApplication::UnicodeUTF8));
         indb_btn->setText(QApplication::translate("autoCCode", "\345\205\245\345\272\223", 0, QApplication::UnicodeUTF8));
         checkBox_inbox->setText(QApplication::translate("autoCCode", "\350\277\236\347\273\255\350\276\223\345\205\245", 0, QApplication::UnicodeUTF8));

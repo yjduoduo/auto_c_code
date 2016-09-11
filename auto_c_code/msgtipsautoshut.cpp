@@ -9,8 +9,14 @@
 #endif
 
 
+MsgTipsAutoShut::MsgTipsAutoShut()
+{
+
+}
+
 MsgTipsAutoShut::MsgTipsAutoShut(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    m_ultimeout(500)
 {
     setWindowFlags(Qt::FramelessWindowHint);
     label = new QLabel(this);
@@ -18,10 +24,24 @@ MsgTipsAutoShut::MsgTipsAutoShut(QWidget *parent) :
     QObject::connect(timer,SIGNAL(timeout()), this,SLOT(close()));
 //    resize(200,80);
 
+//    setLayoutDirection(Qt::LayoutDirectionAuto);
+
+}
+
+MsgTipsAutoShut::MsgTipsAutoShut(QWidget *parent,quint32 ultimeout) :
+    QWidget(parent),
+    m_ultimeout(ultimeout)
+{
+    setWindowFlags(Qt::FramelessWindowHint);
+    label = new QLabel(this);
+    timer = new QTimer(this);
+    QObject::connect(timer,SIGNAL(timeout()), this,SLOT(close()));
+//    resize(200,80);
 
 //    setLayoutDirection(Qt::LayoutDirectionAuto);
 
 }
+
 
 void MsgTipsAutoShut::SetTipsInfo(QString s)
 {
@@ -31,7 +51,7 @@ void MsgTipsAutoShut::SetTipsInfo(QString s)
     label->setWordWrap(false);
     label->adjustSize(); //自动调整大小
     label->setAlignment(Qt::AlignCenter);
-    timer->start(500);
+    timer->start(m_ultimeout);
 //    setLayoutDirection(Qt::LayoutDirectionAuto);
     WidgetXYsetDesktop_center(this);
 //    move((QApplication::desktop()->width() - width())/2,(QApplication::desktop()->height() - height())/2);

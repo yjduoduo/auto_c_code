@@ -374,6 +374,8 @@ private:
     QStringList getLstIp();
 
     void ShowTipsInfo(QString s);
+
+    void ShowTipsInfoWithShowTime(QString s, quint32 ultimeout);
 private:
 
     Ui::autoCCode *ui;
@@ -515,6 +517,8 @@ private slots://network
     void on_btn_find_down_clicked();
 
     void on_btn_find_up_clicked();
+
+    void on_showlarger_btn_clicked();
 
 private:
     QString remoteip;

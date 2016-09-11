@@ -71,6 +71,16 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="showlarger_btn">
+           <property name="toolTip">
+            <string>扩大显示</string>
+           </property>
+           <property name="text">
+            <string>←</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QComboBox" name="comboBox_vartype"/>
          </item>
          <item>

@@ -8,7 +8,9 @@ class MsgTipsAutoShut : public QWidget
 {
     Q_OBJECT
 public:
+    MsgTipsAutoShut();
     explicit MsgTipsAutoShut(QWidget *parent = 0);
+    MsgTipsAutoShut(QWidget *parent,quint32 ultimeout);
     void SetTipsInfo(QString s);
     void WidgetXYsetDesktop_center(QWidget *widget);
 
@@ -20,6 +22,7 @@ private:
     QString str;
     QTimer *timer;
     QLabel *label;
+    quint32 m_ultimeout;
 
 };
 

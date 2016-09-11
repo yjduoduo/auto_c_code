@@ -2127,7 +2127,8 @@ void autoCCode::dropEvent(QDropEvent *event)
     this->setWindowTitle(fileName);
     readTextFile(fileName);
 #else
-    QString showTitle(windowTitle() + "  ");
+    static QString oldTitle = windowTitle();
+    QString showTitle(oldTitle + "  ");
     QString fileName("");
     rightClear_textedit();//清空显示数据
     foreach (QUrl url, urls)
@@ -2138,7 +2139,22 @@ void autoCCode::dropEvent(QDropEvent *event)
             continue;
         }
         this->setWindowTitle(showTitle);
-        readTextFileAppend(fileName);
+        qDebug() << "~~filename :" << fileName;
+
+        QFileInfo fileinfo(fileName);
+        if(fileinfo.isDir())
+        {
+            qDebug() << "~~is dir!!,filename :" << fileName;
+            QString msgstr(str_china(不能读取文件夹 %1.).arg(fileName));
+            ShowTipsInfoWithShowTime(msgstr, 1000);
+        }
+        else
+        {
+            qDebug() << "~~ is file!!,filename :" << fileName;
+            readTextFileAppend(fileName);
+        }
+
+
     }
 #endif
 }
@@ -5105,4 +5121,38 @@ void autoCCode::ShowTipsInfo(QString s)
     MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL);
     tipsinfo->SetTipsInfo(s);
     tipsinfo->show();
+}
+
+void autoCCode::ShowTipsInfoWithShowTime(QString s, quint32 ultimeout)
+{
+    MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL, ultimeout);
+    tipsinfo->SetTipsInfo(s);
+    tipsinfo->show();
+}
+
+void autoCCode::on_showlarger_btn_clicked()
+{
+    static quint32 cout = 0;
+    static quint32 orgwidth = ui->genshow_textEdit->width();
+    static quint32 orgheight = ui->genshow_textEdit->height();
+    static QPoint orgpt = ui->genshow_textEdit->pos();
+    static quint32 resizeheight = height();
+    if (0 == (cout++ % 2) )
+    {
+        orgwidth = ui->genshow_textEdit->width();
+        orgheight = ui->genshow_textEdit->height();
+        orgpt = ui->genshow_textEdit->pos();
+        resizeheight = height();
+        ui->verticalLayout_2->removeWidget(ui->genshow_textEdit);
+        ui->genshow_textEdit->move(10,40);
+        ui->genshow_textEdit->resize(1360,resizeheight);
+    }
+    else
+    {
+        ui->verticalLayout_2->addWidget(ui->genshow_textEdit);
+        ui->genshow_textEdit->resize(orgwidth, orgheight);
+        ui->genshow_textEdit->move(orgpt);
+    }
+    update();
+
 }
