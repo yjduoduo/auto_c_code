@@ -5136,13 +5136,13 @@ void autoCCode::on_showlarger_btn_clicked()
     static quint32 orgwidth = ui->genshow_textEdit->width();
     static quint32 orgheight = ui->genshow_textEdit->height();
     static QPoint orgpt = ui->genshow_textEdit->pos();
-    static quint32 resizeheight = height();
+    static quint32 resizeheight = height() - 30;
     if (0 == (cout++ % 2) )
     {
         orgwidth = ui->genshow_textEdit->width();
         orgheight = ui->genshow_textEdit->height();
         orgpt = ui->genshow_textEdit->pos();
-        resizeheight = height();
+        resizeheight = height() - 30;
         ui->verticalLayout_2->removeWidget(ui->genshow_textEdit);
         ui->genshow_textEdit->move(10,40);
         ui->genshow_textEdit->resize(1360,resizeheight);
