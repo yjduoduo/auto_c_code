@@ -2127,7 +2127,7 @@ void autoCCode::dropEvent(QDropEvent *event)
     this->setWindowTitle(fileName);
     readTextFile(fileName);
 #else
-    static QString oldTitle = windowTitle();
+    QString oldTitle = windowTitle();
     QString showTitle(oldTitle + "  ");
     QString fileName("");
     rightClear_textedit();//清空显示数据
