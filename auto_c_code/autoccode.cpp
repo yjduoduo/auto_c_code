@@ -399,6 +399,7 @@ void autoCCode::checkboxSet()
 
 void autoCCode::on_checkBox_rightTextSelectIndb_change(bool flag)
 {
+    qDebug() << "on_checkBox_rightTextSelectIndb_change, flag: " << flag << endl  ;
     if(flag)
     {
         ui->pushButton_rightTextSelectIndb->setEnabled(TRUE);
