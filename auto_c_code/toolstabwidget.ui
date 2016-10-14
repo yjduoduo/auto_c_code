@@ -182,6 +182,24 @@
     </item>
    </layout>
   </widget>
+  <widget class="QWidget" name="tab_date">
+   <attribute name="title">
+    <string>日历</string>
+   </attribute>
+   <widget class="QPushButton" name="pushButton_calender">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>日历</string>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <resources/>
  <connections/>

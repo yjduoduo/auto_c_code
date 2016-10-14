@@ -27,7 +27,12 @@ SOURCES += main.cpp\
     globalapplication.cpp \
     udppkg.cpp \
     sockthread.cpp \
-    msgtipsautoshut.cpp
+    msgtipsautoshut.cpp \
+    calender/setbirthday.cpp \
+    calender/qrc_resource.cpp \
+    calender/displaybutton.cpp \
+    calender/clock.cpp \
+    calender/window_calender.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -48,7 +53,11 @@ HEADERS  += autoccode.h \
     globalapplication.h \
     udppkg.h \
     sockthread.h \
-    msgtipsautoshut.h
+    msgtipsautoshut.h \
+    calender/setbirthday.h \
+    calender/displaybutton.h \
+    calender/clock.h \
+    calender/window_calender.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
@@ -62,7 +71,8 @@ FORMS    += autoccode.ui \
 
 INCLUDEPATH +=\
 ./sqlite-autoconf\
-./codeEditor
+./codeEditor\
+./calender
 
 LIBS += -lpthread
 RC_FILE = autoapp.rc

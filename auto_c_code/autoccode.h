@@ -13,6 +13,7 @@
 #include "version.h"
 #include <QTcpSocket>
 #include <QTcpServer>
+#include "window_calender.h"
 
 namespace Ui {
 class autoCCode;
@@ -477,7 +478,7 @@ private slots:
     void on_pushButton_python_Dpathtestfile_exe_clicked();
     void on_pushButton_sourceinsight_exe_clicked();
     void on_pushButton_cmd_exe_clicked();
-
+    void on_pushButton_show_calender_clicked();
 
 
 private slots://ui tools
@@ -538,7 +539,8 @@ private:
     QByteArray outBlock;
     QByteArray outBlockFile;//文件字节序列
 
-
+private:
+    Window *window_calender;
 };
 
 

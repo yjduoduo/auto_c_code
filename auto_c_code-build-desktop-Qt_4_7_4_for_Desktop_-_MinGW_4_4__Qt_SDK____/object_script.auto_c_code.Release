@@ -16,6 +16,11 @@ INPUT(
 ./release/udppkg.o
 ./release/sockthread.o
 ./release/msgtipsautoshut.o
+./release/setbirthday.o
+./release/qrc_resource.o
+./release/displaybutton.o
+./release/clock.o
+./release/window_calender.o
 ./release/moc_autoccode.o
 ./release/moc_dialog_select_database.o
 ./release/moc_qxtglobalshortcut.o
@@ -25,5 +30,9 @@ INPUT(
 ./release/moc_uithread.o
 ./release/moc_sockthread.o
 ./release/moc_msgtipsautoshut.o
+./release/moc_setbirthday.o
+./release/moc_displaybutton.o
+./release/moc_clock.o
+./release/moc_window_calender.o
 ./release/qrc_imgsrc.o
 );

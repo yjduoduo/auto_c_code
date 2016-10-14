@@ -35,6 +35,9 @@
 #include "ui_udppkgdialog.h"
 #include "sockthread.h"
 #include "msgtipsautoshut.h"
+//calender
+#include "window_calender.h"
+
 
 #define DEFAULT_PORT 22222
 //#define DEFAULT_PORT   "16689"
@@ -117,7 +120,8 @@ autoCCode::autoCCode(QWidget *parent) :
     pthread_event(NULL),
     socket(NULL),
     hostaddr(NULL),
-    tcpserver(NULL)
+    tcpserver(NULL),
+    window_calender(NULL)
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
     ui->setupUi(this);
@@ -648,6 +652,8 @@ void autoCCode::pushButtonSet(void)
     QObject::connect(ui_toolsets->pushButton_python,SIGNAL(clicked()),this,SLOT(on_pushButton_python_exe_clicked()));
     //Python python D:\test.py
     QObject::connect(ui_toolsets->pushButton_python_Dtest,SIGNAL(clicked()),this,SLOT(on_pushButton_python_Dpathtestfile_exe_clicked()));
+    //Calender
+    QObject::connect(ui_toolsets->pushButton_calender,SIGNAL(clicked()),this,SLOT(on_pushButton_show_calender_clicked()));
 
 
     //source insight
@@ -4380,6 +4386,18 @@ void autoCCode::on_pushButton_python_Dpathtestfile_exe_clicked()
 
 }
 
+
+void autoCCode::on_pushButton_show_calender_clicked()
+{
+    qDebug() << "on_pushButton_show_calender_clicked";
+
+
+    window_calender = new Window();
+    window_calender->show();
+
+//    window.show();
+//    Sleep(2000);
+}
 
 
 void autoCCode::on_pushButton_sourceinsight_exe_clicked()
