@@ -2,10 +2,11 @@
     <qresource prefix="/">
         <file>images/gezi.png</file>
         <file>images/about.png</file>
-        <file>images/clock.ico</file>
         <file>images/configure.png</file>
         <file>images/go_back_today.png</file>
         <file>images/icon.ico</file>
         <file>images/calendar.qm</file>
+        <file>images/calendar.ts</file>
+        <file>images/clock.png</file>
     </qresource>
 </RCC>

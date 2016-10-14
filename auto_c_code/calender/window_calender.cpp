@@ -255,7 +255,8 @@ void Window::createPreviewGroupBox()
             this, SLOT(ReturnToday()));
 
     m_ShowClock = new DisplayButton;
-    m_ShowClock->setIcon(QIcon(":/images/clock.ico"));
+//    m_ShowClock->setIcon(QIcon(":/images/clock.ico"));
+    m_ShowClock->setIcon(QIcon(":/images/clock.png"));
     m_ShowClock->setToolTip(tr("clock"));    //时钟
     connect(m_ShowClock, SIGNAL(clicked()),
             this, SLOT(ShowClockButtonClicked()));
@@ -309,7 +310,8 @@ void Window::createPreviewGroupBox()
         m_ReturnTodayAction->setIcon(QIcon(":/images/go_back_today.png"));
         m_ReturnTodayAction->setShortcut(tr("F9"));
         m_ShowClockAction = new QAction(tr("Mclock"), this);
-        m_ShowClockAction->setIcon(QIcon(":/images/clock.ico"));
+//        m_ShowClockAction->setIcon(QIcon(":/images/clock.ico"));
+        m_ShowClockAction->setIcon(QIcon(":/images/clock.png"));
         m_ShowClockAction->setShortcut(tr("F10"));
         m_ConfigureButtonAction = new QAction(tr("Msetup"), this);
         m_ConfigureButtonAction->setIcon(QIcon(":/images/configure.png"));
