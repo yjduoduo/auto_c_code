@@ -8,5 +8,6 @@
         <file>images/calendar.qm</file>
         <file>images/calendar.ts</file>
         <file>images/clock.png</file>
+        <file>autoccode.qm</file>
     </qresource>
 </RCC>

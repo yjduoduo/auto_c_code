@@ -83,3 +83,5 @@ RESOURCES += \
 OTHER_FILES += \
     qxtglobalshortcut/qxtglobalshortcut.pri
 
+TRANSLATIONS += autoccode.ts
+

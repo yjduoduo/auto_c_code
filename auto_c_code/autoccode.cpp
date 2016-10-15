@@ -139,13 +139,13 @@ autoCCode::autoCCode(QWidget *parent) :
     /* tools sets menu */  //独立的
     toolsTabWidget = new QTabWidget();
     ui_toolsets->setupUi(toolsTabWidget);
-//    ui_toolsets->textEdit_main_content->installEventFilter(NULL);
-//    ui_toolsets->textEdit_suffix->installEventFilter(NULL);
+    //    ui_toolsets->textEdit_main_content->installEventFilter(NULL);
+    //    ui_toolsets->textEdit_suffix->installEventFilter(NULL);
     toolsTabWidget->hide();
 
     codetool = new QWizardPage();
     ui_codetool->setupUi(codetool);
-//    codetool->show();
+    //    codetool->show();
 
     //network
     remoteip = ReadRemoteIpAddr();
@@ -160,10 +160,10 @@ autoCCode::autoCCode(QWidget *parent) :
     byteWritten  = 0;
     bytesToWrite = 0;
 
-//    //读数据统计
-//    TotalReadBytes = 0;
-//    bytesReceived  = 0;
-//    bytesNeedRecv  = 0;
+    //    //读数据统计
+    //    TotalReadBytes = 0;
+    //    bytesReceived  = 0;
+    //    bytesNeedRecv  = 0;
 
     QTimerSet();
     pushButtonSet();
@@ -184,7 +184,7 @@ autoCCode::autoCCode(QWidget *parent) :
     PopMenu();
     ThreadSets();
     DebugSets();
-
+    ReadHistorySettings();
 }
 
 void autoCCode::PopMenu()
@@ -251,8 +251,8 @@ void autoCCode::InstallEventFilterSets(void)
     ui->listWidget_codeview->installEventFilter(this);
     ui->listWidget_note->installEventFilter(this);
     ui->genshow_textEdit->installEventFilter(this);
-//    ui_toolsets->textEdit_main_content->installEventFilter(this);
-//    ui_toolsets->textEdit_suffix->installEventFilter(this);
+    //    ui_toolsets->textEdit_main_content->installEventFilter(this);
+    //    ui_toolsets->textEdit_suffix->installEventFilter(this);
 
     ui->choseCodeDB_btn->installEventFilter(this);
 
@@ -276,7 +276,7 @@ void autoCCode::ListViewSets()
     QObject::connect(listView,SIGNAL(clicked(QModelIndex)),this,SLOT(completeText(QModelIndex)));
     //network localipaddr
     QObject::disconnect(ui_setup->comboBox_localIp,SIGNAL(currentIndexChanged(QString)),
-                     this,SLOT(saveBindLocalIP(QString)));
+                        this,SLOT(saveBindLocalIP(QString)));
     ui_setup->comboBox_localIp->addItems(getLstIp());
 
     QStringList ipsets = getLstIp();
@@ -321,7 +321,7 @@ void autoCCode::DebugSets()
 {
     /* 打印信息的数据包 printfsets */
     ClsDebugSets::Push("DebugSets");
-//    ClsDebugSets qCDebug;
+    //    ClsDebugSets qCDebug;
     qCDebug << "DebugSets2222222222222";
 }
 
@@ -352,6 +352,18 @@ void autoCCode::QTimerSet(void)
     timer_datachangedpopui = new QTimer(this);
     timer_datachangedpopui->start(300);
     QObject::connect(timer_datachangedpopui,SIGNAL(timeout()),this,SLOT(PopInDbUi()));
+
+    //    timer_genshow_textEdit_checkContent_append = new QTimer(this);
+    //    timer_genshow_textEdit_checkContent_append->start(500);
+    //    QObject::connect(timer_genshow_textEdit_checkContent_append,
+    //                     SIGNAL(timeout()),this,SLOT(check_genshow_textEdit_is_append()));
+    QClipboard *clipboard = QApplication::clipboard();
+    //    QString clipboardtext = clipboard->text();
+    //检测剪切板内容是否变化
+
+    QObject::connect(clipboard,SIGNAL(dataChanged()),this,
+                     SLOT(check_genshow_textEdit_is_append()));
+
 
 }
 void autoCCode::keyPressEventSet()
@@ -389,10 +401,10 @@ void autoCCode::checkboxSet()
     QObject::connect(ui_dialog->content_textEdit_dia,SIGNAL(textChanged()),
                      this,SLOT(set_note_textEdit_firstline()));
 
-//右选入库处理
+    //右选入库处理
     QObject::connect(ui_setup->checkBox_rightTextSelectIndb,SIGNAL(toggled(bool)),
                      this,SLOT(on_checkBox_rightTextSelectIndb_change(bool)));
-//实时查询处理
+    //实时查询处理
     QObject::connect(ui_setup->checkBox_rtQuery,SIGNAL(toggled(bool)),
                      this,SLOT(on_checkBox_rtQuery_change(bool)));
 
@@ -422,7 +434,7 @@ void autoCCode::on_checkBox_rtQuery_change(bool flag)
 
 void autoCCode::on_checkBox_checkBox_SeverFlag_change(bool flag)
 {
-//    qDebug() << "checkbox sendpkg change:" << flag << endl;
+    //    qDebug() << "checkbox sendpkg change:" << flag << endl;
     if(!flag)
     {
         return;
@@ -430,17 +442,17 @@ void autoCCode::on_checkBox_checkBox_SeverFlag_change(bool flag)
 
     saveBindLocalIP(localip);
 
-//    pUdp_ui = new Ui::UdpPkgDialog;
-////    QDialog *dialog = new QDialog;
-//    QWidget *pUdpdialog = new QWidget;
-//    pUdp_ui->setupUi(pUdpdialog);
-//    pUdpdialog->show();
-//    QObject::connect(pUdp_ui->cancelButton,SIGNAL(clicked()),
-//                     pUdpdialog,SLOT(close()));
-//    QObject::connect(pUdp_ui->okButton,SIGNAL(clicked()),
-//                     this,SLOT(on_pUdpdialog_okBtn_clicked()));
-//    QObject::connect(pUdp_ui->okButton,SIGNAL(clicked()),
-//                     pUdpdialog,SLOT(close()));
+    //    pUdp_ui = new Ui::UdpPkgDialog;
+    ////    QDialog *dialog = new QDialog;
+    //    QWidget *pUdpdialog = new QWidget;
+    //    pUdp_ui->setupUi(pUdpdialog);
+    //    pUdpdialog->show();
+    //    QObject::connect(pUdp_ui->cancelButton,SIGNAL(clicked()),
+    //                     pUdpdialog,SLOT(close()));
+    //    QObject::connect(pUdp_ui->okButton,SIGNAL(clicked()),
+    //                     this,SLOT(on_pUdpdialog_okBtn_clicked()));
+    //    QObject::connect(pUdp_ui->okButton,SIGNAL(clicked()),
+    //                     pUdpdialog,SLOT(close()));
 
 }
 
@@ -522,7 +534,7 @@ void autoCCode::lineTextEditSet(void)
     QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
                      this,SLOT(SearchText(QString)));
 #else//定时搜索
-//    QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer()));
+    //    QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer()));
     //是否支持实时查询
     QObject::connect(lineEdit_search_timer,SIGNAL(timeout()),this,SLOT(SearchText_WithTimer_Enter()));
 
@@ -807,8 +819,8 @@ void autoCCode::comboBoxSet(void)
 
     QObject::connect(this->ui->listWidget_note,SIGNAL(itemClicked(QListWidgetItem*)),
                      this,SLOT(listWidget_codeview_scroll_sync(QListWidgetItem*)));
-//    QObject::connect(this->ui->listWidget_note,SIGNAL(activated(QModelIndex)),
-//                     this,SLOT(listWidget_note_with_enter(QModelIndex)));
+    //    QObject::connect(this->ui->listWidget_note,SIGNAL(activated(QModelIndex)),
+    //                     this,SLOT(listWidget_note_with_enter(QModelIndex)));
 
     //network localipaddr
     QObject::connect(ui_setup->comboBox_localIp,SIGNAL(currentIndexChanged(QString)),
@@ -915,7 +927,7 @@ void autoCCode::textEditSet(void)
     //                     this,SLOT(on_db_comboBox_activated(QString)));
 
 
-//    QObject::connect(ui_toolsset)
+    //    QObject::connect(ui_toolsset)
 
 }
 void autoCCode::addstr_aspect_comboBox(void)
@@ -970,7 +982,7 @@ void autoCCode::addstr_comboBox(void)
       <<str_china(Erlang)
      << str_china(Go)
      <<str_china(Hadoop)
-     <<str_china(Jave)
+    <<str_china(Jave)
     <<str_china(JavaScript)
     <<str_china(Mysql)
     <<str_china(Oracle)
@@ -1031,7 +1043,7 @@ void autoCCode::on_save_btn_clicked()
     if(!ui->checkBox_AutoSave->isChecked())//自动保存未被选中
     {
         savefileName = QFileDialog::getSaveFileName(this,
-                                                            tr("Save File"), getCurrentDateTimeTxt(), tr("All Files (*.*);;Txt(*.txt);;Img Files(*.png);;Code Files(*.c)"));
+                                                    tr("Save File"), getCurrentDateTimeTxt(), tr("All Files (*.*);;Txt(*.txt);;Img Files(*.png);;Code Files(*.c)"));
 
     }
     else //自动保存选中
@@ -1549,7 +1561,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
     //    update();
-//    ui->listWidget_codeview->update();
+    //    ui->listWidget_codeview->update();
     ui->genshow_textEdit->update();
 }
 //添加到右边的内容中
@@ -1894,7 +1906,7 @@ void autoCCode::SearchText_WithTimer(void)
 void autoCCode::SearchText_WithTimer_Enter(void)
 {
     qApp->processEvents();
-//    qDebug() << "get_rtQuery_enable():" << get_rtQuery_enable();
+    //    qDebug() << "get_rtQuery_enable():" << get_rtQuery_enable();
     if(!get_rtQuery_enable())
     {
         return;
@@ -1949,7 +1961,7 @@ void autoCCode::SearchText(const QString &searchStr)
                      selectresult,
                      searchStr.toLower());
 
-//    qCDebug <<"SearchText:" << searchStr;
+    //    qCDebug <<"SearchText:" << searchStr;
 
     /* 判断查询字符和实际的字符串是否相同 */
     if(searchStr != ui->lineEdit_search->text())
@@ -2232,15 +2244,15 @@ void autoCCode::readTextFileAppend(const QString &fileName)
 
 void autoCCode::SearchEnter()
 {
-//    qDebug() << "search enter!!";
+    //    qDebug() << "search enter!!";
     self_print(SearchEnter);
-//    if(get_rtQuery_enable()) //如果支持实时查询，屏蔽此功能
-//        return;
-//    SearchText_WithTimer();
+    //    if(get_rtQuery_enable()) //如果支持实时查询，屏蔽此功能
+    //        return;
+    //    SearchText_WithTimer();
     SearchText(ui->lineEdit_search->text());
-//    SetlistWidget_codeview_row(0);
-//    this->ui->listWidget_codeview->setFocus();
-//    this->ui->listWidget_codeview->setModelColumn(GetlistWidget_codeview_row());
+    //    SetlistWidget_codeview_row(0);
+    //    this->ui->listWidget_codeview->setFocus();
+    //    this->ui->listWidget_codeview->setModelColumn(GetlistWidget_codeview_row());
 }
 
 
@@ -2409,19 +2421,19 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     //    cursor.movePosition(QTextCursor::End);
     //    ui->genshow_textEdit->setTextCursor(cursor);
     //    //    ui->genshow_textEdit->setFocus();
-//    ui->genshow_textEdit->updateGeometry();
-//    ui->genshow_textEdit->updatesEnabled();
-//    ui->genshow_textEdit->update();
+    //    ui->genshow_textEdit->updateGeometry();
+    //    ui->genshow_textEdit->updatesEnabled();
+    //    ui->genshow_textEdit->update();
 
 
-//    //修改数据显示不全的问题，为啥更改下大小就可以了？
-//    int h = ui->genshow_textEdit->height();
-//    int w = ui->genshow_textEdit->width();
-//    //    QPoint p();
-//    ui->genshow_textEdit->resize(w/2,h/2);
-//    ui->genshow_textEdit->resize(w,h);
-//    ui->genshow_textEdit->setFocus();
-//    ui->genshow_textEdit->update();
+    //    //修改数据显示不全的问题，为啥更改下大小就可以了？
+    //    int h = ui->genshow_textEdit->height();
+    //    int w = ui->genshow_textEdit->width();
+    //    //    QPoint p();
+    //    ui->genshow_textEdit->resize(w/2,h/2);
+    //    ui->genshow_textEdit->resize(w,h);
+    //    ui->genshow_textEdit->setFocus();
+    //    ui->genshow_textEdit->update();
 
 }
 
@@ -2722,7 +2734,7 @@ void autoCCode::SearchTextResWithColor2(QString &resStr)
     QString searchText = ui->lineEdit_search->text().trimmed();
     if(searchText.isEmpty())
     {
-//        ShowTipsInfo(QString::fromLocal8Bit("search text null!"));
+        //        ShowTipsInfo(QString::fromLocal8Bit("search text null!"));
         return;
     }
 
@@ -2737,7 +2749,7 @@ void autoCCode::SearchTextResWithColor2(QString &resStr)
         }
         if (!ui->genshow_textEdit->find(searchText))
         {
-//            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+            //            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
             break;
         }
         else
@@ -2779,7 +2791,7 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 
     //    setCharColor(10);
     //    ui->genshow_textEdit->setHtml(GenCode_str);
-//    ui->genshow_textEdit->moveCursor(QTextCursor::End);
+    //    ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
 
 }
@@ -3361,11 +3373,11 @@ void autoCCode::wheelEvent(QWheelEvent *event)
         //        scrollVertically(numSteps);       //垂直滚动
         //        qDebug() << "vectorial numSteps:" <<numSteps << ",numDegrees:" << numDegrees;
     }
-//    qDebug() << "isCTRLKeyPressed :" << isCTRLKeyPressed;
-//    qDebug() << "windowFlags :" << this->windowFlags();
+    //    qDebug() << "isCTRLKeyPressed :" << isCTRLKeyPressed;
+    //    qDebug() << "windowFlags :" << this->windowFlags();
 
-//    if(isCTRLKeyPressed
-//            && IsCursorInGenShowUi(ui->genshow_textEdit))
+    //    if(isCTRLKeyPressed
+    //            && IsCursorInGenShowUi(ui->genshow_textEdit))
 
     qDebug() << "isCTRLKeyPressed         :" <<  isCTRLKeyPressed;
     qDebug() << "Isgenshow_textEdit_Enter :" <<  Isgenshow_textEdit_Enter;
@@ -3387,41 +3399,41 @@ void autoCCode::wheelEvent(QWheelEvent *event)
         }
     }
 
-////    qDebug() << "isCTRLKeyPressed 2222:" << isCTRLKeyPressed;
-////    qDebug() << "isTopLevel 2222:" << ui_toolsets->textEdit_main_content->isTopLevel();
-////    if(isCTRLKeyPressed
-////            && IsCursorInGenShowUi(ui_toolsets->textEdit_main_content))
-//    if(isCTRLKeyPressed
-//            && isToolsContent_Enter)
-//    {
-//        qDebug() << "ui_toolsets->textEdit_main_content!!!!!!!";
-//        if(numSteps > 0)
-//        {
-//            ZoomInFont(ui_toolsets->textEdit_main_content);
-//        }
-//        else if(numSteps < 0)
-//        {
-//            ZoomOutFont(ui_toolsets->textEdit_main_content);
-//        }
-//    }
+    ////    qDebug() << "isCTRLKeyPressed 2222:" << isCTRLKeyPressed;
+    ////    qDebug() << "isTopLevel 2222:" << ui_toolsets->textEdit_main_content->isTopLevel();
+    ////    if(isCTRLKeyPressed
+    ////            && IsCursorInGenShowUi(ui_toolsets->textEdit_main_content))
+    //    if(isCTRLKeyPressed
+    //            && isToolsContent_Enter)
+    //    {
+    //        qDebug() << "ui_toolsets->textEdit_main_content!!!!!!!";
+    //        if(numSteps > 0)
+    //        {
+    //            ZoomInFont(ui_toolsets->textEdit_main_content);
+    //        }
+    //        else if(numSteps < 0)
+    //        {
+    //            ZoomOutFont(ui_toolsets->textEdit_main_content);
+    //        }
+    //    }
 
 
-////    isCTRLKeyPressed_TOOLSsuffix
-////    if(isCTRLKeyPressed_TOOLSsuffix
-////            /*&& IsCursorInGenShowUi(ui_toolsets->textEdit_suffix) */ )
+    ////    isCTRLKeyPressed_TOOLSsuffix
+    ////    if(isCTRLKeyPressed_TOOLSsuffix
+    ////            /*&& IsCursorInGenShowUi(ui_toolsets->textEdit_suffix) */ )
 
-//    if(isCTRLKeyPressed && isToolsSuffix_Enter )
-//    {
-//        qDebug() << "ui_toolsets->textEdit_suffix_content!!!!!!!";
-//        if(numSteps > 0)
-//        {
-//            ZoomInFont(ui_toolsets->textEdit_suffix);
-//        }
-//        else if(numSteps < 0)
-//        {
-//            ZoomOutFont(ui_toolsets->textEdit_suffix);
-//        }
-//    }
+    //    if(isCTRLKeyPressed && isToolsSuffix_Enter )
+    //    {
+    //        qDebug() << "ui_toolsets->textEdit_suffix_content!!!!!!!";
+    //        if(numSteps > 0)
+    //        {
+    //            ZoomInFont(ui_toolsets->textEdit_suffix);
+    //        }
+    //        else if(numSteps < 0)
+    //        {
+    //            ZoomOutFont(ui_toolsets->textEdit_suffix);
+    //        }
+    //    }
 
 
     event->accept();      //接收该事件
@@ -3429,20 +3441,20 @@ void autoCCode::wheelEvent(QWheelEvent *event)
 //入库界面里的数据库列表弹出
 bool autoCCode::eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent *event)
 {
-   if(!ui_setup->checkBox_indb_shortkey->isChecked())
-   {
-       return false;
-   }
+    if(!ui_setup->checkBox_indb_shortkey->isChecked())
+    {
+        return false;
+    }
 
 
-   //入库按钮
-   if(watched == ui_dialog->langtype_comboBox)
-   {
-       if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
-       {
-//            qDebug() << "comboBox_selectdb,coming here!!";
-           ui_dialog->langtype_comboBox->showPopup();//combox下拉事件
-       }/*
+    //入库按钮
+    if(watched == ui_dialog->langtype_comboBox)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+            //            qDebug() << "comboBox_selectdb,coming here!!";
+            ui_dialog->langtype_comboBox->showPopup();//combox下拉事件
+        }/*
        else if (event->type()==QEvent::Leave)    // mouse leaves widget
        {
 //            qDebug() << "comboBox_selectdb,leave now!!";
@@ -3456,17 +3468,17 @@ bool autoCCode::eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent
 //            dialog_selectdb->hide();
        }
 //        qDebug() << "comboBox_selectdb, event type:" << event->type();*/
-   }
+    }
 }
 
 bool autoCCode::eventFilter_ui_setup(QObject *watched, QEvent *event)
 {
-//    if(!ui_setup->checkBox_SeverFlag->isChecked())
-//    {
-//        return false;
-//    }
+    //    if(!ui_setup->checkBox_SeverFlag->isChecked())
+    //    {
+    //        return false;
+    //    }
 
-//    qDebug() << "sendpkg checkbox is checked!!";
+    //    qDebug() << "sendpkg checkbox is checked!!";
 
 
 
@@ -3490,8 +3502,8 @@ bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
     {
         if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
         {
-//            qDebug() << "comboBox_selectdb,coming here!!";
-//            dialog_selectdb->show();
+            //            qDebug() << "comboBox_selectdb,coming here!!";
+            //            dialog_selectdb->show();
             if(!isMainServer())
             {
                 InDb_Dialog->show();//入库界面弹出
@@ -3519,9 +3531,9 @@ bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
     {
         if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
         {
-//            qDebug() << "comboBox_selectdb,coming here!!";
-//            dialog_selectdb->show();
-//            InDb_Dialog->show();//入库界面弹出
+            //            qDebug() << "comboBox_selectdb,coming here!!";
+            //            dialog_selectdb->show();
+            //            InDb_Dialog->show();//入库界面弹出
             ok_btn_dia_clicked_self();
         }/*
         else if (event->type()==QEvent::Leave)    // mouse leaves widget
@@ -3544,8 +3556,8 @@ bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
     {
         if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
         {
-//            qDebug() << "comboBox_selectdb,coming here!!";
-//            dialog_selectdb->show();
+            //            qDebug() << "comboBox_selectdb,coming here!!";
+            //            dialog_selectdb->show();
             InDb_Dialog->hide();//入库界面隐藏
         }/*
         else if (event->type()==QEvent::Leave)    // mouse leaves widget
@@ -3572,23 +3584,23 @@ bool autoCCode::eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, 
     {
         if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
         {
-//            qDebug() << "comboBox_selectdb,coming here!!";
-//            dialog_selectdb->show();
+            //            qDebug() << "comboBox_selectdb,coming here!!";
+            //            dialog_selectdb->show();
             ui_dia_selectdb->comboBox_selectdb->showPopup();//combox下拉事件
         }
         else if (event->type()==QEvent::Leave)    // mouse leaves widget
         {
-//            qDebug() << "comboBox_selectdb,leave now!!";
-//            ui_dia_selectdb->comboBox_selectdb->showNormal();
-//            dialog_selectdb->hide();
+            //            qDebug() << "comboBox_selectdb,leave now!!";
+            //            ui_dia_selectdb->comboBox_selectdb->showNormal();
+            //            dialog_selectdb->hide();
         }
         else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
         {
-//            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
-//            ui_dia_selectdb
+            //            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+            //            ui_dia_selectdb
             dialog_selectdb->hide();
         }
-//        qDebug() << "comboBox_selectdb, event type:" << event->type();
+        //        qDebug() << "comboBox_selectdb, event type:" << event->type();
     }
 
 }
@@ -3600,13 +3612,13 @@ bool autoCCode::eventFilter_ui_choseCodeDB_btn(QObject *watched, QEvent *event)
     {
         if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
         {
-//            qDebug() << "chose codedb btn focus in,coming here!!";
+            //            qDebug() << "chose codedb btn focus in,coming here!!";
             dialog_selectdb->show();
         }
         else if (event->type()==QEvent::Leave)    // mouse leaves widget
         {
-//            qDebug() << "chose codedb btn focus out,leave now!!";
-//            dialog_selectdb->hide();
+            //            qDebug() << "chose codedb btn focus out,leave now!!";
+            //            dialog_selectdb->hide();
         }
     }
 }
@@ -3704,28 +3716,28 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 
 
 
-//        if(obj == ui_toolsets->textEdit_main_content)
-//        {
-//            //按键处理
-//            if(event->type() == QEvent::KeyRelease)
-//            {
-//                isCTRLKeyPressed = FALSE;
-//            }
-//            //按键处理
-//            if(event->type() == QEvent::KeyPress)
-//            {
-//                //qDebug()<<"KeyPress ed!!";
-//                QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-//                int key = keyEvent->key();
-//                if (Qt::Key_Control == key){
-//                    qDebug()<<"Key_Control   Pressed";
-//                    isCTRLKeyPressed = TRUE;
-//                }
-//                else {
-//                    //qDebug()<<"else Key !!";
-//                }
-//            }
-//        }
+        //        if(obj == ui_toolsets->textEdit_main_content)
+        //        {
+        //            //按键处理
+        //            if(event->type() == QEvent::KeyRelease)
+        //            {
+        //                isCTRLKeyPressed = FALSE;
+        //            }
+        //            //按键处理
+        //            if(event->type() == QEvent::KeyPress)
+        //            {
+        //                //qDebug()<<"KeyPress ed!!";
+        //                QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        //                int key = keyEvent->key();
+        //                if (Qt::Key_Control == key){
+        //                    qDebug()<<"Key_Control   Pressed";
+        //                    isCTRLKeyPressed = TRUE;
+        //                }
+        //                else {
+        //                    //qDebug()<<"else Key !!";
+        //                }
+        //            }
+        //        }
 
 
         //        //按键处理
@@ -3781,7 +3793,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     eventFilter_ui_dialog(obj, event);
     eventFilter_ui_dialog_langtype_comboBox(obj, event);
     eventFilter_ui_setup(obj, event);
-//    eventFilter_ui_toolsets(obj, event);
+    //    eventFilter_ui_toolsets(obj, event);
 
     return QObject::eventFilter(obj, event);
 }
@@ -3789,23 +3801,23 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 
 void autoCCode::keyPressEvent(QKeyEvent *k)
 {
-//    if(k->key() == Qt::Key_A)
-//    {
-//        qDebug() << "key A is pressed";
-//    }
+    //    if(k->key() == Qt::Key_A)
+    //    {
+    //        qDebug() << "key A is pressed";
+    //    }
 
-//    if (k->key() == Qt::Key_Control)
-//    {
-//        qDebug() << "key Ctrl is pressed";
-//    }
-//    (WM_RBUTTONCLKDOWN)
+    //    if (k->key() == Qt::Key_Control)
+    //    {
+    //        qDebug() << "key Ctrl is pressed";
+    //    }
+    //    (WM_RBUTTONCLKDOWN)
     return;
 }
 
 void autoCCode::mouseMoveEvent ( QMouseEvent * e )
 {
-//    qDebug() << "mouseMoveEvent" << endl;
-//    setMouseTracking(false);
+    //    qDebug() << "mouseMoveEvent" << endl;
+    //    setMouseTracking(false);
 }
 void autoCCode::mousePressEvent ( QMouseEvent * e )
 {
@@ -4027,6 +4039,7 @@ void autoCCode::setforegroudColor()
         ui_setup->pushButton_foreColor->setPalette(palettebtn);
 
     }
+    palettebtn.color(QPalette::Button);
     update();
 }
 //颜色对话框设置-背景色
@@ -4077,11 +4090,11 @@ void autoCCode::setFont()
 void autoCCode::ZoomInFont(QObject *watched)
 {
     QWidget *pwnd =(QWidget *)watched;
-//    qDebug() << "ZoomInFont";
+    //    qDebug() << "ZoomInFont";
     QFont font = pwnd->font();
     int fontsize = font.pointSize();
     //    qDebug() << "OldFontFamily:" << OldFontFamily;
-//    qDebug() << "fontsize:" << fontsize;
+    //    qDebug() << "fontsize:" << fontsize;
     fontsize += 1;
     if(fontsize > MAXFONTSIZE)
         fontsize = MAXFONTSIZE;
@@ -4092,11 +4105,11 @@ void autoCCode::ZoomInFont(QObject *watched)
 void autoCCode::ZoomOutFont(QObject *watched)
 {
     QWidget *pwnd =(QWidget *)watched;
-//    qDebug() << "ZoomOutFont";
+    //    qDebug() << "ZoomOutFont";
     QFont font = pwnd->font();
     int fontsize = font.pointSize();
     //    qDebug() << "OldFontFamily:" << OldFontFamily;
-//    qDebug() << "fontsize:" << fontsize;
+    //    qDebug() << "fontsize:" << fontsize;
     fontsize -= 1;
     if(fontsize < MINFONTSIZE)
         fontsize = MINFONTSIZE;
@@ -4173,7 +4186,7 @@ void autoCCode::on_pushButton_rightTextSelectIndb_clicked()
         str_selected = ui->genshow_textEdit->textCursor().selectedText().trimmed();
     }
 
-   if(str_selected.isEmpty())
+    if(str_selected.isEmpty())
     {
         qDebug() << "select text. empty";
         return;
@@ -4278,17 +4291,17 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
 
 #ifndef DEBUG_V
 
-//    if(ui_dialog->checkBox_EOR->isChecked())
-//        ui_dialog->note_textEdit_dia->clear();
+    //    if(ui_dialog->checkBox_EOR->isChecked())
+    //        ui_dialog->note_textEdit_dia->clear();
 
-//    if(ui->checkBox_inbox->isChecked())
-//    {
-//        //对话框不关闭
-//        ui_dialog->content_textEdit_dia->clear();
-//    }else{
-//        InDb_Dialog->update();
-//        InDb_Dialog->close();
-//    }
+    //    if(ui->checkBox_inbox->isChecked())
+    //    {
+    //        //对话框不关闭
+    //        ui_dialog->content_textEdit_dia->clear();
+    //    }else{
+    //        InDb_Dialog->update();
+    //        InDb_Dialog->close();
+    //    }
 
 
 #else
@@ -4303,7 +4316,7 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
     //内容添加后，更新控件中内容的相关显示
     update_show_after_insert();
 
-//    is_selected = FALSE;//插入数据后，把此置为FALSE
+    //    is_selected = FALSE;//插入数据后，把此置为FALSE
 }
 
 
@@ -4321,7 +4334,7 @@ void autoCCode::on_pushButton_notepad_exe_clicked()
     //调用记事本
     ShellExecuteA(NULL,"open","NOTEPAD.EXE",NULL,NULL,SW_SHOWNORMAL);
 
-//    toolsTabWidget->hide();
+    //    toolsTabWidget->hide();
 }
 
 void autoCCode::on_pushButton_calc_exe_clicked()
@@ -4391,18 +4404,18 @@ void autoCCode::on_pushButton_show_calender_clicked()
 {
     qDebug() << "on_pushButton_show_calender_clicked";
 
-
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
     window_calender = new Window();
     window_calender->show();
-
-//    window.show();
-//    Sleep(2000);
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("GB2312"));
+    //    window.show();
+    //    Sleep(2000);
 }
 
 
 void autoCCode::on_pushButton_sourceinsight_exe_clicked()
 {
-//    Insight3.exe
+    //    Insight3.exe
     LPCSTR exepath = "Insight3.exe";
     ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
     exepath = "C:\\Program Files (x86)\\Source Insight 3\\Insight3.exe";
@@ -4416,8 +4429,8 @@ void autoCCode::on_pushButton_cmd_exe_clicked()
     //cmd.exe
     LPCSTR exepath = "cmd.exe";
     ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
-//    exepath = "C:\\Program Files (x86)\\Source Insight 3\\Insight3.exe";
-//    ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
+    //    exepath = "C:\\Program Files (x86)\\Source Insight 3\\Insight3.exe";
+    //    ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
 
 }
 
@@ -4429,7 +4442,7 @@ void autoCCode::on_selectionChanged()
 void autoCCode::on_pUdpdialog_okBtn_clicked()
 {
     qDebug() << "on_pUdpdialog_okBtn_clicked" ;
-//    qDebug() << "Ip Addr:" << pUdp_ui->lineEdit->text();
+    //    qDebug() << "Ip Addr:" << pUdp_ui->lineEdit->text();
 }
 
 QStringList autoCCode::getLstIp()
@@ -4827,7 +4840,7 @@ void autoCCode::saveBindLocalIP(QString lip)
     QObject::connect(socket,SIGNAL(connected()),this,
                      SLOT(hellosocket()));
     QObject::connect(socket,SIGNAL(bytesWritten(qint64)),this,
-            SLOT(updateClientProgress(qint64)));
+                     SLOT(updateClientProgress(qint64)));
 
     QTimer *sendtimer = new QTimer();
     QObject::connect(sendtimer,SIGNAL(timeout()),this,
@@ -4838,8 +4851,8 @@ void autoCCode::saveBindLocalIP(QString lip)
 
 void autoCCode::hellosocket()
 {
-//    QString page = " you addr";
-//    socket->write("GET " + page.toLocal8Bit() + "\r\n");
+    //    QString page = " you addr";
+    //    socket->write("GET " + page.toLocal8Bit() + "\r\n");
     QMessageBox::information(NULL, str_china(版本),
                              str_china(连接远端成功！！),NULL,NULL);
 }
@@ -4861,7 +4874,7 @@ void autoCCode::timerwritemsg()
 
     TotalBytes = outBlockFile.size();
 
-//    bytesToWrite = TotalBytes - socket->write(outBlockFile);
+    //    bytesToWrite = TotalBytes - socket->write(outBlockFile);
     qDebug() << "write msg:" << bigmsg;
 
 
@@ -4872,23 +4885,23 @@ void autoCCode::timerwritemsg()
 
     QString readFname("tag");
     //发送文件名称
-//    sendOut <<qint64(0) <<readFname;
+    //    sendOut <<qint64(0) <<readFname;
     //占据文件大小位置
     sendOut << TotalBytes;
     //TotalBytes为总数据长度，即（数据量长度+文件名长度+文件名）
     TotalBytes += outBlock.size(); //加上图片名称长度
     sendOut.device()->seek(0);
 
-//    //总字节(文件大小 + 8字节 + 文件名) ，
-//    sendOut << TotalBytes << qint64((outBlock.size() - sizeof(qint64)*1));
+    //    //总字节(文件大小 + 8字节 + 文件名) ，
+    //    sendOut << TotalBytes << qint64((outBlock.size() - sizeof(qint64)*1));
 
     //    (文件大小 [8字节])
-//    sendOut << TotalBytes;
+    //    sendOut << TotalBytes;
     bytesToWrite = TotalBytes - socket->write(outBlock);//将名称发出后，剩余图片大小
-////    ui->clientStatusLabel->setText(str_china("已连接"));
-//#ifdef DEBUG
-//    qDebug() << "TotalBytes:" << TotalBytes;
-//#endif
+    ////    ui->clientStatusLabel->setText(str_china("已连接"));
+    //#ifdef DEBUG
+    //    qDebug() << "TotalBytes:" << TotalBytes;
+    //#endif
 
     qDebug() << "TotalBytes:" << TotalBytes;
     qDebug() << "bytesToWrite:" << bytesToWrite;
@@ -4913,40 +4926,40 @@ int autoCCode::CheckIPAddr(QString ipaddr)
 
 void autoCCode::readfromremote(QString recvBigMsg)
 {
-//    static bool readdone = READ_DONE;
-//    if(READ_DONE == readdone)
-//    {
-//        TotalReadBytes = clientConnection->read(sizeof(qint64)).toLongLong();
-//        readdone = READING;
-//    }
+    //    static bool readdone = READ_DONE;
+    //    if(READ_DONE == readdone)
+    //    {
+    //        TotalReadBytes = clientConnection->read(sizeof(qint64)).toLongLong();
+    //        readdone = READING;
+    //    }
 
-//    qDebug() << "recicve byte size:" << TotalReadBytes;
-//    QString readdata = clientConnection->readAll();
-
-
+    //    qDebug() << "recicve byte size:" << TotalReadBytes;
+    //    QString readdata = clientConnection->readAll();
 
 
-//    qDebug() << "numBytes:--------->>"<<numBytes;
-//    byteWritten += (int)numBytes;
-//    if(bytesToWrite > 0)
-//    {
-//        qDebug() <<"-->:outBlockFile size:" << outBlockFile.size();
 
-//        bytesToRead -= (int)socket->write(outBlockFile);
-//        qDebug() <<"-->:bytesToWrite size:" << bytesToWrite;
-//    }
-//    else
-//    {
-//        qDebug() << "-->: send msg done!!";
-//        TotalReadBytes = 0;
-//        byteReadden = 0;
-//        readdone = READ_DONE;
-//    }
 
-//    if(READ_DONE != readdone)
-//    {
-//        return;
-//    }
+    //    qDebug() << "numBytes:--------->>"<<numBytes;
+    //    byteWritten += (int)numBytes;
+    //    if(bytesToWrite > 0)
+    //    {
+    //        qDebug() <<"-->:outBlockFile size:" << outBlockFile.size();
+
+    //        bytesToRead -= (int)socket->write(outBlockFile);
+    //        qDebug() <<"-->:bytesToWrite size:" << bytesToWrite;
+    //    }
+    //    else
+    //    {
+    //        qDebug() << "-->: send msg done!!";
+    //        TotalReadBytes = 0;
+    //        byteReadden = 0;
+    //        readdone = READ_DONE;
+    //    }
+
+    //    if(READ_DONE != readdone)
+    //    {
+    //        return;
+    //    }
 
     if(!isMainServer())//非主服务端时不存储数据
     {
@@ -4994,12 +5007,12 @@ void autoCCode::ifSeverUi()
     bool isserverflag = isMainServer();
     if(isserverflag)
     {
-//        ui->pushbtn_autoindb->setEnabled(false);
+        //        ui->pushbtn_autoindb->setEnabled(false);
         ui->indb_btn->setEnabled(false);
     }
     else
     {
-//        ui->pushbtn_autoindb->setEnabled(true);
+        //        ui->pushbtn_autoindb->setEnabled(true);
         ui->indb_btn->setEnabled(true);
     }
 }
@@ -5128,10 +5141,10 @@ void autoCCode::on_btn_find_up_clicked()
     else
     {
         //向后查找不正常
-//        QTextCursor cursor = ui->genshow_textEdit->textCursor();
-//        setStringColor(cursor.position()/* - searchText.length() + 1*/,
-//                       searchText.length());
-//        ui->genshow_textEdit->update();
+        //        QTextCursor cursor = ui->genshow_textEdit->textCursor();
+        //        setStringColor(cursor.position()/* - searchText.length() + 1*/,
+        //                       searchText.length());
+        //        ui->genshow_textEdit->update();
     }
 }
 
@@ -5175,3 +5188,109 @@ void autoCCode::on_showlarger_btn_clicked()
     update();
 
 }
+
+void autoCCode::check_genshow_textEdit_is_append()
+{
+    qDebug() << "check_genshow_textEdit_is_append";
+    if(!ui_setup->checkBox_showcontent_autoappend->isChecked())
+    {
+        return;
+    }
+    QString text;
+    text = ui->genshow_textEdit->toPlainText();
+    text += get_clipboard_data();
+    ui->genshow_textEdit->setPlainText(text);
+}
+
+QString autoCCode::get_clipboard_data()
+{
+    QClipboard *clip = QApplication::clipboard();
+    return clip->text();
+}
+
+void autoCCode::ReadHistorySettings()
+{
+    QSettings m_settings("weilaidb.com.cn", "autoccode");
+    qDebug() << "read setting filename:" << m_settings.fileName();
+    qDebug() << "ui_setup->checkBox_showcontent_autoappend->isChecked() setting:" << m_settings.value("GenShowAppend").toBool();
+    ui_setup->checkBox_showcontent_autoappend->setChecked(m_settings.value("GenShowAppend").toBool());
+    ui_setup->checkBox_rtQuery->setChecked(m_settings.value("RealTimeQuery").toBool());
+    ui_setup->checkBox_showpath->setChecked(m_settings.value("ShowPath").toBool());
+    ui_setup->checkBox_indb_shortkey->setChecked(m_settings.value("InDbShortKey").toBool());
+    ui_setup->checkBox_rightTextSelectIndb->setChecked(m_settings.value("rightselectindb").toBool());
+    ui_setup->checkBox_SeverFlag->setChecked(m_settings.value("ServerFlag").toBool());
+    ui_setup->checkBox_supportRemote->setChecked(m_settings.value("SupportRemote").toBool());
+//    QPalette palettebtn ;
+//    QColor color= m_settings.value("ForeColor").Color;
+//    palettebtn.setColor(QPalette::Button, color);
+//    palettebtn.setColor(QPalette::Text, color);
+////    QColor color = palette().background().color();
+////    QVariant variant = color;
+//    ui_setup->pushButton_foreColor->setPalette(palettebtn);
+
+
+    this->restoreGeometry(m_settings.value("AutoCCode_Geometry").toByteArray());
+
+//    localeCombo->setCurrentIndex(m_settings.value("Language").toInt());
+//    firstDayCombo->setCurrentIndex(m_settings.value("WeekStart").toInt());
+//    selectionModeCombo->setCurrentIndex(m_settings.value("Selection_Mode").toInt());
+//    gridCheckBox->setChecked(m_settings.value("Show_Grid").toBool());
+//    navigationCheckBox->setChecked(m_settings.value("Show_Navigation_Bar").toBool());
+//    horizontalHeaderCombo->setCurrentIndex(m_settings.value("Horizontal_Header").toInt());
+//    verticalHeaderCombo->setCurrentIndex(m_settings.value("Vertival_Header").toInt());
+//    weekdayColorCombo->setCurrentIndex(m_settings.value("WeekdayColor").toInt());
+//    weekendColorCombo->setCurrentIndex(m_settings.value("WeekendColor").toInt());
+//    headerTextFormatCombo->setCurrentIndex(m_settings.value("Header_Font").toInt());
+//    firstFridayCheckBox->setChecked(m_settings.value("First_Friday").toBool());
+//    mayFirstCheckBox->setChecked(m_settings.value("May_First").toBool());
+//    m_clock->restoreGeometry(m_settings.value("Clock_Geometry").toByteArray());
+//    m_Birthday = QDate::fromString(m_settings.value("Birthday_Date").toString(), "yyyy-MM-dd");
+//    this->restoreGeometry(m_settings.value("Calendar_Geometry").toByteArray());
+
+//    if (m_Birthday.isNull())
+//        goBirthday->setEnabled(false);
+}
+
+void autoCCode::WriteCurrentSettings()
+{
+    QSettings m_settings("weilaidb.com.cn", "autoccode");
+    qDebug() << "ui_setup->checkBox_showcontent_autoappend->isChecked():" << ui_setup->checkBox_showcontent_autoappend->isChecked();
+    m_settings.setValue("GenShowAppend", ui_setup->checkBox_showcontent_autoappend->isChecked());
+    m_settings.setValue("RealTimeQuery",ui_setup->checkBox_rtQuery->isChecked());
+    m_settings.setValue("ShowPath", ui_setup->checkBox_showpath->isChecked());
+    m_settings.setValue("InDbShortKey",ui_setup->checkBox_indb_shortkey->isChecked());
+    m_settings.setValue("rightselectindb", ui_setup->checkBox_rightTextSelectIndb->isChecked());
+    m_settings.setValue("ServerFlag", ui_setup->checkBox_SeverFlag->isChecked());
+    m_settings.setValue("SupportRemote", ui_setup->checkBox_supportRemote->isChecked());
+
+//    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
+
+
+//    m_settings.setValue("Language", localeCombo->currentIndex());
+//    m_settings.setValue("WeekStart", firstDayCombo->currentIndex());
+//    m_settings.setValue("Selection_Mode", selectionModeCombo->currentIndex());
+//    m_settings.setValue("Show_Grid", gridCheckBox->isChecked());
+//    m_settings.setValue("Show_Navigation_Bar", navigationCheckBox->isChecked());
+//    m_settings.setValue("Horizontal_Header", horizontalHeaderCombo->currentIndex());
+//    m_settings.setValue("Vertival_Header", verticalHeaderCombo->currentIndex());
+//    m_settings.setValue("WeekdayColor", weekdayColorCombo->currentIndex());
+//    m_settings.setValue("WeekendColor", weekendColorCombo->currentIndex());
+//    m_settings.setValue("Header_Font", headerTextFormatCombo->currentIndex());
+//    m_settings.setValue("First_Friday", firstFridayCheckBox->isChecked());
+//    m_settings.setValue("May_First", mayFirstCheckBox->isChecked());
+//    m_settings.setValue("Clock_Geometry", m_clock->saveGeometry());
+//    m_settings.setValue("Birthday_Date", m_Birthday.toString ("yyyy-MM-dd"));
+//    m_settings.setValue("Calendar_Geometry", this->saveGeometry());
+    m_settings.setValue("AutoCCode_Geometry", this->saveGeometry());
+
+    qDebug() << "setting filename:" << m_settings.fileName();
+
+}
+
+void autoCCode::closeEvent(QCloseEvent *event)
+{
+    qDebug() << "closeEvent";
+    WriteCurrentSettings();
+    event->accept();
+}
+

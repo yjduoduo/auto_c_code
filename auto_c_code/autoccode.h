@@ -288,6 +288,7 @@ private slots:
 
     int showcode_textEdit_AtBotton();//是否显示界面左侧的内容了
     void PopInDbUi();//弹出入库对话框
+    void check_genshow_textEdit_is_append();
     quint8 IsClipboardChanged();//判断剪切板内容改变否
 
     void on_lineEdit_search_MouseButtonDblClick();
@@ -314,6 +315,11 @@ public slots:
     void ok_btn_dia_clicked_self(void);
 
     void cancel_btn_dia_clicked_self(void);
+
+    QString get_clipboard_data();
+
+    void ReadHistorySettings();
+    void WriteCurrentSettings();
 
 
 private:
@@ -399,7 +405,7 @@ private:
     void dropEvent(QDropEvent *event);
     void readTextFile(const QString &fileName);
     void readTextFileAppend(const QString &fileName);
-
+    void closeEvent(QCloseEvent *event);
 
 protected:
     QString GenCode_str;
@@ -440,6 +446,7 @@ private://QString
     QTimer *checkbox_getcliptext_timer;
     QTimer *checkbox_AutoGetCon_timer;
     QTimer *timer_datachangedpopui;//数据发生变化，弹出入库框
+    QTimer *timer_genshow_textEdit_checkContent_append;//检测有内容变化时，自动追加到后面
 
     QListView *listView; // lineEdit Search Text显示列表
     QStringListModel *model; // 完成列表的model

@@ -213,8 +213,8 @@
   <widget class="QCheckBox" name="checkBox_SeverFlag">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>150</y>
+     <x>201</x>
+     <y>160</y>
      <width>91</width>
      <height>17</height>
     </rect>
@@ -278,8 +278,8 @@
   <widget class="QCheckBox" name="checkBox_supportRemote">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>240</y>
+     <x>200</x>
+     <y>140</y>
      <width>91</width>
      <height>17</height>
     </rect>
@@ -292,6 +292,25 @@
    </property>
    <property name="checked">
     <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_showcontent_autoappend">
+   <property name="geometry">
+    <rect>
+     <x>61</x>
+     <y>235</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>入库按钮鼠标移动即弹出，且确定和取消也一样效果</string>
+   </property>
+   <property name="text">
+    <string>快速追加</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>
