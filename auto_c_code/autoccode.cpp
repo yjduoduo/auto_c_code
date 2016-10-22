@@ -5220,6 +5220,8 @@ void autoCCode::ReadHistorySettings()
     ui_setup->checkBox_rightTextSelectIndb->setChecked(m_settings.value("rightselectindb").toBool());
     ui_setup->checkBox_SeverFlag->setChecked(m_settings.value("ServerFlag").toBool());
     ui_setup->checkBox_supportRemote->setChecked(m_settings.value("SupportRemote").toBool());
+    ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(m_settings.value("CurrentDataBase").toInt());
+
 //    QPalette palettebtn ;
 //    QColor color= m_settings.value("ForeColor").Color;
 //    palettebtn.setColor(QPalette::Button, color);
@@ -5262,7 +5264,7 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("rightselectindb", ui_setup->checkBox_rightTextSelectIndb->isChecked());
     m_settings.setValue("ServerFlag", ui_setup->checkBox_SeverFlag->isChecked());
     m_settings.setValue("SupportRemote", ui_setup->checkBox_supportRemote->isChecked());
-
+    m_settings.setValue("CurrentDataBase", ui_dia_selectdb->comboBox_selectdb->currentIndex());
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
 
