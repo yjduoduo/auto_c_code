@@ -279,11 +279,15 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
 //    pthread_key_create(&thread_log_key,close_thread_log);
     /* Create threads to do the work. */
     for(i = 0;i<THREADNUMS;i++){
-        pthread_create(&threads[i],NULL,&thread_func_selectdatabase,&inPara_selectdatabase);
+        pthread_attr_t attr;
+        pthread_attr_init (&attr);
+        pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+        pthread_create(&threads[i],&attr,&thread_func_selectdatabase,&inPara_selectdatabase);
+        pthread_attr_destroy (&attr);
     }
-    for(i = 0;i<THREADNUMS;i++){
-        pthread_join(threads[i],NULL);
-    }
+//    for(i = 0;i<THREADNUMS;i++){
+//        pthread_join(threads[i],NULL);
+//    }
 
     selectres = inPara_selectdatabase.selectres;
     return 0;
