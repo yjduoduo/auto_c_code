@@ -21,7 +21,6 @@ INPUT(
 ./release/displaybutton.o
 ./release/clock.o
 ./release/window_calender.o
-./release/searchthread.o
 ./release/moc_autoccode.o
 ./release/moc_dialog_select_database.o
 ./release/moc_qxtglobalshortcut.o
@@ -35,6 +34,5 @@ INPUT(
 ./release/moc_displaybutton.o
 ./release/moc_clock.o
 ./release/moc_window_calender.o
-./release/moc_searchthread.o
 ./release/qrc_imgsrc.o
 );

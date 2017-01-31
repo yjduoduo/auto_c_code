@@ -47,7 +47,7 @@ public:
 //    QDialog *ToolSets_Dialog;
     QTabWidget *toolsTabWidget;//工具集界面,操作函数的实体
     QWizardPage *codetool;
-    GenCodeDatabase *gb;
+    GenCodeDatabase b;
 
     QString selecttext;
 

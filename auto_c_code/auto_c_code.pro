@@ -32,8 +32,7 @@ SOURCES += main.cpp\
     calender/qrc_resource.cpp \
     calender/displaybutton.cpp \
     calender/clock.cpp \
-    calender/window_calender.cpp \
-    searchthread.cpp
+    calender/window_calender.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -58,8 +57,7 @@ HEADERS  += autoccode.h \
     calender/setbirthday.h \
     calender/displaybutton.h \
     calender/clock.h \
-    calender/window_calender.h \
-    searchthread.h
+    calender/window_calender.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
