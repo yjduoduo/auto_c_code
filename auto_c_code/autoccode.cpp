@@ -121,7 +121,8 @@ autoCCode::autoCCode(QWidget *parent) :
     socket(NULL),
     hostaddr(NULL),
     tcpserver(NULL),
-    window_calender(NULL)
+    window_calender(NULL),
+    gb(NULL)
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
     ui->setupUi(this);
@@ -164,6 +165,8 @@ autoCCode::autoCCode(QWidget *parent) :
     //    TotalReadBytes = 0;
     //    bytesReceived  = 0;
     //    bytesNeedRecv  = 0;
+
+    gb = new GenCodeDatabase();
 
     QTimerSet();
     pushButtonSet();
@@ -903,7 +906,7 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     //gencode str clear
     GenCode_str.clear();
 
-    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+    gb->selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);
     if(showcode_textEdit_AtBotton())
@@ -916,6 +919,8 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     //    ui->listWidget_codeview->addItems(selectresult.keyword_list);
 
     ui->listWidget_note->addItems(selectresult.note_list);
+    update();
+    dialog_selectdb->update();
     dialog_selectdb->close();
 }
 
@@ -940,7 +945,7 @@ void autoCCode::addstr_aspect_comboBox(void)
     clr_selectresult(selectresult);
     str_print(select_express);
     //    selectresult.aspect_list<<str_china();
-    b.selectdatabase(sets->databasename,
+    gb->selectdatabase(sets->databasename,
                      select_express.toUtf8().data(),
                      selectresult,
                      ASPECT_HAVE);
@@ -1411,7 +1416,7 @@ void autoCCode::ok_btn_dia_clicked_self(void)
 
     clr_selectresult(selectresult);
     str_print(select_express);
-    b.selectdatabase(sets->databasename,
+    gb->selectdatabase(sets->databasename,
                      select_express.toUtf8().data(),
                      selectresult,
                      ASPECT_NONE);
@@ -1478,8 +1483,8 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     ui_dialog->content_textEdit_dia->clear();
 #endif
 
-    b.creatable(&insertcontent);
-    b.inserttable(&insertcontent);
+    gb->creatable(&insertcontent);
+    gb->inserttable(&insertcontent);
 
 
     //内容添加后，更新控件中内容的相关显示
@@ -1650,7 +1655,7 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     //str_print(sets->talbename);
     clr_selectresult(selectresult);
 
-    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+    gb->selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);
 
@@ -1738,8 +1743,8 @@ void autoCCode::add_aspect_totable(void)
     //    insertcontent.note      = note;
     //    insertcontent.vartype   = vartype;
 
-    b.creatable(&insertcontent);
-    b.inserttable(&insertcontent);
+    gb->creatable(&insertcontent);
+    gb->inserttable(&insertcontent);
 
     //范畴
     addstr_aspect_comboBox();
@@ -1879,7 +1884,7 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
                 .arg(sets->talbename)
                 .arg(keyword);
 
-        b.updatetable(sets->langtype,select_express);
+        gb->updatetable(sets->langtype,select_express);
 
         update_show_after_insert();
         QMessageBox::information(this,"Information",
@@ -1957,7 +1962,7 @@ void autoCCode::SearchText(const QString &searchStr)
 
     str_print(select_express);
 
-    b.searchdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+    gb->searchdatabase(sets->databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      searchStr.toLower());
 
@@ -2004,7 +2009,7 @@ void autoCCode::SearchText(const QString &searchStr)
     looktexthis_express = QString("select * from %1 order by ID desc")
             .arg(setsLookHis->talbename);
 
-    b.searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
+    gb->searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
                                     looktexthistoryres,
                                     searchStr);
 
@@ -2022,8 +2027,8 @@ void autoCCode::SearchText(const QString &searchStr)
         //        //qDebug() << "databasename:" << setsLookHis->databasename;
         //        //qDebug() << "express:" << setsLookHis->creat_table_express;
 
-        b.opendatabase(setsLookHis->databasename,setsLookHis->creat_table_express);
-        b.insertdatabase(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data());
+        gb->opendatabase(setsLookHis->databasename,setsLookHis->creat_table_express);
+        gb->insertdatabase(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data());
     }
     else
     {//更新数据
@@ -2038,8 +2043,8 @@ void autoCCode::SearchText(const QString &searchStr)
         //qDebug() << "databasename:" << setsLookHis->databasename;
         //qDebug() << "express:" << setsLookHis->creat_table_express;
 
-        b.opendatabase(setsLookHis->databasename,setsLookHis->creat_table_express);
-        b.insertdatabase(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data());
+        gb->opendatabase(setsLookHis->databasename,setsLookHis->creat_table_express);
+        gb->insertdatabase(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data());
     }
 
 
@@ -2085,7 +2090,7 @@ void autoCCode::add_column_lowercase_keywords_content(void)
     str_print(select_express);
     GenCode_str.clear();
 
-    b.selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
+    gb->selectdatabase(sets->databasename,select_express.toLocal8Bit().data(),
                      selectresult,
                      ASPECT_NONE);
     if(showcode_textEdit_AtBotton())
@@ -2114,7 +2119,7 @@ void autoCCode::add_column_lowercase_keywords_content(void)
                 .arg(getLanguageStr(sets->langtype));
 
         str_print(select_express);
-        b.updatetable(sets->langtype,select_express);
+        gb->updatetable(sets->langtype,select_express);
 
         ++iterator;
     }
@@ -3116,7 +3121,7 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
 
     clr_selectresult(selectresult);
     str_print(select_express);
-    b.selectdatabase(sets->databasename,
+    gb->selectdatabase(sets->databasename,
                      select_express.toUtf8().data(),
                      selectresult,
                      ASPECT_NONE);
@@ -3163,8 +3168,8 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
     insertcontent.aspect    = aspect;
 
 
-    b.creatable(&insertcontent);
-    b.inserttable(&insertcontent);
+    gb->creatable(&insertcontent);
+    gb->inserttable(&insertcontent);
 
     //#ifndef DEBUG_V
 
@@ -3888,7 +3893,7 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
             .arg(sets->talbename)
             .arg(LIMITDATA_MAX);
 
-    b.searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
+    gb->searchdatabase_lookTextHisTbl(setsLookHis->databasename,looktexthis_express.toLocal8Bit().data(),
                                     looktexthistoryres,
                                     "");//searchStr置空，表示所有全查询
 
@@ -4242,7 +4247,7 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
 
     clr_selectresult(selectresult);
     str_print(select_express);
-    b.selectdatabase(sets->databasename,
+    gb->selectdatabase(sets->databasename,
                      select_express.toUtf8().data(),
                      selectresult,
                      ASPECT_NONE);
@@ -4309,8 +4314,8 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
     ui_dialog->content_textEdit_dia->clear();
 #endif
 
-    b.creatable(&insertcontent);
-    b.inserttable(&insertcontent);
+    gb->creatable(&insertcontent);
+    gb->inserttable(&insertcontent);
 
 
     //内容添加后，更新控件中内容的相关显示

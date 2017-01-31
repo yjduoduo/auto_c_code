@@ -70,14 +70,50 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
                           };
 #endif
 
+//typedef struct SelInPara_Selectdatabase
+//{
+//    const char *databases_name;
+//    char *selecttableexpress;
+//    SelectResult selectres;
+//    int aspeactflag;
+//}SelInPara_Selectdatabase;
 
 
 
-GenCodeDatabase::GenCodeDatabase()
+
+
+void* thread_func_selectdatabase(void* args);
+SelInPara_Selectdatabase inPara_selectdatabase = {0};
+uint32_t GenCodeDatabase::querydone = FALSE;
+GenCodeDatabase::GenCodeDatabase(QObject *parent)
+    :searchThread(NULL)
 {
     self_print(GenCodeDatabase);
+//    int i;
 
+    searchThread = new SearchThread(NULL);
+    QObject::connect(searchThread, SIGNAL(emitMsgDoneSignal(SelectResult)),
+                     this, SLOT(updateSearchResult(SelectResult)));
+
+    searchThread->start();
+
+
+//    /* Create a key to associate thread_log file pointer in thread-specific data. Use close_thread_log to clean up the file pointers. */
+//    pthread_key_create(&thread_log_key,close_thread_log);
+    /* Create threads to do the work. */
+//    for(i = 0;i<THREADNUMS;i++){
+//        pthread_create(&threads[i],NULL,&thread_func_selectdatabase,&inPara_selectdatabase);
+//    }
 }
+
+GenCodeDatabase::~GenCodeDatabase()
+{
+//    int i;
+//    for(i = 0;i<THREADNUMS;i++){
+//        pthread_join(threads[i],NULL);
+//    }
+}
+
 codestructSets* GenCodeDatabase::get_table_sets_bytype(LanguageType type)
 {
     for(unsigned i=0;i<ARRAY_SIZE(codesets);i++)
@@ -161,15 +197,7 @@ int GenCodeDatabase::insertdatabase(const char *databases_name,
 }
 
 #if 1
-typedef struct SelInPara_Selectdatabase
-{
-    const char *databases_name;
-    char *selecttableexpress;
-    SelectResult selectres;
-    int aspeactflag;
-}SelInPara_Selectdatabase;
 
-SelInPara_Selectdatabase inPara_selectdatabase;
 
 void* thread_func_selectdatabase(void* args)
 {
@@ -260,6 +288,8 @@ void* thread_func_selectdatabase(void* args)
 
     inPara_selectdatabase.selectres =  selectres;
 
+
+
     return NULL;
 }
 
@@ -271,23 +301,32 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
     inPara_selectdatabase.selecttableexpress = selecttableexpress;
     inPara_selectdatabase.aspeactflag = aspeactflag;
 //    inPara_selectdatabase.selectres = selectres;
-#define THREADNUMS 1
-    int i;
-    /*  线程 ID   */
-    pthread_t threads[THREADNUMS];
-//    /* Create a key to associate thread_log file pointer in thread-specific data. Use close_thread_log to clean up the file pointers. */
-//    pthread_key_create(&thread_log_key,close_thread_log);
-    /* Create threads to do the work. */
-    for(i = 0;i<THREADNUMS;i++){
-        pthread_attr_t attr;
-        pthread_attr_init (&attr);
-        pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
-        pthread_create(&threads[i],&attr,&thread_func_selectdatabase,&inPara_selectdatabase);
-        pthread_attr_destroy (&attr);
-    }
+//#define THREADNUMS 1
+//    int i;
+//    /*  线程 ID   */
+//    pthread_t threads[THREADNUMS];
+////    /* Create a key to associate thread_log file pointer in thread-specific data. Use close_thread_log to clean up the file pointers. */
+////    pthread_key_create(&thread_log_key,close_thread_log);
+//    /* Create threads to do the work. */
+//    for(i = 0;i<THREADNUMS;i++){
+//        pthread_create(&threads[i],NULL,&thread_func_selectdatabase,&inPara_selectdatabase);
+//    }
 //    for(i = 0;i<THREADNUMS;i++){
 //        pthread_join(threads[i],NULL);
 //    }
+
+//    while(1)
+//    {
+//        if(!GenCodeDatabase::querydone) {
+//            Sleep(100);
+//            continue;
+//        }
+//    }
+
+//    emit EmitSearchSignal(inPara_selectdatabase);
+
+
+
 
     selectres = inPara_selectdatabase.selectres;
     return 0;
@@ -1127,4 +1166,10 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
     default:
         return "Err";
     }
+}
+
+
+void GenCodeDatabase::updateSearchResult(SelectResult res)
+{
+    qDebug() << "get result";
 }

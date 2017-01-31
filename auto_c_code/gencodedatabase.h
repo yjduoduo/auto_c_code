@@ -3,6 +3,8 @@
 
 #include "sqlite3.h"
 #include "prefix_string.h"
+#include "searchthread.h"
+#include <pthread.h>
 #include <QtGui>
 
 enum LanguageType{
@@ -55,18 +57,7 @@ typedef struct
     QString aspect;//范围
 }InsertCon;
 
-typedef struct
-{
-    QString contentstr;
-    QStringList content_list;
-    QStringList keyword_list;
-    QStringList keyword_subshowlist;
-    QStringList note_list;
-    QStringList vartype_list;
-    int existflag;//检测是否存在内容 标志
-    QStringList aspect_list;
-    QStringList aspect_field;//自定义区域
-}SelectResult;
+
 
 //查找文本信息数据查询结果 数据库查找入参
 typedef struct
@@ -82,11 +73,14 @@ enum aspect{
 
 
 
+#define THREADNUMS 1
 
 class GenCodeDatabase
 {
+    Q_OBJECT
 public:
-    GenCodeDatabase();
+    GenCodeDatabase(QObject *parent = 0);
+    ~GenCodeDatabase();
     void creatable(InsertCon *cont);
     void inserttable(InsertCon *cont );
     void updatetable(LanguageType languagetype,QString &insertexpress);
@@ -106,9 +100,23 @@ public:
                                         LookTextHistoryResult &selectres,
                                         const QString &searchtext);
     QString getLanguageStr(LanguageType type);
+
+public:
+    static uint32_t querydone;
+    SearchThread *searchThread;
 protected:
     codestructSets* get_table_sets_bytype(LanguageType type);
     const char * get_tablename_bytype(LanguageType type);
+private:
+    /*  线程 ID   */
+    pthread_t threads[THREADNUMS];
+
+signals:
+    void EmitSearchSignal(SelInPara_Selectdatabase &);
+
+public slots:
+    void updateSearchResult(SelectResult res);
+
 };
 
 #endif // GENCODEDATABASE_H
