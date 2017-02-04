@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Sun Sep 11 18:33:40 2016
+** Created: Sat Feb 4 20:56:20 2017
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -77,6 +77,7 @@ public:
     QHBoxLayout *horizontalLayout;
     QPushButton *save_btn;
     QCheckBox *checkBox_AutoSave;
+    QCheckBox *checkBox_query_exact;
     QPushButton *btn_find_down;
     QPushButton *btn_find_up;
     QPushButton *gencode_btn;
@@ -86,7 +87,7 @@ public:
     {
         if (autoCCode->objectName().isEmpty())
             autoCCode->setObjectName(QString::fromUtf8("autoCCode"));
-        autoCCode->resize(1003, 518);
+        autoCCode->resize(1084, 518);
         autoCCode->setWindowOpacity(1);
         autoCCode->setAutoFillBackground(false);
         autoCCode->setStyleSheet(QString::fromUtf8(""));
@@ -309,6 +310,13 @@ public:
 
         horizontalLayout->addWidget(checkBox_AutoSave);
 
+        checkBox_query_exact = new QCheckBox(autoCCode);
+        checkBox_query_exact->setObjectName(QString::fromUtf8("checkBox_query_exact"));
+        checkBox_query_exact->setCheckable(true);
+        checkBox_query_exact->setChecked(false);
+
+        horizontalLayout->addWidget(checkBox_query_exact);
+
         btn_find_down = new QPushButton(autoCCode);
         btn_find_down->setObjectName(QString::fromUtf8("btn_find_down"));
         QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -390,6 +398,7 @@ public:
         close_btn->setText(QApplication::translate("autoCCode", "close", 0, QApplication::UnicodeUTF8));
         save_btn->setText(QApplication::translate("autoCCode", "save", 0, QApplication::UnicodeUTF8));
         checkBox_AutoSave->setText(QApplication::translate("autoCCode", "AS", 0, QApplication::UnicodeUTF8));
+        checkBox_query_exact->setText(QApplication::translate("autoCCode", "\347\262\276\347\241\256\346\237\245\346\211\276", 0, QApplication::UnicodeUTF8));
         btn_find_down->setText(QApplication::translate("autoCCode", "\342\206\223", 0, QApplication::UnicodeUTF8));
         btn_find_up->setText(QApplication::translate("autoCCode", "\342\206\221", 0, QApplication::UnicodeUTF8));
         gencode_btn->setText(QApplication::translate("autoCCode", "\347\224\237\346\210\220\344\273\243\347\240\201\345\272\223", 0, QApplication::UnicodeUTF8));

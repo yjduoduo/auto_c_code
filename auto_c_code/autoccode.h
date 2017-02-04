@@ -528,6 +528,12 @@ private slots://network
 
     void on_showlarger_btn_clicked();
 
+    //正则查找字符串
+    QSet<QString> getAllMatchResults(const QString text, const QString regexp);
+    //正则查找字符串--位置
+    QSet<quint32> getAllMatchPosResults(const QString text, const QString regexp);
+    void on_checkBox_query_exact_stateChanged(int arg1);
+
 private:
     QString remoteip;
     QString localip;

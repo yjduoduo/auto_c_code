@@ -313,6 +313,25 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox_content_withheader">
+   <property name="geometry">
+    <rect>
+     <x>62</x>
+     <y>257</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>右侧内容是否显示头</string>
+   </property>
+   <property name="text">
+    <string>内容前缀</string>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>

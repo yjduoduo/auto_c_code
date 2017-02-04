@@ -386,6 +386,25 @@ typedef struct SelInPara
 
 SelInPara inPara;
 
+
+/*QSet<QString>*/int getAllMatchResults(const QString text, QString regexp)
+{
+    QSet<QString> resultSet;
+    regexp.replace(QString("+"),QString("\+"));
+    QRegExp rx(regexp.toLower());
+    int pos = 0;
+    while ((pos = rx.indexIn(text.toLower(), pos)) != -1)
+    {
+//        qDebug() << "pos :" << pos;
+        pos += rx.matchedLength();
+        QString result = rx.cap(0);
+        resultSet << result;
+        break;
+    }
+    return resultSet.size();
+}
+
+
 void* thread_func_searchdatabase(void* args)
 {
     SelInPara *pPara =(SelInPara *)args;
@@ -424,7 +443,9 @@ void* thread_func_searchdatabase(void* args)
         for(  int i = 0; i < nRow ; i++ )
 
         {
+            qApp->processEvents();
             //           printf( "第 %d 条记录\n", i+1 );
+            searchflag = 0;
             for( int j = 0 ; j < nColumn; j++ )
             {//查询顺序表
                 /* lowercase_keyworks,keywords,content,lantype,note,vartype */
@@ -432,6 +453,9 @@ void* thread_func_searchdatabase(void* args)
                     if(QString::fromUtf8(dbResult [index]).contains(searchtext)){
                         searchflag = 1;
                     }
+//                    if(getAllMatchResults(QString::fromUtf8(dbResult [index]), searchtext)){
+//                        searchflag = 1;
+//                    }
                 }else if(1==j){
                     if(searchflag){
                         selectres.keyword_list << QString::fromUtf8(dbResult [index]);
@@ -441,6 +465,10 @@ void* thread_func_searchdatabase(void* args)
                         searchflag = 1;
                         selectres.keyword_list << QString::fromUtf8(dbResult [index]);
                     }
+//                    else if(getAllMatchResults(QString::fromUtf8(dbResult [index]), searchtext)){
+//                        searchflag = 1;
+//                        selectres.keyword_list << QString::fromUtf8(dbResult [index]);
+//                    }
 
                 }
                 else if(2==j){
@@ -457,6 +485,8 @@ void* thread_func_searchdatabase(void* args)
                 else if(5==j){
                     if(searchflag)
                         selectres.vartype_list<< QString::fromUtf8(dbResult [index]);
+                    index += nColumn - j;
+                    break;
                 }
 
                 if(nColumn-1 == j)

@@ -1547,10 +1547,14 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
 
     str_print(str);
 
-    GenCode_str+="/*  ";
-    GenCode_str+=selectresult.note_list.at(index);
-    GenCode_str+="   */";
-    GenCode_str+="\n";
+    //内容前缀头 内容头
+    if (ui_setup->checkBox_content_withheader->isChecked())
+    {
+        GenCode_str+="/*  ";
+        GenCode_str+=selectresult.note_list.at(index);
+        GenCode_str+="   */";
+        GenCode_str+="\n";
+    }
     GenCode_str+=selectresult.content_list.at(index);
     GenCode_str+="\n";
     GenCode_str+="\n";
@@ -1578,11 +1582,15 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
     }
 
     str_print(str);
+    //内容前缀头 内容头
+    if (ui_setup->checkBox_content_withheader->isChecked())
+    {
+        GenCode_str+="/*  ";
+        GenCode_str+=selectresult.note_list.at(index);
+        GenCode_str+="   */";
+        GenCode_str+="\n";
+    }
 
-    GenCode_str+="/*  ";
-    GenCode_str+=selectresult.note_list.at(index);
-    GenCode_str+="   */";
-    GenCode_str+="\n";
     GenCode_str+=selectresult.content_list.at(index);
     GenCode_str+="\n";
     GenCode_str+="\n";
@@ -2299,11 +2307,16 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
         ui->listWidget_codeview->item(index_note_color)->setBackgroundColor(Qt::white);
         flag_selectLeft = 0 ;
 
+
         GenCode_str.clear();
-        GenCode_str+="/*  ";
-        GenCode_str+=selectresult.note_list.at(index);
-        GenCode_str+="   */";
-        GenCode_str+="\n";
+        //内容前缀头 内容头
+        if (ui_setup->checkBox_content_withheader->isChecked())
+        {
+            GenCode_str+="/*  ";
+            GenCode_str+=selectresult.note_list.at(index);
+            GenCode_str+="   */";
+            GenCode_str+="\n";
+        }
         GenCode_str+=selectresult.content_list.at(index);
         GenCode_str+="\n";
         GenCode_str+="\n";
@@ -2382,6 +2395,7 @@ void autoCCode::setStringColor(unsigned int pos,unsigned int len)
     //    cursor.movePosition( QTextCursor::StartOfLine);//行首
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor, pos >=1? (pos-1):0);//向右移动到Pos
     for(i = 0;i < len;i++){
+        qApp->processEvents();
         cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
 
     }
@@ -2742,24 +2756,79 @@ void autoCCode::SearchTextResWithColor2(QString &resStr)
     time.restart();
     while(1)
     {
-        //超长时间跳出 3s
-        if(time.elapsed()/1000 >= 3)
+        qApp->processEvents();
+        //超长时间跳出 2s
+        if(time.elapsed()/1000 >= 2)
         {
             break;
         }
-        if (!ui->genshow_textEdit->find(searchText))
+
+//        FindCaseSensitively
+        //精确查找
+        if (ui->checkBox_query_exact->isChecked())
         {
-            //            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
-            break;
+            if (!ui->genshow_textEdit->find(searchText,QTextDocument::FindCaseSensitively))
+            {
+                //            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+                break;
+            }
+            else
+            {
+                QTextCursor cursor = ui->genshow_textEdit->textCursor();
+                setStringColor(cursor.position() - searchText.length() + 1,
+                               searchText.length());
+                ui->genshow_textEdit->update();
+            }
         }
         else
         {
-            QTextCursor cursor = ui->genshow_textEdit->textCursor();
-            setStringColor(cursor.position() - searchText.length() + 1,
-                           searchText.length());
-            ui->genshow_textEdit->update();
+
+            if (!ui->genshow_textEdit->find(searchText))
+            {
+                //            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+                break;
+            }
+            else
+            {
+                QTextCursor cursor = ui->genshow_textEdit->textCursor();
+                setStringColor(cursor.position() - searchText.length() + 1,
+                               searchText.length());
+                ui->genshow_textEdit->update();
+            }
         }
     }
+
+
+
+//    while(1)
+//    {
+//        if (!ui->genshow_textEdit->find(searchText))
+//        {
+//            //            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+//            break;
+//        }
+//        else
+//        {
+//            QTextCursor cursor = ui->genshow_textEdit->textCursor();
+//            setStringColor(cursor.position() - searchText.length() + 1,
+//                           searchText.length());
+//            ui->genshow_textEdit->update();
+//        }
+//    }
+
+
+//    QSet<quint32> posset = getAllMatchPosResults(ui->genshow_textEdit->toPlainText(), searchText);
+////    qDebug() << "posset result size " << posset.size();
+//    QSet<quint32>::iterator i;
+//    for (i = posset.begin(); i != posset.end(); ++i) {
+//        //      *i = (*i).toLower(); // 使用 * 运算符获取遍历器所指的元素
+////        qDebug()<<*i;
+//        setStringColor(*i + 1,
+//                       searchText.length());
+//    }
+//    ui->genshow_textEdit->update();
+
+
 
     return;
 }
@@ -2772,11 +2841,14 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
     unsigned int index = GetlistWidget_codeview_row();
 
 
-
-    GenCode_str+="/*  ";
-    GenCode_str+=selectresult.note_list.at(index);
-    GenCode_str+="   */";
-    GenCode_str+="\n";
+    //内容前缀头 内容头
+    if (ui_setup->checkBox_content_withheader->isChecked())
+    {
+        GenCode_str+="/*  ";
+        GenCode_str+=selectresult.note_list.at(index);
+        GenCode_str+="   */";
+        GenCode_str+="\n";
+    }
     GenCode_str+=selectresult.content_list.at(index);
     GenCode_str+="\n";
     GenCode_str+="\n";
@@ -5104,6 +5176,55 @@ void autoCCode::updateClientProgress(qint64 numBytes)
 
 //}
 
+QSet<QString> autoCCode::getAllMatchResults(const QString text, const QString regexp)
+{
+    QSet<QString> resultSet;
+    QRegExp rx(regexp);
+    int pos = 0;
+    while ((pos = rx.indexIn(text, pos)) != -1)
+    {
+//        qDebug() << "pos :" << pos;
+        pos += rx.matchedLength();
+        QString result = rx.cap(0);
+        resultSet << result;
+    }
+    return resultSet;
+}
+
+QSet<quint32> autoCCode::getAllMatchPosResults(const QString text, const QString regexp)
+{
+    QSet<quint32> resultPosSet;
+    int pos = 0;
+    //精确查找
+    if (ui->checkBox_query_exact->isChecked())
+    {
+        QRegExp rx(regexp);
+        while ((pos = rx.indexIn(text, pos, QRegExp::CaretAtOffset)) != -1)
+        {
+    //        qDebug() << "pos :" << pos;
+            resultPosSet << pos;
+            pos += rx.matchedLength();
+    //        QString result = rx.cap(0);
+        }
+
+    }
+    else
+    {
+        QRegExp rx(regexp.toLower());
+        QString lowertext = text.toLower();
+        while ((pos = rx.indexIn(lowertext, pos, QRegExp::CaretAtOffset)) != -1)
+        {
+            //        qDebug() << "pos :" << pos;
+            resultPosSet << pos;
+            pos += rx.matchedLength();
+            //        QString result = rx.cap(0);
+        }
+
+    }
+
+    return resultPosSet;
+}
+
 void autoCCode::on_btn_find_down_clicked()
 {
     if (ui->lineEdit_search->text().isEmpty())
@@ -5112,18 +5233,58 @@ void autoCCode::on_btn_find_down_clicked()
         return;
     }
     QString searchText = ui->lineEdit_search->text().trimmed();
+//    QSet<QString> tmpset = getAllMatchResults(ui->genshow_textEdit->toPlainText(), searchText);
+//    qDebug() << "result size " << tmpset.size();
+//    QSet<QString>::iterator i;
+//    for (i = tmpset.begin(); i != tmpset.end(); ++i) {
+////      *i = (*i).toLower(); // 使用 * 运算符获取遍历器所指的元素
+//       qDebug()<<*i;
+//    }
 
-    if (!ui->genshow_textEdit->find(searchText))
+    //精确查找
+    if (ui->checkBox_query_exact->isChecked())
     {
-        ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+        if (!ui->genshow_textEdit->find(searchText,QTextDocument::FindCaseSensitively))
+        {
+            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+        }
+        else
+        {
+            QTextCursor cursor = ui->genshow_textEdit->textCursor();
+            setStringColor(cursor.position() - searchText.length() + 1,
+                           searchText.length());
+            ui->genshow_textEdit->update();
+        }
     }
     else
     {
-        QTextCursor cursor = ui->genshow_textEdit->textCursor();
-        setStringColor(cursor.position() - searchText.length() + 1,
-                       searchText.length());
-        ui->genshow_textEdit->update();
+
+        if (!ui->genshow_textEdit->find(searchText))
+        {
+            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+        }
+        else
+        {
+            QTextCursor cursor = ui->genshow_textEdit->textCursor();
+            setStringColor(cursor.position() - searchText.length() + 1,
+                           searchText.length());
+            ui->genshow_textEdit->update();
+        }
     }
+
+
+
+//    if (!ui->genshow_textEdit->find(searchText))
+//    {
+//        ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+//    }
+//    else
+//    {
+//        QTextCursor cursor = ui->genshow_textEdit->textCursor();
+//        setStringColor(cursor.position() - searchText.length() + 1,
+//                       searchText.length());
+//        ui->genshow_textEdit->update();
+//    }
 }
 
 void autoCCode::on_btn_find_up_clicked()
@@ -5134,18 +5295,52 @@ void autoCCode::on_btn_find_up_clicked()
         return;
     }
     QString searchText = ui->lineEdit_search->text().trimmed();
-    if (!ui->genshow_textEdit->find(searchText, QTextDocument::FindBackward))
+//    if (!ui->genshow_textEdit->find(searchText, QTextDocument::FindBackward))
+//    {
+//        ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+//    }
+//    else
+//    {
+//        //向后查找不正常
+//        //        QTextCursor cursor = ui->genshow_textEdit->textCursor();
+//        //        setStringColor(cursor.position()/* - searchText.length() + 1*/,
+//        //                       searchText.length());
+//        //        ui->genshow_textEdit->update();
+//    }
+
+
+    //精确查找
+    if (ui->checkBox_query_exact->isChecked())
     {
-        ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+        if (!ui->genshow_textEdit->find(searchText, QTextDocument::FindBackward | QTextDocument::FindCaseSensitively))
+        {
+            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+        }
+        else
+        {
+            //向后查找不正常
+            //        QTextCursor cursor = ui->genshow_textEdit->textCursor();
+            //        setStringColor(cursor.position()/* - searchText.length() + 1*/,
+            //                       searchText.length());
+            //        ui->genshow_textEdit->update();
+        }
     }
     else
     {
-        //向后查找不正常
-        //        QTextCursor cursor = ui->genshow_textEdit->textCursor();
-        //        setStringColor(cursor.position()/* - searchText.length() + 1*/,
-        //                       searchText.length());
-        //        ui->genshow_textEdit->update();
+        if (!ui->genshow_textEdit->find(searchText, QTextDocument::FindBackward))
+        {
+            ShowTipsInfo(QString::fromLocal8Bit("找不到 \"%1\"").arg(searchText));
+        }
+        else
+        {
+            //向后查找不正常
+            //        QTextCursor cursor = ui->genshow_textEdit->textCursor();
+            //        setStringColor(cursor.position()/* - searchText.length() + 1*/,
+            //                       searchText.length());
+            //        ui->genshow_textEdit->update();
+        }
     }
+
 }
 
 void autoCCode::ShowTipsInfo(QString s)
@@ -5221,7 +5416,8 @@ void autoCCode::ReadHistorySettings()
     ui_setup->checkBox_SeverFlag->setChecked(m_settings.value("ServerFlag").toBool());
     ui_setup->checkBox_supportRemote->setChecked(m_settings.value("SupportRemote").toBool());
     ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(m_settings.value("CurrentDataBase").toInt());
-
+    ui->checkBox_query_exact->setChecked(m_settings.value("QueryExact").toBool());
+    ui_setup->checkBox_content_withheader->setChecked(m_settings.value("ContentWithHeader").toBool());
 //    QPalette palettebtn ;
 //    QColor color= m_settings.value("ForeColor").Color;
 //    palettebtn.setColor(QPalette::Button, color);
@@ -5265,6 +5461,8 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("ServerFlag", ui_setup->checkBox_SeverFlag->isChecked());
     m_settings.setValue("SupportRemote", ui_setup->checkBox_supportRemote->isChecked());
     m_settings.setValue("CurrentDataBase", ui_dia_selectdb->comboBox_selectdb->currentIndex());
+    m_settings.setValue("QueryExact", ui->checkBox_query_exact->isChecked());
+    m_settings.setValue("ContentWithHeader", ui_setup->checkBox_content_withheader->isChecked());
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
 
@@ -5296,3 +5494,12 @@ void autoCCode::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+
+void autoCCode::on_checkBox_query_exact_stateChanged(int arg1)
+{
+    qDebug() << "on_checkBox_query_exact_stateChanged arg1 :" <<arg1;
+
+    setStringColor(0, 0);
+    ui->genshow_textEdit->setPlainText(GenCode_str);
+    SearchTextResWithColor2(GenCode_str);
+}
