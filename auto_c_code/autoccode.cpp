@@ -869,6 +869,8 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
         return;
     }
 
+    dialog_selectdb->close();
+
     QString select_express;
     select_express.clear();
     //str_print(sets->talbename);
@@ -916,7 +918,6 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     //    ui->listWidget_codeview->addItems(selectresult.keyword_list);
 
     ui->listWidget_note->addItems(selectresult.note_list);
-    dialog_selectdb->close();
 }
 
 void autoCCode::textEditSet(void)
@@ -1388,12 +1389,14 @@ void autoCCode::ok_btn_dia_clicked_self(void)
 
     if(lanaugetype.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("类型!! 不能为空"));
+//        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
         return;
     }
     if(content.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("内容!! 不能为空"));
+//        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
         return;
     }
 
@@ -1421,24 +1424,29 @@ void autoCCode::ok_btn_dia_clicked_self(void)
         restore_before_ops();
         if(isMainServer())
             return;
-        QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes, QMessageBox::Yes);
+        close_indb_dialog();
+        ShowTipsInfo(QString::fromLocal8Bit("内容已经存在"));
+//        QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
 
     if(vartype.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("变量类型 不能为空"));
+//        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
 
     if(index_keyword.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("检索 不能为空"));
+//        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
     if(note.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("注释 不能为空"));
+//        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
     //    if(aspect.isEmpty())
@@ -1447,6 +1455,7 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     //        return;
     //    }
 
+    close_indb_dialog();
 
     clr_selectresult(selectresult_tmp);
 
@@ -1458,6 +1467,19 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     insertcontent.vartype   = vartype;
     insertcontent.aspect    = aspect;
 
+
+    b.creatable(&insertcontent);
+    b.inserttable(&insertcontent);
+
+
+    //内容添加后，更新控件中内容的相关显示
+    update_show_after_insert();
+
+    is_selected = FALSE;//插入数据后，把此置为FALSE
+}
+
+void autoCCode::close_indb_dialog()
+{
 #ifndef DEBUG_V
 
     if(ui_dialog->checkBox_EOR->isChecked())
@@ -1478,15 +1500,9 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     ui_dialog->content_textEdit_dia->clear();
 #endif
 
-    b.creatable(&insertcontent);
-    b.inserttable(&insertcontent);
-
-
-    //内容添加后，更新控件中内容的相关显示
-    update_show_after_insert();
-
-    is_selected = FALSE;//插入数据后，把此置为FALSE
 }
+
+
 
 void autoCCode::cancel_btn_dia_clicked_self(void)
 {
@@ -1495,7 +1511,8 @@ void autoCCode::cancel_btn_dia_clicked_self(void)
 }
 void autoCCode::aboutVersion(void)
 {
-    QMessageBox::information(NULL, str_china(版本), GetVersion(),NULL,NULL);
+    ShowTipsInfo(QString::fromLocal8Bit("版本 %1").arg(GetVersion()));
+//    QMessageBox::information(NULL, str_china(版本), GetVersion(),NULL,NULL);
     return;
 }
 QString autoCCode::GetVersion(void)
@@ -3161,13 +3178,15 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
 
     if(lanaugetype.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("类型 不能为空"));
+//        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
         *ret = 1;
         return;
     }
     if(content.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("内容 不能为空"));
+//        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
         *ret = 1;
         return;
     }
@@ -3204,20 +3223,23 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
 
     if(vartype.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("变量类型 不能为空"));
+//        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         *ret = 1;
         return;
     }
 
     if(index_keyword.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("检索 不能为空"));
+//        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         *ret = 1;
         return;
     }
     if(note.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("注释 不能为空"));
+//        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         *ret = 1;
         return;
     }
@@ -4291,12 +4313,14 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
 
     if(lanaugetype.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("类型 不能为空"));
+//        QMessageBox::information(NULL, str_china(类型), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
         return;
     }
     if(content.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("内容 不能为空"));
+//        QMessageBox::information(NULL, str_china(内容), str_china(不能为空), QMessageBox::Yes , QMessageBox::Yes);
         return;
     }
 
@@ -4324,24 +4348,28 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
         restore_before_ops();
         if(isMainServer())
             return;
-        QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("内容已经存在"));
+//        QMessageBox::information(NULL, str_china(声明), str_china(内容已经存在), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
 
     if(vartype.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("变量类型 不能为空"));
+//        QMessageBox::information(NULL, str_china(变量类型), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
 
     if(index_keyword.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("检索 不能为空"));
+//        QMessageBox::information(NULL, str_china(检索), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
     if(note.isEmpty())
     {
-        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
+        ShowTipsInfo(QString::fromLocal8Bit("注释 不能为空"));
+//        QMessageBox::information(NULL, str_china(注释), str_china(不能为空), QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
     //    if(aspect.isEmpty())
@@ -4890,8 +4918,9 @@ void autoCCode::saveBindLocalIP(QString lip)
 
     if(isMainServer())//接收服务器只接收数据，不发送数据
     {
-        QMessageBox::information(NULL, str_china(提示),
-                                 str_china(数据库服务器端！),NULL,NULL);
+//        QMessageBox::information(NULL, str_china(提示),
+//                                 str_china(数据库服务器端！),NULL,NULL);
+        ShowTipsInfo(QString::fromLocal8Bit("提示!! 数据库服务器端！"));
         ifSeverUi();
         return;
     }
@@ -4925,8 +4954,9 @@ void autoCCode::hellosocket()
 {
     //    QString page = " you addr";
     //    socket->write("GET " + page.toLocal8Bit() + "\r\n");
-    QMessageBox::information(NULL, str_china(版本),
-                             str_china(连接远端成功！！),NULL,NULL);
+//    QMessageBox::information(NULL, str_china(版本),
+//                             str_china(连接远端成功！！),NULL,NULL);
+    ShowTipsInfo(QString::fromLocal8Bit("版本!! 连接远端成功！！"));
 }
 
 void autoCCode::timerwritemsg()

@@ -323,6 +323,8 @@ public slots:
 
 
 private:
+    void close_indb_dialog();
+
     void pushButtonSet(void);//°´Å¥¼¯ºÏ
     void pushButton_setup();
 
