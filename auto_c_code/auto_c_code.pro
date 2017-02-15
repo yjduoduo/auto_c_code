@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     calender/qrc_resource.cpp \
     calender/displaybutton.cpp \
     calender/clock.cpp \
-    calender/window_calender.cpp
+    calender/window_calender.cpp \
+    netthings.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -57,7 +58,10 @@ HEADERS  += autoccode.h \
     calender/setbirthday.h \
     calender/displaybutton.h \
     calender/clock.h \
-    calender/window_calender.h
+    calender/window_calender.h \
+    zeromq/include/zmq_utils.h \
+    zeromq/include/zmq.h \
+    netthings.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
@@ -72,16 +76,29 @@ FORMS    += autoccode.ui \
 INCLUDEPATH +=\
 ./sqlite-autoconf\
 ./codeEditor\
-./calender
+./calender\
+./zeromq\include \
+./zeromq\
 
 LIBS += -lpthread
+LIBS += -L$$PWD/zeromq/lib  -lzmq
+
 RC_FILE = autoapp.rc
 
 RESOURCES += \
     imgsrc.qrc
 
 OTHER_FILES += \
-    qxtglobalshortcut/qxtglobalshortcut.pri
+    qxtglobalshortcut/qxtglobalshortcut.pri \
+    zeromq/lib/libzmq.dll
 
 TRANSLATIONS += autoccode.ts
 
+
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/zeromq/lib/ -llibzmq
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/zeromq/lib/ -llibzmqd
+#else:symbian: LIBS += -llibzmq
+#else:unix: LIBS += -L$$PWD/zeromq/lib/ -llibzmq
+
+INCLUDEPATH += $$PWD/zeromq/lib
+DEPENDPATH += $$PWD/zeromq/lib

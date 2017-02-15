@@ -21,6 +21,7 @@ INPUT(
 ./debug/displaybutton.o
 ./debug/clock.o
 ./debug/window_calender.o
+./debug/netthings.o
 ./debug/moc_autoccode.o
 ./debug/moc_dialog_select_database.o
 ./debug/moc_qxtglobalshortcut.o

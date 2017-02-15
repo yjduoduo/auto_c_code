@@ -21,6 +21,7 @@ INPUT(
 ./release/displaybutton.o
 ./release/clock.o
 ./release/window_calender.o
+./release/netthings.o
 ./release/moc_autoccode.o
 ./release/moc_dialog_select_database.o
 ./release/moc_qxtglobalshortcut.o
