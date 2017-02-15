@@ -14,6 +14,7 @@
 #include <QTcpSocket>
 #include <QTcpServer>
 #include "window_calender.h"
+#include "netthings.h"
 
 namespace Ui {
 class autoCCode;
@@ -321,6 +322,8 @@ public slots:
     void ReadHistorySettings();
     void WriteCurrentSettings();
 
+    void updateHelloMsg(void);
+
 
 private:
     void close_indb_dialog();
@@ -556,6 +559,8 @@ private:
 
 private:
     Window *window_calender;
+
+    NetThings *helloworldNet;
 };
 
 

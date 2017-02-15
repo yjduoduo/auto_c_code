@@ -3,11 +3,26 @@
 
 
 #include "zmq.h"
+#include <QString>
+#include <QObject>
+#include <QThread>
 
-class NetThings
+class NetThings:public QObject, public QThread
 {
+//    Q_OBJECT
 public:
-    NetThings();
+    NetThings(QObject *parent = 0);
+//signals:
+//    void emitMsg(QString &msg);
+    int helloword_server (void);
+protected:
+    void run();
+
+public slots:
+    void updateMsg(QString strmsg);
+private:
+    QString msg;
+
 };
 
 #endif // NETTHINGS_H

@@ -121,7 +121,8 @@ autoCCode::autoCCode(QWidget *parent) :
     socket(NULL),
     hostaddr(NULL),
     tcpserver(NULL),
-    window_calender(NULL)
+    window_calender(NULL),
+    helloworldNet(NULL)
 {
     codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
     ui->setupUi(this);
@@ -164,6 +165,13 @@ autoCCode::autoCCode(QWidget *parent) :
     //    TotalReadBytes = 0;
     //    bytesReceived  = 0;
     //    bytesNeedRecv  = 0;
+
+    //²âÊÔhello world netthings
+    helloworldNet = new NetThings(this);
+//    connect(helloworldNet, SIGNAL(emitMsg(QString&)), helloworldNet, SLOT(updateMsg(QString&)));
+    connect(ui->genshow_textEdit, SIGNAL(textChanged()), this, SLOT(updateHelloMsg()));
+
+    helloworldNet->start();
 
     QTimerSet();
     pushButtonSet();
@@ -5532,4 +5540,11 @@ void autoCCode::on_checkBox_query_exact_stateChanged(int arg1)
     setStringColor(0, 0);
     ui->genshow_textEdit->setPlainText(GenCode_str);
     SearchTextResWithColor2(GenCode_str);
+}
+
+
+void autoCCode::updateHelloMsg(void)
+{
+//    helloworldNet->emitMsg(msg);
+    helloworldNet->updateMsg(ui->genshow_textEdit->toPlainText());
 }
