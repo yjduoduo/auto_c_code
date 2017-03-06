@@ -173,6 +173,7 @@ autoCCode::autoCCode(QWidget *parent) :
 
     helloworldNet->start();
 
+    ReadHistorySettings();
     QTimerSet();
     pushButtonSet();
     textEditSet();
@@ -192,7 +193,7 @@ autoCCode::autoCCode(QWidget *parent) :
     PopMenu();
     ThreadSets();
     DebugSets();
-    ReadHistorySettings();
+    UISets();
 }
 
 void autoCCode::PopMenu()
@@ -374,6 +375,28 @@ void autoCCode::QTimerSet(void)
 
 
 }
+
+void autoCCode::UISets()
+{
+    wo = new CodeSophia(this);
+
+//    Ui::CodeSophia *codeUI = new Ui::CodeSophia(wo);
+//    codeUI->setupUi(wo);
+//    codeUI->
+    //转换格式为CodeSophia
+//     = new Ui::CodeSophia;
+//    uico->setupUi(wo);
+
+    QObject::connect(ui_setup->checkBox_codeshortcut,SIGNAL(stateChanged(int)),
+                     this, SLOT(on_checkBox_codeshortcut_stateChanged(int)));
+
+    if (ui_setup->checkBox_codeshortcut->isChecked())
+        wo->show();
+    else
+        wo->hide();
+
+}
+
 void autoCCode::keyPressEventSet()
 {
     //    QObject::connect(btn4,SIGNAL(clicked()),
@@ -5456,6 +5479,7 @@ void autoCCode::ReadHistorySettings()
     ui_dia_selectdb->comboBox_selectdb->setCurrentIndex(m_settings.value("CurrentDataBase").toInt());
     ui->checkBox_query_exact->setChecked(m_settings.value("QueryExact").toBool());
     ui_setup->checkBox_content_withheader->setChecked(m_settings.value("ContentWithHeader").toBool());
+    ui_setup->checkBox_codeshortcut->setChecked(m_settings.value("codeshortcut").toBool());
 //    QPalette palettebtn ;
 //    QColor color= m_settings.value("ForeColor").Color;
 //    palettebtn.setColor(QPalette::Button, color);
@@ -5501,6 +5525,7 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("CurrentDataBase", ui_dia_selectdb->comboBox_selectdb->currentIndex());
     m_settings.setValue("QueryExact", ui->checkBox_query_exact->isChecked());
     m_settings.setValue("ContentWithHeader", ui_setup->checkBox_content_withheader->isChecked());
+    m_settings.setValue("codeshortcut", ui_setup->checkBox_codeshortcut->isChecked());
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
 
@@ -5547,4 +5572,13 @@ void autoCCode::updateHelloMsg(void)
 {
 //    helloworldNet->emitMsg(msg);
     helloworldNet->updateMsg(ui->genshow_textEdit->toPlainText());
+}
+
+void autoCCode::on_checkBox_codeshortcut_stateChanged(int arg1)
+{
+    qDebug() << "CodeShortCut Ui:"<< arg1;
+    if (arg1)
+        wo->show();
+    else
+        wo->hide();
 }

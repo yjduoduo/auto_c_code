@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CodeSophia</class>
+ <widget class="QMainWindow" name="CodeSophia">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CodeSophia 2</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>功能</string>
+    </property>
+    <addaction name="action"/>
+    <addaction name="action_2"/>
+    <addaction name="action_3"/>
+    <addaction name="action_4"/>
+    <addaction name="action_5"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action">
+   <property name="text">
+    <string>生成声明</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>生成函数</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>生成宏</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>生成结构体</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>结构体打印</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -332,6 +332,25 @@
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox_codeshortcut">
+   <property name="geometry">
+    <rect>
+     <x>202</x>
+     <y>183</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>入库按钮鼠标移动即弹出，且确定和取消也一样效果</string>
+   </property>
+   <property name="text">
+    <string>Code快手</string>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>

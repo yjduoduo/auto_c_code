@@ -15,6 +15,7 @@
 #include <QTcpServer>
 #include "window_calender.h"
 #include "netthings.h"
+#include "codesophia.h"
 
 namespace Ui {
 class autoCCode;
@@ -25,6 +26,7 @@ class SetUpDialog;
 class ToolsTabWidget;//工具集
 class UdpPkgDialog;//UDP
 class WizardPage;
+class CodeSophia;
 }
 
 class codeEditor;
@@ -345,6 +347,7 @@ private:
     void QTimerSet(void);
     void ThreadSets();
     void DebugSets();
+    void UISets();
     void hide_inBtn(void);
     void hide_OutBtn(void);
     void show_OutBtn(void);
@@ -398,7 +401,7 @@ private:
     Ui::ToolsTabWidget *ui_toolsets;//工具集
     Ui::UdpPkgDialog *pUdp_ui; //UDP
     Ui::WizardPage  *ui_codetool;
-
+    CodeSophia * wo;
 
     /* pthread线程，防止界面假死 */
     UiThread *pthread_event;
@@ -538,6 +541,7 @@ private slots://network
     //正则查找字符串--位置
     QSet<quint32> getAllMatchPosResults(const QString text, const QString regexp);
     void on_checkBox_query_exact_stateChanged(int arg1);
+    void on_checkBox_codeshortcut_stateChanged(int arg1);
 
 private:
     QString remoteip;

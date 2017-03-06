@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     calender/displaybutton.cpp \
     calender/clock.cpp \
     calender/window_calender.cpp \
-    netthings.cpp
+    netthings.cpp \
+    codesophia.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -61,7 +62,8 @@ HEADERS  += autoccode.h \
     calender/window_calender.h \
     zeromq/include/zmq_utils.h \
     zeromq/include/zmq.h \
-    netthings.h
+    netthings.h \
+    codesophia.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
@@ -70,7 +72,8 @@ FORMS    += autoccode.ui \
     setup1.ui \
     toolstabwidget.ui \
     udppkgdialog.ui \
-    codetools.ui
+    codetools.ui \
+    codesophia.ui
 
 
 INCLUDEPATH +=\

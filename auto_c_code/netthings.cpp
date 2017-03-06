@@ -16,6 +16,7 @@
 int NetThings::helloword_server (void)
 {
     //  Hello World server
+    return 0;
 
     //  Socket to talk to clients
     void *context = zmq_ctx_new ();
@@ -26,6 +27,9 @@ int NetThings::helloword_server (void)
 //    int rc = zmq_bind (responder, "inproc://my_publisher");
     assert (rc == 0);
 
+//    zmq_msg_t msg;
+//    zmq_recvmsg();
+//    zmq_getsockopt();
     while (1) {
         char buffer [10];
 
@@ -63,7 +67,7 @@ void NetThings::run()
 
     while(1)
     {
-        qDebug() << "emit signal.....";
+//        qDebug() << "emit signal.....";
 //        emit emitMsgBoxSignal();
         Sleep(1000);
     }
