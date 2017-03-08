@@ -11,9 +11,72 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CodeSophia 2</string>
+   <string>CodeSophia</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="0">
+        <widget class="QTextEdit" name="textEdit_key"/>
+       </item>
+       <item row="1" column="4">
+        <widget class="QTextEdit" name="textEdit_result"/>
+       </item>
+       <item row="1" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QPushButton" name="pushButton_gen">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Gen</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>50</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="0">
+        <widget class="QComboBox" name="comboBox_keytips"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -27,38 +90,123 @@
     <property name="title">
      <string>功能</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
-    <addaction name="action_3"/>
-    <addaction name="action_4"/>
-    <addaction name="action_5"/>
+    <addaction name="action_header"/>
+    <addaction name="action_declare"/>
+    <addaction name="action_fucntion"/>
+    <addaction name="action_define"/>
+    <addaction name="action_struct"/>
+    <addaction name="action_structprint"/>
+    <addaction name="action_ifcondition"/>
+    <addaction name="action_loop"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>语言</string>
+    </property>
+    <addaction name="actionC_2"/>
+    <addaction name="actionCPP"/>
+    <addaction name="actionJAVA"/>
+    <addaction name="actionSHELL"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>结果</string>
+    </property>
+    <addaction name="action_save"/>
+   </widget>
+   <addaction name="menu_2"/>
    <addaction name="menu"/>
+   <addaction name="menu_3"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_declare">
+   <property name="text">
+    <string>声明</string>
+   </property>
+  </action>
+  <action name="action_fucntion">
+   <property name="text">
+    <string>函数</string>
+   </property>
+  </action>
+  <action name="action_define">
+   <property name="text">
+    <string>宏</string>
+   </property>
+  </action>
+  <action name="action_struct">
+   <property name="text">
+    <string>结构体</string>
+   </property>
+  </action>
+  <action name="action_structprint">
+   <property name="text">
+    <string>结构体打印</string>
+   </property>
+  </action>
+  <action name="actionCPP">
+   <property name="text">
+    <string>C++</string>
+   </property>
+  </action>
+  <action name="actionJAVA">
+   <property name="text">
+    <string>JAVA</string>
+   </property>
+  </action>
+  <action name="actionSHELL">
+   <property name="text">
+    <string>SHELL</string>
+   </property>
+  </action>
   <action name="action">
    <property name="text">
-    <string>生成声明</string>
+    <string>头文件</string>
    </property>
   </action>
   <action name="action_2">
    <property name="text">
-    <string>生成函数</string>
+    <string>注释</string>
    </property>
   </action>
   <action name="action_3">
    <property name="text">
-    <string>生成宏</string>
+    <string>声明</string>
    </property>
   </action>
-  <action name="action_4">
+  <action name="action_6">
    <property name="text">
-    <string>生成结构体</string>
+    <string>宏</string>
    </property>
   </action>
-  <action name="action_5">
+  <action name="action_7">
    <property name="text">
-    <string>结构体打印</string>
+    <string>函数</string>
+   </property>
+  </action>
+  <action name="action_save">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="actionC_2">
+   <property name="text">
+    <string>C</string>
+   </property>
+  </action>
+  <action name="action_header">
+   <property name="text">
+    <string>头文件</string>
+   </property>
+  </action>
+  <action name="action_ifcondition">
+   <property name="text">
+    <string>条件</string>
+   </property>
+  </action>
+  <action name="action_loop">
+   <property name="text">
+    <string>循环</string>
    </property>
   </action>
  </widget>
