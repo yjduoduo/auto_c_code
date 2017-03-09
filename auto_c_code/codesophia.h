@@ -30,6 +30,7 @@ enum SubType
     SUB_HEADER,
     SUB_IFCONDITION,
     SUB_LOOP,
+    SUB_NOTE,
     SUB_OTHER,
 };
 
@@ -64,8 +65,10 @@ public slots:
     void HeaderMsg();
     void IfConditionMsg();
     void LoopMsg();
+    void NoteMsg();
 
     void SaveMsg();
+    void FillStringList();
 
     void on_pushButton_gen_clicked();
     void on_comboBox_keytips_clicked();
@@ -75,6 +78,7 @@ protected:
     void ActiveSets();
     void ButtonSets();
     void ComboBoxSets();
+    void TextEditSets();
 
     void ShowTipsInfo(QString s);
     void FillComBoxKeyTips();
@@ -82,6 +86,26 @@ protected:
     QString getSubType(SubType type);
     QString getKeyClass(KeyClass cls);
     QString getOPType(OPTYPE type);
+
+    void ReadHistorySettings();
+    void WriteCurrentSettings();
+
+
+
+private slots:
+    void on_pushButton_leftclear_clicked();
+
+    void on_pushButton_rightclear_clicked();
+
+private:
+//    void dragEnterEvent(QDragEnterEvent *event);
+//    void dropEvent(QDropEvent *event);
+//    void readTextFile(const QString &fileName);
+//    void readTextFileAppend(const QString &fileName);
+    void closeEvent(QCloseEvent *event);
+    void Proc_C_Header(QStringList &lst);
+    void Proc_C_Note(QStringList &lst);
+
 
 private:
     Ui::CodeSophia *ui;
@@ -98,6 +122,18 @@ private:
     QString current_optype; //op class
     quint32 current_optype_num;
     QString showtitle; //sub class
+
+    //定义显示列表
+    QStringList StrLst_KEYC_HEADER;
+    QStringList StrLst_KEYC_DECLARE;
+    QStringList StrLst_KEYC_DEFINE;
+    QStringList StrLst_KEYC_FUNCTION;
+    QStringList StrLst_KEYC_STRUCT;
+    QStringList StrLst_KEYC_STRUCTPRINT;
+    QStringList StrLst_KEYC_IFCONDITION;
+    QStringList StrLst_KEYC_LOOP;
+    QStringList StrLst_KEYC_NOTE;
+
     
 };
 

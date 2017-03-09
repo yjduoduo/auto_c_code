@@ -26,6 +26,14 @@
     FillComBoxKeyTips();
 
 
+#define SETTITLE_STARTUP \
+    showtitle = title_org + splitsign + current_lan + splitsign + current_optype;\
+    setWindowTitle(showtitle);\
+    FillComBoxKeyTips();
+
+
+
+
 
 CodeSophia::CodeSophia(QWidget *parent) :
     QMainWindow(parent),
@@ -36,14 +44,30 @@ CodeSophia::CodeSophia(QWidget *parent) :
     splitsign = " -- ";
     current_subtype = "";
 
+    current_lan.clear(); //当前语言
+    current_lan_num = 0;
+    current_subtype.clear(); //sub class
+    current_subtype_num = 0;
+    current_optype.clear(); //op class
+    current_optype_num = 0;
+    showtitle.clear(); //sub class
+
+
+    FillStringList();
+    ReadHistorySettings();
+    SETTITLE_STARTUP;
+
     ActiveSets();
     ButtonSets();
     ComboBoxSets();
+    TextEditSets();
+
 
 
 
 
 }
+
 
 void CodeSophia::ActiveSets()
 {
@@ -59,6 +83,7 @@ void CodeSophia::ActiveSets()
     connect(ui->action_header, SIGNAL(triggered()), this, SLOT(HeaderMsg()));
     connect(ui->action_ifcondition, SIGNAL(triggered()), this, SLOT(IfConditionMsg()));
     connect(ui->action_loop, SIGNAL(triggered()), this, SLOT(LoopMsg()));
+    connect(ui->action_note, SIGNAL(triggered()), this, SLOT(NoteMsg()));
     connect(ui->action_save, SIGNAL(triggered()), this, SLOT(SaveMsg()));
 
 }
@@ -72,6 +97,13 @@ void CodeSophia::ButtonSets()
 void CodeSophia::ComboBoxSets()
 {
     connect(ui->comboBox_keytips,SIGNAL(clicked()), this, SLOT(on_comboBox_keytips_clicked()));
+    connect(ui->comboBox_keytips,SIGNAL(currentIndexChanged(int)), this, SLOT(on_pushButton_gen_clicked()));
+
+}
+void CodeSophia::TextEditSets()
+{
+    connect(ui->textEdit_key,SIGNAL(textChanged()), this, SLOT(on_pushButton_gen_clicked()));
+
 
 }
 
@@ -95,12 +127,58 @@ void CodeSophia::on_pushButton_gen_clicked()
         ShowTipsInfo("subtype empty!!!");
         return;
     }
-    if(ui->textEdit_key->toPlainText().isEmpty())
-    {
-        ShowTipsInfo("Key TextEdit empty,please input something!!!");
-        return;
-    }
+//    if(ui->textEdit_key->toPlainText().isEmpty())
+//    {
+//        ui->textEdit_result->clear();
+//        //        ShowTipsInfo("Key TextEdit empty,please input something!!!");
+//        return;
+//    }
 
+    int n;
+    int Number= ui->textEdit_key->document()->lineCount();
+    QString orgText = ui->textEdit_key->toPlainText();
+    QStringList middlestrList;
+    qDebug() << "Number :" << Number;
+    qDebug() << "key    :" << orgText << endl;
+
+    for(n=0;n<Number;n++)
+    {
+        QString str=ui->textEdit_key->toPlainText().section('\n',n-Number ,n-Number,QString::SectionSkipEmpty); //取得每行（以换行符进行换行）搜索
+        QStringList list=str.split("\n");
+        //        ......... //list.at(n) 随便获得各行中以空格分开的各个字符串
+        foreach (QString string, list) {
+            if(string.isEmpty())
+                continue;
+            middlestrList << string;
+            qDebug() << "middle str :" << string;
+        }
+
+    }
+    qDebug() << "middle result size:" << middlestrList.size();
+
+
+    switch(current_lan_num)
+    {
+    case KEY_C:
+    {
+        switch(current_subtype_num)
+        {
+        case SUB_HEADER:
+            Proc_C_Header(middlestrList);
+            break;
+
+        case SUB_NOTE:
+            Proc_C_Note(middlestrList);
+            break;
+
+        default:
+            break;
+        }
+    }
+        break;
+    default:
+        break;
+    }
 
 
 
@@ -181,6 +259,11 @@ void CodeSophia::LoopMsg()
     SETSUBTITLE((SUB_LOOP));
 
 }
+void CodeSophia::NoteMsg()
+{
+    SETSUBTITLE((SUB_NOTE));
+
+}
 
 
 void CodeSophia::SaveMsg()
@@ -209,6 +292,8 @@ QString CodeSophia::getSubType(SubType type)
         return "IFCONDITION";
     case SUB_LOOP:
         return "LOOP";
+    case SUB_NOTE:
+        return "NOTE";
     default:
         break;
     }
@@ -266,55 +351,31 @@ void CodeSophia::FillComBoxKeyTips()
         switch(( current_subtype_num))
         {
         case SUB_HEADER:
-            list
-                << "#include <>"
-                << "#include \"\""
-                ;
+            list = StrLst_KEYC_HEADER;
             break;
         case SUB_DECLARE:
-            list << "extern C"
-                    ;
+            list  = StrLst_KEYC_DECLARE;
             break;
         case SUB_DEFINE:
-            list << "#ifdef "
-                 << "#ifndef "
-                 << "#ifdef  else "
-                 << "#ifndef  else"
-                 << "#if 0"
-                 << "#if 1"
-                ;
+            list  = StrLst_KEYC_DEFINE;
             break;
         case SUB_FUNCTION:
-            list
-                << "extern"
-                    ;
+            list  = StrLst_KEYC_FUNCTION;
             break;
         case SUB_STRUCT:
-            list
-                << "typedef struct "
-                    ;
+            list  = StrLst_KEYC_STRUCT;
             break;
         case SUB_STRUCTPRINT:
-            list
-                << "print %u"
-                << "print %d"
-                << "print %s"
-                << "print %#x"
-                << "print %x"
-                    ;
+            list  = StrLst_KEYC_STRUCTPRINT;
             break;
         case SUB_LOOP:
-            list
-                    << "for"
-                    << "while"
-                       ;
+            list  = StrLst_KEYC_LOOP;
             break;
         case SUB_IFCONDITION:
-            list
-                    << "if"
-                    << "if else "
-                    << "if elseif else"
-                       ;
+            list  = StrLst_KEYC_IFCONDITION;
+            break;
+        case SUB_NOTE:
+            list  = StrLst_KEYC_NOTE;
             break;
         default:
             break;
@@ -335,4 +396,257 @@ void CodeSophia::FillComBoxKeyTips()
 }
 
 
+void CodeSophia::ReadHistorySettings()
+{
+    QSettings m_settings("codesophia.com.cn", "codesophia");
+    //    qDebug() << "read setting filename:" << m_settings.fileName();
 
+    current_lan_num =  m_settings.value("current_lan_num").toInt();
+    current_subtype_num =  m_settings.value("current_subtype_num").toInt();
+    current_optype_num =  m_settings.value("current_optype_num").toInt();
+    current_lan =  m_settings.value("current_lan").toString();
+    current_subtype =  m_settings.value("current_subtype").toString();
+    current_optype =  m_settings.value("current_optype").toString();
+
+
+
+    this->restoreGeometry(m_settings.value("AutoCCode_Geometry").toByteArray());
+}
+
+void CodeSophia::WriteCurrentSettings()
+{
+    QSettings m_settings("codesophia.com.cn", "codesophia");
+    m_settings.setValue("current_lan_num", current_lan_num);
+    m_settings.setValue("current_subtype_num", current_subtype_num);
+    m_settings.setValue("current_optype_num", current_optype_num);
+    m_settings.setValue("current_lan", current_lan);
+    m_settings.setValue("current_subtype", current_subtype);
+    m_settings.setValue("current_optype", current_optype);
+
+    m_settings.setValue("AutoCCode_Geometry", this->saveGeometry());
+
+    //    qDebug() << "setting filename:" << m_settings.fileName();
+
+}
+
+
+
+void CodeSophia::closeEvent(QCloseEvent *event)
+{
+    qDebug() << "CodeSophia closeEvent";
+    WriteCurrentSettings();
+    event->accept();
+}
+
+void CodeSophia::Proc_C_Header(QStringList &lst)
+{
+    QString result;
+    result.clear();
+
+    QString leftsign;
+    QString rightsign;
+    QString header = "#include ";
+
+    QString combotext = ui->comboBox_keytips->currentText();
+    if(combotext.contains("<"))
+    {
+        leftsign = "<";
+        rightsign = ">";
+    }
+    else if (combotext.contains("\""))
+    {
+        leftsign = "\"";
+        rightsign = "\"";
+    }
+    else
+    {
+        return;
+    }
+
+    foreach (QString string, lst) {
+        if(string.isEmpty())
+            continue;
+        result += header + leftsign + string + rightsign +"\n";
+        qDebug() << "result str :" << result;
+    }
+
+
+
+
+
+
+    ui->textEdit_result->setText(result);
+
+}
+
+void CodeSophia::Proc_C_Note(QStringList &lst)
+{
+    QString result;
+    result.clear();
+
+    QString leftsign;
+    QString rightsign;
+    QString header;
+    bool hassplit = true;
+    bool ignorelst = false;
+
+    quint32 index = ui->comboBox_keytips->currentIndex();
+    switch(index)
+    {
+    case 0:
+        result = "\n"
+                "\/*\n"
+                 "* See the file LICENSE for redistribution information.\n"
+                 "*\n"
+                 "* Copyright (c) 2012, 2017 WeilaiDb and/or its affiliates.  All rights reserved.\n"
+                 "*\n"
+                 "* $Id$\n"
+                 "*\/\n";
+        ignorelst = true;
+        break;
+    case 1:
+        break;
+    case 2:
+        hassplit =false;
+        header = "";
+        leftsign = "/*  \n\n";
+        rightsign = "\n\n*/";
+        foreach (QString string, lst) {
+            if(string.isEmpty())
+                continue;
+            if(string.contains("//"))
+            {
+                ShowTipsInfo("Invalid Text, having //");
+                break;
+            }
+            if(string.contains("/*"))
+            {
+                ShowTipsInfo("Invalid Text, having /*");
+                break;
+            }
+            if(string.contains("*/"))
+            {
+                ShowTipsInfo("Invalid Text, having */");
+                break;
+            }
+        }
+        break;
+    case 3:
+        header = "";
+        leftsign = "//  ";
+        rightsign = "";
+        break;
+    default:
+        return;
+        break;
+    }
+
+    if(!hassplit)
+        result +=  header + leftsign;
+
+    foreach (QString string, lst) {
+        if(ignorelst)
+            break;
+        if(string.isEmpty())
+            continue;
+        if(hassplit)
+            result += header + leftsign + string + rightsign +"\n";
+        else
+            result +=  string + "\n";
+
+        qDebug() << "result str :" << result;
+    }
+
+    if(!hassplit)
+        result +=  rightsign;
+
+
+
+
+
+    ui->textEdit_result->setText(result);
+
+}
+
+void CodeSophia::on_pushButton_leftclear_clicked()
+{
+    ui->textEdit_key->clear();
+}
+
+void CodeSophia::on_pushButton_rightclear_clicked()
+{
+    ui->textEdit_result->clear();
+}
+
+
+
+void CodeSophia::FillStringList()
+{
+    //    QStringList StrLst_KEYC_HEADER;
+
+    StrLst_KEYC_HEADER
+            << "#include <>"
+            << "#include \"\""
+               ;
+    //    QStringList StrLst_KEYC_DECLARE;
+    StrLst_KEYC_DECLARE
+            << "extern"
+            << "extern C"
+               ;
+    //    QStringList StrLst_KEYC_DEFINE;
+    StrLst_KEYC_DEFINE
+            << "#ifdef "
+            << "#ifndef "
+            << "#ifdef  else "
+            << "#ifndef  else"
+            << "#if 0"
+            << "#if 1"
+               ;
+    //    QStringList StrLst_KEYC_FUNCTION;
+    StrLst_KEYC_FUNCTION
+            << "extern"
+               ;
+    //    QStringList StrLst_KEYC_STRUCT;
+    StrLst_KEYC_STRUCT
+            << "typedef struct "
+               ;
+    //    QStringList StrLst_KEYC_STRUCTPRINT;
+    StrLst_KEYC_STRUCTPRINT
+            << "print %u"
+            << "print %lu"
+            << "print %llu"
+            << "print %d"
+            << "print %s"
+            << "print %-02s"
+            << "print %-04s"
+            << "print %-08s"
+            << "print %#x"
+            << "print %x"
+            << "print %-2x"
+            << "print %-02x"
+            << "print %-4x"
+            << "print %-04x"
+            << "print %-8x"
+            << "print %-08x"
+               ;
+    //    QStringList StrLst_KEYC_LOOP;
+    StrLst_KEYC_LOOP
+            << "for"
+            << "while"
+               ;
+    StrLst_KEYC_IFCONDITION
+            << "if"
+            << "if else"
+            << "if elseif else"
+            << "switch"
+               ;
+    //    QStringList StrLst_KEYC_NOTE;
+    StrLst_KEYC_NOTE
+            << "file note"
+            << "function note"
+            << "/* */"
+            << "//"
+               ;
+
+
+}
