@@ -173,7 +173,6 @@ autoCCode::autoCCode(QWidget *parent) :
 
     helloworldNet->start();
 
-    ReadHistorySettings();
     QTimerSet();
     pushButtonSet();
     textEditSet();
@@ -194,6 +193,7 @@ autoCCode::autoCCode(QWidget *parent) :
     ThreadSets();
     DebugSets();
     UISets();
+    ReadHistorySettings();
 }
 
 void autoCCode::PopMenu()
