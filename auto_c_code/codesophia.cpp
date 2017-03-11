@@ -707,6 +707,96 @@ QString CodeSophia::Proc_C_Function_SetGet(QStringList &lst, bool Local)
     return result;
 }
 
+QString CodeSophia::Proc_C_Function_GenFunc(QStringList &lst, bool Local)
+{
+    QStringList resultlst;
+    QString result;
+    QString type;
+    QString name;
+    QString funcname;
+    QString parainfo;
+    QString _inname;
+    QString staticFlag;
+    quint32 loop1 = 0;
+    quint32 loop2 = 0;
+    quint8 invalid = false;
+    if(Local)
+        staticFlag = "static ";
+
+    if(lst.size())
+        result += "/* function declare begin */" + enter;
+    foreach (QString string, lst) {
+        string = string.simplified();
+        string = string.replace(";", "");
+        string = string.replace("(", " ");
+        string = string.replace(")", " ");
+        parainfo.clear();
+        QStringList splitinfo = string.split(",");
+        foreach (QString t2, splitinfo) {
+            if(t2.split(" ").size() < 2)
+            {
+                invalid = true;
+                break;
+            }
+        }
+        if(invalid)
+            continue;
+
+        foreach (QString str, splitinfo) {
+            QStringList tmp = str.split(" ");
+            type = tmp.at(0);
+            funcname = tmp.at(1);
+            break;
+        }
+        parainfo += "(";
+        loop1 = 0;
+        loop2 = 0;
+        foreach (QString str, splitinfo) {
+            QStringList tmp = str.split(" ");
+            loop1++;
+            loop2 = 0;
+            if(tmp.size() == 2)
+                continue;
+            foreach (QString str2, tmp) {
+                loop2++;
+                if(loop1 == 1 && loop2 < 3)
+                    continue;
+                parainfo +=  spacesign + str2.simplified();
+            }
+            if(loop1 != splitinfo.size())
+                parainfo += ",";
+        }
+
+        parainfo += ")";
+
+        result += staticFlag + type + spacesign +funcname + parainfo + semisign + enter;
+        resultlst <<  staticFlag + type + spacesign +funcname + parainfo  + enter;
+
+    }
+
+    if(lst.size())
+        result += "/* function declare end */" + enter;
+
+    result += enter;
+    result += enter;
+    if(lst.size())
+        result += "/* function implement */" + enter;
+
+    foreach (QString resl, resultlst) {
+        result += resl;
+        result += "{";
+        result += enter;
+        result += enter;
+        result += enter;
+        result += "}";
+        result += enter;
+        result += enter;
+
+    }
+
+    return result;
+}
+
 void CodeSophia::Proc_C_Function(QStringList &lst)
 {
     QString result;
@@ -737,9 +827,10 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
         result = Proc_C_Function_SetGet(lst, true);
         break;
     case 3:
-        header = "";
-        leftsign = "//  ";
-        rightsign = "";
+        result = Proc_C_Function_GenFunc(lst, false);
+        break;
+    case 4:
+        result = Proc_C_Function_GenFunc(lst, true);
         break;
     default:
         return;
@@ -791,6 +882,8 @@ void CodeSophia::FillStringList()
             << "extern"
             << "set get"
             << "set get local"
+            << "gen func"
+            << "gen func local"
                ;
     //    QStringList StrLst_KEYC_STRUCT;
     StrLst_KEYC_STRUCT

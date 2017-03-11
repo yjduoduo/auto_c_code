@@ -111,6 +111,7 @@ private:
     void Proc_C_Note(QStringList &lst);
     void Proc_C_Function(QStringList &lst);
     QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
+    QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
 
 
 
