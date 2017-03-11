@@ -21,13 +21,15 @@
 #define SETOPTITLE(TITLE) \
     current_optype_num = TITLE; \
     current_optype = getOPType(TITLE); \
+    current_subtype_num = 0;\
+    current_subtype.clear();\
     showtitle = title_org + splitsign + current_lan + splitsign + current_optype;\
     setWindowTitle(showtitle);\
     FillComBoxKeyTips();
 
 
 #define SETTITLE_STARTUP \
-    showtitle = title_org + splitsign + current_lan + splitsign + current_optype;\
+    showtitle = title_org + splitsign + current_lan + splitsign + current_subtype;\
     setWindowTitle(showtitle);\
     FillComBoxKeyTips();
 
@@ -52,22 +54,29 @@ CodeSophia::CodeSophia(QWidget *parent) :
     current_optype_num = 0;
     showtitle.clear(); //sub class
 
+    enter = "\n";
+    semisign = ";";
+    underlinesign = "_";
+    equalsign = " = ";
+    spacesign = " ";
+    tabsign = "    ";
+
 
     FillStringList();
-    ReadHistorySettings();
-    SETTITLE_STARTUP;
 
     ActiveSets();
     ButtonSets();
     ComboBoxSets();
     TextEditSets();
-
-
-
-
+    ReadHistorySettings();
+    SETTITLE_STARTUP;
 
 }
 
+CodeSophia::~CodeSophia()
+{
+    delete ui;
+}
 
 void CodeSophia::ActiveSets()
 {
@@ -169,6 +178,9 @@ void CodeSophia::on_pushButton_gen_clicked()
 
         case SUB_NOTE:
             Proc_C_Note(middlestrList);
+            break;
+        case SUB_FUNCTION:
+            Proc_C_Function(middlestrList);
             break;
 
         default:
@@ -339,8 +351,11 @@ QString CodeSophia::getKeyClass(KeyClass cls)
 
 void CodeSophia::FillComBoxKeyTips()
 {
-    if(current_lan.isEmpty() || current_subtype.isEmpty())
-        return;
+//    if(current_lan.isEmpty() || current_subtype.isEmpty())
+//        return;
+    qDebug() << "current   lan:" << current_lan ;
+    qDebug() << "  subtype lan:" << current_subtype ;
+    qDebug() << "  optype  lan:" << current_optype;
     QStringList list;
     list.clear();
 
@@ -391,8 +406,14 @@ void CodeSophia::FillComBoxKeyTips()
         break;
     }
 
+    foreach(QString str, list)
+    {
+        qDebug() << "str:" << str;
+    }
+
     ui->comboBox_keytips->clear();
     ui->comboBox_keytips->addItems(list);
+
 }
 
 
@@ -438,6 +459,16 @@ void CodeSophia::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+void CodeSophia::SetTextEditResult(QString &str)
+{
+    ui->textEdit_result->setText(str);
+    QTextCursor cursor = ui->textEdit_result->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    ui->textEdit_result->setTextCursor(cursor);
+}
+
+
+
 void CodeSophia::Proc_C_Header(QStringList &lst)
 {
     QString result;
@@ -475,7 +506,7 @@ void CodeSophia::Proc_C_Header(QStringList &lst)
 
 
 
-    ui->textEdit_result->setText(result);
+    SetTextEditResult(result);
 
 }
 
@@ -564,7 +595,160 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
 
 
 
-    ui->textEdit_result->setText(result);
+    SetTextEditResult(result);
+
+}
+
+QString CodeSophia::Proc_C_Function_SetGet(QStringList &lst, bool Local)
+{
+    QString result;
+    QString type;
+    QString name;
+    QString _inname;
+    QString staticFlag = "";
+    if(Local)
+        staticFlag = "static ";
+
+    if(lst.size())
+        result += "/* variable declare begin */" + enter;
+    foreach (QString string, lst) {
+        string = string.simplified();
+        if(!string.contains(";"))
+            result += string + semisign + enter;
+        else
+            result += string + enter;
+    }
+
+    if(lst.size())
+        result += "/* variable declare end */" + enter;
+
+
+    foreach(QString string, lst) {
+        string = string.simplified();
+        QStringList list=string.split(" ");
+        if(list.size() < 2)
+            continue;
+
+        if(list.at(1) == "*" || list.at(1) == "&")
+        {
+            if(list.size() <3)
+                continue;
+            type = list.at(0) + list.at(1);
+            name = list.at(2);
+        }
+        else
+        {
+            type = list.at(0);
+            name = list.at(1);
+            if(name.contains("*"))
+            {
+                type +="*";
+                name.replace("*", "");
+            }else if(name.contains("&"))
+            {
+                type +="&";
+                name.replace("&", "");
+            }
+        }
+        name.replace(";","");
+
+        if(name.contains("."))
+        {
+            QStringList inlist = name.split(".");
+            _inname = inlist.at(1);
+        }
+        else
+        {
+            _inname = name;
+        }
+
+
+        //note for set and get name
+        result += "/*";
+        result += enter;
+        result += staticFlag + "Set and Get for " + _inname;
+        result += enter;
+        result += "*/";
+        result += enter;
+
+
+        //set function
+        result += staticFlag;
+        result += "void" + spacesign;
+        result += "Set" + underlinesign + _inname;
+        result += "(" + type + spacesign + underlinesign + _inname + ")";
+        result += enter;
+        result += "{";
+        result += enter;
+        result += tabsign;
+        result += name + equalsign + underlinesign + _inname + semisign;
+        result += enter;
+        result += "}";
+        result += enter;
+
+        result += enter;
+
+        //get function
+        result += staticFlag;
+        result += type + spacesign;
+        result += "Get" + underlinesign + _inname;
+        result += "(void)";
+        result += enter;
+        result += "{";
+        result += enter;
+        result += tabsign;
+        result += "return " +name +semisign;
+        result += enter;
+        result += "}";
+        result += enter;
+        result += enter;
+    }
+
+    return result;
+}
+
+void CodeSophia::Proc_C_Function(QStringList &lst)
+{
+    QString result;
+    result.clear();
+
+    QString leftsign;
+    QString rightsign;
+    QString header;
+
+
+    quint32 index = ui->comboBox_keytips->currentIndex();
+    switch(index)
+    {
+    case 0:
+        header = "extern ";
+        foreach(QString string, lst) {
+            string = string.simplified();
+            if(string.contains(semisign))
+                result += header + string + enter;
+            else
+                result += header + string + semisign + enter;
+        }
+        break;
+    case 1:
+        result = Proc_C_Function_SetGet(lst,false);
+        break;
+    case 2:
+        result = Proc_C_Function_SetGet(lst, true);
+        break;
+    case 3:
+        header = "";
+        leftsign = "//  ";
+        rightsign = "";
+        break;
+    default:
+        return;
+        break;
+    }
+
+
+
+    SetTextEditResult(result);
 
 }
 
@@ -605,6 +789,8 @@ void CodeSophia::FillStringList()
     //    QStringList StrLst_KEYC_FUNCTION;
     StrLst_KEYC_FUNCTION
             << "extern"
+            << "set get"
+            << "set get local"
                ;
     //    QStringList StrLst_KEYC_STRUCT;
     StrLst_KEYC_STRUCT

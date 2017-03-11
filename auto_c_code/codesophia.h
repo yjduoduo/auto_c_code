@@ -37,7 +37,7 @@ enum SubType
 enum OPTYPE
 {
     OP_INVALID,
-    OP_SAVE,
+    OP_SAVE = 0x20,
     OP_OTHER,
 };
 
@@ -49,6 +49,7 @@ class CodeSophia : public QMainWindow
     Q_OBJECT
 public:
     explicit CodeSophia(QWidget *parent = 0);
+    ~CodeSophia();
     
 signals:
     
@@ -103,8 +104,14 @@ private:
 //    void readTextFile(const QString &fileName);
 //    void readTextFileAppend(const QString &fileName);
     void closeEvent(QCloseEvent *event);
+    void SetTextEditResult(QString &str);
+
+
     void Proc_C_Header(QStringList &lst);
     void Proc_C_Note(QStringList &lst);
+    void Proc_C_Function(QStringList &lst);
+    QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
+
 
 
 private:
@@ -122,6 +129,13 @@ private:
     QString current_optype; //op class
     quint32 current_optype_num;
     QString showtitle; //sub class
+
+    QString enter;
+    QString semisign;
+    QString spacesign;
+    QString underlinesign;
+    QString tabsign;
+    QString equalsign;
 
     //定义显示列表
     QStringList StrLst_KEYC_HEADER;
