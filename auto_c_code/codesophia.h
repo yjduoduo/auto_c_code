@@ -43,6 +43,14 @@ enum OPTYPE
 
 
 
+typedef struct T_DataFormat
+{
+    QString string;
+    QString format;
+}T_DataFormat;
+
+
+
 
 class CodeSophia : public QMainWindow
 {
@@ -91,12 +99,18 @@ protected:
     void ReadHistorySettings();
     void WriteCurrentSettings();
 
+    void StructPrintMsgUIHide();
+    void StructPrintMsgUIShow();
 
 
 private slots:
     void on_pushButton_leftclear_clicked();
 
     void on_pushButton_rightclear_clicked();
+
+    void on_lineEdit_print_textChanged(const QString &arg1);
+
+    void on_lineEdit_dataprint_textChanged(const QString &arg1);
 
 private:
 //    void dragEnterEvent(QDragEnterEvent *event);
@@ -110,6 +124,7 @@ private:
     void Proc_C_Header(QStringList &lst);
     void Proc_C_Note(QStringList &lst);
     void Proc_C_Function(QStringList &lst);
+    void Proc_C_StructPrint(QStringList &lst);
     QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
     QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
 
@@ -132,8 +147,14 @@ private:
     QString showtitle; //sub class
 
     QString enter;
+    QString entersign;
     QString semisign;
+    QString douhaosign;
+    QString yinhaomsign;
+    QString leftkuohaosin;
+    QString rightkuohaosign;
     QString spacesign;
+    QString maohaosign;
     QString underlinesign;
     QString tabsign;
     QString equalsign;

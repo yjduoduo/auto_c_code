@@ -391,7 +391,14 @@ void autoCCode::UISets()
                      this, SLOT(on_checkBox_codeshortcut_stateChanged(int)));
 
     if (ui_setup->checkBox_codeshortcut->isChecked())
+    {
+//        wo->show();
+//        wo->showMinimized();
+        setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint);
+//        setWindowState(Qt::WindowMinimizeButtonHint);
         wo->show();
+//        wo->hide();
+    }
     else
         wo->hide();
 
