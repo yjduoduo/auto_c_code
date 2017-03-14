@@ -204,6 +204,9 @@ void CodeSophia::on_pushButton_gen_clicked()
         case SUB_DEFINE:
             Proc_C_Define(middlestrList);
             break;
+        case SUB_IFCONDITION:
+            Proc_C_IFCONDITION(middlestrList);
+            break;
 
         default:
             break;
@@ -1299,6 +1302,152 @@ void CodeSophia::Proc_C_Define(QStringList &lst)
             result += enter + enter;
 
     }
+
+
+    SetTextEditResult(result);
+
+}
+
+void CodeSophia::Proc_C_IFCONDITION(QStringList &lst)
+{
+    QString result;
+    result.clear();
+
+    QString first;
+    QString middle;
+    QString middle2;
+    QString end;
+    QString m_lsign;
+    QString m_rsign;
+    QList<T_DefineInfo> dealafter;
+    QList<T_DefineInfo> after_nameLst;
+    T_DefineInfo tDefInfo;
+
+
+    quint32 index = ui->comboBox_keytips->currentIndex();
+    switch(index)
+    {
+    case 0:
+
+        first = "if";
+        middle = "";
+        end = enter;
+        m_lsign = "{";
+        m_rsign = "}";
+        break;
+    case 1:
+        first = "if";
+        middle = "else";
+        end = enter;
+        m_lsign = "{";
+        m_rsign = "}";
+        break;
+    case 2:
+        first = "if";
+        middle = "else if";
+        middle2 = "else";
+        end = enter;
+        m_lsign = "{";
+        m_rsign = "}";
+        break;
+    case 3:
+        first = "switch";
+        middle = "";
+        end = "";
+        m_lsign = "{";
+        m_rsign = "}";
+        break;
+//    case 4:
+//        first = "#ifdef";
+//        middle = "#else";
+//        end = "#endif";
+//        m_lsign = enter;
+//        m_rsign = enter;
+//        break;
+//    case 5:
+//        first = "#ifndef";
+//        middle = "#else";
+//        end = "#endif";
+//        m_lsign = enter;
+//        m_rsign = enter;
+//        break;
+
+
+
+    default:
+        return;
+        break;
+    }
+
+    if(first.isEmpty())
+        return;
+
+
+    QString breaktips = "break;";
+    foreach (QString string, lst) {
+        string = string.simplified();
+
+        if(first.contains("switch"))
+        {
+            result += first + leftkuohaosin + spacesign + string + spacesign + rightkuohaosign;
+            result += enter;
+            result += m_lsign;
+            result += enter;
+            result += "case 0:" + enter + enter  + tabsign + breaktips + enter;
+            result += "case 1:" + enter + enter + tabsign + breaktips + enter;
+            result += "case 2:" + enter + enter + tabsign + breaktips + enter;
+            result += "case 3:" + enter + enter + tabsign + breaktips + enter;
+            result += "case 4:" + enter + enter + tabsign + breaktips + enter;
+            result += "case 5:" + enter + enter + tabsign + breaktips + enter;
+            result += "case 6:" + enter + enter + tabsign + breaktips + enter;
+            result += "case 7:" + enter + enter + tabsign + breaktips + enter;
+            result += "case 8:" + enter + enter + tabsign + breaktips + enter;
+            result += "case 9:" + enter + enter + tabsign + breaktips + enter;
+            result += "case 10:" + enter + enter + tabsign + breaktips + enter;
+            result += "default:" + enter + enter + tabsign + breaktips + enter;
+            result += m_rsign;
+            result += enter;
+
+
+            continue;
+        }
+
+
+
+
+
+
+
+
+        result += first ;
+        result += leftkuohaosin + spacesign;
+        result += string;
+        result += spacesign + rightkuohaosign ;
+        result += enter;
+        result += m_lsign + enter;
+        result += enter;
+        result += m_rsign + enter;
+        if(!middle.isEmpty())
+        {
+            result += middle + enter;
+            result += m_lsign + enter;
+            result += enter;
+            result += m_rsign + enter;
+        }
+
+        if(!middle2.isEmpty())
+        {
+            result += middle2 + enter;
+            result += m_lsign + enter;
+            result += enter;
+            result += m_rsign + enter;
+        }
+
+
+        result += enter;
+
+    }
+
 
 
     SetTextEditResult(result);
