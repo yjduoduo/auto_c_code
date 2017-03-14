@@ -49,6 +49,15 @@ typedef struct T_DataFormat
     QString format;
 }T_DataFormat;
 
+typedef struct T_DefineInfo
+{
+    QString defname;
+    QString defvalue;
+    QString note; //zhushi
+}T_DefineInfo;
+
+
+
 
 
 
@@ -125,6 +134,7 @@ private:
     void Proc_C_Note(QStringList &lst);
     void Proc_C_Function(QStringList &lst);
     void Proc_C_StructPrint(QStringList &lst);
+    void Proc_C_Define(QStringList &lst);
     QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
     QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
 

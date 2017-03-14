@@ -201,6 +201,9 @@ void CodeSophia::on_pushButton_gen_clicked()
         case SUB_STRUCTPRINT:
             Proc_C_StructPrint(middlestrList);
             break;
+        case SUB_DEFINE:
+            Proc_C_Define(middlestrList);
+            break;
 
         default:
             break;
@@ -774,8 +777,6 @@ QString CodeSophia::Proc_C_Function_GenFunc(QStringList &lst, bool Local)
             QStringList tmp = str.split(" ");
             loop1++;
             loop2 = 0;
-            if(tmp.size() == 2)
-                continue;
             foreach (QString str2, tmp) {
                 loop2++;
                 if(loop1 == 1 && loop2 < 3)
@@ -821,8 +822,6 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
     QString result;
     result.clear();
 
-    QString leftsign;
-    QString rightsign;
     QString header;
 
 
@@ -1124,6 +1123,188 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
 
 }
 
+void CodeSophia::Proc_C_Define(QStringList &lst)
+{
+    QString result;
+    result.clear();
+
+    QString first;
+    QString middle;
+    QString end;
+    QString m_lsign;
+    QString m_rsign;
+    QList<T_DefineInfo> dealafter;
+    QList<T_DefineInfo> after_nameLst;
+    T_DefineInfo tDefInfo;
+
+
+//    << ""
+//    << "#define ()"
+//    << "#ifdef "
+//    << "#ifndef "
+//    << "#ifdef  else endif"
+//    << "#ifndef  else endif"
+//    << "#if 0"
+//    << "#if 1"
+
+
+    quint32 index = ui->comboBox_keytips->currentIndex();
+    switch(index)
+    {
+    case 0:
+
+        first = "#define";
+        middle = "";
+        end = "";
+        m_lsign = "";
+        m_rsign = "";
+        break;
+    case 1:
+        first = "#define";
+        middle = "";
+        end = "";
+        m_lsign = leftkuohaosin;
+        m_rsign = rightkuohaosign;
+        break;
+    case 2:
+        first = "#ifdef";
+        middle = "";
+        end = "#endif";
+        m_lsign = enter;
+        m_rsign = enter;
+        break;
+    case 3:
+        first = "#ifndef";
+        middle = "";
+        end = "#endif";
+        m_lsign = enter;
+        m_rsign = enter;
+        break;
+    case 4:
+        first = "#ifdef";
+        middle = "#else";
+        end = "#endif";
+        m_lsign = enter;
+        m_rsign = enter;
+        break;
+    case 5:
+        first = "#ifndef";
+        middle = "#else";
+        end = "#endif";
+        m_lsign = enter;
+        m_rsign = enter;
+        break;
+    case 6:
+        first = "#if 0";
+        middle = "";
+        end = "#endif";
+        m_lsign = enter;
+        m_rsign = enter;
+        break;
+    case 7:
+        first = "#if 1";
+        middle = "";
+        end = "#endif";
+        m_lsign = enter;
+        m_rsign = enter;
+        break;
+
+
+    default:
+        return;
+        break;
+    }
+
+    if(first.isEmpty())
+        return;
+
+
+    foreach (QString string, lst) {
+        string = string.simplified();
+        QStringList slst = string.split(" ");
+        if(slst.size() < 2)
+            continue;
+        QString defname = slst.at(0).trimmed();
+        QString defvalue = slst.at(1).trimmed();
+        QString note;
+        note.clear();
+        if(slst.size() > 2)
+        {
+            quint32 lp = 0;
+            foreach (QString str, slst) {
+                qDebug() << "note str:" << str;
+                if((lp == 0 ) || (lp == 1))
+                {
+                    lp++;
+                    continue;
+                }
+                note += str + spacesign;
+                lp++;
+            }
+        }
+        tDefInfo.defname  = defname;
+        tDefInfo.defvalue = defvalue;
+        tDefInfo.note = note;
+        dealafter.push_back(tDefInfo);
+
+
+    }
+
+    //寻找最大长度
+    quint32 maxlen = 0;
+    quint32 maxlen2 = 0;
+    foreach (T_DefineInfo ele, dealafter) {
+        if(ele.defname.length() > maxlen)
+            maxlen = ele.defname.length();
+    }
+
+    foreach (T_DefineInfo ele, dealafter) {
+        if(ele.defvalue.length() > maxlen2)
+            maxlen2 = ele.defvalue.length();
+    }
+
+
+
+    foreach (T_DefineInfo el, dealafter) {
+        quint32 tmplen = el.defname.length();
+        quint32 tmplen2 = el.defvalue.length();
+        if(tmplen < maxlen)
+        {
+            el.defname = QString("%1%2").arg(el.defname).arg(" ", maxlen - tmplen);
+        }
+        if(tmplen2 < maxlen2)
+        {
+            el.defvalue = QString("%1%2").arg(el.defvalue).arg(" ", maxlen2 - tmplen2);
+        }
+
+
+
+
+
+        after_nameLst << el;
+    }
+
+
+
+    foreach (T_DefineInfo el, after_nameLst) {
+        if(middle.isEmpty())
+            result += first +  spacesign + el.defname + tabsign + m_lsign + el.defvalue + m_rsign + end;
+        else
+            result += first +  spacesign + el.defname + enter + middle + enter + m_lsign + el.defvalue + m_rsign + end;
+
+        result += tabsign +"/* " + el.note  + " */";
+        if(end.isEmpty())
+            result += enter ;
+        else
+            result += enter + enter;
+
+    }
+
+
+    SetTextEditResult(result);
+
+}
+
 void CodeSophia::on_pushButton_leftclear_clicked()
 {
     ui->textEdit_key->clear();
@@ -1151,6 +1332,8 @@ void CodeSophia::FillStringList()
                ;
     //    QStringList StrLst_KEYC_DEFINE;
     StrLst_KEYC_DEFINE
+            << "#define "
+            << "#define ()"
             << "#ifdef "
             << "#ifndef "
             << "#ifdef  else "
