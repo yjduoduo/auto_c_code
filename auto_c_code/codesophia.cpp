@@ -207,6 +207,9 @@ void CodeSophia::on_pushButton_gen_clicked()
         case SUB_IFCONDITION:
             Proc_C_IFCONDITION(middlestrList);
             break;
+        case SUB_LOOP:
+            Proc_C_LOOP(middlestrList);
+            break;
 
         default:
             break;
@@ -1454,6 +1457,138 @@ void CodeSophia::Proc_C_IFCONDITION(QStringList &lst)
 
 }
 
+void CodeSophia::Proc_C_LOOP(QStringList &lst)
+{
+    QString result;
+    result.clear();
+
+    QString first;
+    QString middle;
+    QString middle2;
+    QString end;
+    QString m_lsign;
+    QString m_rsign;
+    QString sign_con;//condition
+    QString sign_sizhe; //si ze yunsuan
+    QList<T_DefineInfo> dealafter;
+    QList<T_DefineInfo> after_nameLst;
+    T_DefineInfo tDefInfo;
+
+
+    quint32 index = ui->comboBox_keytips->currentIndex();
+    switch(index)
+    {
+    case 0:
+        if(lst.size() == 0)
+            ShowTipsInfo("int i = 0; 100");
+        first = "for";
+        middle = "";
+        sign_con = "<";
+        sign_sizhe = "++";
+        end = enter;
+        m_lsign = "{";
+        m_rsign = "}";
+        break;
+    case 1:
+        if(lst.size() == 0)
+            ShowTipsInfo("int i = 0; 100");
+        first = "for";
+        middle = "";
+        sign_con = ">";
+        sign_sizhe = "--";
+        end = enter;
+        m_lsign = "{";
+        m_rsign = "}";
+        break;
+    case 2:
+        ShowTipsInfo("conditons");
+        first = "while";
+        middle = "";
+        end = enter;
+        m_lsign = "{";
+        m_rsign = "}";
+        break;
+    case 3:
+        first = "if";
+        middle = "else if";
+        middle2 = "else";
+        end = enter;
+        m_lsign = "{";
+        m_rsign = "}";
+        break;
+
+    default:
+        return;
+        break;
+    }
+
+    if(first.isEmpty())
+        return;
+
+
+    foreach (QString string, lst) {
+        string = string.simplified();
+        QStringList tmplst = string.split(";");
+        if(tmplst.size() < 2)
+        {
+            continue;
+        }
+        QString initval = tmplst.at(0).trimmed();
+        QString initval2;
+        QString conditionval = tmplst.at(1).trimmed();
+        QStringList firstlst = initval.split(" ");
+        if(firstlst.size() < 2)
+        {
+            continue;
+        }
+        QString firstval  = firstlst.at(1);
+        firstlst.removeAt(0);
+
+        foreach (QString str, firstlst) {
+            initval2 += str + spacesign;
+        }
+
+
+
+        result += initval +  semisign + enter ;
+
+        result += first ;
+        result += leftkuohaosin + spacesign;
+        result += initval2 + semisign + spacesign;
+        result += firstval + spacesign + sign_con + spacesign+ conditionval+ semisign + spacesign;
+        result += firstval + sign_sizhe;
+        result += spacesign + rightkuohaosign ;
+        result += enter;
+        result += m_lsign + enter;
+        result += enter;
+        result += m_rsign + enter;
+//        if(!middle.isEmpty())
+//        {
+//            result += middle + enter;
+//            result += m_lsign + enter;
+//            result += enter;
+//            result += m_rsign + enter;
+//        }
+
+//        if(!middle2.isEmpty())
+//        {
+//            result += middle2 + enter;
+//            result += m_lsign + enter;
+//            result += enter;
+//            result += m_rsign + enter;
+//        }
+
+
+        result += enter;
+
+    }
+
+
+
+    SetTextEditResult(result);
+
+}
+
 void CodeSophia::on_pushButton_leftclear_clicked()
 {
     ui->textEdit_key->clear();
@@ -1523,8 +1658,10 @@ void CodeSophia::FillStringList()
                ;
     //    QStringList StrLst_KEYC_LOOP;
     StrLst_KEYC_LOOP
-            << "for"
+            << "for ++"
+            << "for --"
             << "while"
+            << "do while"
                ;
     StrLst_KEYC_IFCONDITION
             << "if"

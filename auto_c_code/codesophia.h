@@ -136,6 +136,7 @@ private:
     void Proc_C_StructPrint(QStringList &lst);
     void Proc_C_Define(QStringList &lst);
     void Proc_C_IFCONDITION(QStringList &lst);
+    void Proc_C_LOOP(QStringList &lst);
     QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
     QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
 
