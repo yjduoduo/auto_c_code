@@ -2,6 +2,7 @@
 #define CODESOPHIA_H
 
 #include <QMainWindow>
+#include <QFile>
 //#include "codesophia.h"
 
 namespace Ui {
@@ -121,6 +122,10 @@ private slots:
 
     void on_lineEdit_dataprint_textChanged(const QString &arg1);
 
+    void on_pushButton_load_clicked();
+
+    void on_checkBox_showFunc_toggled(bool checked);
+
 private:
 //    void dragEnterEvent(QDragEnterEvent *event);
 //    void dropEvent(QDropEvent *event);
@@ -181,6 +186,26 @@ private:
     QStringList StrLst_KEYC_IFCONDITION;
     QStringList StrLst_KEYC_LOOP;
     QStringList StrLst_KEYC_NOTE;
+
+
+private:
+    void LogInitLog();
+    void LogWriteFile(QString str);
+    QString LogReadFile(QString filename);
+    void LogDeleteFile(QString filename);
+    void writepythonexecfuncfilename(QString filename);
+    void writepythonexecfuncfilename_funcdeclare(QString filename);
+private:
+    /*************[±£´ælog]**********************/
+    QFile *plogFile;
+    QString logfilename;
+    QString logreadfilename;
+    const char * pythonexecfilename;
+    const char * pythonexecfilename_funcdeclare;
+    const char * pythonexecdir;
+
+
+
 
     
 };

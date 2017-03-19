@@ -1,6 +1,13 @@
 #include "codesophia.h"
 #include "ui_codesophia.h"
 #include "msgtipsautoshut.h"
+#include <QRegExp>
+#include <QFile>
+#include <QDate>
+#include <QTime>
+#include <windows.h>
+
+#define SC_LOG
 
 #define STRUCTPRINTUIOP \
     if(current_lan_num == KEY_C && current_subtype_num == SUB_STRUCTPRINT)\
@@ -46,7 +53,6 @@
 
 
 
-
 CodeSophia::CodeSophia(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CodeSophia)
@@ -77,6 +83,12 @@ CodeSophia::CodeSophia(QWidget *parent) :
     entersign = "\\n";
     maohaosign = ":";
 
+    logfilename        ="D:\\files_time.log";
+    logreadfilename    ="D:\\\\files_time.re.log";
+    pythonexecfilename ="D:\\re.func.py";
+    pythonexecfilename_funcdeclare ="D:\\re.func_declare.py";
+    pythonexecdir ="D:";
+    LogInitLog();
 
     FillStringList();
 
@@ -548,6 +560,7 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
     QString header;
     bool hassplit = true;
     bool ignorelst = false;
+    bool hasenter = true;
 
     quint32 index = ui->comboBox_keytips->currentIndex();
     switch(index)
@@ -568,8 +581,8 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
     case 2:
         hassplit =false;
         header = "";
-        leftsign = "/*  \n\n";
-        rightsign = "\n\n*/";
+        leftsign = "/*  \n";
+        rightsign = "*/";
         foreach (QString string, lst) {
             if(string.isEmpty())
                 continue;
@@ -595,6 +608,32 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
         leftsign = "//  ";
         rightsign = "";
         break;
+    case 4:
+        hassplit =true;
+        header = "";
+        leftsign = "/*  ";
+        rightsign = "  */";
+        hasenter = false;
+        foreach (QString string, lst) {
+            if(string.isEmpty())
+                continue;
+            if(string.contains("//"))
+            {
+                ShowTipsInfo("Invalid Text, having //");
+                break;
+            }
+            if(string.contains("/*"))
+            {
+                ShowTipsInfo("Invalid Text, having /*");
+                break;
+            }
+            if(string.contains("*/"))
+            {
+                ShowTipsInfo("Invalid Text, having */");
+                break;
+            }
+        }
+        break;
     default:
         return;
         break;
@@ -610,10 +649,13 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             continue;
         if(hassplit)
             result += header + leftsign + string + rightsign +"\n";
-        else
+        else if(hasenter)
             result +=  string + "\n";
+        else
+            result +=  string ;
 
-        qDebug() << "result str :" << result;
+
+//        qDebug() << "result str :" << result;
     }
 
     if(!hassplit)
@@ -735,24 +777,31 @@ QString CodeSophia::Proc_C_Function_SetGet(QStringList &lst, bool Local)
     return result;
 }
 
+typedef struct T_FuncUse
+{
+    QString string;
+    bool hasreturn;
+}T_FuncUse;
+
 QString CodeSophia::Proc_C_Function_GenFunc(QStringList &lst, bool Local)
 {
-    QStringList resultlst;
+    QList<T_FuncUse> resultlst;
     QString result;
     QString type;
     QString name;
     QString funcname;
     QString parainfo;
-    QString _inname;
+    bool hasreturn = false;
     QString staticFlag;
     quint32 loop1 = 0;
     quint32 loop2 = 0;
     quint8 invalid = false;
+    T_FuncUse tfunc = {0};
     if(Local)
         staticFlag = "static ";
 
     if(lst.size())
-        result += "/* function declare begin */" + enter;
+        result += "/* func_declare_begin */" + enter;
     foreach (QString string, lst) {
         string = string.simplified();
         string = string.replace(";", "");
@@ -776,6 +825,16 @@ QString CodeSophia::Proc_C_Function_GenFunc(QStringList &lst, bool Local)
             funcname = tmp.at(1);
             break;
         }
+
+        if(!type.simplified().contains("void", Qt::CaseInsensitive))
+        {
+            hasreturn = true;
+        }
+        else
+        {
+            hasreturn = false;
+        }
+
         parainfo += "(";
         loop1 = 0;
         loop2 = 0;
@@ -796,23 +855,29 @@ QString CodeSophia::Proc_C_Function_GenFunc(QStringList &lst, bool Local)
         parainfo += ")";
 
         result += staticFlag + type + spacesign +funcname + parainfo + semisign + enter;
-        resultlst <<  staticFlag + type + spacesign +funcname + parainfo  + enter;
+        tfunc.string = staticFlag + type + spacesign +funcname + parainfo  + enter;
+        tfunc.hasreturn = hasreturn;
+        resultlst <<  tfunc;
 
     }
 
     if(lst.size())
-        result += "/* function declare end */" + enter;
+        result += "/* func_declare_end */" + enter;
 
     result += enter;
     result += enter;
     if(lst.size())
-        result += "/* function implement */" + enter;
+        result += "/* func_implement */" + enter;
 
-    foreach (QString resl, resultlst) {
-        result += resl;
+    foreach (T_FuncUse resl, resultlst) {
+        result += resl.string;
         result += "{";
         result += enter;
         result += enter;
+        if(resl.hasreturn)
+        {
+            result += tabsign + "return 0;";
+        }
         result += enter;
         result += "}";
         result += enter;
@@ -829,9 +894,12 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
     result.clear();
 
     QString header;
+//    QRegExp regExp("\{([^{]*?)\}");
+    QRegExp regExp("\s*#include.*");
 
 
     quint32 index = ui->comboBox_keytips->currentIndex();
+    qDebug() << "---index "<< index;
     switch(index)
     {
     case 0:
@@ -855,6 +923,110 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
         break;
     case 4:
         result = Proc_C_Function_GenFunc(lst, true);
+        break;
+    case 5:
+        header = "extern \"C\" ";
+        foreach(QString string, lst) {
+            string = string.simplified();
+            if(string.contains(semisign))
+                result += header + string + enter;
+            else
+                result += header + string + semisign + enter;
+        }
+        break;
+    case 6: //提取函数
+        header = "";
+        foreach(QString string, lst) {
+//            string = string.simplified();
+            result += string + enter;
+        }
+        LogWriteFile(ui->textEdit_key->toPlainText());
+
+//        ShellExecuteA(NULL,"open", exepath,filepath,NULL,SW_SHOWNORMAL);
+
+////        ShellExecuteA(NULL,"open", exepath,filepath,NULL,SW_SHOWMINIMIZED);
+
+//        //python.exe
+////        LPCSTR exepath = "python.exe";
+////        ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
+//        //python.exe
+////        QFile *pFile = NULL;
+////        pFile = new QFile(filepath);
+////        if(!pFile->exists())
+////        {
+////            pFile->open(QIODevice::WriteOnly);
+////            pFile->write(headerPython.toLocal8Bit().data());
+////        }
+////        pFile->close();
+//        //notepad++.exe打开此文件
+////        LPCSTR notepadexe = "notepad++.exe";
+////        ShellExecuteA(NULL,"open", notepadexe,filepath,NULL,SW_SHOWNORMAL);
+
+////        Sleep(3000);
+////        pythonexecfilename
+//        result = LogReadFile(logreadfilename);
+//        LogDeleteFile(logreadfilename);
+
+
+
+//        if(!regExp.exactMatch(result))
+//        {
+////            QMessageBox::warning(NULL, tr("提示"), tr("ip地址错误"),NULL,NULL);
+//            ShowTipsInfo(tr("无匹配函数"));
+//            return;
+//        }
+
+//        p = re.compile(r'.*[\w&*]+\s+(?P<functionname>([\w:*&~]+))\((?P<paramterlist>([\s\S]*?))\)')
+//        astr = re.sub(r'\s*\/\/.*','', text) ##del //
+//        astr = re.sub(r'\s*\/\*([\s\S]*?)\*\/', '', astr) ##del /* * in multi line
+//        astr = re.sub(r'#ifdef\s+__cplusplus([\s\S]*?)#endif', '', astr)  ##del __cplusplus
+//        astr = re.sub(r'#if 0([\s\S]*?)#endif', '', astr)  ##del  #if 0 ~ #endif
+//        astr = re.sub(r'\s*#include.*', '', astr)  ##del #include
+//        astr = re.sub(r'"(.*)"', '',astr)  ##del "   "
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+
+//        result = result.replace(QRegExp("\s*//[^\n]*"), "");
+//        result = result.replace(QRegExp("\s*\/\*([\s\S]*)\*\/"), "");
+//        result = result.replace(QRegExp("\s*/*([\s\S]*)*//"), "");
+//        result = result.replace(QRegExp("\s*/*([\s\S]*)*/"), "");
+//        result.replace();
+//        result = result.replace(QRegExp("#ifdef\s+__cplusplus([\s\S]*?)#endif"), "");
+//        result = result.replace(QRegExp("#if 0([\s\S]*?)#endif"), "");
+//        result = result.replace(QRegExp("\s*#include.*"), "");
+//        result = result.replace(QRegExp("\"(.*)\""), "");
+//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+//        result = result.replace(QRegExp(""), "");
+//        result = result.replace(QRegExp(""), "");
+
+//        result = result.replace("{([^{]*?)}", "");
+//        result = result.replace("{([^{]*?)}", "");
+//        result = result.replace("{([^{]*?)}", "");
+//        result = result.replace("{([^{]*?)}", "");
+//        result = result.replace("{([^{]*?)}", "");
+//        result = result.replace("{([^{]*?)}", "");
+//        result = result.replace("{([^{]*?)}", "");
+//        result = result.replace("{([^{]*?)}", "");
+//        result += header + string + semisign + enter;
+        return;
         break;
     default:
         return;
@@ -1026,11 +1198,18 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
     structinfo += enter;
 
 
+    //过滤元素
     foreach(QString string, lst) {
         string = string.simplified();
         if(!string.contains(";"))
             continue;
+        if(string.length() < 2)
+            continue;
         if(string.left(1) == "*")
+            continue;
+        if(string.left(1) == "/" && string.left(2) == "/")
+            continue;
+        if(string.left(1) == "/" && string.left(2) == "*")
             continue;
         if(string.contains("{") || string.contains("}"))
             continue;
@@ -1632,6 +1811,8 @@ void CodeSophia::FillStringList()
             << "set get local"
             << "gen func"
             << "gen func local"
+            << "extern \"C\""
+            << tr("提取函数")
                ;
     //    QStringList StrLst_KEYC_STRUCT;
     StrLst_KEYC_STRUCT
@@ -1673,8 +1854,9 @@ void CodeSophia::FillStringList()
     StrLst_KEYC_NOTE
             << "file note"
             << "function note"
-            << "/* */"
+            << "/* */ multi line"
             << "//"
+            << "/* */ single"
                ;
 
 
@@ -1704,4 +1886,432 @@ void CodeSophia::StructPrintMsgUIShow()
     ui->label_print->show();
     ui->lineEdit_dataprint->show();
     ui->lineEdit_print->show();
+}
+
+
+
+
+/************************************************/
+/*函 数:LogInitLog                               */
+/*入 参:无                                        */
+/*出 参:无                                        */
+/*返 回:无                                        */
+/*功 能:保存log信息                                */
+/*author :wxj                                    */
+/*version:1.0                                    */
+/*时 间:2015.4.25                                 */
+/*************************************************/
+void CodeSophia::LogInitLog()
+{
+#ifdef SC_LOG  //将发送网络的数据有效信息进行保存
+//    QDate date;
+//    QTime time;
+//    logfilename = date.currentDate().toString("sclogyyyy-MM-dd");
+//    logfilename += time.currentTime().toString("_HH-mm-ss");
+
+    plogFile = new QFile(logfilename);
+    if(!plogFile)
+    {
+        qDebug() <<"Open file Err:" << logfilename;
+        return ;
+    }
+
+
+//    LogWriteFile("\nTcpWrite NetData Log!!\n==============>>>>Starting:\n");
+    qDebug() <<"Log file:" << logfilename;
+#endif
+
+}
+
+
+/************************************************/
+/*函 数:LogWriteFile                              */
+/*入 参:str-写入log的数据                           */
+/*出 参:无                                        */
+/*返 回:                                          */
+/*功 能:将str写入文件                              */
+/*author :wxj                                    */
+/*version:1.0                                    */
+/*时 间:2015.4.25                                 */
+/*************************************************/
+void CodeSophia::LogWriteFile(QString str)
+{
+#ifdef SC_LOG
+    if(plogFile)
+    {
+        plogFile->open(QIODevice::WriteOnly);
+//        plogFile->open(QIODevice::Append);
+        plogFile->write(str.toLocal8Bit());
+        plogFile->close();
+    }
+#endif
+}
+
+QString CodeSophia::LogReadFile(QString filename)
+{
+    QFile file(filename);
+
+    if(file.exists())
+    {
+        QByteArray dataFromFile;
+        file.open(QIODevice::ReadOnly);
+        dataFromFile=file.readAll();
+        file.close();
+        return dataFromFile;
+    }
+    return "";
+}
+
+void CodeSophia::LogDeleteFile(QString filename)
+{
+//    QFile file(filename);
+
+//    QFile::remove();
+    qDebug() << " will delte file :" << filename;
+    QFile::remove(filename.toLatin1().data());
+//    QFile::unlink(filename.toLatin1().data());
+
+//    if(file.exists())
+//    {
+////        file.remove();
+//    }
+
+}
+
+
+
+
+void CodeSophia::on_pushButton_load_clicked()
+{
+    QString result;
+    LPCSTR exepath = "python.exe";
+    LPCSTR filepath = "";
+    //python使用的版本必须是2.7的，如果是3.4以上的可能还不行。
+    if(ui->checkBox_showFunc->isChecked())
+    {
+        filepath = pythonexecfilename;
+        writepythonexecfuncfilename(pythonexecfilename);
+    }
+    else
+    {
+        filepath = pythonexecfilename_funcdeclare;
+        writepythonexecfuncfilename_funcdeclare(pythonexecfilename_funcdeclare);
+    }
+
+    LogDeleteFile(logreadfilename);
+//    ShellExecuteA(NULL,"open", exepath,filepath,pythonexecdir,SW_SHOWNORMAL);
+    ShellExecuteA(NULL,"open", exepath,filepath,pythonexecdir,SW_HIDE);
+//    Sleep(1000);
+    while(1)
+    {
+        QFile file(logreadfilename);
+        if(file.exists())
+        {
+            result = LogReadFile(logreadfilename);
+//            LogDeleteFile(logreadfilename);
+            break;
+        }
+        Sleep(500);
+//        SetTextEditResult(result);
+
+    }
+    QStringList lst = result.split("\n");
+    result = "";
+    foreach (QString str, lst) {
+        if(!str.simplified().length())
+            continue;
+        str = str.simplified();
+        if(str.right(1) == ")" && !str.contains(";"))
+            result += str + semisign + enter;
+        else
+        {
+            result += str + enter;
+        }
+    }
+
+    ui->textEdit_result->setText(result);
+}
+
+void CodeSophia::writepythonexecfuncfilename(QString filename)
+{
+    QString headerPython =
+            QString("#!/usr/bin/env python") + "\n" +
+            "# -*- coding: utf-8 -*-" + "\n"
+            "##file function: 提取C CPP文件中的函数名，宏定义，结构体等" + "\n"
+            "##filename:re.py" + "\n"
+            "" + "\n"
+            "import re" + "\n"
+            "import sys" + "\n"
+            "import os" + "\n"
+            "import time" + "\n"
+            "from time import ctime,sleep;" + "\n"
+            "" + "\n"
+            "" + "\n"
+            "" + "\n"
+            "tips = \"regular expression\"" + "\n"
+            "print '-' * 30 + tips + '-' * 30" + "\n"
+            "" + "\n"
+            "print 'Number of arguments:', len(sys.argv)" + "\n"
+            "print 'They are:', str(sys.argv)" + "\n"
+            "if (len(sys.argv) > 1):" + "\n"
+            "	filename=str(sys.argv[1])" + "\n"
+            "	print 'filename is ' + filename" + "\n"
+            "	" + "\n"
+            "###open and read file" + "\n"
+            "def openfilereturncontent(filename):" + "\n"
+            "	# try:" + "\n"
+            "	fh = open(filename, \"r\")" + "\n"
+            "	filecontent = fh.read()" + "\n"
+            "	fh.close()" + "\n"
+            "	return filecontent" + "\n"
+            "	# finally:" + "\n"
+            "		# print \"Error:没有找到文件或读取文件失败\"" + "\n"
+            "	" + "\n"
+            "" + "\n"
+            "def writefilewithcontent(filename, text):" + "\n"
+            "	# try:" + "\n"
+            "	print filename" + "\n"
+            "	print os.path.dirname(filename)" + "\n"
+            "	print os.path.exists(os.path.dirname(filename))" + "\n"
+            "	if False == os.path.exists(os.path.dirname(filename)):" + "\n"
+            "		os.makedirs(os.path.dirname(filename))" + "\n"
+            "	fw = open(filename,\"w\")" + "\n"
+            "	fw.write(text)" + "\n"
+            "	fw.close()" + "\n"
+            "	# finally:" + "\n"
+            "		# print \"Error:没有找到文件或读取文件失败\"" + "\n"
+            "	" + "\n"
+            "def f2(m2):" + "\n"
+            "	d = m2.groupdict()" + "\n"
+            "	return d['functionname']" + "\n"
+            "" + "\n"
+            "###regular expression for header and source files" + "\n"
+            "def regrexheader(text):" + "\n"
+              "	p = re.compile(r'.*[\\w&*]+\\s+(?P<functionname>([\\w:*&~]+))\\((?P<paramterlist>([\\s\\S]*?))\\)')" + "\n"
+              "	astr = re.sub(r'\\s*\\/\\/.*','', text) ##del //" + "\n"
+              "	astr = re.sub(r'\\s*\\/\\*([\\s\\S]*?)\\*\\/', '', astr) ##del /* * in multi line" + "\n"
+              "	astr = re.sub(r'#ifdef\\s+__cplusplus([\\s\\S]*?)#endif', '', astr)  ##del __cplusplus" + "\n"
+              "	astr = re.sub(r'#if 0([\\s\\S]*?)#endif', '', astr)  ##del  #if 0 ~ #endif" + "\n"
+              "	astr = re.sub(r'\\s*#include.*', '', astr)  ##del #include" + "\n"
+              "	astr = re.sub(r'\"(.*)\"', '',astr)  ##del "   "" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}	" + "\n"
+              "" + "\n"
+              "	astr = p.sub(f2,astr)   ##提取函数名称   效率高" + "\n"
+              "" + "\n"
+              "	astr = re.sub(r'#pragma.*', '', astr)  ##del " + "\n"
+              "	astr = re.sub(r'\\s*#endif', '', astr)  ##del " + "\n"
+              "	astr = re.sub(r'\\s*#ifndef.*', '', astr)  ##del " + "\n"
+              "	astr = re.sub(r'\\s*#ifdef.*', '', astr)  ##del " + "\n"
+              "	astr = re.sub(r'\\s*#else', '', astr)  ##del " + "\n"
+              "	# print astr" + "\n"
+              "	return astr" + "\n"
+              "	" + "\n"
+            "def delete(filepath):" + "\n"
+            "	f = open(filepath, 'a+')" + "\n"
+            "	fnew = open(filepath + '.re.txt','wb')" + "\n"
+            "	for line in f.readlines():" + "\n"
+            "		data = line.strip()" + "\n"
+            "		if len(data) != 0:" + "\n"
+            "			fnew.write(data)" + "\n"
+            "			fnew.write('\\n')" + "\n"
+            "	f.close()" + "\n"
+            "	fnew.close()" + "\n"
+            "	" + "\n"
+            "	" + "\n"
+            "	" + "\n"
+            "	" + "\n"
+            "if __name__==\"__main__\":" + "\n"
+            "	" + "\n"
+            "	print '=' * 3 + \"begin\" + '=' * 3" + "\n"
+            "	str=\"\"" + "\n"
+            "	savedir=\"D:\\\\\"" + "\n"
+            "	savefilename=\"files_time.re.log\"" + "\n"
+            "	readfile=\"files_time.log\"" + "\n"
+            "" + "\n"
+            "	str = openfilereturncontent(savedir + readfile)" + "\n"
+            "	print \"file[%s] content:\" % (savedir + readfile)" + "\n"
+            "	savefilename = os.path.realpath(savefilename)	" + "\n"
+            "	print \"savefilename[%s] content:\" % (savefilename)" + "\n"
+            "	text = regrexheader(str)" + "\n"
+            "	print '-' *100" + "\n"
+            "	print \"deal result:\" + text" + "\n"
+            "	" + "\n"
+            "	writefilewithcontent(savefilename, text)" + "\n"
+            "	" + "\n"
+            "	# delete(savefilename)" + "\n"
+            "	# os.remove(savefilename)" + "\n"
+            "	# os.rename(savefilename +'.re.txt', savefilename)" + "\n"
+            "	" + "\n"
+            "	print '=' * 3 + \"end\" + '=' * 3" + "\n"
+            "	# sleep(100)" + "\n"
+            "	" + "\n"
+            "	" + "\n"
+            "	" + "\n";
+
+        QFile file(filename);
+        if(!file.exists())
+        {
+            file.open(QIODevice::WriteOnly);
+            file.write(headerPython.toLocal8Bit().data());
+            file.close();
+        }
+
+}
+
+void CodeSophia::writepythonexecfuncfilename_funcdeclare(QString filename)
+{
+    QString headerPython =
+            QString("#!/usr/bin/env python") + "\n" +
+            "# -*- coding: utf-8 -*-" + "\n"
+            "##file function: 提取C CPP文件中的函数名，宏定义，结构体等" + "\n"
+            "##filename:re.py" + "\n"
+            "" + "\n"
+            "import re" + "\n"
+            "import sys" + "\n"
+            "import os" + "\n"
+            "import time" + "\n"
+            "from time import ctime,sleep;" + "\n"
+            "" + "\n"
+            "" + "\n"
+            "" + "\n"
+            "tips = \"regular expression\"" + "\n"
+            "print '-' * 30 + tips + '-' * 30" + "\n"
+            "" + "\n"
+            "print 'Number of arguments:', len(sys.argv)" + "\n"
+            "print 'They are:', str(sys.argv)" + "\n"
+            "if (len(sys.argv) > 1):" + "\n"
+            "	filename=str(sys.argv[1])" + "\n"
+            "	print 'filename is ' + filename" + "\n"
+            "	" + "\n"
+            "###open and read file" + "\n"
+            "def openfilereturncontent(filename):" + "\n"
+            "	# try:" + "\n"
+            "	fh = open(filename, \"r\")" + "\n"
+            "	filecontent = fh.read()" + "\n"
+            "	fh.close()" + "\n"
+            "	return filecontent" + "\n"
+            "	# finally:" + "\n"
+            "		# print \"Error:没有找到文件或读取文件失败\"" + "\n"
+            "	" + "\n"
+            "" + "\n"
+            "def writefilewithcontent(filename, text):" + "\n"
+            "	# try:" + "\n"
+            "	print filename" + "\n"
+            "	print os.path.dirname(filename)" + "\n"
+            "	print os.path.exists(os.path.dirname(filename))" + "\n"
+            "	if False == os.path.exists(os.path.dirname(filename)):" + "\n"
+            "		os.makedirs(os.path.dirname(filename))" + "\n"
+            "	fw = open(filename,\"w\")" + "\n"
+            "	fw.write(text)" + "\n"
+            "	fw.close()" + "\n"
+            "	# finally:" + "\n"
+            "		# print \"Error:没有找到文件或读取文件失败\"" + "\n"
+            "	" + "\n"
+            "def f2(m2):" + "\n"
+            "	d = m2.groupdict()" + "\n"
+            "	return d['functionname']" + "\n"
+            "" + "\n"
+            "###regular expression for header and source files" + "\n"
+            "def regrexheader(text):" + "\n"
+              "	p = re.compile(r'.*[\\w&*]+\\s+(?P<functionname>([\\w:*&~]+))\\((?P<paramterlist>([\\s\\S]*?))\\)')" + "\n"
+              "	astr = re.sub(r'\\s*\\/\\/.*','', text) ##del //" + "\n"
+              "	astr = re.sub(r'\\s*\\/\\*([\\s\\S]*?)\\*\\/', '', astr) ##del /* * in multi line" + "\n"
+              "	astr = re.sub(r'#ifdef\\s+__cplusplus([\\s\\S]*?)#endif', '', astr)  ##del __cplusplus" + "\n"
+              "	astr = re.sub(r'#if 0([\\s\\S]*?)#endif', '', astr)  ##del  #if 0 ~ #endif" + "\n"
+              "	astr = re.sub(r'\\s*#include.*', '', astr)  ##del #include" + "\n"
+              "	astr = re.sub(r'\"(.*)\"', '',astr)  ##del "   "" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}	" + "\n"
+              "" + "\n"
+              "	astr = re.sub(r'#pragma.*', '', astr)  ##del " + "\n"
+              "	astr = re.sub(r'\\s*#endif', '', astr)  ##del " + "\n"
+              "	astr = re.sub(r'\\s*#ifndef.*', '', astr)  ##del " + "\n"
+              "	astr = re.sub(r'\\s*#ifdef.*', '', astr)  ##del " + "\n"
+              "	astr = re.sub(r'\\s*#else', '', astr)  ##del " + "\n"
+              "	# print astr" + "\n"
+              "	return astr" + "\n"
+              "	" + "\n"
+            "def delete(filepath):" + "\n"
+            "	f = open(filepath, 'a+')" + "\n"
+            "	fnew = open(filepath + '.re.txt','wb')" + "\n"
+            "	for line in f.readlines():" + "\n"
+            "		data = line.strip()" + "\n"
+            "		if len(data) != 0:" + "\n"
+            "			fnew.write(data)" + "\n"
+            "			fnew.write('\\n')" + "\n"
+            "	f.close()" + "\n"
+            "	fnew.close()" + "\n"
+            "	" + "\n"
+            "	" + "\n"
+            "	" + "\n"
+            "	" + "\n"
+            "if __name__==\"__main__\":" + "\n"
+            "	" + "\n"
+            "	print '=' * 3 + \"begin\" + '=' * 3" + "\n"
+            "	str=\"\"" + "\n"
+            "	savedir=\"D:\\\\\"" + "\n"
+            "	savefilename=\"files_time.re.log\"" + "\n"
+            "	readfile=\"files_time.log\"" + "\n"
+            "" + "\n"
+            "	str = openfilereturncontent(savedir + readfile)" + "\n"
+            "	print \"file[%s] content:\" % (savedir + readfile)" + "\n"
+            "	savefilename = os.path.realpath(savefilename)	" + "\n"
+            "	print \"savefilename[%s] content:\" % (savefilename)" + "\n"
+            "	text = regrexheader(str)" + "\n"
+            "	print '-' *100" + "\n"
+            "	print \"deal result:\" + text" + "\n"
+            "	" + "\n"
+            "	writefilewithcontent(savefilename, text)" + "\n"
+            "	" + "\n"
+            "	# delete(savefilename)" + "\n"
+            "	# os.remove(savefilename)" + "\n"
+            "	# os.rename(savefilename +'.re.txt', savefilename)" + "\n"
+            "	" + "\n"
+            "	print '=' * 3 + \"end\" + '=' * 3" + "\n"
+            "	# sleep(100)" + "\n"
+            "	" + "\n"
+            "	" + "\n"
+            "	" + "\n";
+
+        QFile file(filename);
+        if(!file.exists())
+        {
+            file.open(QIODevice::WriteOnly);
+            file.write(headerPython.toLocal8Bit().data());
+            file.close();
+        }
+
+}
+
+
+
+
+void CodeSophia::on_checkBox_showFunc_toggled(bool checked)
+{
+    on_pushButton_load_clicked();
 }

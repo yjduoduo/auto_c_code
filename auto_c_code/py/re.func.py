@@ -103,11 +103,7 @@ if __name__=="__main__":
 	savedir="D:\\"
 	savefilename="files_time.re.log"
 	readfile="files_time.log"
-	# if (len(sys.argv) > 1):
-		# str = openfilereturncontent(sys.argv[1])
-		# print "file[%s] content:" % (sys.argv[1])
-		# savefilename = savedir + os.path.realpath(sys.argv[1])
-	# print str
+
 	str = openfilereturncontent(savedir + readfile)
 	print "file[%s] content:" % (savedir + readfile)
 	savefilename = os.path.realpath(savefilename)	
@@ -124,3 +120,6 @@ if __name__=="__main__":
 	
 	print '=' * 3 + "end" + '=' * 3
 	# sleep(100)
+	
+	
+	
