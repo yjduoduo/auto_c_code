@@ -78,6 +78,8 @@ CodeSophia::CodeSophia(QWidget *parent) :
     tabsign = "    ";
     leftkuohaosin = "(";
     rightkuohaosign = ")";
+    leftbigkuohaosin = "{";
+    rightbigkuohaosign = "}";
     yinhaomsign = "\"";
     douhaosign = ",";
     entersign = "\\n";
@@ -212,6 +214,9 @@ void CodeSophia::on_pushButton_gen_clicked()
             break;
         case SUB_STRUCTPRINT:
             Proc_C_StructPrint(middlestrList);
+            break;
+        case SUB_STRUCT:
+            Proc_C_Struct(middlestrList);
             break;
         case SUB_DEFINE:
             Proc_C_Define(middlestrList);
@@ -1308,6 +1313,86 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
 
 }
 
+void CodeSophia::Proc_C_Struct(QStringList &lst)
+{
+    QString result;
+    QString header;
+    QString structname;
+    T_StructFormat data;
+    QList<T_StructFormat> elementlst;
+    QList<T_StructFormat> elementlastlst;
+    QString prefix_T = "T_";
+    QString prefix_P = "*P_";
+    QString notes = "/*    */";
+
+    header = "typedef struct " + prefix_T;
+
+
+    quint16 ulp = 0;
+    foreach (QString string, lst) {
+        ulp++;
+        string = string.simplified();
+        if(ulp == 1)
+        {
+            structname = string;
+            continue;
+        }
+        if(string.isEmpty())
+            continue;
+
+        if(string.split(";").size() > 1)
+        {
+            data.string = string.split(";").at(0).simplified();
+            data.note = string.split(";").at(1).simplified();
+        }
+        else
+        {
+            string.replace(";", "");
+            string.replace(":", "");
+            data.string = string;
+        }
+        elementlst.push_back(data);
+    }
+
+    //寻找最大长度
+    quint32 maxlenstr = 0;
+    foreach (T_StructFormat data, elementlst) {
+        if(data.string.length() > maxlenstr)
+            maxlenstr = data.string.length();
+    }
+    quint32 maxlennote = 0;
+    foreach (T_StructFormat data, elementlst) {
+        if(data.note.length() > maxlennote)
+            maxlennote = data.note.length();
+    }
+
+    foreach (T_StructFormat data, elementlst) {
+        quint32 tmplen = data.string.length();
+        if(tmplen < maxlenstr)
+        {
+            data.string = QString("%1%2").arg(data.string).arg(" ", maxlenstr - tmplen);
+        }
+        quint32 tmplennote = data.note.length();
+        if(tmplennote < maxlennote)
+        {
+            data.note = QString("%1%2").arg(data.note).arg(" ", maxlennote - tmplennote);
+        }
+
+        elementlastlst << data;
+    }
+
+    result = header + structname + leftbigkuohaosin + enter;
+    foreach (T_StructFormat data2, elementlastlst) {
+        result += tabsign + data2.string + semisign + tabsign + "/* " + data2.note  + " */" + enter;
+    }
+    result += rightbigkuohaosign + prefix_T + structname +
+            douhaosign + spacesign + prefix_P + structname + semisign + enter;
+
+
+    SetTextEditResult(result);
+
+}
+
 void CodeSophia::Proc_C_Define(QStringList &lst)
 {
     QString result;
@@ -1569,8 +1654,28 @@ void CodeSophia::Proc_C_IFCONDITION(QStringList &lst)
     foreach (QString string, lst) {
         string = string.simplified();
 
-        if(first.contains("switch"))
+        if(first.contains("switch") && (lst.size() > 1))
         {
+
+            result += first + leftkuohaosin + spacesign + string + spacesign + rightkuohaosign;
+            result += enter;
+            result += m_lsign;
+            result += enter;
+            uint8_t cnt = 0;
+            foreach (QString instr, lst) {
+                cnt ++;
+                if(cnt == 1 )
+                {
+                    continue;
+                }
+                result += "case " + instr.simplified().replace(";","") + ":" + enter + enter  + tabsign + breaktips + enter;
+            }
+            result += "default:" + enter + enter + tabsign + breaktips + enter;
+            result += m_rsign;
+            result += enter;
+
+            break;
+        }else if(first.contains("switch")){
             result += first + leftkuohaosin + spacesign + string + spacesign + rightkuohaosign;
             result += enter;
             result += m_lsign;
@@ -1589,8 +1694,6 @@ void CodeSophia::Proc_C_IFCONDITION(QStringList &lst)
             result += "default:" + enter + enter + tabsign + breaktips + enter;
             result += m_rsign;
             result += enter;
-
-
             continue;
         }
 
@@ -1670,7 +1773,7 @@ void CodeSophia::Proc_C_LOOP(QStringList &lst)
         break;
     case 1:
         if(lst.size() == 0)
-            ShowTipsInfo("int i = 0; 100");
+            ShowTipsInfo("int i = 100; 0");
         first = "for";
         middle = "";
         sign_con = ">";
@@ -1680,7 +1783,8 @@ void CodeSophia::Proc_C_LOOP(QStringList &lst)
         m_rsign = "}";
         break;
     case 2:
-        ShowTipsInfo("conditons");
+        if(lst.size() == 0)
+            ShowTipsInfo("conditons");
         first = "while";
         middle = "";
         end = enter;
@@ -1688,9 +1792,15 @@ void CodeSophia::Proc_C_LOOP(QStringList &lst)
         m_rsign = "}";
         break;
     case 3:
-        first = "if";
-        middle = "else if";
-        middle2 = "else";
+        first = "do";
+        middle = "while(0)";
+        end = enter;
+        m_lsign = "{";
+        m_rsign = "}";
+        break;
+    case 4:
+        first = "do";
+        middle = "while(1)";
         end = enter;
         m_lsign = "{";
         m_rsign = "}";
@@ -1741,28 +1851,69 @@ void CodeSophia::Proc_C_LOOP(QStringList &lst)
         result += m_lsign + enter;
         result += enter;
         result += m_rsign + enter;
-//        if(!middle.isEmpty())
-//        {
-//            result += middle + enter;
-//            result += m_lsign + enter;
-//            result += enter;
-//            result += m_rsign + enter;
-//        }
-
-//        if(!middle2.isEmpty())
-//        {
-//            result += middle2 + enter;
-//            result += m_lsign + enter;
-//            result += enter;
-//            result += m_rsign + enter;
-//        }
-
 
         result += enter;
 
     }
 
+    foreach (QString string, lst) {
+        if(!first.contains("while"))
+            break;
+        string = string.simplified();
 
+
+        result += first ;
+        result += leftkuohaosin + spacesign;
+        result += string + spacesign;
+        result += rightkuohaosign ;
+        result += enter;
+        result += m_lsign + enter;
+        result += enter;
+        result += m_rsign + enter;
+
+        result += enter;
+
+    }
+    //do while(0)
+    foreach (QString string, lst) {
+        if(!(first.contains("do")) && !(first.contains("while(0)")))
+            break;
+        string = string.simplified();
+
+
+        result = first ;
+        result += leftkuohaosin + spacesign;
+        result += string + spacesign;
+        result += rightkuohaosign ;
+        result += enter;
+        result += m_lsign + enter;
+        result += enter;
+        result += m_rsign + middle;
+        result +=  enter;
+
+        result += enter;
+
+    }
+    //do while(1)
+    foreach (QString string, lst) {
+        if(!(first.contains("do")) && !(first.contains("while(1)")))
+            break;
+        string = string.simplified();
+
+
+        result = first ;
+        result += leftkuohaosin + spacesign;
+        result += string + spacesign;
+        result += rightkuohaosign ;
+        result += enter;
+        result += m_lsign + enter;
+        result += enter;
+        result += m_rsign + middle;
+        result +=  enter;
+
+        result += enter;
+
+    }
 
     SetTextEditResult(result);
 
@@ -1842,7 +1993,8 @@ void CodeSophia::FillStringList()
             << "for ++"
             << "for --"
             << "while"
-            << "do while"
+            << "do while(0)"
+            << "do while(1)"
                ;
     StrLst_KEYC_IFCONDITION
             << "if"

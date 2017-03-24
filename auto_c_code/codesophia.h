@@ -50,6 +50,12 @@ typedef struct T_DataFormat
     QString format;
 }T_DataFormat;
 
+typedef struct T_StructFormat
+{
+    QString string;
+    QString note;
+}T_StructFormat;
+
 typedef struct T_DefineInfo
 {
     QString defname;
@@ -139,6 +145,7 @@ private:
     void Proc_C_Note(QStringList &lst);
     void Proc_C_Function(QStringList &lst);
     void Proc_C_StructPrint(QStringList &lst);
+    void Proc_C_Struct(QStringList &lst);
     void Proc_C_Define(QStringList &lst);
     void Proc_C_IFCONDITION(QStringList &lst);
     void Proc_C_LOOP(QStringList &lst);
@@ -170,6 +177,8 @@ private:
     QString yinhaomsign;
     QString leftkuohaosin;
     QString rightkuohaosign;
+    QString leftbigkuohaosin;
+    QString rightbigkuohaosign;
     QString spacesign;
     QString maohaosign;
     QString underlinesign;
