@@ -899,6 +899,7 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
     result.clear();
 
     QString header;
+    QString end;
 //    QRegExp regExp("\{([^{]*?)\}");
     QRegExp regExp("\s*#include.*");
 
@@ -1032,6 +1033,38 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
 //        result = result.replace("{([^{]*?)}", "");
 //        result += header + string + semisign + enter;
         return;
+        break;
+    case 7://malloc free
+    {
+        header = "malloc";
+        end = "free";
+
+        foreach (QString string, lst) {
+            QStringList inlst = string.simplified().split(" ");
+            if(inlst.size() < 3)
+                continue;
+            QString type = inlst.at(0).simplified().replace("*", "");
+            QString name = inlst.at(1).simplified().replace("*", "");
+            QString size = inlst.at(2).simplified();
+            result += type + spacesign;
+            result += "*" + name + spacesign + "=" + spacesign;
+            result += "(" + type + " *" + ")" + header + "(" + size + ")" + semisign + enter;
+            result += "para_checkpointer(" + name + ")" + semisign + enter;
+            result += enter;
+            result += enter;
+            result += enter;
+            result += "if(" + name + ")" + enter;
+            result += "{" + enter;
+            result += tabsign + "free(" + name +")" + semisign + enter;
+            result += "}" + enter;
+            result += enter;
+            result += enter;
+            result += enter;
+
+
+        }
+
+    }
         break;
     default:
         return;
@@ -1964,6 +1997,7 @@ void CodeSophia::FillStringList()
             << "gen func local"
             << "extern \"C\""
             << tr("ÌáÈ¡º¯Êý")
+            << "malloc free"
                ;
     //    QStringList StrLst_KEYC_STRUCT;
     StrLst_KEYC_STRUCT
