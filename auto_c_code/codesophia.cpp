@@ -1793,7 +1793,7 @@ void CodeSophia::Proc_C_LOOP(QStringList &lst)
     quint32 index = ui->comboBox_keytips->currentIndex();
     switch(index)
     {
-    case 0:
+    case 0://for ++
         if(lst.size() == 0)
             ShowTipsInfo("int i = 0; 100");
         first = "for";
@@ -1804,7 +1804,7 @@ void CodeSophia::Proc_C_LOOP(QStringList &lst)
         m_lsign = "{";
         m_rsign = "}";
         break;
-    case 1:
+    case 1://for --
         if(lst.size() == 0)
             ShowTipsInfo("int i = 100; 0");
         first = "for";
@@ -1850,6 +1850,7 @@ void CodeSophia::Proc_C_LOOP(QStringList &lst)
 
     foreach (QString string, lst) {
         string = string.simplified();
+        string.replace("="," = ");
         QStringList tmplst = string.split(";");
         if(tmplst.size() < 2)
         {

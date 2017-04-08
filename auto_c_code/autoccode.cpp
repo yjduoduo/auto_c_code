@@ -1070,7 +1070,7 @@ void autoCCode::addstr_comboBox(void)
 
 autoCCode::~autoCCode()
 {
-    delete ui;
+    delete wo;
     delete ui_dialog;//入库
     delete ui_dia_selectdb;//选择数据库
     delete ui_autoindb;//自动入库界面
@@ -1079,7 +1079,7 @@ autoCCode::~autoCCode()
     delete pUdp_ui; //UDP
     delete ui_codetool;
 
-    delete wo;
+    delete ui;//最后删除
 }
 
 void autoCCode::on_save_btn_clicked()
