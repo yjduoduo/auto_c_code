@@ -192,8 +192,10 @@ autoCCode::autoCCode(QWidget *parent) :
     PopMenu();
     ThreadSets();
     DebugSets();
-    UISets();
     ReadHistorySettings();
+
+    UISets();
+
 }
 
 void autoCCode::PopMenu()
@@ -394,9 +396,12 @@ void autoCCode::UISets()
     {
 //        wo->show();
 //        wo->showMinimized();
-        setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint);
+        //setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint);
 //        setWindowState(Qt::WindowMinimizeButtonHint);
-        wo->show();
+//        wo->show();
+        qDebug() << "windowFlags() :" << windowFlags();
+        wo->showMinimized();
+        wo->update();
 //        wo->hide();
     }
     else
