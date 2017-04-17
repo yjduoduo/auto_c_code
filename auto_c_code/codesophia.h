@@ -47,6 +47,7 @@ enum OPTYPE
 typedef struct T_DataFormat
 {
     QString string;
+    QString stringright; //替换掉[.*]里面的数据
     QString format;
 }T_DataFormat;
 

@@ -1173,6 +1173,10 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
         format = "%-08x";
         //    << "print %-08x"
         break;
+    case 16:
+        format = "%p   ";
+        //    << "print %-08x"
+        break;
         break;
     default:
         return;
@@ -1229,8 +1233,9 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
     structinfo += "Struct" + spacesign;
     structinfo += structname;
     structinfo += " info following ===== ";
-    structinfo += "[" + var_name + "]";
+    structinfo += "[" + var_name + "]" ;
     structinfo += entersign;
+    structinfo += yinhaomsign;
     structinfo += rightkuohaosign;
     structinfo += semisign;
     structinfo += enter;
@@ -1251,8 +1256,18 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
             continue;
         if(string.contains("{") || string.contains("}"))
             continue;
+//        string = string.replace(QRegExp("(\\d+)"),"");
+//        string = string.replace(QRegExp("(\\s+);"),"");
+        string.replace(" ","");
+        string = string.replace(QRegExp("(\\/\\*.*\\*\\/)"),""); //去除/* */
+        string = string.replace(QRegExp("(\\/\\/)"),""); //去除//
         QStringList tmps = string.split(";");
 //        qDebug() << "; split size :" << tmps.size();
+        //去除变量和;之间的空格
+//        foreach (QString s, tmps) {
+//            if(s != tmps.last())
+//                string += s;
+//        }
         string.clear();
         //分隔;号
         foreach (QString s, tmps) {
@@ -1262,7 +1277,7 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
 //        qDebug() << "string filter :" << string;
         if(string.isEmpty())
             continue;
-        if(string.contains("*"))
+        if(string.contains("*") || (string.contains("[") && string.contains("]")))
         {
             single.format = format_p;
         }
@@ -1270,7 +1285,16 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
         {
             single.format = format;
         }
-        string.replace("*", "");
+
+        if(string.contains("*"))
+        {
+            QString tmpstr2 = string;
+            tmpstr2.replace(QRegExp("(\\[.*\\])"),"") ;
+            if(tmpstr2.contains("*"))
+                string.replace(QRegExp("(.*\\*)"),"");
+        }
+
+//        string.replace("*", "");
         tmps = string.split(",");
         if(tmps.size() > 1)
         {
@@ -1283,12 +1307,14 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
                     m_name = s.split(" ").last();
                     qDebug() << ", m_name split name:" <<m_name;
                     single.string = m_name;
+                    single.stringright = m_name.replace(QRegExp("(\\[.*\\])"),"") ;
                     m_nameLst << single;
                 }
                 else
                 {
                     qDebug() << ", m_name split name:" <<s;
                     single.string = s.simplified();
+                    single.stringright = s.simplified().replace(QRegExp("(\\[.*\\])"),"") ;
                     m_nameLst << single;
                 }
             }
@@ -1298,25 +1324,35 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
 
             m_name = string.split(" ").last();
             single.string = m_name.simplified();
+            single.stringright = m_name.simplified().replace(QRegExp("(\\[.*\\])"),"") ;
             m_nameLst << single;
         }
     }
 
     //寻找最大长度
     quint32 maxlen = 0;
+    quint32 maxlen2 = 0;
     foreach (T_DataFormat ele, m_nameLst) {
         if(ele.string.length() > maxlen)
             maxlen = ele.string.length();
+        if(ele.stringright.length() > maxlen2)
+            maxlen2 = ele.stringright.length();
     }
 
     foreach (T_DataFormat el, m_nameLst) {
         quint32 tmplen = el.string.length();
+        quint32 tmplen2 = el.stringright.length();
         if(tmplen < maxlen)
         {
             el.string = QString("%1%2").arg(el.string).arg(" ", maxlen - tmplen);
         }
+        if(tmplen2 < maxlen2)
+        {
+            el.stringright = QString("%1%2").arg(el.stringright).arg(" ", maxlen2 - tmplen2);
+        }
         after_nameLst << el;
     }
+
 
 
     result += structinfo ;
@@ -1335,7 +1371,7 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
         result += douhaosign ;
         result += spacesign ;
         result += var_name ;
-        result += el.string ;
+        result += el.stringright;
         result += rightkuohaosign ;
         result += semisign ;
         result += enter ;
@@ -2022,6 +2058,7 @@ void CodeSophia::FillStringList()
             << "print %-04x"
             << "print %-8x"
             << "print %-08x"
+            << "print %p"
                ;
     //    QStringList StrLst_KEYC_LOOP;
     StrLst_KEYC_LOOP
