@@ -84,6 +84,7 @@ CodeSophia::CodeSophia(QWidget *parent) :
     douhaosign = ",";
     entersign = "\\n";
     maohaosign = ":";
+    qudizhisign = "&";
 
     logfilename        ="D:\\files_time.log";
     logreadfilename    ="D:\\\\files_time.re.log";
@@ -1077,6 +1078,17 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
 
 }
 
+void CodeSophia::needqudizhi(T_DataFormat &single)
+{
+    if(single.string.contains("*") || single.string.contains("[") ||single.string.contains("]"))
+    {
+        single.haveyihao = false;
+    }
+    else
+    {
+        single.haveyihao = true;
+    }
+}
 
 void CodeSophia::Proc_C_StructPrint(QStringList &lst)
 {
@@ -1258,7 +1270,7 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
             continue;
 //        string = string.replace(QRegExp("(\\d+)"),"");
 //        string = string.replace(QRegExp("(\\s+);"),"");
-        string.replace(" ","");
+        string.replace(QRegExp("(\\s+;)"),";");
         string = string.replace(QRegExp("(\\/\\*.*\\*\\/)"),""); //È¥³ý/* */
         string = string.replace(QRegExp("(\\/\\/)"),""); //È¥³ý//
         QStringList tmps = string.split(";");
@@ -1308,6 +1320,7 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
                     qDebug() << ", m_name split name:" <<m_name;
                     single.string = m_name;
                     single.stringright = m_name.replace(QRegExp("(\\[.*\\])"),"") ;
+                    needqudizhi(single);
                     m_nameLst << single;
                 }
                 else
@@ -1315,6 +1328,7 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
                     qDebug() << ", m_name split name:" <<s;
                     single.string = s.simplified();
                     single.stringright = s.simplified().replace(QRegExp("(\\[.*\\])"),"") ;
+                    needqudizhi(single);
                     m_nameLst << single;
                 }
             }
@@ -1325,6 +1339,7 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
             m_name = string.split(" ").last();
             single.string = m_name.simplified();
             single.stringright = m_name.simplified().replace(QRegExp("(\\[.*\\])"),"") ;
+            needqudizhi(single);
             m_nameLst << single;
         }
     }
@@ -1370,7 +1385,16 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
         result += yinhaomsign ;
         result += douhaosign ;
         result += spacesign ;
-        result += var_name ;
+        if(el.haveyihao && (16 == index ))
+        {
+
+            result += qudizhisign;
+            result += var_name ;
+        }
+        else
+        {
+            result += var_name ;
+        }
         result += el.stringright;
         result += rightkuohaosign ;
         result += semisign ;

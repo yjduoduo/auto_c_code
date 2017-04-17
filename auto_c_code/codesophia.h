@@ -49,6 +49,7 @@ typedef struct T_DataFormat
     QString string;
     QString stringright; //替换掉[.*]里面的数据
     QString format;
+    bool haveyihao;
 }T_DataFormat;
 
 typedef struct T_StructFormat
@@ -152,7 +153,7 @@ private:
     void Proc_C_LOOP(QStringList &lst);
     QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
     QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
-
+    void needqudizhi(T_DataFormat &single);
 
 
 private:
@@ -185,6 +186,7 @@ private:
     QString underlinesign;
     QString tabsign;
     QString equalsign;
+    QString qudizhisign;
 
     //定义显示列表
     QStringList StrLst_KEYC_HEADER;
