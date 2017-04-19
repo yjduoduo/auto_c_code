@@ -132,6 +132,9 @@ private slots:
 
     void on_pushButton_load_clicked();
 
+    void get_funcname_qregexp(QString &text);
+    void get_funcname_and_declare_qregexp(QString &text);
+
     void on_checkBox_showFunc_toggled(bool checked);
 
 private:

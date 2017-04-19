@@ -415,6 +415,9 @@ private:
     void readTextFileAppend(const QString &fileName);
     void closeEvent(QCloseEvent *event);
 
+    void filedraged(QList<QUrl> &urls);
+    QList<QUrl> urls;
+
 protected:
     QString GenCode_str;
 private://QString
@@ -542,6 +545,8 @@ private slots://network
     QSet<quint32> getAllMatchPosResults(const QString text, const QString regexp);
     void on_checkBox_query_exact_stateChanged(int arg1);
     void on_checkBox_codeshortcut_stateChanged(int arg1);
+
+    void on_checkBox_codecutf8_toggled(bool checked);
 
 private:
     QString remoteip;

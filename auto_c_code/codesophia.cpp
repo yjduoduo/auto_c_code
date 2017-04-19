@@ -11,9 +11,9 @@
 
 #define STRUCTPRINTUIOP \
     if(current_lan_num == KEY_C && current_subtype_num == SUB_STRUCTPRINT)\
-        StructPrintMsgUIShow();\
+    StructPrintMsgUIShow();\
     else\
-        StructPrintMsgUIHide();
+    StructPrintMsgUIHide();
 
 
 
@@ -167,12 +167,12 @@ void CodeSophia::on_pushButton_gen_clicked()
         ShowTipsInfo("subtype empty!!!");
         return;
     }
-//    if(ui->textEdit_key->toPlainText().isEmpty())
-//    {
-//        ui->textEdit_result->clear();
-//        //        ShowTipsInfo("Key TextEdit empty,please input something!!!");
-//        return;
-//    }
+    //    if(ui->textEdit_key->toPlainText().isEmpty())
+    //    {
+    //        ui->textEdit_result->clear();
+    //        //        ShowTipsInfo("Key TextEdit empty,please input something!!!");
+    //        return;
+    //    }
 
     int n;
     int Number= ui->textEdit_key->document()->lineCount();
@@ -397,8 +397,8 @@ QString CodeSophia::getKeyClass(KeyClass cls)
 
 void CodeSophia::FillComBoxKeyTips()
 {
-//    if(current_lan.isEmpty() || current_subtype.isEmpty())
-//        return;
+    //    if(current_lan.isEmpty() || current_subtype.isEmpty())
+    //        return;
     qDebug() << "current   lan:" << current_lan ;
     qDebug() << "  subtype lan:" << current_subtype ;
     qDebug() << "  optype  lan:" << current_optype;
@@ -574,12 +574,12 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
     case 0:
         result = "\n"
                 "\/*\n"
-                 "* See the file LICENSE for redistribution information.\n"
-                 "*\n"
-                 "* Copyright (c) 2012, 2017 WeilaiDb and/or its affiliates.  All rights reserved.\n"
-                 "*\n"
-                 "* $Id$\n"
-                 "*\/\n";
+                "* See the file LICENSE for redistribution information.\n"
+                "*\n"
+                "* Copyright (c) 2012, 2017 WeilaiDb and/or its affiliates.  All rights reserved.\n"
+                "*\n"
+                "* $Id$\n"
+                "*\/\n";
         ignorelst = true;
         break;
     case 1:
@@ -661,7 +661,7 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             result +=  string ;
 
 
-//        qDebug() << "result str :" << result;
+        //        qDebug() << "result str :" << result;
     }
 
     if(!hassplit)
@@ -901,7 +901,7 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
 
     QString header;
     QString end;
-//    QRegExp regExp("\{([^{]*?)\}");
+    //    QRegExp regExp("\{([^{]*?)\}");
     QRegExp regExp("\s*#include.*");
 
 
@@ -943,96 +943,117 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
         break;
     case 6: //提取函数
         header = "";
+#if 0
         foreach(QString string, lst) {
-//            string = string.simplified();
+            //            string = string.simplified();
+            string.replace(QRegExp("(.*#define.*)"),"");
+            string.replace(QRegExp("(.*#include.*)"),"");
+//            string.replace(QRegExp("(\{([^{]*?)\})"),"");
+            string.replace(QRegExp("\\{"),"");
+            if(string.simplified().isEmpty())
+                continue;
             result += string + enter;
         }
-        LogWriteFile(ui->textEdit_key->toPlainText());
 
-//        ShellExecuteA(NULL,"open", exepath,filepath,NULL,SW_SHOWNORMAL);
+        ui->textEdit_result->setText(result);
+#endif
+        foreach(QString string, lst) {
+            result += string + enter;
+        }
+        //            string = string.simplified();
+        result.replace(QRegExp("(.*#define.*)"),"");
+        result.replace(QRegExp("(.*#include.*)"),"");
+//            string.replace(QRegExp("(\{([^{]*?)\})"),"");
+        result.replace(QRegExp("\\{"),"");
+//        if(string.simplified().isEmpty())
+//            continue;
+        ui->textEdit_result->setText(result);
+//        LogWriteFile(ui->textEdit_key->toPlainText());
 
-////        ShellExecuteA(NULL,"open", exepath,filepath,NULL,SW_SHOWMINIMIZED);
+        //        ShellExecuteA(NULL,"open", exepath,filepath,NULL,SW_SHOWNORMAL);
 
-//        //python.exe
-////        LPCSTR exepath = "python.exe";
-////        ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
-//        //python.exe
-////        QFile *pFile = NULL;
-////        pFile = new QFile(filepath);
-////        if(!pFile->exists())
-////        {
-////            pFile->open(QIODevice::WriteOnly);
-////            pFile->write(headerPython.toLocal8Bit().data());
-////        }
-////        pFile->close();
-//        //notepad++.exe打开此文件
-////        LPCSTR notepadexe = "notepad++.exe";
-////        ShellExecuteA(NULL,"open", notepadexe,filepath,NULL,SW_SHOWNORMAL);
+        ////        ShellExecuteA(NULL,"open", exepath,filepath,NULL,SW_SHOWMINIMIZED);
 
-////        Sleep(3000);
-////        pythonexecfilename
-//        result = LogReadFile(logreadfilename);
-//        LogDeleteFile(logreadfilename);
+        //        //python.exe
+        ////        LPCSTR exepath = "python.exe";
+        ////        ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
+        //        //python.exe
+        ////        QFile *pFile = NULL;
+        ////        pFile = new QFile(filepath);
+        ////        if(!pFile->exists())
+        ////        {
+        ////            pFile->open(QIODevice::WriteOnly);
+        ////            pFile->write(headerPython.toLocal8Bit().data());
+        ////        }
+        ////        pFile->close();
+        //        //notepad++.exe打开此文件
+        ////        LPCSTR notepadexe = "notepad++.exe";
+        ////        ShellExecuteA(NULL,"open", notepadexe,filepath,NULL,SW_SHOWNORMAL);
+
+        ////        Sleep(3000);
+        ////        pythonexecfilename
+        //        result = LogReadFile(logreadfilename);
+        //        LogDeleteFile(logreadfilename);
 
 
 
-//        if(!regExp.exactMatch(result))
-//        {
-////            QMessageBox::warning(NULL, tr("提示"), tr("ip地址错误"),NULL,NULL);
-//            ShowTipsInfo(tr("无匹配函数"));
-//            return;
-//        }
+        //        if(!regExp.exactMatch(result))
+        //        {
+        ////            QMessageBox::warning(NULL, tr("提示"), tr("ip地址错误"),NULL,NULL);
+        //            ShowTipsInfo(tr("无匹配函数"));
+        //            return;
+        //        }
 
-//        p = re.compile(r'.*[\w&*]+\s+(?P<functionname>([\w:*&~]+))\((?P<paramterlist>([\s\S]*?))\)')
-//        astr = re.sub(r'\s*\/\/.*','', text) ##del //
-//        astr = re.sub(r'\s*\/\*([\s\S]*?)\*\/', '', astr) ##del /* * in multi line
-//        astr = re.sub(r'#ifdef\s+__cplusplus([\s\S]*?)#endif', '', astr)  ##del __cplusplus
-//        astr = re.sub(r'#if 0([\s\S]*?)#endif', '', astr)  ##del  #if 0 ~ #endif
-//        astr = re.sub(r'\s*#include.*', '', astr)  ##del #include
-//        astr = re.sub(r'"(.*)"', '',astr)  ##del "   "
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
-//        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        p = re.compile(r'.*[\w&*]+\s+(?P<functionname>([\w:*&~]+))\((?P<paramterlist>([\s\S]*?))\)')
+        //        astr = re.sub(r'\s*\/\/.*','', text) ##del //
+        //        astr = re.sub(r'\s*\/\*([\s\S]*?)\*\/', '', astr) ##del /* * in multi line
+        //        astr = re.sub(r'#ifdef\s+__cplusplus([\s\S]*?)#endif', '', astr)  ##del __cplusplus
+        //        astr = re.sub(r'#if 0([\s\S]*?)#endif', '', astr)  ##del  #if 0 ~ #endif
+        //        astr = re.sub(r'\s*#include.*', '', astr)  ##del #include
+        //        astr = re.sub(r'"(.*)"', '',astr)  ##del "   "
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
+        //        astr = re.sub(r'\{([^{]*?)\}', '',astr)  ##del {}
 
-//        result = result.replace(QRegExp("\s*//[^\n]*"), "");
-//        result = result.replace(QRegExp("\s*\/\*([\s\S]*)\*\/"), "");
-//        result = result.replace(QRegExp("\s*/*([\s\S]*)*//"), "");
-//        result = result.replace(QRegExp("\s*/*([\s\S]*)*/"), "");
-//        result.replace();
-//        result = result.replace(QRegExp("#ifdef\s+__cplusplus([\s\S]*?)#endif"), "");
-//        result = result.replace(QRegExp("#if 0([\s\S]*?)#endif"), "");
-//        result = result.replace(QRegExp("\s*#include.*"), "");
-//        result = result.replace(QRegExp("\"(.*)\""), "");
-//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
-//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
-//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
-//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
-//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
-//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
-//        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
-//        result = result.replace(QRegExp(""), "");
-//        result = result.replace(QRegExp(""), "");
+        //        result = result.replace(QRegExp("\s*//[^\n]*"), "");
+        //        result = result.replace(QRegExp("\s*\/\*([\s\S]*)\*\/"), "");
+        //        result = result.replace(QRegExp("\s*/*([\s\S]*)*//"), "");
+        //        result = result.replace(QRegExp("\s*/*([\s\S]*)*/"), "");
+        //        result.replace();
+        //        result = result.replace(QRegExp("#ifdef\s+__cplusplus([\s\S]*?)#endif"), "");
+        //        result = result.replace(QRegExp("#if 0([\s\S]*?)#endif"), "");
+        //        result = result.replace(QRegExp("\s*#include.*"), "");
+        //        result = result.replace(QRegExp("\"(.*)\""), "");
+        //        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+        //        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+        //        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+        //        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+        //        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+        //        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+        //        result = result.replace(QRegExp("\{([^{]*?)\}"), "");
+        //        result = result.replace(QRegExp(""), "");
+        //        result = result.replace(QRegExp(""), "");
 
-//        result = result.replace("{([^{]*?)}", "");
-//        result = result.replace("{([^{]*?)}", "");
-//        result = result.replace("{([^{]*?)}", "");
-//        result = result.replace("{([^{]*?)}", "");
-//        result = result.replace("{([^{]*?)}", "");
-//        result = result.replace("{([^{]*?)}", "");
-//        result = result.replace("{([^{]*?)}", "");
-//        result = result.replace("{([^{]*?)}", "");
-//        result += header + string + semisign + enter;
+        //        result = result.replace("{([^{]*?)}", "");
+        //        result = result.replace("{([^{]*?)}", "");
+        //        result = result.replace("{([^{]*?)}", "");
+        //        result = result.replace("{([^{]*?)}", "");
+        //        result = result.replace("{([^{]*?)}", "");
+        //        result = result.replace("{([^{]*?)}", "");
+        //        result = result.replace("{([^{]*?)}", "");
+        //        result = result.replace("{([^{]*?)}", "");
+        //        result += header + string + semisign + enter;
         return;
         break;
     case 7://malloc free
@@ -1196,22 +1217,22 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
     }
     single.format = format;
 
-//    << "print %u"
-//    << "print %lu"
-//    << "print %llu"
-//    << "print %d"
-//    << "print %s"
-//    << "print %-02s"
-//    << "print %-04s"
-//    << "print %-08s"
-//    << "print %#x"
-//    << "print %x"
-//    << "print %-2x"
-//    << "print %-02x"
-//    << "print %-4x"
-//    << "print %-04x"
-//    << "print %-8x"
-//    << "print %-08x"
+    //    << "print %u"
+    //    << "print %lu"
+    //    << "print %llu"
+    //    << "print %d"
+    //    << "print %s"
+    //    << "print %-02s"
+    //    << "print %-04s"
+    //    << "print %-08s"
+    //    << "print %#x"
+    //    << "print %x"
+    //    << "print %-2x"
+    //    << "print %-02x"
+    //    << "print %-4x"
+    //    << "print %-04x"
+    //    << "print %-8x"
+    //    << "print %-08x"
 
 
     if(header.isEmpty())
@@ -1268,25 +1289,25 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
             continue;
         if(string.contains("{") || string.contains("}"))
             continue;
-//        string = string.replace(QRegExp("(\\d+)"),"");
-//        string = string.replace(QRegExp("(\\s+);"),"");
+        //        string = string.replace(QRegExp("(\\d+)"),"");
+        //        string = string.replace(QRegExp("(\\s+);"),"");
         string.replace(QRegExp("(\\s+;)"),";");
         string = string.replace(QRegExp("(\\/\\*.*\\*\\/)"),""); //去除/* */
         string = string.replace(QRegExp("(\\/\\/)"),""); //去除//
         QStringList tmps = string.split(";");
-//        qDebug() << "; split size :" << tmps.size();
+        //        qDebug() << "; split size :" << tmps.size();
         //去除变量和;之间的空格
-//        foreach (QString s, tmps) {
-//            if(s != tmps.last())
-//                string += s;
-//        }
+        //        foreach (QString s, tmps) {
+        //            if(s != tmps.last())
+        //                string += s;
+        //        }
         string.clear();
         //分隔;号
         foreach (QString s, tmps) {
             if(s != tmps.last())
                 string += s;
         }
-//        qDebug() << "string filter :" << string;
+        //        qDebug() << "string filter :" << string;
         if(string.isEmpty())
             continue;
         if(string.contains("*") || (string.contains("[") && string.contains("]")))
@@ -1306,7 +1327,7 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
                 string.replace(QRegExp("(.*\\*)"),"");
         }
 
-//        string.replace("*", "");
+        //        string.replace("*", "");
         tmps = string.split(",");
         if(tmps.size() > 1)
         {
@@ -1501,14 +1522,14 @@ void CodeSophia::Proc_C_Define(QStringList &lst)
     T_DefineInfo tDefInfo;
 
 
-//    << ""
-//    << "#define ()"
-//    << "#ifdef "
-//    << "#ifndef "
-//    << "#ifdef  else endif"
-//    << "#ifndef  else endif"
-//    << "#if 0"
-//    << "#if 1"
+    //    << ""
+    //    << "#define ()"
+    //    << "#ifdef "
+    //    << "#ifndef "
+    //    << "#ifdef  else endif"
+    //    << "#ifndef  else endif"
+    //    << "#if 0"
+    //    << "#if 1"
 
 
     quint32 index = ui->comboBox_keytips->currentIndex();
@@ -1717,20 +1738,20 @@ void CodeSophia::Proc_C_IFCONDITION(QStringList &lst)
         m_lsign = "{";
         m_rsign = "}";
         break;
-//    case 4:
-//        first = "#ifdef";
-//        middle = "#else";
-//        end = "#endif";
-//        m_lsign = enter;
-//        m_rsign = enter;
-//        break;
-//    case 5:
-//        first = "#ifndef";
-//        middle = "#else";
-//        end = "#endif";
-//        m_lsign = enter;
-//        m_rsign = enter;
-//        break;
+        //    case 4:
+        //        first = "#ifdef";
+        //        middle = "#else";
+        //        end = "#endif";
+        //        m_lsign = enter;
+        //        m_rsign = enter;
+        //        break;
+        //    case 5:
+        //        first = "#ifndef";
+        //        middle = "#else";
+        //        end = "#endif";
+        //        m_lsign = enter;
+        //        m_rsign = enter;
+        //        break;
 
 
 
@@ -2152,10 +2173,10 @@ void CodeSophia::StructPrintMsgUIShow()
 void CodeSophia::LogInitLog()
 {
 #ifdef SC_LOG  //将发送网络的数据有效信息进行保存
-//    QDate date;
-//    QTime time;
-//    logfilename = date.currentDate().toString("sclogyyyy-MM-dd");
-//    logfilename += time.currentTime().toString("_HH-mm-ss");
+    //    QDate date;
+    //    QTime time;
+    //    logfilename = date.currentDate().toString("sclogyyyy-MM-dd");
+    //    logfilename += time.currentTime().toString("_HH-mm-ss");
 
     plogFile = new QFile(logfilename);
     if(!plogFile)
@@ -2165,7 +2186,7 @@ void CodeSophia::LogInitLog()
     }
 
 
-//    LogWriteFile("\nTcpWrite NetData Log!!\n==============>>>>Starting:\n");
+    //    LogWriteFile("\nTcpWrite NetData Log!!\n==============>>>>Starting:\n");
     qDebug() <<"Log file:" << logfilename;
 #endif
 
@@ -2188,7 +2209,7 @@ void CodeSophia::LogWriteFile(QString str)
     if(plogFile)
     {
         plogFile->open(QIODevice::WriteOnly);
-//        plogFile->open(QIODevice::Append);
+        //        plogFile->open(QIODevice::Append);
         plogFile->write(str.toLocal8Bit());
         plogFile->close();
     }
@@ -2212,25 +2233,49 @@ QString CodeSophia::LogReadFile(QString filename)
 
 void CodeSophia::LogDeleteFile(QString filename)
 {
-//    QFile file(filename);
+    //    QFile file(filename);
 
-//    QFile::remove();
+    //    QFile::remove();
     qDebug() << " will delte file :" << filename;
     QFile::remove(filename.toLatin1().data());
-//    QFile::unlink(filename.toLatin1().data());
+    //    QFile::unlink(filename.toLatin1().data());
 
-//    if(file.exists())
-//    {
-////        file.remove();
-//    }
+    //    if(file.exists())
+    //    {
+    ////        file.remove();
+    //    }
+
+}
+
+void CodeSophia::get_funcname_qregexp(QString &text)
+{
+    QStringList result = text.split("\n");
+    text.clear();
+    foreach (QString str, result) {
+        text +=str.replace(QRegExp("(.*#define.*)"),"");
+        text +=str.replace(QRegExp("(.*#include.*)"),"");
+    }
+//    text.replace(QRegExp("\\{([^{]*?)\\}"),"");
+
+//    text.replace(QRegExp("(\\s*\\/\\/.*)"),"");
+//    text.replace(QRegExp("(\\s*\\/\\*[\\s\\S]*?\\*\\/)"),"");
+
+
+}
+
+void CodeSophia::get_funcname_and_declare_qregexp(QString &text)
+{
+    text.replace(QRegExp("\\{([^{]*?)\\}"),"");
 
 }
 
 
 
 
+
 void CodeSophia::on_pushButton_load_clicked()
 {
+#if 0
     QString result;
     LPCSTR exepath = "python.exe";
     LPCSTR filepath = "";
@@ -2247,20 +2292,20 @@ void CodeSophia::on_pushButton_load_clicked()
     }
 
     LogDeleteFile(logreadfilename);
-//    ShellExecuteA(NULL,"open", exepath,filepath,pythonexecdir,SW_SHOWNORMAL);
+    //    ShellExecuteA(NULL,"open", exepath,filepath,pythonexecdir,SW_SHOWNORMAL);
     ShellExecuteA(NULL,"open", exepath,filepath,pythonexecdir,SW_HIDE);
-//    Sleep(1000);
+    //    Sleep(1000);
     while(1)
     {
         QFile file(logreadfilename);
         if(file.exists())
         {
             result = LogReadFile(logreadfilename);
-//            LogDeleteFile(logreadfilename);
+            //            LogDeleteFile(logreadfilename);
             break;
         }
         Sleep(500);
-//        SetTextEditResult(result);
+        //        SetTextEditResult(result);
 
     }
     QStringList lst = result.split("\n");
@@ -2278,6 +2323,38 @@ void CodeSophia::on_pushButton_load_clicked()
     }
 
     ui->textEdit_result->setText(result);
+
+#else
+
+    QString result = ui->textEdit_key->toPlainText();
+    LPCSTR filepath = "";
+    //python使用的版本必须是2.7的，如果是3.4以上的可能还不行。
+    if(ui->checkBox_showFunc->isChecked())
+    {
+        get_funcname_qregexp(result);
+    }
+    else
+    {
+        get_funcname_and_declare_qregexp(result);
+    }
+
+//    QStringList lst = result.split("\n");
+//    result = "";
+//    foreach (QString str, lst) {
+//        if(!str.simplified().length())
+//            continue;
+//        str = str.simplified();
+//        if(str.right(1) == ")" && !str.contains(";"))
+//            result += str + semisign + enter;
+//        else
+//        {
+//            result += str + enter;
+//        }
+//    }
+
+    ui->textEdit_result->setText(result);
+
+#endif
 }
 
 void CodeSophia::writepythonexecfuncfilename(QString filename)
@@ -2335,38 +2412,38 @@ void CodeSophia::writepythonexecfuncfilename(QString filename)
             "" + "\n"
             "###regular expression for header and source files" + "\n"
             "def regrexheader(text):" + "\n"
-              "	p = re.compile(r'.*[\\w&*]+\\s+(?P<functionname>([\\w:*&~]+))\\((?P<paramterlist>([\\s\\S]*?))\\)')" + "\n"
-              "	astr = re.sub(r'\\s*\\/\\/.*','', text) ##del //" + "\n"
-              "	astr = re.sub(r'\\s*\\/\\*([\\s\\S]*?)\\*\\/', '', astr) ##del /* * in multi line" + "\n"
-              "	astr = re.sub(r'#ifdef\\s+__cplusplus([\\s\\S]*?)#endif', '', astr)  ##del __cplusplus" + "\n"
-              "	astr = re.sub(r'#if 0([\\s\\S]*?)#endif', '', astr)  ##del  #if 0 ~ #endif" + "\n"
-              "	astr = re.sub(r'\\s*#include.*', '', astr)  ##del #include" + "\n"
-              "	astr = re.sub(r'\"(.*)\"', '',astr)  ##del "   "" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}	" + "\n"
-              "" + "\n"
-              "	astr = p.sub(f2,astr)   ##提取函数名称   效率高" + "\n"
-              "" + "\n"
-              "	astr = re.sub(r'#pragma.*', '', astr)  ##del " + "\n"
-              "	astr = re.sub(r'\\s*#endif', '', astr)  ##del " + "\n"
-              "	astr = re.sub(r'\\s*#ifndef.*', '', astr)  ##del " + "\n"
-              "	astr = re.sub(r'\\s*#ifdef.*', '', astr)  ##del " + "\n"
-              "	astr = re.sub(r'\\s*#else', '', astr)  ##del " + "\n"
-              "	# print astr" + "\n"
-              "	return astr" + "\n"
-              "	" + "\n"
+            "	p = re.compile(r'.*[\\w&*]+\\s+(?P<functionname>([\\w:*&~]+))\\((?P<paramterlist>([\\s\\S]*?))\\)')" + "\n"
+            "	astr = re.sub(r'\\s*\\/\\/.*','', text) ##del //" + "\n"
+            "	astr = re.sub(r'\\s*\\/\\*([\\s\\S]*?)\\*\\/', '', astr) ##del /* * in multi line" + "\n"
+            "	astr = re.sub(r'#ifdef\\s+__cplusplus([\\s\\S]*?)#endif', '', astr)  ##del __cplusplus" + "\n"
+            "	astr = re.sub(r'#if 0([\\s\\S]*?)#endif', '', astr)  ##del  #if 0 ~ #endif" + "\n"
+            "	astr = re.sub(r'\\s*#include.*', '', astr)  ##del #include" + "\n"
+            "	astr = re.sub(r'\"(.*)\"', '',astr)  ##del "   "" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}	" + "\n"
+            "" + "\n"
+            "	astr = p.sub(f2,astr)   ##提取函数名称   效率高" + "\n"
+            "" + "\n"
+            "	astr = re.sub(r'#pragma.*', '', astr)  ##del " + "\n"
+            "	astr = re.sub(r'\\s*#endif', '', astr)  ##del " + "\n"
+            "	astr = re.sub(r'\\s*#ifndef.*', '', astr)  ##del " + "\n"
+            "	astr = re.sub(r'\\s*#ifdef.*', '', astr)  ##del " + "\n"
+            "	astr = re.sub(r'\\s*#else', '', astr)  ##del " + "\n"
+            "	# print astr" + "\n"
+            "	return astr" + "\n"
+            "	" + "\n"
             "def delete(filepath):" + "\n"
             "	f = open(filepath, 'a+')" + "\n"
             "	fnew = open(filepath + '.re.txt','wb')" + "\n"
@@ -2409,13 +2486,13 @@ void CodeSophia::writepythonexecfuncfilename(QString filename)
             "	" + "\n"
             "	" + "\n";
 
-        QFile file(filename);
-        if(!file.exists())
-        {
-            file.open(QIODevice::WriteOnly);
-            file.write(headerPython.toLocal8Bit().data());
-            file.close();
-        }
+    QFile file(filename);
+    if(!file.exists())
+    {
+        file.open(QIODevice::WriteOnly);
+        file.write(headerPython.toLocal8Bit().data());
+        file.close();
+    }
 
 }
 
@@ -2474,36 +2551,36 @@ void CodeSophia::writepythonexecfuncfilename_funcdeclare(QString filename)
             "" + "\n"
             "###regular expression for header and source files" + "\n"
             "def regrexheader(text):" + "\n"
-              "	p = re.compile(r'.*[\\w&*]+\\s+(?P<functionname>([\\w:*&~]+))\\((?P<paramterlist>([\\s\\S]*?))\\)')" + "\n"
-              "	astr = re.sub(r'\\s*\\/\\/.*','', text) ##del //" + "\n"
-              "	astr = re.sub(r'\\s*\\/\\*([\\s\\S]*?)\\*\\/', '', astr) ##del /* * in multi line" + "\n"
-              "	astr = re.sub(r'#ifdef\\s+__cplusplus([\\s\\S]*?)#endif', '', astr)  ##del __cplusplus" + "\n"
-              "	astr = re.sub(r'#if 0([\\s\\S]*?)#endif', '', astr)  ##del  #if 0 ~ #endif" + "\n"
-              "	astr = re.sub(r'\\s*#include.*', '', astr)  ##del #include" + "\n"
-              "	astr = re.sub(r'\"(.*)\"', '',astr)  ##del "   "" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
-              "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}	" + "\n"
-              "" + "\n"
-              "	astr = re.sub(r'#pragma.*', '', astr)  ##del " + "\n"
-              "	astr = re.sub(r'\\s*#endif', '', astr)  ##del " + "\n"
-              "	astr = re.sub(r'\\s*#ifndef.*', '', astr)  ##del " + "\n"
-              "	astr = re.sub(r'\\s*#ifdef.*', '', astr)  ##del " + "\n"
-              "	astr = re.sub(r'\\s*#else', '', astr)  ##del " + "\n"
-              "	# print astr" + "\n"
-              "	return astr" + "\n"
-              "	" + "\n"
+            "	p = re.compile(r'.*[\\w&*]+\\s+(?P<functionname>([\\w:*&~]+))\\((?P<paramterlist>([\\s\\S]*?))\\)')" + "\n"
+            "	astr = re.sub(r'\\s*\\/\\/.*','', text) ##del //" + "\n"
+            "	astr = re.sub(r'\\s*\\/\\*([\\s\\S]*?)\\*\\/', '', astr) ##del /* * in multi line" + "\n"
+            "	astr = re.sub(r'#ifdef\\s+__cplusplus([\\s\\S]*?)#endif', '', astr)  ##del __cplusplus" + "\n"
+            "	astr = re.sub(r'#if 0([\\s\\S]*?)#endif', '', astr)  ##del  #if 0 ~ #endif" + "\n"
+            "	astr = re.sub(r'\\s*#include.*', '', astr)  ##del #include" + "\n"
+            "	astr = re.sub(r'\"(.*)\"', '',astr)  ##del "   "" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}" + "\n"
+            "	astr = re.sub(r'\\{([^{]*?)\\}', '',astr)  ##del {}	" + "\n"
+            "" + "\n"
+            "	astr = re.sub(r'#pragma.*', '', astr)  ##del " + "\n"
+            "	astr = re.sub(r'\\s*#endif', '', astr)  ##del " + "\n"
+            "	astr = re.sub(r'\\s*#ifndef.*', '', astr)  ##del " + "\n"
+            "	astr = re.sub(r'\\s*#ifdef.*', '', astr)  ##del " + "\n"
+            "	astr = re.sub(r'\\s*#else', '', astr)  ##del " + "\n"
+            "	# print astr" + "\n"
+            "	return astr" + "\n"
+            "	" + "\n"
             "def delete(filepath):" + "\n"
             "	f = open(filepath, 'a+')" + "\n"
             "	fnew = open(filepath + '.re.txt','wb')" + "\n"
@@ -2546,13 +2623,13 @@ void CodeSophia::writepythonexecfuncfilename_funcdeclare(QString filename)
             "	" + "\n"
             "	" + "\n";
 
-        QFile file(filename);
-        if(!file.exists())
-        {
-            file.open(QIODevice::WriteOnly);
-            file.write(headerPython.toLocal8Bit().data());
-            file.close();
-        }
+    QFile file(filename);
+    if(!file.exists())
+    {
+        file.open(QIODevice::WriteOnly);
+        file.write(headerPython.toLocal8Bit().data());
+        file.close();
+    }
 
 }
 

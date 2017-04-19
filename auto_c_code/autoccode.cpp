@@ -124,7 +124,14 @@ autoCCode::autoCCode(QWidget *parent) :
     window_calender(NULL),
     helloworldNet(NULL)
 {
-    codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
+//    codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
+    codec = QTextCodec::codecForName("UTF-8");//must first used,or is NULL,die
+//    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForTr(codec);
+    QTextCodec::setCodecForLocale(QTextCodec::codecForLocale()); //设置GBK到本地
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
+
+
     ui->setupUi(this);
     InDb_Dialog = new QDialog(this);
     ui_dialog->setupUi(InDb_Dialog);
@@ -1173,20 +1180,20 @@ void autoCCode::on_gencode_btn_clicked(void)
     file.close();
     return;
 
-    //before
-    if(ui_setup->checkBox_showpath->isChecked())
-    {
-        QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
-        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
-        QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
+//    //before
+//    if(ui_setup->checkBox_showpath->isChecked())
+//    {
+//        QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
+//        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
+//        QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
 
-    }
-    else
-    {
-        QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-        QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-    }
+//    }
+//    else
+//    {
+//        QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+//        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+//        QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+//    }
 
     //    QString text_file = file.readAll();
     QString text_china;
@@ -1210,19 +1217,19 @@ void autoCCode::on_gencode_btn_clicked(void)
 
     file.close();
 
-    //after
-    if(ui_setup->checkBox_showpath->isChecked())
-    {
-        QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-        QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-    }
-    else
-    {
-        QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
-        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
-        QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
-    }
+//    //after
+//    if(ui_setup->checkBox_showpath->isChecked())
+//    {
+//        QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+//        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+//        QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+//    }
+//    else
+//    {
+//        QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
+//        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
+//        QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
+//    }
 }
 void autoCCode::hide_inBtn(void)
 {
@@ -2207,9 +2214,9 @@ void autoCCode::dragEnterEvent(QDragEnterEvent *event)
         event->acceptProposedAction();
     }
 }
-void autoCCode::dropEvent(QDropEvent *event)
+
+void autoCCode::filedraged(QList<QUrl> &urls)
 {
-    QList<QUrl> urls = event->mimeData()->urls();
     if(urls.isEmpty()){
         return;
     }
@@ -2253,6 +2260,12 @@ void autoCCode::dropEvent(QDropEvent *event)
 
     }
 #endif
+}
+
+void autoCCode::dropEvent(QDropEvent *event)
+{
+    urls = event->mimeData()->urls();
+    filedraged(urls);
 }
 
 void autoCCode::readTextFile(const QString &fileName)
@@ -2299,6 +2312,10 @@ void autoCCode::readTextFileAppend(const QString &fileName)
     {
         //        qDebug() << "file opend!!";
         QTextStream stream(&file);
+        if(ui->checkBox_codecutf8->isChecked())
+        {
+            stream.setCodec("utf-8");
+        }
 
         if(ui_setup->checkBox_showpath->isChecked())
         {
@@ -4556,10 +4573,10 @@ void autoCCode::on_pushButton_show_calender_clicked()
 {
     qDebug() << "on_pushButton_show_calender_clicked";
 
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+//    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
     window_calender = new Window();
     window_calender->show();
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("GB2312"));
+//    QTextCodec::setCodecForTr(QTextCodec::codecForName("GB2312"));
     //    window.show();
     //    Sleep(2000);
 }
@@ -5501,6 +5518,7 @@ void autoCCode::ReadHistorySettings()
     ui->checkBox_query_exact->setChecked(m_settings.value("QueryExact").toBool());
     ui_setup->checkBox_content_withheader->setChecked(m_settings.value("ContentWithHeader").toBool());
     ui_setup->checkBox_codeshortcut->setChecked(m_settings.value("codeshortcut").toBool());
+    ui->checkBox_codecutf8->setChecked(m_settings.value("codecutf8").toBool());
 //    QPalette palettebtn ;
 //    QColor color= m_settings.value("ForeColor").Color;
 //    palettebtn.setColor(QPalette::Button, color);
@@ -5547,6 +5565,7 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("QueryExact", ui->checkBox_query_exact->isChecked());
     m_settings.setValue("ContentWithHeader", ui_setup->checkBox_content_withheader->isChecked());
     m_settings.setValue("codeshortcut", ui_setup->checkBox_codeshortcut->isChecked());
+    m_settings.setValue("codecutf8", ui->checkBox_codecutf8->isChecked());
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
 
@@ -5602,4 +5621,12 @@ void autoCCode::on_checkBox_codeshortcut_stateChanged(int arg1)
         wo->show();
     else
         wo->hide();
+}
+
+void autoCCode::on_checkBox_codecutf8_toggled(bool checked)
+{
+//    if(checked)
+//    {
+        filedraged(urls);
+//    }
 }

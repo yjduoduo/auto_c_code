@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1084</width>
+    <width>1162</width>
     <height>518</height>
    </rect>
   </property>
@@ -186,6 +186,16 @@
         <widget class="QRadioButton" name="radioButton_showall">
          <property name="text">
           <string>显示全部</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_codecutf8">
+         <property name="text">
+          <string>UTF8</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
