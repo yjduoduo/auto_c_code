@@ -131,6 +131,7 @@ void CodeSophia::ActiveSets()
     connect(ui->action_loop, SIGNAL(triggered()), this, SLOT(LoopMsg()));
     connect(ui->action_note, SIGNAL(triggered()), this, SLOT(NoteMsg()));
     connect(ui->action_save, SIGNAL(triggered()), this, SLOT(SaveMsg()));
+    connect(ui->action_common_print, SIGNAL(triggered()), this, SLOT(Common_Print()));
 
 }
 
@@ -234,6 +235,9 @@ void CodeSophia::on_pushButton_gen_clicked()
         case SUB_LOOP:
             Proc_C_LOOP(middlestrList);
             break;
+        case SUB_COMMONPRINT:
+            Proc_C_COMMONPRINT(middlestrList);
+            break;
 
         default:
             break;
@@ -329,6 +333,12 @@ void CodeSophia::NoteMsg()
 
 }
 
+void CodeSophia::Common_Print()
+{
+    SETSUBTITLE((SUB_COMMONPRINT));
+
+}
+
 
 void CodeSophia::SaveMsg()
 {
@@ -358,6 +368,8 @@ QString CodeSophia::getSubType(SubType type)
         return "LOOP";
     case SUB_NOTE:
         return "NOTE";
+    case SUB_COMMONPRINT:
+        return "COMMONPRINT";
     default:
         break;
     }
@@ -443,6 +455,9 @@ void CodeSophia::FillComBoxKeyTips()
             break;
         case SUB_NOTE:
             list  = StrLst_KEYC_NOTE;
+            break;
+        case SUB_COMMONPRINT:
+            list  = StrLst_COMMONPRINT;
             break;
         default:
             break;
@@ -1155,6 +1170,527 @@ void CodeSophia::needqudizhi(T_DataFormat &single)
     }
 }
 
+void CodeSophia::FormatLst(QStringList &inlst, QString &header,bool &havedouhao,
+                           QString &result, QString fmt)
+{
+    QString format;
+    format.clear();
+    if(havedouhao)
+        format += header /*+ leftkuohaosin*/ + yinhaomsign;
+    else
+        format += header + leftkuohaosin + yinhaomsign;
+    foreach (QString f, inlst) {
+//        format += QString("0x%-0%1x ").arg(f.length() >2 ? (f.length() - 2) : f.length());
+        if(fmt.contains("0x", Qt::CaseInsensitive))
+            format += QString(fmt).arg(f.length() >2 ? (f.length() - 2) : f.length());
+        else
+            format += QString(fmt).arg(f.length() >2 ? (f.length()) : f.length());
+
+    }
+    format += entersign + yinhaomsign;
+    format += spacesign + douhaosign + enter + tabsign;
+    foreach (QString f, inlst) {
+        if(f == inlst.at(0))
+            continue;
+        format += douhaosign + spacesign;
+    }
+
+    format += rightkuohaosign  + semisign;
+    result += format + enter;
+    result += enter;
+}
+
+
+
+void CodeSophia::Proc_C_COMMONPRINT_LOOPS(QStringList &lst)
+{
+    QString result;
+    result.clear();
+
+    QString header;
+    bool havedouhao = false;
+
+
+
+    QString lineEditText = ui->lineEdit_print->text().trimmed();
+
+    if(!lineEditText.isEmpty() && lineEditText.contains(","))
+    {
+        header = ui->lineEdit_print->text().trimmed();
+        havedouhao = true;
+    }
+    else if(!lineEditText.isEmpty())
+        header = ui->lineEdit_print->text().trimmed();
+    else
+        header = "printf";
+
+
+    foreach (QString str, lst) {
+        if(havedouhao)
+        {
+            result += header + yinhaomsign;
+        }
+        else
+        {
+            result += header + leftkuohaosin + yinhaomsign;
+        }
+        result += str.simplified() ;
+        result += entersign + yinhaomsign + rightkuohaosign + semisign;
+        result += enter;
+        QStringList inlst = str.simplified().split(" ");
+        FormatLst(inlst, header, havedouhao,  result, "0x%-0%1x ");
+        FormatLst(inlst, header, havedouhao,  result, "%-0%1u ");
+        FormatLst(inlst, header, havedouhao,  result, "%-0%1llu ");
+        FormatLst(inlst, header, havedouhao,  result, "%-0%1d ");
+        FormatLst(inlst, header, havedouhao,  result, "%-0%1lld ");
+        FormatLst(inlst, header, havedouhao,  result, "%-0%1f ");
+        FormatLst(inlst, header, havedouhao,  result, "%-0%1p ");
+        FormatLst(inlst, header, havedouhao,  result, "%-0%1s ");
+//        FormatLst(inlst, header, havedouhao,  result, "%p ");
+
+        result += enter;
+        result += enter;
+        result += enter;
+
+
+
+
+
+    }
+
+    int loop = 0;
+//    qDebug("name addr shelf slot\n");
+//    qDebug("name addr shelf slotjjjfdsafdsafdsaffffffffffffffffffasdfasdf\n");
+//    qDebug("0x%-02x 0x%-02x 0x%-03x 0x%-043x \n");
+//    qDebug("afdname fdfsdfdsfaddr xxshelf fdfefsfdsfdsfdsslot\n");
+//    qDebug("0x%-05x 0x%-011x 0x%-05x 0x%-017x \n");
+    qDebug("noafd nameafd addrfd shelfaa\n");
+//    qDebug("0x%-03x 0x%-05x 0x%-04x 0x%-05x \n" , , , , );
+
+//    qDebug("%-05u %-07u %-06u %-07u \n" , , , , );
+
+//    qDebug("%-05llu %-07llu %-06llu %-07llu \n" , , , , );
+
+//    qDebug("%-05d %-07d %-06d %-07d \n" , , , , );
+
+//    qDebug("%-05lld %-07lld %-06lld %-07lld \n" , , , , );
+
+//    qDebug("%-05f %-07f %-06f %-07f \n" , , , , );
+
+//    qDebug("%-05p %-07p %-06p %-07p \n" , , , , );
+
+//    qDebug("%p %p %p %p \n" , , , , );
+
+
+
+
+
+
+
+
+
+    for( loop = 0 ; loop < 10; loop++ )
+    {
+        qDebug("0x%-03x 0x%-05x 0x%-04x 0x%-05x " ,
+                loop, loop, loop, loop);
+        qDebug("%-05u %-07u %-06u %-07u \n" ,
+               loop, loop, loop, loop);
+
+//        qDebug("%-05llu %-07llu %-06llu %-07llu \n" ,
+//              loop, loop, loop, loop);
+
+        qDebug("%-05d %-07d %-06d %-07d \n" ,
+               loop, loop, loop, loop);
+
+//        qDebug("%-05lld %-07lld %-06lld %-07lld \n" ,
+//               loop, loop, loop, loop);
+
+//        qDebug("%-05f %-07f %-06f %-07f \n" ,
+//               loop, loop, loop, loop);
+
+        qDebug("%-05p %-07p %-06p %-07p \n" ,
+               loop, loop, loop, loop);
+
+//        qDebug("%p %p %p %p \n" ,
+//               loop, loop, loop, loop);
+
+        char *pt = "this";
+        qDebug("%-05s %-07s %-06s %-07s \n" ,
+               pt, pt, pt, pt);
+    }
+
+
+
+
+
+
+    SetTextEditResult(result);
+}
+
+
+
+
+void CodeSophia::Proc_C_COMMONPRINT(QStringList &lst)
+{
+    QString result;
+    result.clear();
+
+    QString format;
+    QList<T_DataFormat> m_nameLst;
+    QList<T_DataFormat> after_nameLst;
+    T_DataFormat single;
+    QString m_name;
+    QString header;
+    QString structname;
+    QString structinfo;
+    QString var_name;
+    bool havedouhao = false;
+
+
+
+    QString lineEditText = ui->lineEdit_print->text().trimmed();
+
+    if(!lineEditText.isEmpty() && lineEditText.contains(","))
+    {
+        header = ui->lineEdit_print->text().trimmed();
+        havedouhao = true;
+    }
+    else if(!lineEditText.isEmpty())
+        header = ui->lineEdit_print->text().trimmed();
+    else
+        header = "printf";
+
+    if(!ui->lineEdit_dataprint->text().trimmed().isEmpty())
+        var_name = ui->lineEdit_dataprint->text().trimmed();
+    else
+        var_name = "";
+
+
+    QString format_p = "%p   ";
+
+
+    quint32 index = ui->comboBox_keytips->currentIndex();
+    switch(index)
+    {
+    case 0://var print
+
+        format = "%u   ";
+        break;
+    case 1:
+        format = "%lu  ";
+        break;
+    case 2://loops print
+        format = "%llu ";
+        break;
+    case 3:
+        format = "%d   ";
+        break;
+    case 4:
+        format = "%s   ";
+        break;
+    case 5:
+        format = "%-02s";
+        //    << "print %-02s"
+        break;
+    case 6:
+        format = "%-04s";
+        //    << "print %-04s"
+        break;
+    case 7:
+        format = "%-08s";
+        //    << "print %-08s"
+        break;
+    case 8:
+        format = "%#x  ";
+        //    << "print %#x"
+        break;
+    case 9:
+        format = "%x   ";
+        //    << "print %x"
+        break;
+    case 10:
+        format = "%-2x ";
+        //    << "print %-2x"
+        break;
+    case 11:
+        format = "%-02x";
+        //    << "print %-02x"
+        break;
+    case 12:
+        format = "%-4x ";
+        //    << "print %-4x"
+        break;
+    case 13:
+        format = "%-04x";
+        //    << "print %-04x"
+        break;
+    case 14:
+        format = "%-8x ";
+        //    << "print %-8x"
+        break;
+    case 15:
+        format = "%-08x";
+        //    << "print %-08x"
+        break;
+    case 16:
+        format = "%p   ";
+        //    << "print %-08x"
+        break;
+        break;
+    case 17: //loops
+        format = "%p   ";
+        //    << "print %-08x"
+        if(lst.size() == 0)
+            ShowTipsInfo("name addr shelf slot");
+        Proc_C_COMMONPRINT_LOOPS(lst);
+        return;
+        break;
+    default:
+        return;
+        break;
+    }
+    single.format = format;
+
+    //    << "print %u"
+    //    << "print %lu"
+    //    << "print %llu"
+    //    << "print %d"
+    //    << "print %s"
+    //    << "print %-02s"
+    //    << "print %-04s"
+    //    << "print %-08s"
+    //    << "print %#x"
+    //    << "print %x"
+    //    << "print %-2x"
+    //    << "print %-02x"
+    //    << "print %-4x"
+    //    << "print %-04x"
+    //    << "print %-8x"
+    //    << "print %-08x"
+
+
+    if(header.isEmpty())
+        return;
+
+
+//    foreach (QString string, lst) {
+//        string = string.simplified();
+//        if (string.contains("struct") && string.contains("{"))
+//        {
+//            structname = string.split("struct").at(1).split("{").at(0).trimmed();
+//        }
+//        if (string.contains("}") && structname.isEmpty())
+//        {
+//            structname = string.split("}").at(1).split(";").at(0).trimmed();
+//            qDebug() << "string split name:" << string.split("}").at(0);
+//            qDebug() << "string split name:" << string.split("}").at(1);
+//        }
+//        if(!structname.isEmpty())
+//        {
+//            qDebug() << "strucgt name:" << structname;
+//            break;
+//        }
+//    }
+
+//    if(structname.isEmpty())
+//        return;
+
+//    if(havedouhao)
+//    {
+//        structinfo += header; /*  有逗号不加左括号  */
+//    }
+//    else
+//    {
+//        structinfo += header + leftkuohaosin;
+//    }
+//    structinfo += yinhaomsign;
+//    structinfo += "Struct" + spacesign;
+//    structinfo += structname;
+//    structinfo += " info following ===== ";
+//    structinfo += "[" + var_name + "]" ;
+//    structinfo += entersign;
+//    structinfo += yinhaomsign;
+//    structinfo += rightkuohaosign;
+//    structinfo += semisign;
+//    structinfo += enter;
+
+
+    //过滤元素
+    foreach(QString string, lst) {
+        string = string.simplified();
+        if(!string.contains(";"))
+            continue;
+        if(string.length() < 2)
+            continue;
+        if(string.left(1) == "*")
+            continue;
+        if(string.left(1) == "/" && string.left(2) == "/")
+            continue;
+        if(string.left(1) == "/" && string.left(2) == "*")
+            continue;
+        if(string.contains("{") || string.contains("}"))
+            continue;
+        //        string = string.replace(QRegExp("(\\d+)"),"");
+        //        string = string.replace(QRegExp("(\\s+);"),"");
+        string.replace(QRegExp("(\\s+;)"),";");
+        if(string.contains(","))
+        {
+            QStringList inlst = string.split(",");
+//            string.replace(QRegExp(","),";");
+            QString type = inlst.at(0).split(" ").at(0);
+            QString inres;
+            foreach (QString str, inlst) {
+                if(str.split(" ").size() >=2)
+                    inres +=type+ spacesign + str.split(" ").at(1);
+                else
+                    inres +=type + spacesign + str.split(" ").at(0);
+
+                inres += semisign;
+
+            }
+            string = inres;
+        }
+
+        qDebug() << "commprint--> string:" << string;
+        string.replace(QRegExp("\\s*=.*,"),";");
+        string.replace(QRegExp("\\s*=.*;"),";");
+        string = string.replace(QRegExp("(\\/\\*.*\\*\\/)"),""); //去除/* */
+        string = string.replace(QRegExp("(\\/\\/)"),""); //去除//
+        QStringList tmps = string.split(";");
+        //        qDebug() << "; split size :" << tmps.size();
+        //去除变量和;之间的空格
+        //        foreach (QString s, tmps) {
+        //            if(s != tmps.last())
+        //                string += s;
+        //        }
+        string.clear();
+        //分隔;号
+        foreach (QString s, tmps) {
+//            if(s != tmps.last())
+                string += s;
+        }
+        //        qDebug() << "string filter :" << string;
+        if(string.isEmpty())
+            continue;
+        if(string.contains("*") || (string.contains("[") && string.contains("]")))
+        {
+            single.format = format_p;
+        }
+        else
+        {
+            single.format = format;
+        }
+
+        if(string.contains("*"))
+        {
+            QString tmpstr2 = string;
+            tmpstr2.replace(QRegExp("(\\[.*\\])"),"") ;
+            if(tmpstr2.contains("*"))
+                string.replace(QRegExp("(.*\\*)"),"");
+        }
+
+        //        string.replace("*", "");
+//        tmps = string.split(",");
+        tmps = string.split(";");
+        if(tmps.size() > 1)
+        {
+            qDebug() << ", size :" << tmps.size();
+            string.clear();
+            //分隔,号
+            foreach (QString s, tmps) {
+                if(s == tmps.first())
+                {
+                    m_name = s.split(" ").last();
+                    qDebug() << ", m_name split name:" <<m_name;
+                    single.string = m_name;
+                    single.stringright = m_name.replace(QRegExp("(\\[.*\\])"),"") ;
+                    needqudizhi(single);
+                    m_nameLst << single;
+                }
+                else
+                {
+                    qDebug() << ", m_name split name:" <<s;
+                    single.string = s.simplified();
+                    single.stringright = s.simplified().replace(QRegExp("(\\[.*\\])"),"") ;
+                    needqudizhi(single);
+                    m_nameLst << single;
+                }
+            }
+        }
+        else
+        {
+
+            m_name = string.split(" ").last();
+            single.string = m_name.simplified();
+            single.stringright = m_name.simplified().replace(QRegExp("(\\[.*\\])"),"") ;
+            needqudizhi(single);
+            m_nameLst << single;
+        }
+    }
+
+    //寻找最大长度
+    quint32 maxlen = 0;
+    quint32 maxlen2 = 0;
+    foreach (T_DataFormat ele, m_nameLst) {
+        if(ele.string.length() > maxlen)
+            maxlen = ele.string.length();
+        if(ele.stringright.length() > maxlen2)
+            maxlen2 = ele.stringright.length();
+    }
+
+    foreach (T_DataFormat el, m_nameLst) {
+        quint32 tmplen = el.string.length();
+        quint32 tmplen2 = el.stringright.length();
+        if(tmplen < maxlen)
+        {
+            el.string = QString("%1%2").arg(el.string).arg(" ", maxlen - tmplen);
+        }
+        if(tmplen2 < maxlen2)
+        {
+            el.stringright = QString("%1%2").arg(el.stringright).arg(" ", maxlen2 - tmplen2);
+        }
+        after_nameLst << el;
+    }
+
+
+
+    result += structinfo ;
+
+    foreach (T_DataFormat el, after_nameLst) {
+        result += header ;
+        if(!havedouhao)
+            result += leftkuohaosin ;
+        result += yinhaomsign ;
+        result += el.string ;
+        result += spacesign ;
+        result += maohaosign ;
+        result += tabsign ;
+        result += el.format ;
+        result += entersign ;
+        result += yinhaomsign ;
+        result += douhaosign ;
+        result += spacesign ;
+        if(el.haveyihao && (16 == index ))
+        {
+
+            result += qudizhisign;
+            result += var_name ;
+        }
+        else
+        {
+            result += var_name ;
+        }
+        result += el.stringright;
+        result += rightkuohaosign ;
+        result += semisign ;
+        result += enter ;
+    }
+
+
+    SetTextEditResult(result);
+
+}
+
 void CodeSophia::Proc_C_StructPrint(QStringList &lst)
 {
     QString result;
@@ -1169,11 +1705,18 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
     QString structname;
     QString structinfo;
     QString var_name;
+    bool havedouhao = false;
 
 
 
+    QString lineEditText = ui->lineEdit_print->text().trimmed();
 
-    if(!ui->lineEdit_print->text().trimmed().isEmpty())
+    if(!lineEditText.isEmpty() && lineEditText.contains(","))
+    {
+        header = ui->lineEdit_print->text().trimmed();
+        havedouhao = true;
+    }
+    else if(!lineEditText.isEmpty())
         header = ui->lineEdit_print->text().trimmed();
     else
         header = "printf";
@@ -1305,7 +1848,14 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
     if(structname.isEmpty())
         return;
 
-    structinfo += header + leftkuohaosin;
+    if(havedouhao)
+    {
+        structinfo += header; /*  有逗号不加左括号  */
+    }
+    else
+    {
+        structinfo += header + leftkuohaosin;
+    }
     structinfo += yinhaomsign;
     structinfo += "Struct" + spacesign;
     structinfo += structname;
@@ -1439,7 +1989,8 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
 
     foreach (T_DataFormat el, after_nameLst) {
         result += header ;
-        result += leftkuohaosin ;
+        if(!havedouhao)
+            result += leftkuohaosin ;
         result += yinhaomsign ;
         result += el.string ;
         result += spacesign ;
@@ -2174,6 +2725,11 @@ void CodeSophia::FillStringList()
                ;
 
 
+    //普通打印
+    StrLst_COMMONPRINT
+            << StrLst_KEYC_STRUCTPRINT
+            << "loops"
+               ;
 }
 
 void CodeSophia::on_lineEdit_print_textChanged(const QString &arg1)

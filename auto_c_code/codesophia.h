@@ -32,6 +32,7 @@ enum SubType
     SUB_IFCONDITION,
     SUB_LOOP,
     SUB_NOTE,
+    SUB_COMMONPRINT,
     SUB_OTHER,
 };
 
@@ -93,6 +94,7 @@ public slots:
     void IfConditionMsg();
     void LoopMsg();
     void NoteMsg();
+    void Common_Print();
 
     void SaveMsg();
     void FillStringList();
@@ -154,6 +156,9 @@ private:
     void Proc_C_Define(QStringList &lst);
     void Proc_C_IFCONDITION(QStringList &lst);
     void Proc_C_LOOP(QStringList &lst);
+    void Proc_C_COMMONPRINT(QStringList &lst);
+    void Proc_C_COMMONPRINT_LOOPS(QStringList &lst);
+    void FormatLst(QStringList &inlst, QString &header, bool &havedouhao, QString &result, QString fmt);
     QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
     QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
     void needqudizhi(T_DataFormat &single);
@@ -201,6 +206,7 @@ private:
     QStringList StrLst_KEYC_IFCONDITION;
     QStringList StrLst_KEYC_LOOP;
     QStringList StrLst_KEYC_NOTE;
+    QStringList StrLst_COMMONPRINT;
 
 
 private:

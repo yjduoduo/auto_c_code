@@ -248,6 +248,8 @@
     <addaction name="action_ifcondition"/>
     <addaction name="action_loop"/>
     <addaction name="action_note"/>
+    <addaction name="separator"/>
+    <addaction name="action_common_print"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -362,6 +364,11 @@
   <action name="action_note">
    <property name="text">
     <string>注释</string>
+   </property>
+  </action>
+  <action name="action_common_print">
+   <property name="text">
+    <string>打印</string>
    </property>
   </action>
  </widget>
