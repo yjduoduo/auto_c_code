@@ -11,7 +11,8 @@
 #define SC_LOG
 
 #define STRUCTPRINTUIOP \
-    if(current_lan_num == KEY_C && current_subtype_num == SUB_STRUCTPRINT)\
+    if(current_lan_num == KEY_C &&( current_subtype_num == SUB_STRUCTPRINT\
+    || current_subtype_num == SUB_COMMONPRINT))\
     StructPrintMsgUIShow();\
     else\
     StructPrintMsgUIHide();
