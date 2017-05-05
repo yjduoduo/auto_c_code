@@ -63,7 +63,8 @@ HEADERS  += autoccode.h \
     zeromq/include/zmq_utils.h \
     zeromq/include/zmq.h \
     netthings.h \
-    codesophia.h
+    codesophia.h \
+    comon.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \

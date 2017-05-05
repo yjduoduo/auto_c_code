@@ -6,6 +6,7 @@
 #include <QDate>
 #include <QTime>
 #include <windows.h>
+#include "comon.h"
 
 #define SC_LOG
 
@@ -57,6 +58,11 @@ CodeSophia::CodeSophia(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CodeSophia)
 {
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForTr(codec);
+    QTextCodec::setCodecForLocale(QTextCodec::codecForLocale()); //设置GBK到本地
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
+
     ui->setupUi(this);
     title_org = this->windowTitle();
     splitsign = " -- ";
@@ -1060,6 +1066,8 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
     {
         header = "malloc";
         end = "free";
+        if(lst.size() == 0)
+            ShowTipsInfo("char *p size");
 
         foreach (QString string, lst) {
             QStringList inlst = string.simplified().split(" ");
@@ -1077,7 +1085,43 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
             result += enter;
             result += "if(" + name + ")" + enter;
             result += "{" + enter;
-            result += tabsign + "free(" + name +")" + semisign + enter;
+            result += tabsign + end +"(" + name +")" + semisign + enter;
+            result += tabsign + name +" = NULL" + semisign + enter;
+            result += "}" + enter;
+            result += enter;
+            result += enter;
+            result += enter;
+
+
+        }
+
+    }
+        break;
+    case 8://new delete
+    {
+        header = "new";
+        end = "delete";
+        if(lst.size() == 0)
+            ShowTipsInfo("char *p size");
+
+        foreach (QString string, lst) {
+            QStringList inlst = string.simplified().split(" ");
+            if(inlst.size() < 3)
+                continue;
+            QString type = inlst.at(0).simplified().replace("*", "");
+            QString name = inlst.at(1).simplified().replace("*", "");
+            QString size = inlst.at(2).simplified();
+            result += type + spacesign;
+            result += "*" + name + spacesign + "=" + spacesign;
+            result += /*"(" + type + " *" + ")" + */header + "(" + size + ")" + semisign + enter;
+            result += "para_checkpointer(" + name + ")" + semisign + enter;
+            result += enter;
+            result += enter;
+            result += enter;
+            result += "if(" + name + ")" + enter;
+            result += "{" + enter;
+            result += tabsign + end +"(" + name +")" + semisign + enter;
+            result += tabsign + name +" = NULL" + semisign + enter;
             result += "}" + enter;
             result += enter;
             result += enter;
@@ -2078,8 +2122,9 @@ void CodeSophia::FillStringList()
             << "gen func"
             << "gen func local"
             << "extern \"C\""
-            << tr("提取函数")
+            << str_china(提取函数)
             << "malloc free"
+            << "new delete"
                ;
     //    QStringList StrLst_KEYC_STRUCT;
     StrLst_KEYC_STRUCT
