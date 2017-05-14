@@ -37,6 +37,8 @@
 #include "msgtipsautoshut.h"
 //calender
 #include "window_calender.h"
+#include <QProgressDialog>
+#include <QProgressBar>
 
 
 #define DEFAULT_PORT 22222
@@ -172,6 +174,27 @@ autoCCode::autoCCode(QWidget *parent) :
     //    TotalReadBytes = 0;
     //    bytesReceived  = 0;
     //    bytesNeedRecv  = 0;
+
+    /*
+    ** 处理扫描夹
+    */
+    pathFileNums = 0;
+    //增加进度条
+    progress=new QProgressDialog(this);
+//    progress->setLabelText(QString("scaning").arg(""));
+    //添加setWindowFlags之后进度条在window中显示，无法单独出来
+    //progress->setWindowFlags(Qt::FramelessWindowHint);
+//    progress->setRange(0,idmainmaxnums);
+    progress->setModal(true);
+    progress->setFocus();
+    //必须显示出来
+    progress->hide();
+
+
+    key_escaple_pressed = false;
+
+
+
 
     //测试hello world netthings
     helloworldNet = new NetThings(this);
@@ -2215,6 +2238,140 @@ void autoCCode::dragEnterEvent(QDragEnterEvent *event)
     }
 }
 
+
+quint32 autoCCode::iteratorDirectory_FileNums(QString path)
+{
+    QDir dir(path);
+
+    foreach(QFileInfo mfi ,dir.entryInfoList())
+    {
+        if(mfi.isFile())
+        {
+            pathFileNums +=1;
+            qDebug()<< "File :" << mfi.fileName();
+        }else
+        {
+            if(mfi.fileName()=="." || mfi.fileName() == "..")continue;
+            qDebug() << "Entry Dir" << mfi.absoluteFilePath();
+            iteratorDirectory_FileNums(mfi.absoluteFilePath());
+//            ShowTipsInfo("扫描中...");
+        }
+    }
+    return pathFileNums;
+}
+
+void autoCCode::zeropathFileNums()
+{
+    pathFileNums = 0;
+}
+quint32 autoCCode::getpathFileNums()
+{
+    return pathFileNums;
+}
+
+
+void autoCCode::zeroloopFileNums()
+{
+    loopFileNums = 0;
+}
+
+void autoCCode::iteratorDirectory_Print(QString path)
+{
+    QDir dir(path);
+
+    foreach(QFileInfo mfi ,dir.entryInfoList())
+    {
+        if(mfi.isFile())
+        {
+            qDebug()<< "File :" << mfi.fileName();
+        }else
+        {
+            if(mfi.fileName()=="." || mfi.fileName() == "..")continue;
+            qDebug() << "Entry Dir" << mfi.absoluteFilePath();
+            iteratorDirectory_Print(mfi.absoluteFilePath());
+        }
+    }
+}
+
+char g_textbar[102];
+char tipsstr[] = "|\\-/";
+
+void autoCCode::textprogress_init(void)
+{
+    memset(g_textbar, 0 ,sizeof(g_textbar));
+}
+
+
+void autoCCode::textprogress(quint32 loop, quint32 total)
+{
+    int i = 0;
+
+    i = (loop * 100 ) / total;
+
+
+//    while(i <= 100)
+    {
+        g_textbar[i]='#';
+        printf("[%-101s][%d%%][%c]\r", g_textbar, i, tipsstr[i%4]);
+        ShowTipsInfo(QString("[%-101s][%d%%][%c]\r").arg(g_textbar).arg(i).arg(tipsstr[i%4]));
+//        fflush(stdout);
+//        i++;
+//        usleep(100000);
+    }
+//    printf("\n");
+
+}
+
+void autoCCode::dirprogress(QString filename, quint32 loop, quint32 total)
+{
+//    //增加进度条
+//    progress=new QProgressDialog(this);
+//    progress->setLabelText(tr("Search %1").arg("database"));
+//    //添加setWindowFlags之后进度条在window中显示，无法单独出来
+//    //progress->setWindowFlags(Qt::FramelessWindowHint);
+//    progress->setRange(0,idmainmaxnums);
+//    progress->setModal(true);
+//    progress->setFocus();
+//    //必须显示出来
+    progress->setLabelText(QString("scaning %1").arg(filename));
+    progress->show();
+    progress->setRange(0,total);
+    progress->setValue(loop);
+
+}
+
+
+
+
+
+void autoCCode::iteratorDirectory_Saveui(QString path)
+{
+    QDir dir(path);
+
+    foreach(QFileInfo mfi ,dir.entryInfoList())
+    {
+        if(mfi.isFile() && !mfi.isSymLink())
+        {
+//            qDebug()<< "File :" << mfi.fileName();
+            qDebug()<< "File :" << mfi.absoluteFilePath();
+            readTextFileAppend(mfi.absoluteFilePath());
+            loopFileNums +=1;
+//            textprogress(loopFileNums , getpathFileNums());
+            dirprogress(mfi.absoluteFilePath(), loopFileNums , getpathFileNums());
+        }else
+        {
+            if(mfi.fileName()=="." || mfi.fileName() == "..")continue;
+            qDebug() << "Entry Dir" << mfi.absoluteFilePath();
+            iteratorDirectory_Saveui(mfi.absoluteFilePath());
+        }
+
+        if(key_escaple_pressed)
+        {
+            break;
+        }
+    }
+}
+
 void autoCCode::filedraged(QList<QUrl> &urls)
 {
     if(urls.isEmpty()){
@@ -2247,9 +2404,39 @@ void autoCCode::filedraged(QList<QUrl> &urls)
         QFileInfo fileinfo(fileName);
         if(fileinfo.isDir())
         {
+            this->setWindowTitle(url.toLocalFile());
             qDebug() << "~~is dir!!,filename :" << fileName;
-            QString msgstr(str_china(不能读取文件夹 %1.).arg(fileName));
-            ShowTipsInfoWithShowTime(msgstr, 1000);
+//            QString msgstr(str_china(不能读取文件夹 %1.).arg(fileName));
+//            ShowTipsInfoWithShowTime(msgstr, 1000);
+            //遍历文件夹
+//            QDir dir(fileName);
+            zeropathFileNums();
+            zeroloopFileNums();
+//            qDebug() << "文件夹["<< fileName << "]里文件数量为:" << iteratorDirectory_FileNums(fileName);
+            zeropathFileNums();
+            zeroloopFileNums();
+            quint32 IteratorNums = iteratorDirectory_FileNums(fileName);
+            ShowTipsInfoWithShowTime(QString("文件数量为:%2,文件夹[%1]").arg(fileName).arg(IteratorNums),
+                                     3000);
+            zeroloopFileNums();
+            textprogress_init();
+            key_escaple_pressed = false;
+            if(IteratorNums > 500)
+            {
+                if(QMessageBox::Yes == QMessageBox::warning(NULL, "warning", "文件数量较大，是否继续？", QMessageBox::Yes , QMessageBox::No))
+                {
+                    iteratorDirectory_Saveui(fileName);
+                }
+            }
+            else
+            {
+                iteratorDirectory_Saveui(fileName);
+            }
+//
+            key_escaple_pressed = false;
+            zeropathFileNums();
+            zeroloopFileNums();
+
         }
         else
         {
@@ -2308,7 +2495,13 @@ void autoCCode::readTextFileAppend(const QString &fileName)
 
     QString text_china = ui->genshow_textEdit->toPlainText();
 
-    if(file.open(QIODevice::ReadOnly) && file.size() < MAXREADFILESIZE)
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::warning(NULL, str_china(提示), QString::fromLocal8Bit("读取文件失败[%1]").arg(fileName),NULL,NULL);
+        return;
+    }
+
+    if(file.size() < MAXREADFILESIZE)
     {
         //        qDebug() << "file opend!!";
         QTextStream stream(&file);
@@ -3974,6 +4167,16 @@ void autoCCode::keyPressEvent(QKeyEvent *k)
     //        qDebug() << "key Ctrl is pressed";
     //    }
     //    (WM_RBUTTONCLKDOWN)
+
+    if(k->key() == Qt::Key_Escape)
+    {
+        qDebug() << "key Escape is pressed";
+        key_escaple_pressed = true;
+    }
+    else
+    {
+        key_escaple_pressed = false;
+    }
     return;
 }
 

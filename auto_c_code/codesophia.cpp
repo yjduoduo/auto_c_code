@@ -92,6 +92,8 @@ CodeSophia::CodeSophia(QWidget *parent) :
     entersign = "\\n";
     maohaosign = ":";
     qudizhisign = "&";
+    xinghao = "*";
+    doublexinghao = "**";
 
     logfilename        ="D:\\files_time.log";
     logreadfilename    ="D:\\\\files_time.re.log";
@@ -586,6 +588,7 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
     QString leftsign;
     QString rightsign;
     QString header;
+    QString xinghaosign;
     bool hassplit = true;
     bool ignorelst = false;
     bool hasenter = true;
@@ -610,6 +613,7 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
         hassplit =false;
         header = "";
         leftsign = "/*  \n";
+        xinghaosign = doublexinghao;
         rightsign = "*/";
         foreach (QString string, lst) {
             if(string.isEmpty())
@@ -678,7 +682,7 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
         if(hassplit)
             result += header + leftsign + string + rightsign +"\n";
         else if(hasenter)
-            result +=  string + "\n";
+            result +=  xinghaosign + spacesign + string + "\n";
         else
             result +=  string ;
 

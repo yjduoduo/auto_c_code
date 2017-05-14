@@ -195,6 +195,8 @@ private:
     QString tabsign;
     QString equalsign;
     QString qudizhisign;
+    QString xinghao;
+    QString doublexinghao;
 
     //定义显示列表
     QStringList StrLst_KEYC_HEADER;

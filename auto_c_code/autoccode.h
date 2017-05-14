@@ -418,6 +418,22 @@ private:
     void filedraged(QList<QUrl> &urls);
     QList<QUrl> urls;
 
+    void iteratorDirectory_Print(QString path);
+    void iteratorDirectory_Saveui(QString path);
+    quint32 iteratorDirectory_FileNums(QString path);
+    void textprogress(quint32 loop, quint32 total);
+    void dirprogress(QString filename, quint32 loop, quint32 total);
+    void textprogress_init(void);
+
+    void zeropathFileNums();
+    void zeroloopFileNums();
+    quint32 getpathFileNums();
+    quint32 pathFileNums; //文件夹里文件的数量
+    quint32 loopFileNums; //迭代文件夹里文件的数量
+    QProgressDialog *progress;
+    boolean key_escaple_pressed;
+
+
 protected:
     QString GenCode_str;
 private://QString
