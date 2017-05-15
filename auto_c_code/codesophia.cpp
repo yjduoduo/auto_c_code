@@ -929,6 +929,7 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
     QString end;
     //    QRegExp regExp("\{([^{]*?)\}");
     QRegExp regExp("\s*#include.*");
+    QString veryimport_note = QString::fromLocal8Bit("  /* 长度判断非常重要 */");
 
 
     quint32 index = ui->comboBox_keytips->currentIndex();
@@ -1100,6 +1101,7 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
             result += "*" + name + spacesign + "=" + spacesign;
             result += "(" + type + " *" + ")" + header + "(" + size + ")" + semisign + enter;
             result += "para_checkpointer(" + name + ")" + semisign + enter;
+            result += "para_checklen(" + QString("dwActLen > ") + size + ")" + semisign + veryimport_note + enter;
             result += enter;
             result += enter;
             result += enter;
@@ -1135,6 +1137,7 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
             result += "*" + name + spacesign + "=" + spacesign;
             result += /*"(" + type + " *" + ")" + */header + "(" + size + ")" + semisign + enter;
             result += "para_checkpointer(" + name + ")" + semisign + enter;
+            result += "para_checklen(" + QString("dwActLen > ") + size + ")" + semisign + veryimport_note + enter;
             result += enter;
             result += enter;
             result += enter;
