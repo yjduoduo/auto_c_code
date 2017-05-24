@@ -2640,6 +2640,7 @@ void CodeSophia::Proc_C_LOOP(QStringList &lst)
 void CodeSophia::on_pushButton_leftclear_clicked()
 {
     ui->textEdit_key->clear();
+    ui->textEdit_key->setFocus();
 }
 
 void CodeSophia::on_pushButton_rightclear_clicked()
@@ -2874,7 +2875,9 @@ void CodeSophia::get_funcname_qregexp(QString &text)
 
 void CodeSophia::get_funcname_and_declare_qregexp(QString &text)
 {
-    text.replace(QRegExp("\\{([^{]*?)\\}"),"");
+//    text.replace(QRegExp("\\{([^{]*?)\\}"),"");
+//    text = text.replace("\n",""); //去除换行
+    text = text.replace(QRegExp("\\{([^{]*?)\\}"),"");
 
 }
 
@@ -2940,7 +2943,7 @@ void CodeSophia::on_pushButton_load_clicked()
     //python使用的版本必须是2.7的，如果是3.4以上的可能还不行。
     if(ui->checkBox_showFunc->isChecked())
     {
-        get_funcname_qregexp(result);
+//        get_funcname_qregexp(result);
     }
     else
     {
