@@ -149,6 +149,7 @@ private:
 
 
     void Proc_C_Header(QStringList &lst);
+    void Proc_C_Declare(QStringList &lst);
     void Proc_C_Note(QStringList &lst);
     void Proc_C_Function(QStringList &lst);
     void Proc_C_StructPrint(QStringList &lst);

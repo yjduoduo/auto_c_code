@@ -216,6 +216,9 @@ void CodeSophia::on_pushButton_gen_clicked()
         case SUB_HEADER:
             Proc_C_Header(middlestrList);
             break;
+        case SUB_DECLARE:
+            Proc_C_Declare(middlestrList);
+            break;
 
         case SUB_NOTE:
             Proc_C_Note(middlestrList);
@@ -573,6 +576,54 @@ void CodeSophia::Proc_C_Header(QStringList &lst)
 
 
 
+
+
+
+    SetTextEditResult(result);
+
+}
+
+void CodeSophia::Proc_C_Declare(QStringList &lst)
+{
+    QString result;
+    result.clear();
+
+    QString leftsign;
+    QString rightsign;
+    QString header = "";
+
+    QString combotext = ui->comboBox_keytips->currentText();
+    if(combotext.contains("extern C"))
+    {
+        leftsign = "";
+        rightsign = "";
+        header = "extern \"C\" ";
+    }
+    else if (combotext.contains("extern"))
+    {
+        leftsign = "";
+        rightsign = "";
+        header = "extern ";
+    }
+    else
+    {
+        return;
+    }
+
+    foreach (QString string, lst) {
+        if(string.isEmpty())
+            continue;
+        if(string.contains(";"))
+        {
+            string.replace(";","");
+            result += header + leftsign + string + rightsign + semisign + "\n";
+        }
+        else
+        {
+            result += header + leftsign + string + rightsign + semisign + "\n";
+        }
+        qDebug() << "result str :" << result;
+    }
 
 
 
