@@ -164,6 +164,11 @@ private:
     QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
     void needqudizhi(T_DataFormat &single);
 
+    //get function name
+    QString Proc_Note_GetFuncName(QString string);
+    QString Proc_Note_GetFuncPara(QString string);
+
+
 
 private:
     Ui::CodeSophia *ui;

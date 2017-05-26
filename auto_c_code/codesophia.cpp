@@ -631,6 +631,80 @@ void CodeSophia::Proc_C_Declare(QStringList &lst)
 
 }
 
+QString CodeSophia::Proc_Note_GetFuncName(QString string)
+{
+//    QString pattern("\\([^(]*\\)"); //static inline void list_del(struct list_head *entry)
+    QString pattern("^[^(]*");
+    QRegExp rx(pattern);
+//            static inline void list_add(struct list_head *new, struct list_head *head)
+    if(string.contains(rx))
+    {
+        int pos = string.indexOf(rx);              // 0, position of the first match.
+                                                // Returns -1 if str is not found.
+                                                // You can also use rx.indexIn(str);
+//        qDebug() << pos;
+        if ( pos >= 0 )
+        {
+//            qDebug() << rx.matchedLength();     // 5, length of the last matched string
+//                                                // or -1 if there was no match
+//            qDebug() << rx.capturedTexts();     // QStringList("a=100", "a", "100"),
+//                                                //   0: text matching pattern
+//                                                //   1: text captured by the 1st ()
+//                                                //   2: text captured by the 2nd ()
+
+//            qDebug() << rx.cap(0);              // a=100, text matching pattern
+//            qDebug() << rx.cap(1);              // a, text captured by the nth ()
+//            qDebug() << rx.cap(2);              // 100,
+
+//            qDebug() << rx.pos(0);              // 0, position of the nth captured text
+//            qDebug() << rx.pos(1);              // 0
+//            qDebug() << rx.pos(2);              // 2
+            return rx.cap(0);
+        }
+    }
+
+    return "";
+}
+
+
+QString CodeSophia::Proc_Note_GetFuncPara(QString string)
+{
+    QString pattern("\\([^(]*\\)"); //static inline void list_del(struct list_head *entry)
+//    QString pattern("^[^(]*");
+    QRegExp rx(pattern);
+    //            static inline void list_add(struct list_head *new, struct list_head *head)
+    if(string.contains(rx))
+    {
+        int pos = string.indexOf(rx);              // 0, position of the first match.
+        // Returns -1 if str is not found.
+        // You can also use rx.indexIn(str);
+        qDebug() << pos;
+        if ( pos >= 0 )
+        {
+            qDebug() << rx.matchedLength();     // 5, length of the last matched string
+            // or -1 if there was no match
+            qDebug() << rx.capturedTexts();     // QStringList("a=100", "a", "100"),
+            //   0: text matching pattern
+            //   1: text captured by the 1st ()
+            //   2: text captured by the 2nd ()
+
+            qDebug() << rx.cap(0);              // a=100, text matching pattern
+            qDebug() << rx.cap(1);              // a, text captured by the nth ()
+            qDebug() << rx.cap(2);              // 100,
+
+            qDebug() << rx.pos(0);              // 0, position of the nth captured text
+            qDebug() << rx.pos(1);              // 0
+            qDebug() << rx.pos(2);              // 2
+//            QString para = rx.cap(0).replace("(","").replace(")","");
+            return rx.cap(0).replace("(","").replace(")","");
+        }
+    }
+
+    return "";
+}
+
+
+
 void CodeSophia::Proc_C_Note(QStringList &lst)
 {
     QString result;
@@ -717,6 +791,77 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             }
         }
         break;
+    case 5: //        function para
+        hassplit =false;
+        header = "/*============================================";
+        leftsign = "";
+        rightsign = "";
+        hasenter = false;
+        if(lst.isEmpty())
+        {
+            ShowTipsInfo("eg:: static inline void list_add(struct list_head *new, struct list_head *head)");
+        }
+        foreach (QString string, lst) {
+            if(string.isEmpty())
+                continue;
+            QString funcname = Proc_Note_GetFuncName(string);
+            QString funcpara = Proc_Note_GetFuncPara(string);
+            QStringList paralist = funcpara.split(",");
+            QString lastfuncname;
+            lastfuncname.clear();
+            QStringList lastparalst;
+            lastparalst.clear();
+            if(!funcname.isEmpty() && ! funcpara.isEmpty())
+            {
+                lastfuncname = funcname.split(" ").last();
+                qDebug() << "funcname :" << lastfuncname;
+                foreach (QString str, paralist) {
+                    QString tmpstr = str.split(" ").last().replace("*","");
+                    lastparalst << tmpstr;
+                    qDebug() << "funcpara :" << tmpstr;
+
+                }
+//                qDebug() << "right function parameter"<< endl;
+            }
+            else
+            {
+                continue;
+            }
+
+            /* 添加注释项 */
+            result += QString("") + header + enter;
+            result += QString("") + "* FuncName    : " + lastfuncname + enter;
+            result += QString("") + "* Description : " + enter;
+            foreach (QString para, lastparalst) {
+                result += QString("") + "* @" + para +    "    : "  + enter;
+            }
+            result += QString("") + "* Author      : " + enter;
+            QDateTime time;
+            result += QString("") + "* Time        : " + time.currentDateTime().toString("yyyy-MM-dd") + enter;
+            result += QString("") + "============================================*/" + enter;
+            result += string + enter + enter;
+
+//            if(string.contains("//"))
+//            {
+//                ShowTipsInfo("Invalid Text, having //");
+//                break;
+//            }
+//            if(string.contains("/*"))
+//            {
+//                ShowTipsInfo("Invalid Text, having /*");
+//                break;
+//            }
+//            if(string.contains("*/"))
+//            {
+//                ShowTipsInfo("Invalid Text, having */");
+//                break;
+//            }
+        }
+        SetTextEditResult(result);
+        return;
+
+        break;
+
     default:
         return;
         break;
@@ -2730,8 +2875,8 @@ void CodeSophia::FillStringList()
             << "extern"
             << "set get"
             << "set get local"
-            << "gen func"
-            << "gen func local"
+            << "make func"
+            << "make func local"
             << "extern \"C\""
             << str_china(提取函数)
             << "malloc free"
@@ -2782,6 +2927,7 @@ void CodeSophia::FillStringList()
             << "/* */ multi line"
             << "//"
             << "/* */ single"
+            << "function para"
                ;
 
 
