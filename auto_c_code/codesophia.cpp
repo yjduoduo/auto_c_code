@@ -172,14 +172,23 @@ void CodeSophia::ShowTipsInfo(QString s)
 
 void CodeSophia::on_pushButton_gen_clicked()
 {
+    static bool isprocessing = false;
+    if(isprocessing)
+    {
+        return;
+    }
+    isprocessing = true;
+
     if(current_lan.isEmpty())
     {
         ShowTipsInfo("laguage empty!!!");
+        isprocessing = false;
         return;
     }
     if(current_subtype.isEmpty())
     {
         ShowTipsInfo("subtype empty!!!");
+        isprocessing = false;
         return;
     }
     //    if(ui->textEdit_key->toPlainText().isEmpty())
@@ -190,33 +199,46 @@ void CodeSophia::on_pushButton_gen_clicked()
     //    }
 
     int n;
-    int Number= ui->textEdit_key->document()->lineCount();
+//    int Number= ui->textEdit_key->document()->lineCount();
     QString orgText = ui->textEdit_key->toPlainText();
     QStringList middlestrList;
-    qDebug() << "Number :" << Number;
+//    qDebug() << "Number :" << Number;
     qDebug() << "key    :" << orgText << endl;
+    QString str="";
 
+
+
+    //write to files
+    QString filename = "D:\\funcnames_xxx.txt";
+    LogWriteFile(filename, orgText);
+    orgText = LogReadFile(filename);
+
+
+    //progressbar for show infos
     QProgressBar *txtBar = new QProgressBar();
     txtBar->show();
-    txtBar->setRange(0, Number - 1);
-    for(n=0;n<Number;n++)
-    {
-        QString str=ui->textEdit_key->toPlainText().section('\n',n-Number ,n-Number,QString::SectionSkipEmpty); //取得每行（以换行符进行换行）搜索
-        QStringList list=str.split("\n");
-        //        ......... //list.at(n) 随便获得各行中以空格分开的各个字符串
-        foreach (QString string, list) {
-            if(string.isEmpty())
-                continue;
-            middlestrList << string;
-            qDebug() << "middle str :" << string;
+
+    QStringList list = orgText.split("\n");
+    txtBar->setRange(0, list.size());
+    foreach (QString str, list) {
+        if(!ui->checkBox_showAllText->isChecked() && str.isEmpty())
+        {
+            txtBar->setValue(n++);
+            continue;
         }
-        txtBar->setValue(n);
+        txtBar->setValue(n++);
+        middlestrList << str;
         qApp->processEvents();
     }
+
     txtBar->hide();
     txtBar->deleteLater();
 //    update();
     qDebug() << "middle result size:" << middlestrList.size();
+    foreach (QString str , middlestrList) {
+        qDebug() << str;
+    }
+    qDebug() << "middle result size: " << middlestrList.size() << "ends";
 
 
     switch(current_lan_num)
@@ -267,7 +289,7 @@ void CodeSophia::on_pushButton_gen_clicked()
     }
 
 
-
+    isprocessing = false;
 
 }
 
@@ -515,6 +537,7 @@ void CodeSophia::ReadHistorySettings()
     current_optype =  m_settings.value("current_optype").toString();
 
     ui->checkBox_showFunc->setChecked(m_settings.value("showFunc").toBool());
+    ui->checkBox_showAllText->setChecked(m_settings.value("showAllText").toBool());
 
 
     this->restoreGeometry(m_settings.value("CodeSophia_Geometry").toByteArray());
@@ -530,6 +553,7 @@ void CodeSophia::WriteCurrentSettings()
     m_settings.setValue("current_subtype", current_subtype);
     m_settings.setValue("current_optype", current_optype);
     m_settings.setValue("showFunc", ui->checkBox_showFunc->isChecked());
+    m_settings.setValue("showAllText", ui->checkBox_showAllText->isChecked());
 
     m_settings.setValue("CodeSophia_Geometry", this->saveGeometry());
 
@@ -761,8 +785,16 @@ QString CodeSophia::Proc_Note_GetFuncPara(QString string)
 
     return "";
 }
-
-bool CodeSophia::Proc_C_Note_IsSpecialSign(QString &str)
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Note_IsSpecialSign
+* Description : 判断数据是否为特殊字符，如果为特殊，则不处理
+* @str        : 原字符
+* @funcname   : 函数名
+* @funcpara   : 函数参数
+* Author      :
+* Time        : 2017-05-28
+============================================*/
+bool CodeSophia::Proc_C_Note_IsSpecialSign(QString &str,QString &funcname,QString &funcpara)
 {
     if(str.contains(";")
             || str.contains("!")
@@ -776,6 +808,9 @@ bool CodeSophia::Proc_C_Note_IsSpecialSign(QString &str)
             || (str.contains(QRegExp("\\)[\\s]*[\\S]+")) && !str.contains("::"))
             || str.contains(QRegExp("return[\\s]+"))
             || str.contains(QRegExp("if[^\\w_]"))
+            || funcname.contains("[")
+            || funcname.contains("]")
+            || funcname.contains(QRegExp("^[^\\w]+")) //开始为特殊字符
             )
         return true;
     return false;
@@ -799,9 +834,11 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
     bool isendflag = false;
     QString bindedstr("");
     QString bindedstrlast("");
+    QString allbindedstrlast("");//所有数据显示在一个文本里了
 ///add tip
     QProgressBar *tipProgress = NULL;
     quint32 currentnum = 0;
+    quint32 funcnum = 0;
     quint32 totalnum = lst.size();
 
     quint32 index = ui->comboBox_keytips->currentIndex();
@@ -897,7 +934,11 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
 
         foreach (QString string, lst) {
             if(string.isEmpty())
+            {
+                allbindedstrlast += enter;
                 continue;
+            }
+            QString orgstring = string;
 
             if(tipProgress)
             {
@@ -937,14 +978,15 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             qDebug() << "funcpara :" << funcpara;
             qDebug() << "funcsize :" << funcsize;
             qDebug() << "string.simplified().split(\"(\").size() :" << string.simplified().split("(").size();
-            qDebug() << "Proc_C_Note_IsSpecialSign(string) :" << Proc_C_Note_IsSpecialSign(string);
+            qDebug() << "Proc_C_Note_IsSpecialSign(string) :" << Proc_C_Note_IsSpecialSign(string, funcname, funcpara);
 
             if(!funcname.isEmpty()
                     && (string.simplified().split("(").size() == 2)
                     && funcsize > 1 &&
-                    !Proc_C_Note_IsSpecialSign(string))
+                    !Proc_C_Note_IsSpecialSign(string, funcname, funcpara))
             {
-                if(string.endsWith(",") && !firstcome)
+//                if(string.endsWith(",") && !firstcome)
+                if(string.contains("(") && !string.contains(")") && !firstcome)
                 {
                     hasdouhao = true;
                     firstcome = true;
@@ -1001,6 +1043,11 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             }
             else
             {
+                if(firstcome)
+                    allbindedstrlast += bindedstrlast + enter;
+                else
+                    allbindedstrlast += orgstring + enter;
+                firstcome = false;
                 isendflag = false;
                 hasdouhao = false;
                 bindedstr ="";
@@ -1031,11 +1078,14 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
 
             }
 
-            if(ui->checkBox_showFunc->isChecked())
+            funcnum++;
+            ui->statusbar->showMessage(QString::fromLocal8Bit("函数个数为:%1").arg(funcnum));
+            if(ui->checkBox_showFunc->isChecked()) //显示函数名
             {
                 if(isendflag)
                 {
                     result += bindedstrlast + semisign + enter;
+                    allbindedstrlast += bindedstrlast + semisign + enter;
                     isendflag = false;
                     hasdouhao = false;
                     bindedstr ="";
@@ -1045,25 +1095,31 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
                 else
                 {
                     result += string + semisign + enter;
+                    allbindedstrlast += string + semisign + enter;
                 }
                 continue;
             }
 
             /* 添加注释项 */
-            result += QString("") + header + enter;
-            result += QString("") + "* FuncName    : " + lastfuncname + enter;
-            result += QString("") + "* Description : " + enter;
+            QString allfuncnote = "";
+            allfuncnote += QString("") + header + enter;
+            allfuncnote += QString("") + "* FuncName    : " + lastfuncname + enter;
+            allfuncnote += QString("") + "* Description : " + enter;
             foreach (QString para, lastparalst) {
-                result += QString("")  + para +    ": "  + enter;
+                allfuncnote += QString("")  + para +    ": "  + enter;
             }
-            result += QString("") + "* Author      : " + enter;
+            allfuncnote += QString("") + "* Author      : " + enter;
             QDateTime time;
-            result += QString("") + "* Time        : " + time.currentDateTime().toString("yyyy-MM-dd") + enter;
-            result += QString("") + "============================================*/" + enter;
+            allfuncnote += QString("") + "* Time        : " + time.currentDateTime().toString("yyyy-MM-dd") + enter;
+            allfuncnote += QString("") + "============================================*/" + enter;
+
+            result += allfuncnote;
+            allbindedstrlast += allfuncnote;
 
             if(isendflag)
             {
                 result += bindedstrlast + enter + enter + enter;
+                allbindedstrlast += bindedstrlast + enter ;
                 isendflag = false;
                 hasdouhao = false;
                 bindedstr ="";
@@ -1073,8 +1129,10 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             else
             {
                 result += string + enter + enter + enter;
+                allbindedstrlast += string + enter;
             }
             qApp->processEvents();
+
         }
 
 
@@ -1082,7 +1140,11 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
         {
             tipProgress->deleteLater();
         }
-        SetTextEditResult(result);
+        if(ui->checkBox_showAllText->isChecked())
+            SetTextEditResult(allbindedstrlast);
+        else
+            SetTextEditResult(result);
+
         return;
 
         break;
@@ -3062,6 +3124,7 @@ void CodeSophia::on_pushButton_leftclear_clicked()
 {
     ui->textEdit_key->clear();
     ui->textEdit_key->setFocus();
+    ui->statusbar->showMessage("");
 }
 
 void CodeSophia::on_pushButton_rightclear_clicked()
@@ -3247,6 +3310,14 @@ void CodeSophia::LogWriteFile(QString str)
     }
 #endif
 }
+void CodeSophia::LogWriteFile(QString filename, QString str)
+{
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    file.write(str.toLocal8Bit());
+    file.close();
+}
+
 
 QString CodeSophia::LogReadFile(QString filename)
 {
@@ -3793,3 +3864,20 @@ void CodeSophia::writemsg()
 
 
 
+
+void CodeSophia::on_pushButton_paster2left_clicked()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    ui->textEdit_key->setText(clipboard->text());
+}
+
+void CodeSophia::on_pushButton_fetchright_clicked()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(ui->textEdit_result->toPlainText(),QClipboard::Clipboard);
+}
+
+void CodeSophia::on_checkBox_showAllText_toggled(bool checked)
+{
+    on_pushButton_gen_clicked();
+}

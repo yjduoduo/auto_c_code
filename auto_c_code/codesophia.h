@@ -145,6 +145,12 @@ private slots:
     void on_checkBox_showFunc_toggled(bool checked);
 
     void writemsg();
+    void on_pushButton_paster2left_clicked();
+
+    void on_pushButton_fetchright_clicked();
+
+    void on_checkBox_showAllText_toggled(bool checked);
+
 private:
 //    void dragEnterEvent(QDragEnterEvent *event);
 //    void dropEvent(QDropEvent *event);
@@ -169,7 +175,7 @@ private:
     QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
     QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
     void needqudizhi(T_DataFormat &single);
-    bool Proc_C_Note_IsSpecialSign(QString &str);
+    bool Proc_C_Note_IsSpecialSign(QString &str, QString &funcname, QString &funcpara);
 
     //get function name
     QString Proc_Note_GetFuncName(QString string);
@@ -251,6 +257,7 @@ private:
 private:
     void LogInitLog();
     void LogWriteFile(QString str);
+    void LogWriteFile(QString filename, QString str);
     QString LogReadFile(QString filename);
     void LogDeleteFile(QString filename);
     void writepythonexecfuncfilename(QString filename);
