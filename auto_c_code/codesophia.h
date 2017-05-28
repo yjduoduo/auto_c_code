@@ -163,10 +163,12 @@ private:
     QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
     QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
     void needqudizhi(T_DataFormat &single);
+    bool Proc_C_Note_IsSpecialSign(QString &str);
 
     //get function name
     QString Proc_Note_GetFuncName(QString string);
     QString Proc_Note_GetFuncPara(QString string);
+    quint32 Proc_Note_GetFuncNameSize(QString string);
 
 
 

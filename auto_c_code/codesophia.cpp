@@ -666,6 +666,51 @@ QString CodeSophia::Proc_Note_GetFuncName(QString string)
     return "";
 }
 
+quint32 CodeSophia::Proc_Note_GetFuncNameSize(QString string)
+{
+    //    QString pattern("\\([^(]*\\)"); //static inline void list_del(struct list_head *entry)
+    QString pattern("^[^(]*");
+    QRegExp rx(pattern);
+    //            static inline void list_add(struct list_head *new, struct list_head *head)
+    if(string.contains(rx))
+    {
+        int pos = string.indexOf(rx);              // 0, position of the first match.
+        // Returns -1 if str is not found.
+        // You can also use rx.indexIn(str);
+        //        qDebug() << pos;
+        if ( pos >= 0 )
+        {
+            //            qDebug() << rx.matchedLength();     // 5, length of the last matched string
+            //                                                // or -1 if there was no match
+            //            qDebug() << rx.capturedTexts();     // QStringList("a=100", "a", "100"),
+            //                                                //   0: text matching pattern
+            //                                                //   1: text captured by the 1st ()
+            //                                                //   2: text captured by the 2nd ()
+
+            //            qDebug() << rx.cap(0);              // a=100, text matching pattern
+            //            qDebug() << rx.cap(1);              // a, text captured by the nth ()
+            //            qDebug() << rx.cap(2);              // 100,
+
+            //            qDebug() << rx.pos(0);              // 0, position of the nth captured text
+            //            qDebug() << rx.pos(1);              // 0
+            //            qDebug() << rx.pos(2);              // 2
+            QString laststr = rx.cap(0).simplified();
+            quint32 size = 0;
+            if(laststr.contains("::"))
+            {
+                size = 2;
+            }
+            else
+            {
+                size = laststr.split(" ").size();
+            }
+            return size;
+        }
+    }
+
+    return 0;
+}
+
 
 QString CodeSophia::Proc_Note_GetFuncPara(QString string)
 {
@@ -703,7 +748,21 @@ QString CodeSophia::Proc_Note_GetFuncPara(QString string)
     return "";
 }
 
-
+bool CodeSophia::Proc_C_Note_IsSpecialSign(QString &str)
+{
+    if(str.contains(";")
+            || str.contains("!")
+            || str.contains("-")
+            || str.contains(">")
+            || str.contains("#")
+            || str.contains("=")
+            || str.contains(QRegExp("\\)[\\s]*[\\S]+"))
+            || str.contains(QRegExp("return[\\s]+"))
+            || str.contains(QRegExp("if[^\\w_]"))
+            )
+        return true;
+    return false;
+}
 
 void CodeSophia::Proc_C_Note(QStringList &lst)
 {
@@ -801,23 +860,61 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
         {
             ShowTipsInfo("eg:: static inline void list_add(struct list_head *new, struct list_head *head)");
         }
+
         foreach (QString string, lst) {
             if(string.isEmpty())
                 continue;
             QString funcname = Proc_Note_GetFuncName(string);
             QString funcpara = Proc_Note_GetFuncPara(string);
+            quint32 funcsize = Proc_Note_GetFuncNameSize(string);
             QStringList paralist = funcpara.split(",");
             QString lastfuncname;
             lastfuncname.clear();
             QStringList lastparalst;
             lastparalst.clear();
-            if(!funcname.isEmpty() && ! funcpara.isEmpty())
+            QStringList tmplastparalst;
+            tmplastparalst.clear();
+            qDebug() << "funcname :" << funcname;
+            qDebug() << "funcpara :" << funcpara;
+            qDebug() << "funcsize :" << funcsize;
+            qDebug() << "string.simplified().split(\"(\").size() :" << string.simplified().split("(").size();
+            qDebug() << "Proc_C_Note_IsSpecialSign(string) :" << Proc_C_Note_IsSpecialSign(string);
+
+            if(!funcname.isEmpty()
+                    && (string.simplified().split("(").size() == 2)
+                    && funcsize > 1 &&
+                    !Proc_C_Note_IsSpecialSign(string))
             {
                 lastfuncname = funcname.split(" ").last();
                 qDebug() << "funcname :" << lastfuncname;
+                //寻找最大长度
+                bool continueflag = false;
+                continueflag = false;
+                quint32 maxlen = 0;
                 foreach (QString str, paralist) {
-                    QString tmpstr = str.split(" ").last().replace("*","");
-                    lastparalst << tmpstr;
+                    QStringList aftersplitlst = str.simplified().split(" ");
+                    qDebug() << "string :" << str << ", aftersplitlst size:" << aftersplitlst.size();
+                    if(!str.simplified().isEmpty() && (aftersplitlst.size() == 1 /*|| aftersplitlst.size() > 3*/))
+                    {
+                        continueflag = true;
+//                        continue;
+                        break;
+                    }
+                    QString tmpstr = str.simplified().split(" ").last().replace("*","").replace("&","");
+                    if(tmpstr.length() > maxlen)
+                        maxlen = tmpstr.length();
+
+                }
+                if(continueflag)
+                    continue;
+                foreach (QString str, paralist) {
+                    QString tmpstr = str.simplified().split(" ").last().replace("*","").replace("&","");
+                    quint32 tmplen = tmpstr.length();
+                    if(tmplen < maxlen)
+                    {
+                        tmpstr = QString("%1%2").arg(tmpstr).arg(" ", maxlen - tmplen);
+                    }
+                    tmplastparalst << tmpstr;
                     qDebug() << "funcpara :" << tmpstr;
 
                 }
@@ -828,34 +925,47 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
                 continue;
             }
 
+            //寻找最大长度
+            quint32 maxlen = 0;
+            maxlen = QString("* FuncName    ").length();
+
+            foreach (QString tmpstr, tmplastparalst) {
+                if(tmpstr.length() > maxlen)
+                    maxlen = tmpstr.length();
+
+            }
+            foreach (QString str, tmplastparalst) {
+                quint32 tmplen = str.length();
+                if(tmplen + 3 < maxlen)
+                {
+                    str = QString("* @%1%2").arg(str).arg(" ", maxlen - tmplen - 3);
+                }
+                else
+                {
+                    str = QString("* @%1%2").arg(str).arg(" ", 0);
+                }
+                lastparalst << str;
+
+            }
+
+            if(ui->checkBox_showFunc->isChecked())
+            {
+                result += string + semisign + enter;
+                continue;
+            }
+
             /* 添加注释项 */
             result += QString("") + header + enter;
             result += QString("") + "* FuncName    : " + lastfuncname + enter;
             result += QString("") + "* Description : " + enter;
             foreach (QString para, lastparalst) {
-                result += QString("") + "* @" + para +    "    : "  + enter;
+                result += QString("")  + para +    ": "  + enter;
             }
             result += QString("") + "* Author      : " + enter;
             QDateTime time;
             result += QString("") + "* Time        : " + time.currentDateTime().toString("yyyy-MM-dd") + enter;
             result += QString("") + "============================================*/" + enter;
-            result += string + enter + enter;
-
-//            if(string.contains("//"))
-//            {
-//                ShowTipsInfo("Invalid Text, having //");
-//                break;
-//            }
-//            if(string.contains("/*"))
-//            {
-//                ShowTipsInfo("Invalid Text, having /*");
-//                break;
-//            }
-//            if(string.contains("*/"))
-//            {
-//                ShowTipsInfo("Invalid Text, having */");
-//                break;
-//            }
+            result += string + enter + enter + enter;
         }
         SetTextEditResult(result);
         return;
@@ -3447,5 +3557,7 @@ void CodeSophia::writepythonexecfuncfilename_funcdeclare(QString filename)
 
 void CodeSophia::on_checkBox_showFunc_toggled(bool checked)
 {
-    on_pushButton_load_clicked();
+    on_pushButton_gen_clicked();
+//    on_pushButton_load_clicked();
+
 }
