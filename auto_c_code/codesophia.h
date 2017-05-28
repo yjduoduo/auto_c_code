@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QFile>
+#include <QUrl>
+#include <QProgressDialog>
+#include <QProgressBar>
 //#include "codesophia.h"
 
 namespace Ui {
@@ -77,7 +80,9 @@ class CodeSophia : public QMainWindow
 public:
     explicit CodeSophia(QWidget *parent = 0);
     ~CodeSophia();
-    
+public:
+    void setChildUI(QString s);
+
 signals:
     
 public slots:
@@ -169,6 +174,27 @@ private:
     QString Proc_Note_GetFuncName(QString string);
     QString Proc_Note_GetFuncPara(QString string);
     quint32 Proc_Note_GetFuncNameSize(QString string);
+
+private:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+    void filedraged(QList<QUrl> &urls);
+
+    void Clear_textedit();
+    quint32 iteratorDirectory_FileNums(QString path);
+    void zeropathFileNums();
+    quint32 getpathFileNums();
+    void zeroloopFileNums();
+    void iteratorDirectory_Print(QString path);
+    void iteratorDirectory_Saveui(QString path);
+    void dirprogress(QString filename, quint32 loop, quint32 total);
+    void readTextFileAppend(const QString &fileName);
+    quint32 pathFileNums; //文件夹里文件的数量
+    quint32 loopFileNums; //迭代文件夹里文件的数量
+    QProgressDialog *progress;
+    bool key_escaple_pressed;
+
+    QList<QUrl> urls;
 
 
 

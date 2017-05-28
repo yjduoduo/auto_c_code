@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1162</width>
-    <height>518</height>
+    <height>541</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -193,6 +193,16 @@
         <widget class="QCheckBox" name="checkBox_codecutf8">
          <property name="text">
           <string>UTF8</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_senddata2subui">
+         <property name="text">
+          <string>子数据</string>
          </property>
          <property name="checked">
           <bool>false</bool>

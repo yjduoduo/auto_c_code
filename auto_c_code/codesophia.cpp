@@ -502,9 +502,10 @@ void CodeSophia::ReadHistorySettings()
     current_subtype =  m_settings.value("current_subtype").toString();
     current_optype =  m_settings.value("current_optype").toString();
 
+    ui->checkBox_showFunc->setChecked(m_settings.value("showFunc").toBool());
 
 
-    this->restoreGeometry(m_settings.value("AutoCCode_Geometry").toByteArray());
+    this->restoreGeometry(m_settings.value("CodeSophia_Geometry").toByteArray());
 }
 
 void CodeSophia::WriteCurrentSettings()
@@ -516,8 +517,9 @@ void CodeSophia::WriteCurrentSettings()
     m_settings.setValue("current_lan", current_lan);
     m_settings.setValue("current_subtype", current_subtype);
     m_settings.setValue("current_optype", current_optype);
+    m_settings.setValue("showFunc", ui->checkBox_showFunc->isChecked());
 
-    m_settings.setValue("AutoCCode_Geometry", this->saveGeometry());
+    m_settings.setValue("CodeSophia_Geometry", this->saveGeometry());
 
     //    qDebug() << "setting filename:" << m_settings.fileName();
 
@@ -756,7 +758,10 @@ bool CodeSophia::Proc_C_Note_IsSpecialSign(QString &str)
             || str.contains(">")
             || str.contains("#")
             || str.contains("=")
-            || str.contains(QRegExp("\\)[\\s]*[\\S]+"))
+            || str.contains("<")
+            || str.contains("/")
+//            || str.contains(QRegExp("\\)[\\s]*[\\S]+"))
+            || (str.contains(QRegExp("\\)[\\s]*[\\S]+")) && !str.contains("::"))
             || str.contains(QRegExp("return[\\s]+"))
             || str.contains(QRegExp("if[^\\w_]"))
             )
@@ -777,6 +782,16 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
     bool ignorelst = false;
     bool hasenter = true;
 
+    bool hasdouhao = false;
+    bool firstcome = false;
+    bool isendflag = false;
+    QString bindedstr("");
+    QString bindedstrlast("");
+///add tip
+    QProgressBar *tipProgress = NULL;
+    quint32 currentnum = 0;
+    quint32 totalnum = lst.size();
+
     quint32 index = ui->comboBox_keytips->currentIndex();
     switch(index)
     {
@@ -790,6 +805,8 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
                 "* $Id$\n"
                 "*\/\n";
         ignorelst = true;
+        SetTextEditResult(result);
+        return;
         break;
     case 1:
         break;
@@ -861,9 +878,39 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             ShowTipsInfo("eg:: static inline void list_add(struct list_head *new, struct list_head *head)");
         }
 
+        if(lst.size() > 2000){
+            tipProgress = new QProgressBar();
+            tipProgress->setRange(1,totalnum);
+        }
+
         foreach (QString string, lst) {
             if(string.isEmpty())
                 continue;
+
+            if(tipProgress)
+            {
+                ++currentnum;
+                tipProgress->setValue(currentnum);
+                tipProgress->show();
+            }
+
+            if(hasdouhao && !string.contains(")"))
+            {
+                bindedstrlast +=string + enter;
+                bindedstr +=string;
+                continue;
+            }
+            else if(hasdouhao && string.contains(")"))
+            {
+                bindedstr +=string;
+                bindedstrlast +=string;
+                string = bindedstr;
+                isendflag = true;
+
+            }
+
+            string = string.simplified();
+
             QString funcname = Proc_Note_GetFuncName(string);
             QString funcpara = Proc_Note_GetFuncPara(string);
             quint32 funcsize = Proc_Note_GetFuncNameSize(string);
@@ -885,6 +932,19 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
                     && funcsize > 1 &&
                     !Proc_C_Note_IsSpecialSign(string))
             {
+                if(string.endsWith(",") && !firstcome)
+                {
+                    hasdouhao = true;
+                    firstcome = true;
+                    bindedstr +=string;
+                    bindedstrlast +=string + enter;
+                    continue;
+                }
+                firstcome = false;
+                //proc multi function line
+                hasdouhao = false;
+                bindedstr = "";
+
                 lastfuncname = funcname.split(" ").last();
                 qDebug() << "funcname :" << lastfuncname;
                 //寻找最大长度
@@ -892,27 +952,34 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
                 continueflag = false;
                 quint32 maxlen = 0;
                 foreach (QString str, paralist) {
-                    QStringList aftersplitlst = str.simplified().split(" ");
-                    qDebug() << "string :" << str << ", aftersplitlst size:" << aftersplitlst.size();
-                    if(!str.simplified().isEmpty() && (aftersplitlst.size() == 1 /*|| aftersplitlst.size() > 3*/))
-                    {
-                        continueflag = true;
-//                        continue;
-                        break;
-                    }
                     QString tmpstr = str.simplified().split(" ").last().replace("*","").replace("&","");
                     if(tmpstr.length() > maxlen)
                         maxlen = tmpstr.length();
 
                 }
-                if(continueflag)
-                    continue;
+//                if(continueflag)
+//                    continue;
                 foreach (QString str, paralist) {
                     QString tmpstr = str.simplified().split(" ").last().replace("*","").replace("&","");
                     quint32 tmplen = tmpstr.length();
-                    if(tmplen < maxlen)
+                    QStringList aftersplitlst = str.simplified().split(" ");
+                    qDebug() << "string :" << str << ", aftersplitlst size:" << aftersplitlst.size();
+                    if(!str.simplified().isEmpty() && (aftersplitlst.size() == 1 /*|| aftersplitlst.size() > 3*/))
                     {
-                        tmpstr = QString("%1%2").arg(tmpstr).arg(" ", maxlen - tmplen);
+                        continueflag = true;
+                    }
+                    else
+                    {
+                        continueflag = false;
+                    }
+
+                    if(!continueflag)
+                    {
+                        tmpstr = QString("%1%2").arg(tmpstr).arg(" ", maxlen - tmplen > 0 ? (maxlen - tmplen) : 0 );
+                    }
+                    else
+                    {
+                        tmpstr = QString("--      ");
                     }
                     tmplastparalst << tmpstr;
                     qDebug() << "funcpara :" << tmpstr;
@@ -922,6 +989,10 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             }
             else
             {
+                isendflag = false;
+                hasdouhao = false;
+                bindedstr ="";
+                bindedstrlast = "";
                 continue;
             }
 
@@ -950,7 +1021,19 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
 
             if(ui->checkBox_showFunc->isChecked())
             {
-                result += string + semisign + enter;
+                if(isendflag)
+                {
+                    result += bindedstrlast + semisign + enter;
+                    isendflag = false;
+                    hasdouhao = false;
+                    bindedstr ="";
+                    bindedstrlast = "";
+
+                }
+                else
+                {
+                    result += string + semisign + enter;
+                }
                 continue;
             }
 
@@ -965,7 +1048,27 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             QDateTime time;
             result += QString("") + "* Time        : " + time.currentDateTime().toString("yyyy-MM-dd") + enter;
             result += QString("") + "============================================*/" + enter;
-            result += string + enter + enter + enter;
+
+            if(isendflag)
+            {
+                result += bindedstrlast + enter + enter + enter;
+                isendflag = false;
+                hasdouhao = false;
+                bindedstr ="";
+                bindedstrlast = "";
+
+            }
+            else
+            {
+                result += string + enter + enter + enter;
+            }
+            qApp->processEvents();
+        }
+
+
+        if(tipProgress)
+        {
+            tipProgress->deleteLater();
         }
         SetTextEditResult(result);
         return;
@@ -3561,3 +3664,105 @@ void CodeSophia::on_checkBox_showFunc_toggled(bool checked)
 //    on_pushButton_load_clicked();
 
 }
+
+void CodeSophia::dragEnterEvent(QDragEnterEvent *event)
+{
+    if(event->mimeData()->hasUrls()){
+        event->acceptProposedAction();
+    }
+}
+
+void CodeSophia::dropEvent(QDropEvent *event)
+{
+    urls = event->mimeData()->urls();
+    filedraged(urls);
+}
+
+
+void CodeSophia::filedraged(QList<QUrl> &urls)
+{
+    if(urls.isEmpty()){
+        return;
+    }
+    qDebug() << "-->>urls cout:" << urls.size();
+
+//#if 0
+//    QString fileName = urls.first().toLocalFile();
+//    if(fileName.isEmpty()){
+//        return;
+//    }
+//    this->setWindowTitle(fileName);
+//    readTextFile(fileName);
+//#else
+//    QString oldTitle = windowTitle();
+//    QString showTitle(oldTitle + "  ");
+//    QString fileName("");
+//    rightClear_textedit();//清空显示数据
+//    foreach (QUrl url, urls)
+//    {
+//        fileName = url.toLocalFile();
+//        showTitle += url.toLocalFile() + "  ";
+//        if(fileName.isEmpty()){
+//            continue;
+//        }
+//        this->setWindowTitle(showTitle);
+//        qDebug() << "~~filename :" << fileName;
+
+//        QFileInfo fileinfo(fileName);
+//        if(fileinfo.isDir())
+//        {
+//            this->setWindowTitle(url.toLocalFile());
+//            qDebug() << "~~is dir!!,filename :" << fileName;
+////            QString msgstr(str_china(不能读取文件夹 %1.).arg(fileName));
+////            ShowTipsInfoWithShowTime(msgstr, 1000);
+//            //遍历文件夹
+////            QDir dir(fileName);
+//            zeropathFileNums();
+//            zeroloopFileNums();
+////            qDebug() << "文件夹["<< fileName << "]里文件数量为:" << iteratorDirectory_FileNums(fileName);
+//            zeropathFileNums();
+//            zeroloopFileNums();
+//            quint32 IteratorNums = iteratorDirectory_FileNums(fileName);
+//            ShowTipsInfoWithShowTime(QString("文件数量为:%2,文件夹[%1]").arg(fileName).arg(IteratorNums),
+//                                     3000);
+//            zeroloopFileNums();
+//            textprogress_init();
+//            key_escaple_pressed = false;
+//            if(IteratorNums > 500)
+//            {
+//                if(QMessageBox::Yes == QMessageBox::warning(NULL, "warning", "文件数量较大，是否继续？", QMessageBox::Yes , QMessageBox::No))
+//                {
+//                    iteratorDirectory_Saveui(fileName);
+//                }
+//            }
+//            else
+//            {
+//                iteratorDirectory_Saveui(fileName);
+//            }
+////
+//            key_escaple_pressed = false;
+//            zeropathFileNums();
+//            zeroloopFileNums();
+
+//        }
+//        else
+//        {
+//            qDebug() << "~~ is file!!,filename :" << fileName;
+//            readTextFileAppend(fileName);
+//        }
+
+
+//    }
+//#endif
+}
+
+
+
+void CodeSophia::setChildUI(QString s)
+{
+    ui->textEdit_key->setText(s);
+}
+
+
+
+

@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     calender/clock.cpp \
     calender/window_calender.cpp \
     netthings.cpp \
-    codesophia.cpp
+    codesophia.cpp \
+    msgtips.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -64,7 +65,8 @@ HEADERS  += autoccode.h \
     zeromq/include/zmq.h \
     netthings.h \
     codesophia.h \
-    comon.h
+    comon.h \
+    msgtips.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \

@@ -124,7 +124,8 @@ autoCCode::autoCCode(QWidget *parent) :
     hostaddr(NULL),
     tcpserver(NULL),
     window_calender(NULL),
-    helloworldNet(NULL)
+    helloworldNet(NULL),
+    isDropFileEnd(true)
 {
 //    codec = QTextCodec::codecForName("GBK");//must first used,or is NULL,die
     codec = QTextCodec::codecForName("UTF-8");//must first used,or is NULL,die
@@ -410,32 +411,35 @@ void autoCCode::QTimerSet(void)
 
 void autoCCode::UISets()
 {
-    wo = new CodeSophia(this);
+    woUi = new CodeSophia(this);
 
-//    Ui::CodeSophia *codeUI = new Ui::CodeSophia(wo);
-//    codeUI->setupUi(wo);
+//    Ui::CodeSophia *codeUI = new Ui::CodeSophia(woUi);
+//    codeUI->setupUi(woUi);
 //    codeUI->
     //转换格式为CodeSophia
 //     = new Ui::CodeSophia;
-//    uico->setupUi(wo);
+//    uico->setupUi(woUi);
 
     QObject::connect(ui_setup->checkBox_codeshortcut,SIGNAL(stateChanged(int)),
                      this, SLOT(on_checkBox_codeshortcut_stateChanged(int)));
 
+    QObject::connect(ui->checkBox_senddata2subui, SIGNAL(stateChanged(int)),
+                     this, SLOT(SendParent2ChildUI(int)));
     if (ui_setup->checkBox_codeshortcut->isChecked())
     {
-//        wo->show();
-//        wo->showMinimized();
+//        woUi->show();
+//        woUi->showMinimized();
         //setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint);
 //        setWindowState(Qt::WindowMinimizeButtonHint);
-//        wo->show();
+//        woUi->show();
+
         qDebug() << "windowFlags() :" << windowFlags();
-        wo->showMinimized();
-        wo->update();
-//        wo->hide();
+        woUi->showMinimized();
+        woUi->update();
+//        woUi->hide();
     }
     else
-        wo->hide();
+        woUi->hide();
 
 }
 
@@ -1105,7 +1109,7 @@ void autoCCode::addstr_comboBox(void)
 
 autoCCode::~autoCCode()
 {
-//    delete wo;
+//    delete woUi;
 //    delete ui_dialog;//入库
 //    delete ui_dia_selectdb;//选择数据库
 //    delete ui_autoindb;//自动入库界面
@@ -2452,7 +2456,10 @@ void autoCCode::filedraged(QList<QUrl> &urls)
 void autoCCode::dropEvent(QDropEvent *event)
 {
     urls = event->mimeData()->urls();
+    isDropFileEnd = false;
     filedraged(urls);
+    isDropFileEnd = true;
+    SendParent2ChildUI(0);
 }
 
 void autoCCode::readTextFile(const QString &fileName)
@@ -5722,6 +5729,7 @@ void autoCCode::ReadHistorySettings()
     ui_setup->checkBox_content_withheader->setChecked(m_settings.value("ContentWithHeader").toBool());
     ui_setup->checkBox_codeshortcut->setChecked(m_settings.value("codeshortcut").toBool());
     ui->checkBox_codecutf8->setChecked(m_settings.value("codecutf8").toBool());
+    ui->checkBox_senddata2subui->setChecked(m_settings.value("senddata2subui").toBool());
 //    QPalette palettebtn ;
 //    QColor color= m_settings.value("ForeColor").Color;
 //    palettebtn.setColor(QPalette::Button, color);
@@ -5769,6 +5777,7 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("ContentWithHeader", ui_setup->checkBox_content_withheader->isChecked());
     m_settings.setValue("codeshortcut", ui_setup->checkBox_codeshortcut->isChecked());
     m_settings.setValue("codecutf8", ui->checkBox_codecutf8->isChecked());
+    m_settings.setValue("senddata2subui", ui->checkBox_senddata2subui->isChecked());
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
 
@@ -5815,15 +5824,16 @@ void autoCCode::updateHelloMsg(void)
 {
 //    helloworldNet->emitMsg(msg);
     helloworldNet->updateMsg(ui->genshow_textEdit->toPlainText());
+    SendParent2ChildUI(0);
 }
 
 void autoCCode::on_checkBox_codeshortcut_stateChanged(int arg1)
 {
     qDebug() << "CodeShortCut Ui:"<< arg1;
     if (arg1)
-        wo->show();
+        woUi->show();
     else
-        wo->hide();
+        woUi->hide();
 }
 
 void autoCCode::on_checkBox_codecutf8_toggled(bool checked)
@@ -5832,4 +5842,17 @@ void autoCCode::on_checkBox_codecutf8_toggled(bool checked)
 //    {
         filedraged(urls);
 //    }
+}
+
+void autoCCode::SendParent2ChildUI(int state)
+{
+//    if(!state)
+//        return;
+    if(!isDropFileEnd)
+        return;
+    if(!ui->checkBox_senddata2subui->isChecked())
+        return;
+    woUi->setChildUI(ui->genshow_textEdit->toPlainText());
+//    woUi->setChildUI(QString("abc"));
+    isDropFileEnd = true;
 }

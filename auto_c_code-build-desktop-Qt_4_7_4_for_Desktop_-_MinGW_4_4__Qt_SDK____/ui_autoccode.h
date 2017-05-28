@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Wed Apr 19 20:58:25 2017
+** Created: Sun May 28 14:06:39 2017
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -61,6 +61,7 @@ public:
     QCheckBox *checkBox_ResWithColor;
     QRadioButton *radioButton_showall;
     QCheckBox *checkBox_codecutf8;
+    QCheckBox *checkBox_senddata2subui;
     QPushButton *rightclear_btn;
     QSpacerItem *verticalSpacer;
     QPushButton *pushButton_rightTextSelectIndb;
@@ -88,7 +89,7 @@ public:
     {
         if (autoCCode->objectName().isEmpty())
             autoCCode->setObjectName(QString::fromUtf8("autoCCode"));
-        autoCCode->resize(1162, 518);
+        autoCCode->resize(1162, 541);
         autoCCode->setWindowOpacity(1);
         autoCCode->setAutoFillBackground(false);
         autoCCode->setStyleSheet(QString::fromUtf8(""));
@@ -226,6 +227,12 @@ public:
         checkBox_codecutf8->setChecked(false);
 
         verticalLayout_3->addWidget(checkBox_codecutf8);
+
+        checkBox_senddata2subui = new QCheckBox(autoCCode);
+        checkBox_senddata2subui->setObjectName(QString::fromUtf8("checkBox_senddata2subui"));
+        checkBox_senddata2subui->setChecked(false);
+
+        verticalLayout_3->addWidget(checkBox_senddata2subui);
 
         rightclear_btn = new QPushButton(autoCCode);
         rightclear_btn->setObjectName(QString::fromUtf8("rightclear_btn"));
@@ -390,6 +397,7 @@ public:
         checkBox_ResWithColor->setText(QApplication::translate("autoCCode", "\351\242\234\350\211\262", 0, QApplication::UnicodeUTF8));
         radioButton_showall->setText(QApplication::translate("autoCCode", "\346\230\276\347\244\272\345\205\250\351\203\250", 0, QApplication::UnicodeUTF8));
         checkBox_codecutf8->setText(QApplication::translate("autoCCode", "UTF8", 0, QApplication::UnicodeUTF8));
+        checkBox_senddata2subui->setText(QApplication::translate("autoCCode", "\345\255\220\346\225\260\346\215\256", 0, QApplication::UnicodeUTF8));
         rightclear_btn->setText(QApplication::translate("autoCCode", "\345\217\263\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
         pushButton_rightTextSelectIndb->setText(QApplication::translate("autoCCode", "\345\217\263\351\200\211\345\205\245\345\272\223", 0, QApplication::UnicodeUTF8));
         pushButton_getpaste->setText(QApplication::translate("autoCCode", "\347\262\230\344\270\212", 0, QApplication::UnicodeUTF8));

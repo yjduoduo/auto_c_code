@@ -401,7 +401,7 @@ private:
     Ui::ToolsTabWidget *ui_toolsets;//工具集
     Ui::UdpPkgDialog *pUdp_ui; //UDP
     Ui::WizardPage  *ui_codetool;
-    CodeSophia * wo;
+    CodeSophia * woUi;
 
     /* pthread线程，防止界面假死 */
     UiThread *pthread_event;
@@ -433,6 +433,7 @@ private:
     QProgressDialog *progress;
     boolean key_escaple_pressed;
 
+    boolean isDropFileEnd; //拖曳批量文件是否结束
 
 protected:
     QString GenCode_str;
@@ -563,6 +564,9 @@ private slots://network
     void on_checkBox_codeshortcut_stateChanged(int arg1);
 
     void on_checkBox_codecutf8_toggled(bool checked);
+
+    //向子层传递数据
+    void SendParent2ChildUI(int state);
 
 private:
     QString remoteip;
