@@ -144,6 +144,7 @@ private slots:
 
     void on_checkBox_showFunc_toggled(bool checked);
 
+    void writemsg();
 private:
 //    void dragEnterEvent(QDragEnterEvent *event);
 //    void dropEvent(QDropEvent *event);
@@ -194,6 +195,8 @@ private:
     QProgressDialog *progress;
     bool key_escaple_pressed;
 
+    QTimer *msgsametimer;
+    QString towritemsgs;
     QList<QUrl> urls;
 
 

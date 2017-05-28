@@ -57,7 +57,8 @@
 
 CodeSophia::CodeSophia(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::CodeSophia)
+    ui(new Ui::CodeSophia),
+    msgsametimer(new QTimer())
 {
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForTr(codec);
@@ -100,6 +101,10 @@ CodeSophia::CodeSophia(QWidget *parent) :
     pythonexecfilename ="D:\\re.func.py";
     pythonexecfilename_funcdeclare ="D:\\re.func_declare.py";
     pythonexecdir ="D:";
+
+
+    msgsametimer->setInterval(1000);
+    connect(msgsametimer,SIGNAL(timeout()), this,SLOT(writemsg()));
     LogInitLog();
 
     FillStringList();
@@ -191,6 +196,9 @@ void CodeSophia::on_pushButton_gen_clicked()
     qDebug() << "Number :" << Number;
     qDebug() << "key    :" << orgText << endl;
 
+    QProgressBar *txtBar = new QProgressBar();
+    txtBar->show();
+    txtBar->setRange(0, Number - 1);
     for(n=0;n<Number;n++)
     {
         QString str=ui->textEdit_key->toPlainText().section('\n',n-Number ,n-Number,QString::SectionSkipEmpty); //取得每行（以换行符进行换行）搜索
@@ -202,8 +210,12 @@ void CodeSophia::on_pushButton_gen_clicked()
             middlestrList << string;
             qDebug() << "middle str :" << string;
         }
-
+        txtBar->setValue(n);
+        qApp->processEvents();
     }
+    txtBar->hide();
+    txtBar->deleteLater();
+//    update();
     qDebug() << "middle result size:" << middlestrList.size();
 
 
@@ -3760,8 +3772,23 @@ void CodeSophia::filedraged(QList<QUrl> &urls)
 
 void CodeSophia::setChildUI(QString s)
 {
-    ui->textEdit_key->setText(s);
+    msgsametimer->start();
+//    static QString oldData("");
+    towritemsgs.clear();
+    towritemsgs = s;
+//    if(s != oldData)
+//        ui->textEdit_key->setText(s);
+
+//    oldData = s;
 }
+
+
+void CodeSophia::writemsg()
+{
+    msgsametimer->stop();
+    ui->textEdit_key->setText(towritemsgs);
+}
+
 
 
 

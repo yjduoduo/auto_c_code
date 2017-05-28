@@ -84,7 +84,12 @@ using namespace std;
 
 #define UNUSEDVAR(A) (void)A;
 
-
+//ui genshow_textedit设置文本，另外需要设置到子层的数据。可能传递的数据存在问题，双击了。
+#define UI_GENSHOW_TEXTEDIT_SETTEXT(string)\
+do{\
+ui->genshow_textEdit->setPlainText(string);\
+ SendParent2ChildUI(0);\
+}while(0)
 
 //ui tools界面下Ctrl按键是否按下
 static bool isCTRLKeyPressed_uitools = FALSE;
@@ -200,7 +205,8 @@ autoCCode::autoCCode(QWidget *parent) :
     //测试hello world netthings
     helloworldNet = new NetThings(this);
 //    connect(helloworldNet, SIGNAL(emitMsg(QString&)), helloworldNet, SLOT(updateMsg(QString&)));
-    connect(ui->genshow_textEdit, SIGNAL(textChanged()), this, SLOT(updateHelloMsg()));
+    connect(ui->genshow_textEdit, SIGNAL(textChanged()), this, SLOT(updateHelloMsg()),
+            Qt::DirectConnection);
 
     helloworldNet->start();
 
@@ -1238,6 +1244,7 @@ void autoCCode::on_gencode_btn_clicked(void)
     }
     //code Editor设置读取文本
     ui->genshow_textEdit->setPlainText(text_china);
+
 
     //    QTextStream out(&file);
     //    out << "Thomas M. Disch: " << 334 << endl;
@@ -5822,6 +5829,7 @@ void autoCCode::on_checkBox_query_exact_stateChanged(int arg1)
 
 void autoCCode::updateHelloMsg(void)
 {
+    qDebug() << "update Hello Msg and updat!!!!!!!!!!!!!!" << endl;
 //    helloworldNet->emitMsg(msg);
     helloworldNet->updateMsg(ui->genshow_textEdit->toPlainText());
     SendParent2ChildUI(0);
