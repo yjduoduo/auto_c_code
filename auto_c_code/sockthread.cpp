@@ -14,6 +14,13 @@
 #endif
 
 
+/*============================================
+* FuncName    : sockthread::sockthread
+* Description :
+* @parent     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 sockthread::sockthread(QObject *parent) :
     QThread(parent),clientConnection(NULL)
 {
@@ -32,6 +39,13 @@ sockthread::sockthread(QObject *parent) :
 //                     this,SLOT(displayErr(QAbstractSocket::SocketError)));
 
 
+/*============================================
+* FuncName    : sockthread::run
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void sockthread::run()
 {
     while(1)
@@ -43,6 +57,13 @@ void sockthread::run()
 }
 
 
+/*============================================
+* FuncName    : sockthread::displayErr
+* Description :
+* @socketError  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 {
     if(socketError == QTcpSocket::RemoteHostClosedError)
@@ -63,6 +84,13 @@ void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 #endif
 }
 
+/*============================================
+* FuncName    : sockthread::updateReadMsgProgress
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void sockthread::updateReadMsgProgress()
 {
     QDataStream in(clientConnection);
@@ -116,6 +144,13 @@ void sockthread::updateReadMsgProgress()
 
 
 
+/*============================================
+* FuncName    : sockthread::setSocketConnect
+* Description :
+* @cltConnet  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void sockthread::setSocketConnect(QTcpSocket *cltConnet)
 {
     clientConnection = cltConnet;
@@ -126,3 +161,4 @@ void sockthread::setSocketConnect(QTcpSocket *cltConnet)
 
 
 }
+

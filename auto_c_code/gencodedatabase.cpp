@@ -73,11 +73,25 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
 
 
 
+/*============================================
+* FuncName    : GenCodeDatabase::GenCodeDatabase
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 GenCodeDatabase::GenCodeDatabase()
 {
     self_print(GenCodeDatabase);
 
 }
+/*============================================
+* FuncName    : GenCodeDatabase::get_table_sets_bytype
+* Description :
+* @type       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 codestructSets* GenCodeDatabase::get_table_sets_bytype(LanguageType type)
 {
     for(unsigned i=0;i<ARRAY_SIZE(codesets);i++)
@@ -85,6 +99,13 @@ codestructSets* GenCodeDatabase::get_table_sets_bytype(LanguageType type)
             return &codesets[i];
     return NULL;
 }
+/*============================================
+* FuncName    : GenCodeDatabase::get_tablename_bytype
+* Description :
+* @type       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 const char * GenCodeDatabase::get_tablename_bytype(LanguageType type)
 {
     for(unsigned i=0;i<ARRAY_SIZE(codesets);i++)
@@ -92,6 +113,14 @@ const char * GenCodeDatabase::get_tablename_bytype(LanguageType type)
             return codesets[i].talbename;
     return NULL;
 }
+/*============================================
+* FuncName    : GenCodeDatabase::opendatabase
+* Description :
+* @databases_name     :
+* @createtableexpress  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int GenCodeDatabase::opendatabase(const char *databases_name,
                                   const char *createtableexpress)
 {
@@ -125,6 +154,14 @@ int GenCodeDatabase::opendatabase(const char *databases_name,
 
     return(0);
 }
+/*============================================
+* FuncName    : GenCodeDatabase::insertdatabase
+* Description :
+* @databases_name     :
+* @inserttableexpress  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int GenCodeDatabase::insertdatabase(const char *databases_name,
                                     char *inserttableexpress)
 {
@@ -171,6 +208,13 @@ typedef struct SelInPara_Selectdatabase
 
 SelInPara_Selectdatabase inPara_selectdatabase;
 
+/*============================================
+* FuncName    : thread_func_selectdatabase
+* Description :
+* @args       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void* thread_func_selectdatabase(void* args)
 {
     SelInPara_Selectdatabase *pPara =(SelInPara_Selectdatabase *)args;
@@ -263,6 +307,16 @@ void* thread_func_selectdatabase(void* args)
     return NULL;
 }
 
+/*============================================
+* FuncName    : GenCodeDatabase::selectdatabase
+* Description :
+* @databases_name     :
+* @selecttableexpress  :
+* @selectres          :
+* @aspeactflag        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int GenCodeDatabase::selectdatabase(const char *databases_name,
                                     char *selecttableexpress,
                                     SelectResult &selectres,int aspeactflag)
@@ -289,6 +343,16 @@ int GenCodeDatabase::selectdatabase(const char *databases_name,
     return 0;
 }
 #else
+/*============================================
+* FuncName    : GenCodeDatabase::selectdatabase
+* Description :
+* @databases_name     :
+* @selecttableexpress  :
+* @selectres          :
+* @aspeactflag        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int GenCodeDatabase::selectdatabase(const char *databases_name,
                                     char *selecttableexpress,
                                     SelectResult &selectres,int aspeactflag)
@@ -405,6 +469,13 @@ SelInPara inPara;
 }
 
 
+/*============================================
+* FuncName    : thread_func_searchdatabase
+* Description :
+* @args       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void* thread_func_searchdatabase(void* args)
 {
     SelInPara *pPara =(SelInPara *)args;
@@ -513,6 +584,16 @@ void* thread_func_searchdatabase(void* args)
 
 
 /*  mainº¯Êý   */
+/*============================================
+* FuncName    : GenCodeDatabase::searchdatabase
+* Description :
+* @databases_name     :
+* @selecttableexpress  :
+* @selectres          :
+* @searchtext         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int GenCodeDatabase::searchdatabase(const char *databases_name,
                                     char *selecttableexpress,
                                     SelectResult &selectres,
@@ -540,6 +621,16 @@ int GenCodeDatabase::searchdatabase(const char *databases_name,
     return 0;
 }
 #else
+/*============================================
+* FuncName    : GenCodeDatabase::searchdatabase
+* Description :
+* @databases_name     :
+* @selecttableexpress  :
+* @selectres          :
+* @searchtext         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int GenCodeDatabase::searchdatabase(const char *databases_name,
                                     char *selecttableexpress,
                                     SelectResult &selectres,
@@ -644,6 +735,13 @@ typedef struct SelInPara_lookTextHisTbl
 
 SelInPara_lookTextHisTbl inPara_lookTextHisTbl;
 
+/*============================================
+* FuncName    : thread_func_searchdatabase_lookTextHisTbl
+* Description :
+* @args       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void* thread_func_searchdatabase_lookTextHisTbl(void* args)
 {
     SelInPara_lookTextHisTbl *pPara =(SelInPara_lookTextHisTbl *)args;
@@ -752,6 +850,16 @@ void* thread_func_searchdatabase_lookTextHisTbl(void* args)
 
 
 /*  mainº¯Êý   */
+/*============================================
+* FuncName    : GenCodeDatabase::searchdatabase_lookTextHisTbl
+* Description :
+* @databases_name     :
+* @selecttableexpress  :
+* @selectres          :
+* @searchtext         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
                                     char *selecttableexpress,
                                     LookTextHistoryResult &selectres,
@@ -789,6 +897,16 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
 //    "[looktimes] INTEGER,"\
 //    "CreatedTime TimeStamp NOT NULL DEFAULT (datetime('now','localtime')));"
 //looktextname,looktimes ²éÕÒË³Ðò
+/*============================================
+* FuncName    : GenCodeDatabase::searchdatabase_lookTextHisTbl
+* Description :
+* @databases_name     :
+* @selecttableexpress  :
+* @selectres          :
+* @searchtext         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
                                     char *selecttableexpress,
                                     LookTextHistoryResult &selectres,
@@ -890,6 +1008,13 @@ int GenCodeDatabase::searchdatabase_lookTextHisTbl(const char *databases_name,
 }
 #endif
 
+/*============================================
+* FuncName    : GenCodeDatabase::creatable
+* Description :
+* @cont       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void GenCodeDatabase::creatable(InsertCon *cont)
 {
     self_print(creatable);
@@ -933,6 +1058,13 @@ void GenCodeDatabase::creatable(InsertCon *cont)
 
 }
 
+/*============================================
+* FuncName    : GenCodeDatabase::inserttable
+* Description :
+* @cont       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void GenCodeDatabase::inserttable(InsertCon *cont)
 {
     self_print(creatable);
@@ -1052,6 +1184,14 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
     }
 
 }
+/*============================================
+* FuncName    : GenCodeDatabase::updatetable
+* Description :
+* @languagetype  :
+* @insertexpress  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpress)
 {
     self_print(updatetable);
@@ -1099,6 +1239,13 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
 }
 
 
+/*============================================
+* FuncName    : GenCodeDatabase::getLanguageStr
+* Description :
+* @type       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString GenCodeDatabase::getLanguageStr(LanguageType type)
 {
     switch(type)
@@ -1154,3 +1301,4 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "Err";
     }
 }
+

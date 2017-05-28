@@ -13,6 +13,13 @@
 #define sleep(n)    Sleep(n*1000)
 #endif
 
+/*============================================
+* FuncName    :
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int NetThings::helloword_server (void)
 {
     //  Hello World server
@@ -45,6 +52,13 @@ int NetThings::helloword_server (void)
 }
 
 
+/*============================================
+* FuncName    : NetThings::NetThings
+* Description :
+* @parent     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 NetThings::NetThings(QObject *parent)
     :QObject(parent),QThread(parent)
 {
@@ -52,7 +66,14 @@ NetThings::NetThings(QObject *parent)
 
 }
 
-void NetThings::updateMsg(QString  strmsg)
+/*============================================
+* FuncName    : NetThings::updateMsg
+* Description :
+* @strmsg     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
+void NetThings::updateMsg(QString strmsg)
 {
     msg = strmsg;
     qDebug() << "---- hello world server ,msg:" << strmsg;
@@ -60,6 +81,13 @@ void NetThings::updateMsg(QString  strmsg)
 }
 
 
+/*============================================
+* FuncName    : NetThings::run
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void NetThings::run()
 {
     qDebug() << "============>>>>start Hello World Server.....";
@@ -72,3 +100,4 @@ void NetThings::run()
         Sleep(1000);
     }
 }
+

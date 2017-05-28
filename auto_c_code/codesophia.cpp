@@ -55,6 +55,13 @@
 
 
 
+/*============================================
+* FuncName    : CodeSophia::CodeSophia
+* Description :
+* @parent     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 CodeSophia::CodeSophia(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CodeSophia),
@@ -118,11 +125,25 @@ CodeSophia::CodeSophia(QWidget *parent) :
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::~CodeSophia
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 CodeSophia::~CodeSophia()
 {
     delete ui;
 }
 
+/*============================================
+* FuncName    : CodeSophia::ActiveSets
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::ActiveSets()
 {
     connect(ui->actionC_2, SIGNAL(triggered()), this, SLOT(CMsg()));
@@ -144,17 +165,38 @@ void CodeSophia::ActiveSets()
 }
 
 
+/*============================================
+* FuncName    : CodeSophia::ButtonSets
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::ButtonSets()
 {
     connect(ui->pushButton_gen,SIGNAL(clicked()), this, SLOT(on_pushButton_gen_clicked()));
 }
 
+/*============================================
+* FuncName    : CodeSophia::ComboBoxSets
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::ComboBoxSets()
 {
     connect(ui->comboBox_keytips,SIGNAL(clicked()), this, SLOT(on_comboBox_keytips_clicked()));
     connect(ui->comboBox_keytips,SIGNAL(currentIndexChanged(int)), this, SLOT(on_pushButton_gen_clicked()));
 
 }
+/*============================================
+* FuncName    : CodeSophia::TextEditSets
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::TextEditSets()
 {
     connect(ui->textEdit_key,SIGNAL(textChanged()), this, SLOT(on_pushButton_gen_clicked()));
@@ -162,6 +204,13 @@ void CodeSophia::TextEditSets()
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::ShowTipsInfo
+* Description :
+* @s          :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::ShowTipsInfo(QString s)
 {
     MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL,1000);
@@ -170,6 +219,13 @@ void CodeSophia::ShowTipsInfo(QString s)
 }
 
 
+/*============================================
+* FuncName    : CodeSophia::on_pushButton_gen_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_pushButton_gen_clicked()
 {
     static bool isprocessing = false;
@@ -293,6 +349,13 @@ void CodeSophia::on_pushButton_gen_clicked()
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::on_comboBox_keytips_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_comboBox_keytips_clicked()
 {
 
@@ -300,12 +363,26 @@ void CodeSophia::on_comboBox_keytips_clicked()
 }
 
 
+/*============================================
+* FuncName    : CodeSophia::CMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::CMsg()
 {
     SETTITLE((KEY_C));
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::CPPMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::CPPMsg()
 {
     SETTITLE((KEY_CPP));
@@ -314,65 +391,149 @@ void CodeSophia::CPPMsg()
 }
 
 
+/*============================================
+* FuncName    : CodeSophia::JavaMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::JavaMsg()
 {
     SETTITLE((KEY_JAVA));
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::ShellMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::ShellMsg()
 {
     SETTITLE((KEY_SHELL));
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::DeclareMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::DeclareMsg()
 {
     SETSUBTITLE((SUB_DECLARE));
 }
+/*============================================
+* FuncName    : CodeSophia::DefineMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::DefineMsg()
 {
     SETSUBTITLE((SUB_DEFINE));
 
 }
+/*============================================
+* FuncName    : CodeSophia::FuncMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::FuncMsg()
 {
     SETSUBTITLE((SUB_FUNCTION));
 
 }
+/*============================================
+* FuncName    : CodeSophia::StructMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::StructMsg()
 {
     SETSUBTITLE((SUB_STRUCT));
 
 }
+/*============================================
+* FuncName    : CodeSophia::StructPrintMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::StructPrintMsg()
 {
     SETSUBTITLE((SUB_STRUCTPRINT));
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::HeaderMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::HeaderMsg()
 {
     SETSUBTITLE((SUB_HEADER));
 
 }
+/*============================================
+* FuncName    : CodeSophia::IfConditionMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::IfConditionMsg()
 {
     SETSUBTITLE((SUB_IFCONDITION));
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::LoopMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::LoopMsg()
 {
     SETSUBTITLE((SUB_LOOP));
 
 }
+/*============================================
+* FuncName    : CodeSophia::NoteMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::NoteMsg()
 {
     SETSUBTITLE((SUB_NOTE));
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::Common_Print
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Common_Print()
 {
     SETSUBTITLE((SUB_COMMONPRINT));
@@ -380,12 +541,26 @@ void CodeSophia::Common_Print()
 }
 
 
+/*============================================
+* FuncName    : CodeSophia::SaveMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::SaveMsg()
 {
     SETOPTITLE((OP_SAVE));
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::getSubType
+* Description :
+* @type       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString CodeSophia::getSubType(SubType type)
 {
     switch(type)
@@ -415,6 +590,13 @@ QString CodeSophia::getSubType(SubType type)
     }
     return "";
 }
+/*============================================
+* FuncName    : CodeSophia::getOPType
+* Description :
+* @type       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString CodeSophia::getOPType(OPTYPE type)
 {
     switch(type)
@@ -427,6 +609,13 @@ QString CodeSophia::getOPType(OPTYPE type)
     return "";
 }
 
+/*============================================
+* FuncName    : CodeSophia::getKeyClass
+* Description :
+* @cls        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString CodeSophia::getKeyClass(KeyClass cls)
 {
     switch(cls)
@@ -453,6 +642,13 @@ QString CodeSophia::getKeyClass(KeyClass cls)
 
 
 
+/*============================================
+* FuncName    : CodeSophia::FillComBoxKeyTips
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::FillComBoxKeyTips()
 {
     //    if(current_lan.isEmpty() || current_subtype.isEmpty())
@@ -524,6 +720,13 @@ void CodeSophia::FillComBoxKeyTips()
 }
 
 
+/*============================================
+* FuncName    : CodeSophia::ReadHistorySettings
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::ReadHistorySettings()
 {
     QSettings m_settings("codesophia.com.cn", "codesophia");
@@ -543,6 +746,13 @@ void CodeSophia::ReadHistorySettings()
     this->restoreGeometry(m_settings.value("CodeSophia_Geometry").toByteArray());
 }
 
+/*============================================
+* FuncName    : CodeSophia::WriteCurrentSettings
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::WriteCurrentSettings()
 {
     QSettings m_settings("codesophia.com.cn", "codesophia");
@@ -563,6 +773,13 @@ void CodeSophia::WriteCurrentSettings()
 
 
 
+/*============================================
+* FuncName    : CodeSophia::closeEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::closeEvent(QCloseEvent *event)
 {
     qDebug() << "CodeSophia closeEvent";
@@ -570,6 +787,13 @@ void CodeSophia::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+/*============================================
+* FuncName    : CodeSophia::SetTextEditResult
+* Description :
+* @str        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::SetTextEditResult(QString &str)
 {
     ui->textEdit_result->setText(str);
@@ -580,6 +804,13 @@ void CodeSophia::SetTextEditResult(QString &str)
 
 
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Header
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_Header(QStringList &lst)
 {
     QString result;
@@ -621,6 +852,13 @@ void CodeSophia::Proc_C_Header(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Declare
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_Declare(QStringList &lst)
 {
     QString result;
@@ -669,6 +907,13 @@ void CodeSophia::Proc_C_Declare(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_Note_GetFuncName
+* Description :
+* @string     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString CodeSophia::Proc_Note_GetFuncName(QString string)
 {
 //    QString pattern("\\([^(]*\\)"); //static inline void list_del(struct list_head *entry)
@@ -704,6 +949,13 @@ QString CodeSophia::Proc_Note_GetFuncName(QString string)
     return "";
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_Note_GetFuncNameSize
+* Description :
+* @string     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 quint32 CodeSophia::Proc_Note_GetFuncNameSize(QString string)
 {
     //    QString pattern("\\([^(]*\\)"); //static inline void list_del(struct list_head *entry)
@@ -750,6 +1002,13 @@ quint32 CodeSophia::Proc_Note_GetFuncNameSize(QString string)
 }
 
 
+/*============================================
+* FuncName    : CodeSophia::Proc_Note_GetFuncPara
+* Description :
+* @string     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString CodeSophia::Proc_Note_GetFuncPara(QString string)
 {
     QString pattern("\\([^(]*\\)"); //static inline void list_del(struct list_head *entry)
@@ -794,6 +1053,15 @@ QString CodeSophia::Proc_Note_GetFuncPara(QString string)
 * Author      :
 * Time        : 2017-05-28
 ============================================*/
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Note_IsSpecialSign
+* Description :
+* @str        :
+* @funcname   :
+* @funcpara   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool CodeSophia::Proc_C_Note_IsSpecialSign(QString &str,QString &funcname,QString &funcpara)
 {
     if(str.contains(";")
@@ -816,6 +1084,13 @@ bool CodeSophia::Proc_C_Note_IsSpecialSign(QString &str,QString &funcname,QStrin
     return false;
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Note
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_Note(QStringList &lst)
 {
     QString result;
@@ -1184,6 +1459,14 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Function_SetGet
+* Description :
+* @lst        :
+* @Local      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString CodeSophia::Proc_C_Function_SetGet(QStringList &lst, bool Local)
 {
     QString result;
@@ -1298,6 +1581,14 @@ typedef struct T_FuncUse
     bool hasreturn;
 }T_FuncUse;
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Function_GenFunc
+* Description :
+* @lst        :
+* @Local      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString CodeSophia::Proc_C_Function_GenFunc(QStringList &lst, bool Local)
 {
     QList<T_FuncUse> resultlst;
@@ -1403,6 +1694,13 @@ QString CodeSophia::Proc_C_Function_GenFunc(QStringList &lst, bool Local)
     return result;
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Function
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_Function(QStringList &lst)
 {
     QString result;
@@ -1649,6 +1947,13 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::needqudizhi
+* Description :
+* @single     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::needqudizhi(T_DataFormat &single)
 {
     if(single.string.contains("*") || single.string.contains("[") ||single.string.contains("]"))
@@ -1661,6 +1966,17 @@ void CodeSophia::needqudizhi(T_DataFormat &single)
     }
 }
 
+/*============================================
+* FuncName    : CodeSophia::FormatLst
+* Description :
+* @inlst      :
+* @header     :
+* @havedouhao  :
+* @result     :
+* @fmt        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::FormatLst(QStringList &inlst, QString &header,bool &havedouhao,
                            QString &result, QString fmt)
 {
@@ -1693,6 +2009,13 @@ void CodeSophia::FormatLst(QStringList &inlst, QString &header,bool &havedouhao,
 
 
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_COMMONPRINT_LOOPS
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_COMMONPRINT_LOOPS(QStringList &lst)
 {
     QString result;
@@ -1821,6 +2144,13 @@ void CodeSophia::Proc_C_COMMONPRINT_LOOPS(QStringList &lst)
 
 
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_COMMONPRINT
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_COMMONPRINT(QStringList &lst)
 {
     QString result;
@@ -2182,6 +2512,13 @@ void CodeSophia::Proc_C_COMMONPRINT(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_StructPrint
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_StructPrint(QStringList &lst)
 {
     QString result;
@@ -2513,6 +2850,13 @@ void CodeSophia::Proc_C_StructPrint(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Struct
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_Struct(QStringList &lst)
 {
     QString result;
@@ -2593,6 +2937,13 @@ void CodeSophia::Proc_C_Struct(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_Define
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_Define(QStringList &lst)
 {
     QString result;
@@ -2775,6 +3126,13 @@ void CodeSophia::Proc_C_Define(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_IFCONDITION
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_IFCONDITION(QStringList &lst)
 {
     QString result;
@@ -2939,6 +3297,13 @@ void CodeSophia::Proc_C_IFCONDITION(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::Proc_C_LOOP
+* Description :
+* @lst        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::Proc_C_LOOP(QStringList &lst)
 {
     QString result;
@@ -3120,6 +3485,13 @@ void CodeSophia::Proc_C_LOOP(QStringList &lst)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::on_pushButton_leftclear_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_pushButton_leftclear_clicked()
 {
     ui->textEdit_key->clear();
@@ -3127,6 +3499,13 @@ void CodeSophia::on_pushButton_leftclear_clicked()
     ui->statusbar->showMessage("");
 }
 
+/*============================================
+* FuncName    : CodeSophia::on_pushButton_rightclear_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_pushButton_rightclear_clicked()
 {
     ui->textEdit_result->clear();
@@ -3134,6 +3513,13 @@ void CodeSophia::on_pushButton_rightclear_clicked()
 
 
 
+/*============================================
+* FuncName    : CodeSophia::FillStringList
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::FillStringList()
 {
     //    QStringList StrLst_KEYC_HEADER;
@@ -3226,16 +3612,37 @@ void CodeSophia::FillStringList()
                ;
 }
 
+/*============================================
+* FuncName    : CodeSophia::on_lineEdit_print_textChanged
+* Description :
+* @arg1       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_lineEdit_print_textChanged(const QString &arg1)
 {
     on_pushButton_gen_clicked();
 }
 
+/*============================================
+* FuncName    : CodeSophia::on_lineEdit_dataprint_textChanged
+* Description :
+* @arg1       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_lineEdit_dataprint_textChanged(const QString &arg1)
 {
     on_pushButton_gen_clicked();
 }
 
+/*============================================
+* FuncName    : CodeSophia::StructPrintMsgUIHide
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::StructPrintMsgUIHide()
 {
     ui->label_dataprint->hide();
@@ -3244,6 +3651,13 @@ void CodeSophia::StructPrintMsgUIHide()
     ui->lineEdit_print->hide();
 }
 
+/*============================================
+* FuncName    : CodeSophia::StructPrintMsgUIShow
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::StructPrintMsgUIShow()
 {
     ui->label_dataprint->show();
@@ -3265,6 +3679,13 @@ void CodeSophia::StructPrintMsgUIShow()
 /*version:1.0                                    */
 /*时 间:2015.4.25                                 */
 /*************************************************/
+/*============================================
+* FuncName    : CodeSophia::LogInitLog
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::LogInitLog()
 {
 #ifdef SC_LOG  //将发送网络的数据有效信息进行保存
@@ -3298,6 +3719,13 @@ void CodeSophia::LogInitLog()
 /*version:1.0                                    */
 /*时 间:2015.4.25                                 */
 /*************************************************/
+/*============================================
+* FuncName    : CodeSophia::LogWriteFile
+* Description :
+* @str        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::LogWriteFile(QString str)
 {
 #ifdef SC_LOG
@@ -3310,6 +3738,14 @@ void CodeSophia::LogWriteFile(QString str)
     }
 #endif
 }
+/*============================================
+* FuncName    : CodeSophia::LogWriteFile
+* Description :
+* @filename   :
+* @str        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::LogWriteFile(QString filename, QString str)
 {
     QFile file(filename);
@@ -3319,6 +3755,13 @@ void CodeSophia::LogWriteFile(QString filename, QString str)
 }
 
 
+/*============================================
+* FuncName    : CodeSophia::LogReadFile
+* Description :
+* @filename   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString CodeSophia::LogReadFile(QString filename)
 {
     QFile file(filename);
@@ -3334,6 +3777,13 @@ QString CodeSophia::LogReadFile(QString filename)
     return "";
 }
 
+/*============================================
+* FuncName    : CodeSophia::LogDeleteFile
+* Description :
+* @filename   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::LogDeleteFile(QString filename)
 {
     //    QFile file(filename);
@@ -3350,6 +3800,13 @@ void CodeSophia::LogDeleteFile(QString filename)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::get_funcname_qregexp
+* Description :
+* @text       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::get_funcname_qregexp(QString &text)
 {
     QStringList result = text.split("\n");
@@ -3366,6 +3823,13 @@ void CodeSophia::get_funcname_qregexp(QString &text)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::get_funcname_and_declare_qregexp
+* Description :
+* @text       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::get_funcname_and_declare_qregexp(QString &text)
 {
 //    text.replace(QRegExp("\\{([^{]*?)\\}"),"");
@@ -3378,6 +3842,13 @@ void CodeSophia::get_funcname_and_declare_qregexp(QString &text)
 
 
 
+/*============================================
+* FuncName    : CodeSophia::on_pushButton_load_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_pushButton_load_clicked()
 {
 #if 0
@@ -3462,6 +3933,13 @@ void CodeSophia::on_pushButton_load_clicked()
 #endif
 }
 
+/*============================================
+* FuncName    : CodeSophia::writepythonexecfuncfilename
+* Description :
+* @filename   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::writepythonexecfuncfilename(QString filename)
 {
     QString headerPython =
@@ -3601,6 +4079,13 @@ void CodeSophia::writepythonexecfuncfilename(QString filename)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::writepythonexecfuncfilename_funcdeclare
+* Description :
+* @filename   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::writepythonexecfuncfilename_funcdeclare(QString filename)
 {
     QString headerPython =
@@ -3741,6 +4226,13 @@ void CodeSophia::writepythonexecfuncfilename_funcdeclare(QString filename)
 
 
 
+/*============================================
+* FuncName    : CodeSophia::on_checkBox_showFunc_toggled
+* Description :
+* @checked    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_checkBox_showFunc_toggled(bool checked)
 {
     on_pushButton_gen_clicked();
@@ -3748,6 +4240,13 @@ void CodeSophia::on_checkBox_showFunc_toggled(bool checked)
 
 }
 
+/*============================================
+* FuncName    : CodeSophia::dragEnterEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::dragEnterEvent(QDragEnterEvent *event)
 {
     if(event->mimeData()->hasUrls()){
@@ -3755,6 +4254,13 @@ void CodeSophia::dragEnterEvent(QDragEnterEvent *event)
     }
 }
 
+/*============================================
+* FuncName    : CodeSophia::dropEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::dropEvent(QDropEvent *event)
 {
     urls = event->mimeData()->urls();
@@ -3841,6 +4347,13 @@ void CodeSophia::filedraged(QList<QUrl> &urls)
 
 
 
+/*============================================
+* FuncName    : CodeSophia::setChildUI
+* Description :
+* @s          :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::setChildUI(QString s)
 {
     msgsametimer->start();
@@ -3854,6 +4367,13 @@ void CodeSophia::setChildUI(QString s)
 }
 
 
+/*============================================
+* FuncName    : CodeSophia::writemsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::writemsg()
 {
     msgsametimer->stop();
@@ -3865,19 +4385,41 @@ void CodeSophia::writemsg()
 
 
 
+/*============================================
+* FuncName    : CodeSophia::on_pushButton_paster2left_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_pushButton_paster2left_clicked()
 {
     QClipboard *clipboard = QApplication::clipboard();
     ui->textEdit_key->setText(clipboard->text());
 }
 
+/*============================================
+* FuncName    : CodeSophia::on_pushButton_fetchright_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_pushButton_fetchright_clicked()
 {
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(ui->textEdit_result->toPlainText(),QClipboard::Clipboard);
 }
 
+/*============================================
+* FuncName    : CodeSophia::on_checkBox_showAllText_toggled
+* Description :
+* @checked    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void CodeSophia::on_checkBox_showAllText_toggled(bool checked)
 {
     on_pushButton_gen_clicked();
 }
+

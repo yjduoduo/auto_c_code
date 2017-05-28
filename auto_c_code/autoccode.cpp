@@ -97,6 +97,13 @@ static bool isCTRLKeyPressed_uitools = FALSE;
 
 
 
+/*============================================
+* FuncName    : autoCCode::autoCCode
+* Description :
+* @parent     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 autoCCode::autoCCode(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::autoCCode),
@@ -235,6 +242,13 @@ autoCCode::autoCCode(QWidget *parent) :
 
 }
 
+/*============================================
+* FuncName    : autoCCode::PopMenu
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::PopMenu()
 {
     /* 右键菜单 */
@@ -245,6 +259,13 @@ void autoCCode::PopMenu()
 }
 
 
+/*============================================
+* FuncName    : autoCCode::shortCutSet
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::shortCutSet(void)
 {
     //show or hide windows
@@ -284,6 +305,13 @@ void autoCCode::shortCutSet(void)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::ProgressBarSet
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ProgressBarSet(void)
 {
     self_print(ProgressBarSet);
@@ -292,6 +320,13 @@ void autoCCode::ProgressBarSet(void)
 
 }
 //在创建了过滤器之后，下面要做的是安装这个过滤器。安装过滤器需要调用installEventFilter()函数。
+/*============================================
+* FuncName    : autoCCode::InstallEventFilterSets
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::InstallEventFilterSets(void)
 {
     ui->lineEdit_search->installEventFilter(this);
@@ -314,6 +349,13 @@ void autoCCode::InstallEventFilterSets(void)
     ui_dialog->langtype_comboBox->installEventFilter(this);
 }
 
+/*============================================
+* FuncName    : autoCCode::ListViewSets
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ListViewSets()
 {
     listView = new QListView(this);
@@ -345,6 +387,13 @@ void autoCCode::ListViewSets()
 
 }
 
+/*============================================
+* FuncName    : autoCCode::ProgressBarSetValue
+* Description :
+* @value      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ProgressBarSetValue(int value)
 {
     self_print(ProgressBarSetValue);
@@ -355,6 +404,13 @@ void autoCCode::ProgressBarSetValue(int value)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::ThreadSets
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ThreadSets()
 {
     qDebug() << "thread sets";
@@ -365,6 +421,13 @@ void autoCCode::ThreadSets()
 
 }
 
+/*============================================
+* FuncName    : autoCCode::DebugSets
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::DebugSets()
 {
     /* 打印信息的数据包 printfsets */
@@ -375,6 +438,13 @@ void autoCCode::DebugSets()
 
 
 
+/*============================================
+* FuncName    : autoCCode::QTimerSet
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::QTimerSet(void)
 {
     self_print(QTimerSet);
@@ -415,6 +485,13 @@ void autoCCode::QTimerSet(void)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::UISets
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::UISets()
 {
     woUi = new CodeSophia(this);
@@ -449,6 +526,13 @@ void autoCCode::UISets()
 
 }
 
+/*============================================
+* FuncName    : autoCCode::keyPressEventSet
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::keyPressEventSet()
 {
     //    QObject::connect(btn4,SIGNAL(clicked()),
@@ -466,6 +550,13 @@ void autoCCode::keyPressEventSet()
 }
 
 
+/*============================================
+* FuncName    : autoCCode::checkboxSet
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::checkboxSet()
 {
     ui_dialog->checkBox_SEL->setChecked(false);
@@ -496,6 +587,13 @@ void autoCCode::checkboxSet()
                      this,SLOT(on_checkBox_checkBox_SeverFlag_change(bool)));
 }
 
+/*============================================
+* FuncName    : autoCCode::on_checkBox_rightTextSelectIndb_change
+* Description :
+* @flag       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_checkBox_rightTextSelectIndb_change(bool flag)
 {
     qDebug() << "on_checkBox_rightTextSelectIndb_change, flag: " << flag << endl  ;
@@ -510,11 +608,25 @@ void autoCCode::on_checkBox_rightTextSelectIndb_change(bool flag)
     update();
 }
 
+/*============================================
+* FuncName    : autoCCode::on_checkBox_rtQuery_change
+* Description :
+* @flag       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_checkBox_rtQuery_change(bool flag)
 {
 
 }
 
+/*============================================
+* FuncName    : autoCCode::on_checkBox_checkBox_SeverFlag_change
+* Description :
+* @flag       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_checkBox_checkBox_SeverFlag_change(bool flag)
 {
     //    qDebug() << "checkbox sendpkg change:" << flag << endl;
@@ -539,6 +651,13 @@ void autoCCode::on_checkBox_checkBox_SeverFlag_change(bool flag)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::get_rtQuery_enable
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 quint8 autoCCode::get_rtQuery_enable()
 {
     return (Qt::Checked == ui_setup->checkBox_rtQuery->checkState());
@@ -546,6 +665,13 @@ quint8 autoCCode::get_rtQuery_enable()
 
 
 
+/*============================================
+* FuncName    : autoCCode::on_checkBox_SEL_change
+* Description :
+* @flag       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_checkBox_SEL_change(bool flag)
 {
     if(!flag)
@@ -555,11 +681,25 @@ void autoCCode::on_checkBox_SEL_change(bool flag)
     }
 }
 
+/*============================================
+* FuncName    : autoCCode::set_index_text
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::set_index_text()
 {
     if(ui->checkBox_same->isChecked())
         ui_dialog->index_textEdit_dia->setText(ui_dialog->content_textEdit_dia->toPlainText());
 }
+/*============================================
+* FuncName    : autoCCode::set_note_textEdit_firstline
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::set_note_textEdit_firstline()
 {
     //如果有选中的内容，则默认为选中的内容
@@ -611,6 +751,13 @@ void autoCCode::set_note_textEdit_firstline()
 }
 
 
+/*============================================
+* FuncName    : autoCCode::lineTextEditSet
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::lineTextEditSet(void)
 {
 #if 0//文本改变搜索
@@ -629,6 +776,13 @@ void autoCCode::lineTextEditSet(void)
                      this,SLOT(saveRemoteIP(QString)));
 }
 
+/*============================================
+* FuncName    : autoCCode::dragDropSet
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::dragDropSet(void)
 {
     //允许拖放的文字添加到编辑框中
@@ -636,6 +790,13 @@ void autoCCode::dragDropSet(void)
     ui->codeshow_textEdit->hide();
     //    ui->codeshow_textEdit->setHidden(true);
 }
+/*============================================
+* FuncName    : autoCCode::pushButton_setup
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::pushButton_setup()
 {
     QObject::connect(ui_setup->pushButton_backColor,SIGNAL(clicked()),
@@ -647,6 +808,13 @@ void autoCCode::pushButton_setup()
                      this,SLOT(setFont()));
 }
 
+/*============================================
+* FuncName    : autoCCode::pushButtonSet
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::pushButtonSet(void)
 {
     self_print(pushButtonSet);
@@ -757,12 +925,26 @@ void autoCCode::pushButtonSet(void)
     //命令行CMD
     QObject::connect(ui_toolsets->pushButton_cmd,SIGNAL(clicked()),this,SLOT(on_pushButton_cmd_exe_clicked()));
 }
+/*============================================
+* FuncName    : autoCCode::set_search_text
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::set_search_text()
 {
     QClipboard *clipboard = QApplication::clipboard();
     ui->lineEdit_search->clear();
     ui->lineEdit_search->setText(clipboard->text());
 }
+/*============================================
+* FuncName    : autoCCode::search_text_clear
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::search_text_clear()
 {
     if(!InDb_Dialog->isHidden())
@@ -774,44 +956,100 @@ void autoCCode::search_text_clear()
     ui->lineEdit_search->clear();
     ui->lineEdit_search->setFocus();
 }
+/*============================================
+* FuncName    : autoCCode::note_clear
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::note_clear()
 {
     if(!InDb_Dialog->isHidden())
         ui_dialog->note_textEdit_dia->clear();
 }
+/*============================================
+* FuncName    : autoCCode::note_focus
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::note_focus()
 {
     if(!InDb_Dialog->isHidden())
         ui_dialog->note_textEdit_dia->setFocus();
 }
+/*============================================
+* FuncName    : autoCCode::content_focus
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::content_focus()
 {
     if(!InDb_Dialog->isHidden())
         ui_dialog->content_textEdit_dia->setFocus();
 }
 
+/*============================================
+* FuncName    : autoCCode::note_clear_focus
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::note_clear_focus()
 {
     note_clear();
     note_focus();
 }
 
+/*============================================
+* FuncName    : autoCCode::content_clear
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::content_clear()
 {
     ui_dialog->content_textEdit_dia->clear();
 }
+/*============================================
+* FuncName    : autoCCode::setCliptext
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setCliptext()
 {
     QClipboard *clipboard = QApplication::clipboard();
     ui_dialog->note_textEdit_dia->clear();
     ui_dialog->note_textEdit_dia->setText(clipboard->text());
 }
+/*============================================
+* FuncName    : autoCCode::setCliptext_content
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setCliptext_content()
 {
     QClipboard *clipboard = QApplication::clipboard();
     ui_dialog->content_textEdit_dia->clear();
     ui_dialog->content_textEdit_dia->setText(clipboard->text());
 }
+/*============================================
+* FuncName    : autoCCode::setDesktop_center
+* Description :
+* @dialog     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setDesktop_center(QDialog *dialog)
 {
     QDesktopWidget *desk=QApplication::desktop();
@@ -821,6 +1059,13 @@ void autoCCode::setDesktop_center(QDialog *dialog)
     dialog->move(0,(ht-height()/2)/2);
 }
 
+/*============================================
+* FuncName    : autoCCode::WidgetYsetDesktop_center
+* Description :
+* @widget     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::WidgetYsetDesktop_center(QWidget *widget)
 {
     QDesktopWidget *desk=QApplication::desktop();
@@ -830,6 +1075,13 @@ void autoCCode::WidgetYsetDesktop_center(QWidget *widget)
     widget->move(0,(ht-height()/2)/2);
 }
 
+/*============================================
+* FuncName    : autoCCode::WidgetXsetDesktop_center
+* Description :
+* @widget     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::WidgetXsetDesktop_center(QWidget *widget)
 {
     QDesktopWidget *desk=QApplication::desktop();
@@ -840,6 +1092,13 @@ void autoCCode::WidgetXsetDesktop_center(QWidget *widget)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::WidgetXYsetDesktop_center
+* Description :
+* @widget     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::WidgetXYsetDesktop_center(QWidget *widget)
 {
     QDesktopWidget *desk=QApplication::desktop();
@@ -850,12 +1109,26 @@ void autoCCode::WidgetXYsetDesktop_center(QWidget *widget)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::minSize_ui_dialog
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::minSize_ui_dialog()
 {
     InDb_Dialog->resize(QSize());
     setDesktop_center(InDb_Dialog);
 
 }
+/*============================================
+* FuncName    : autoCCode::widthSize_ui_dialog
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::widthSize_ui_dialog()
 {
 
@@ -865,6 +1138,13 @@ void autoCCode::widthSize_ui_dialog()
     int ht=desk->height();
     InDb_Dialog->move(0,(ht-height()/2)/2);
 }
+/*============================================
+* FuncName    : autoCCode::maxSize_ui_dialog
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::maxSize_ui_dialog()
 {
 
@@ -875,6 +1155,13 @@ void autoCCode::maxSize_ui_dialog()
     InDb_Dialog->resize(QSize(QApplication::desktop()->width(),QApplication::desktop()->height()-60));
     InDb_Dialog->move(0,0);
 }
+/*============================================
+* FuncName    : autoCCode::comboBoxSet
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::comboBoxSet(void)
 {
     self_print(comboBoxSet);
@@ -915,6 +1202,13 @@ void autoCCode::comboBoxSet(void)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::comboBox_selectdb_currentIndexChanged
+* Description :
+* @arg1       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
 {
     self_print(comboBox_selectdb_currentIndexChanged);
@@ -1003,6 +1297,13 @@ void autoCCode::comboBox_selectdb_currentIndexChanged(const QString &arg1)
     ui->listWidget_note->addItems(selectresult.note_list);
 }
 
+/*============================================
+* FuncName    : autoCCode::textEditSet
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::textEditSet(void)
 {
     self_print(textEditSet);
@@ -1014,6 +1315,13 @@ void autoCCode::textEditSet(void)
     //    QObject::connect(ui_toolsset)
 
 }
+/*============================================
+* FuncName    : autoCCode::addstr_aspect_comboBox
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::addstr_aspect_comboBox(void)
 {
     LanguageType langtype = languagetype_Aspect_;
@@ -1042,6 +1350,13 @@ void autoCCode::addstr_aspect_comboBox(void)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::addstr_comboBox
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::addstr_comboBox(void)
 {
 
@@ -1113,6 +1428,13 @@ void autoCCode::addstr_comboBox(void)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::~autoCCode
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 autoCCode::~autoCCode()
 {
 //    delete woUi;
@@ -1127,6 +1449,13 @@ autoCCode::~autoCCode()
     delete ui;//最后删除
 }
 
+/*============================================
+* FuncName    : autoCCode::on_save_btn_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_save_btn_clicked()
 {
     self_print(on_save_btn_clicked);
@@ -1165,11 +1494,25 @@ void autoCCode::on_save_btn_clicked()
 
 }
 
+/*============================================
+* FuncName    : autoCCode::db_comboBox_activated
+* Description :
+* @arg1       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::db_comboBox_activated(const QString &arg1)
 {
     self_print(db_comboBox_activated);
 }
 //选择数据库
+/*============================================
+* FuncName    : autoCCode::on_choseCodeDB_btn_clicked
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_choseCodeDB_btn_clicked(void)
 {
     self_print(on_choseCodeDB_btn_clicked);
@@ -1177,6 +1520,13 @@ void autoCCode::on_choseCodeDB_btn_clicked(void)
 
 }
 //生成代码库
+/*============================================
+* FuncName    : autoCCode::on_gencode_btn_clicked
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_gencode_btn_clicked(void)
 {
     self_print(on_gencode_btn_clicked);
@@ -1265,15 +1615,36 @@ void autoCCode::on_gencode_btn_clicked(void)
 //        QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
 //    }
 }
+/*============================================
+* FuncName    : autoCCode::hide_inBtn
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::hide_inBtn(void)
 {
     ui->indb_btn->hide();
 }
 
+/*============================================
+* FuncName    : autoCCode::show_InBtn
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::show_InBtn(void)
 {
     ui->indb_btn->show();
 }
+/*============================================
+* FuncName    : autoCCode::SaveUiMove
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SaveUiMove()
 {
     quint16 usWidth = (this->width() - InDb_Dialog->width())/2;
@@ -1285,6 +1656,13 @@ void autoCCode::SaveUiMove()
 }
 
 //入库函数
+/*============================================
+* FuncName    : autoCCode::on_indb_btn_clicked
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_indb_btn_clicked(void)
 {
     self_print(on_indb_btn_clicked);
@@ -1306,6 +1684,13 @@ void autoCCode::on_indb_btn_clicked(void)
     }
 }
 
+/*============================================
+* FuncName    : autoCCode::on_indb_window_show_hide
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_indb_window_show_hide()
 {
     self_print(on_indb_btn_clicked);
@@ -1344,6 +1729,13 @@ void autoCCode::on_indb_window_show_hide()
 //    self_print(on_outdb_btn_clicked);
 //}
 
+/*============================================
+* FuncName    : autoCCode::getLanguageType
+* Description :
+* @type       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 LanguageType autoCCode::getLanguageType(QString &type)
 {
 
@@ -1437,12 +1829,26 @@ LanguageType autoCCode::getLanguageType(QString &type)
     }
 }
 
+/*============================================
+* FuncName    : autoCCode::save_before_ops
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::save_before_ops(void)
 {
     selectresult_tmp = selectresult;
     index_key_color_tmp = index_key_color;
     index_note_color_tmp = index_note_color;
 }
+/*============================================
+* FuncName    : autoCCode::restore_before_ops
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::restore_before_ops(void)
 {
     selectresult = selectresult_tmp;
@@ -1451,6 +1857,13 @@ void autoCCode::restore_before_ops(void)
 }
 
 //dialog ok button
+/*============================================
+* FuncName    : autoCCode::ok_btn_dia_clicked_self
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ok_btn_dia_clicked_self(void)
 {
     self_print(ok_btn_dia_clicked_self);
@@ -1571,6 +1984,13 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     is_selected = FALSE;//插入数据后，把此置为FALSE
 }
 
+/*============================================
+* FuncName    : autoCCode::close_indb_dialog
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::close_indb_dialog()
 {
 #ifndef DEBUG_V
@@ -1597,17 +2017,38 @@ void autoCCode::close_indb_dialog()
 
 
 
+/*============================================
+* FuncName    : autoCCode::cancel_btn_dia_clicked_self
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::cancel_btn_dia_clicked_self(void)
 {
     self_print(cancel_btn_dia_clicked_self);
     InDb_Dialog->close();
 }
+/*============================================
+* FuncName    : autoCCode::aboutVersion
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::aboutVersion(void)
 {
     ShowTipsInfo(QString::fromLocal8Bit("版本 %1").arg(GetVersion()));
 //    QMessageBox::information(NULL, str_china(版本), GetVersion(),NULL,NULL);
     return;
 }
+/*============================================
+* FuncName    : autoCCode::GetVersion
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString autoCCode::GetVersion(void)
 {
     return str_china(自动生成代码)
@@ -1617,6 +2058,13 @@ QString autoCCode::GetVersion(void)
             +version_autoccode;
 }
 
+/*============================================
+* FuncName    : autoCCode::listWidgetSet
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::listWidgetSet(void)
 {
     self_print(listWidget);
@@ -1643,6 +2091,13 @@ void autoCCode::listWidgetSet(void)
 
 }
 //添加到右边的内容中
+/*============================================
+* FuncName    : autoCCode::add_to_gen_code_textedit_by_keyword
+* Description :
+* @item       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
 {
     self_print(add_to_gen_code_textedit_by_keyword);
@@ -1679,6 +2134,13 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     ui->genshow_textEdit->update();
 }
 //添加到右边的内容中
+/*============================================
+* FuncName    : autoCCode::add_to_gen_code_textedit_by_note
+* Description :
+* @item       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
 {
     self_print(add_to_gen_code_textedit_by_note);
@@ -1712,12 +2174,26 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::rightClear_textedit
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::rightClear_textedit(void)
 {
     GenCode_str.clear();
     ui->genshow_textEdit->clear();
     //    update();
 }
+/*============================================
+* FuncName    : autoCCode::clr_selectresult
+* Description :
+* @result     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::clr_selectresult(SelectResult &result)
 {
     result.content_list.clear();
@@ -1736,30 +2212,65 @@ void autoCCode::clr_selectresult(SelectResult &result)
 
 
 }
+/*============================================
+* FuncName    : autoCCode::clr_looktexthisresult
+* Description :
+* @result     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::clr_looktexthisresult(LookTextHistoryResult &result)
 {
     result.looktextarry.clear();
     result.looktimes = 0;
 }
 
+/*============================================
+* FuncName    : autoCCode::clear_listWidget_beforecall
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::clear_listWidget_beforecall(void)
 {
     ui->listWidget_codeview->clear();
     ui->listWidget_note->clear();
     //    update();
 }
+/*============================================
+* FuncName    : autoCCode::listWidget_scrollToBottom
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::listWidget_scrollToBottom(void)
 {
     ui->listWidget_codeview->scrollToBottom();
     ui->listWidget_note->scrollToBottom();
     //    update();
 }
+/*============================================
+* FuncName    : autoCCode::listWidget_scrollToTop
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::listWidget_scrollToTop(void)
 {
     ui->listWidget_codeview->scrollToTop();
     ui->listWidget_note->scrollToTop();
     //    update();
 }
+/*============================================
+* FuncName    : autoCCode::select_db_by_vartype
+* Description :
+* @select_express  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::select_db_by_vartype(QString &select_express)
 {
 
@@ -1788,6 +2299,13 @@ void autoCCode::select_db_by_vartype(QString &select_express)
     //    update();
 }
 
+/*============================================
+* FuncName    : autoCCode::ui_comboBox_vartype_currentIndexChanged
+* Description :
+* @str        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
 {
     self_print(ui_comboBox_vartype_currentIndexChanged);
@@ -1828,6 +2346,13 @@ void autoCCode::ui_comboBox_vartype_currentIndexChanged(const QString &str)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::comboBox_aspect_currentIndexChanged
+* Description :
+* @str        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::comboBox_aspect_currentIndexChanged(const QString &str)
 {
     self_print(comboBox_aspect_currentIndexChanged);
@@ -1839,6 +2364,13 @@ void autoCCode::comboBox_aspect_currentIndexChanged(const QString &str)
     }
 
 }
+/*============================================
+* FuncName    : autoCCode::add_aspect_totable
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::add_aspect_totable(void)
 {
     QString aspect_str = ui_dialog->lineEdit_add_aspect->text();
@@ -1864,6 +2396,13 @@ void autoCCode::add_aspect_totable(void)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::judge_color_index
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::judge_color_index(void)
 {
     if(index_key_color > selectresult.content_list.size())
@@ -1877,6 +2416,13 @@ void autoCCode::judge_color_index(void)
 }
 
 //右边的注释同步滚动，选择
+/*============================================
+* FuncName    : autoCCode::listWidget_note_scroll_sync
+* Description :
+* @item       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
 {
     self_print(listWidget_note_scroll_sync);
@@ -1908,6 +2454,13 @@ void autoCCode::listWidget_note_scroll_sync(QListWidgetItem* item)
     //    update();
 }
 //note滚动点击
+/*============================================
+* FuncName    : autoCCode::listWidget_codeview_scroll_sync
+* Description :
+* @item       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
 {
     self_print(listWidget_codeview_scroll_sync);
@@ -1938,6 +2491,13 @@ void autoCCode::listWidget_codeview_scroll_sync(QListWidgetItem* item)
     //    update();
 }
 
+/*============================================
+* FuncName    : autoCCode::update_show_after_insert
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::update_show_after_insert(void)
 {
     if(!sets)
@@ -1955,6 +2515,13 @@ void autoCCode::update_show_after_insert(void)
                 .arg(LIMIT_SHOW_SIZE);
     select_db_by_vartype(select_express);
 }
+/*============================================
+* FuncName    : autoCCode::delete_btn_clicked_selfdefine
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::delete_btn_clicked_selfdefine(void)
 {
     self_print(delete_btn_clicked);
@@ -1970,7 +2537,7 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
     if( flag_selectLeft )
     {
         /*  标准对话框——警示消息框   */
-        QMessageBox::warning(NULL,"Warning",
+QMessageBox::warning(NULL,"Warning",
                              str_china(请选择右侧进行删除),
                              QMessageBox::Yes,QMessageBox::Yes);
         //        /*  标准对话框——警示消息框   */
@@ -2000,7 +2567,7 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
         b.updatetable(sets->langtype,select_express);
 
         update_show_after_insert();
-        QMessageBox::information(this,"Information",
+QMessageBox::information(this,"Information",
                                  "Your comment:<h1><font color=red>" +text +"</font></h1>"+" deleted!",
                                  QMessageBox::Yes,QMessageBox::Yes);
     }
@@ -2011,6 +2578,13 @@ void autoCCode::delete_btn_clicked_selfdefine(void)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::SearchText_WithTimer
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SearchText_WithTimer(void)
 {
     QString searchStr = ui->lineEdit_search->text();
@@ -2021,6 +2595,13 @@ void autoCCode::SearchText_WithTimer(void)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::SearchText_WithTimer_Enter
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SearchText_WithTimer_Enter(void)
 {
     qApp->processEvents();
@@ -2038,6 +2619,13 @@ void autoCCode::SearchText_WithTimer_Enter(void)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::SearchText
+* Description :
+* @searchStr  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SearchText(const QString &searchStr)
 {
     qApp->processEvents();
@@ -2165,6 +2753,13 @@ void autoCCode::SearchText(const QString &searchStr)
 
     //保存查找关键字 end
 }
+/*============================================
+* FuncName    : autoCCode::cleanLineTextEditSearch
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::cleanLineTextEditSearch(void)
 {
     ui->lineEdit_search->setFocus();
@@ -2184,6 +2779,13 @@ void autoCCode::cleanLineTextEditSearch(void)
 
 
 //为所有表中的lowercase_keyword添加内容
+/*============================================
+* FuncName    : autoCCode::add_column_lowercase_keywords_content
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::add_column_lowercase_keywords_content(void)
 {
     self_print(add_column_lowercase_keywords);
@@ -2242,6 +2844,13 @@ void autoCCode::add_column_lowercase_keywords_content(void)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::dragEnterEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::dragEnterEvent(QDragEnterEvent *event)
 {
     if(event->mimeData()->hasUrls()){
@@ -2250,6 +2859,13 @@ void autoCCode::dragEnterEvent(QDragEnterEvent *event)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::iteratorDirectory_FileNums
+* Description :
+* @path       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 quint32 autoCCode::iteratorDirectory_FileNums(QString path)
 {
     QDir dir(path);
@@ -2271,21 +2887,49 @@ quint32 autoCCode::iteratorDirectory_FileNums(QString path)
     return pathFileNums;
 }
 
+/*============================================
+* FuncName    : autoCCode::zeropathFileNums
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::zeropathFileNums()
 {
     pathFileNums = 0;
 }
+/*============================================
+* FuncName    : autoCCode::getpathFileNums
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 quint32 autoCCode::getpathFileNums()
 {
     return pathFileNums;
 }
 
 
+/*============================================
+* FuncName    : autoCCode::zeroloopFileNums
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::zeroloopFileNums()
 {
     loopFileNums = 0;
 }
 
+/*============================================
+* FuncName    : autoCCode::iteratorDirectory_Print
+* Description :
+* @path       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::iteratorDirectory_Print(QString path)
 {
     QDir dir(path);
@@ -2307,12 +2951,27 @@ void autoCCode::iteratorDirectory_Print(QString path)
 char g_textbar[102];
 char tipsstr[] = "|\\-/";
 
+/*============================================
+* FuncName    : autoCCode::textprogress_init
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::textprogress_init(void)
 {
     memset(g_textbar, 0 ,sizeof(g_textbar));
 }
 
 
+/*============================================
+* FuncName    : autoCCode::textprogress
+* Description :
+* @loop       :
+* @total      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::textprogress(quint32 loop, quint32 total)
 {
     int i = 0;
@@ -2333,6 +2992,15 @@ void autoCCode::textprogress(quint32 loop, quint32 total)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::dirprogress
+* Description :
+* @filename   :
+* @loop       :
+* @total      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::dirprogress(QString filename, quint32 loop, quint32 total)
 {
 //    //增加进度条
@@ -2355,6 +3023,13 @@ void autoCCode::dirprogress(QString filename, quint32 loop, quint32 total)
 
 
 
+/*============================================
+* FuncName    : autoCCode::iteratorDirectory_Saveui
+* Description :
+* @path       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::iteratorDirectory_Saveui(QString path)
 {
     QDir dir(path);
@@ -2460,6 +3135,13 @@ void autoCCode::filedraged(QList<QUrl> &urls)
 #endif
 }
 
+/*============================================
+* FuncName    : autoCCode::dropEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::dropEvent(QDropEvent *event)
 {
     urls = event->mimeData()->urls();
@@ -2469,6 +3151,13 @@ void autoCCode::dropEvent(QDropEvent *event)
     SendParent2ChildUI(0);
 }
 
+/*============================================
+* FuncName    : autoCCode::readTextFile
+* Description :
+* @fileName   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::readTextFile(const QString &fileName)
 {
 #define MAXREADFILESIZE 10*1024*1024  /* 最大读取文件10M */
@@ -2500,6 +3189,13 @@ void autoCCode::readTextFile(const QString &fileName)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::readTextFileAppend
+* Description :
+* @fileName   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::readTextFileAppend(const QString &fileName)
 {
 #define MAXREADFILESIZE 10*1024*1024  /* 最大读取文件10M */
@@ -2543,6 +3239,13 @@ void autoCCode::readTextFileAppend(const QString &fileName)
     file.close();
 }
 
+/*============================================
+* FuncName    : autoCCode::SearchEnter
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SearchEnter()
 {
     //    qDebug() << "search enter!!";
@@ -2557,6 +3260,13 @@ void autoCCode::SearchEnter()
 }
 
 
+/*============================================
+* FuncName    : autoCCode::listWidget_note_with_currentRowChanged
+* Description :
+* @row        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::listWidget_note_with_currentRowChanged(int row)
 {
     //    qt计算耗时
@@ -2630,6 +3340,13 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::SetlistWidget_codeview_row
+* Description :
+* @row        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SetlistWidget_codeview_row(int row)
 {
     self_print(SetlistWidget_codeview_row);
@@ -2637,6 +3354,13 @@ void autoCCode::SetlistWidget_codeview_row(int row)
         row = 0;
     listWidget_codeview_row = row;
 }
+/*============================================
+* FuncName    : autoCCode::GetlistWidget_codeview_row
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int autoCCode::GetlistWidget_codeview_row(void)
 {
     self_print(GetlistWidget_codeview_row);
@@ -2644,6 +3368,13 @@ int autoCCode::GetlistWidget_codeview_row(void)
 }
 
 /*  QT:设置textedit文本框中某个字符的格式 */
+/*============================================
+* FuncName    : autoCCode::setCharColor
+* Description :
+* @pos        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setCharColor(unsigned int pos)
 {
     if(pos <= 0)return ;
@@ -2666,6 +3397,14 @@ void autoCCode::setCharColor(unsigned int pos)
 }
 
 /*  QT:设置textedit文本框中某个字符串的格式 */
+/*============================================
+* FuncName    : autoCCode::setStringColor
+* Description :
+* @pos        :
+* @len        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setStringColor(unsigned int pos,unsigned int len)
 {
     unsigned int i = 0;
@@ -2750,6 +3489,13 @@ enum
     CHAR_LOCA8Bit,
     CHAR_NONE
 };
+/*============================================
+* FuncName    : autoCCode::SearchTextResWithColor
+* Description :
+* @resStr     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SearchTextResWithColor(QString &resStr)
 {
 
@@ -3026,6 +3772,13 @@ void autoCCode::SearchTextResWithColor(QString &resStr)
     //    }
 }
 
+/*============================================
+* FuncName    : autoCCode::SearchTextResWithColor2
+* Description :
+* @resStr     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SearchTextResWithColor2(QString &resStr)
 {
 
@@ -3126,6 +3879,13 @@ void autoCCode::SearchTextResWithColor2(QString &resStr)
     return;
 }
 
+/*============================================
+* FuncName    : autoCCode::listWidget_note_with_enter
+* Description :
+* @modelindex  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 {
     self_print(listWidget_note_with_enter);
@@ -3161,12 +3921,26 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 
 }
 
+/*============================================
+* FuncName    : autoCCode::contentSetFocus
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::contentSetFocus(void)
 {
     ui->lineEdit_search->clear();
     ui->lineEdit_search->setFocus();
 }
 
+/*============================================
+* FuncName    : autoCCode::modify_content
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::modify_content()
 {
     self_print(modify_content);
@@ -3182,7 +3956,7 @@ void autoCCode::modify_content()
     if( flag_selectLeft )
     {
         /*  标准对话框——警示消息框   */
-        QMessageBox::warning(NULL,"Warning",
+QMessageBox::warning(NULL,"Warning",
                              str_china(请选择右侧进行修改),
                              QMessageBox::Yes,QMessageBox::Yes);
         //        /*  标准对话框——警示消息框   */
@@ -3221,6 +3995,13 @@ void autoCCode::modify_content()
 }
 
 
+/*============================================
+* FuncName    : autoCCode::get_CurrentIndex_comboBox_vartype
+* Description :
+* @vartype    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int autoCCode::get_CurrentIndex_comboBox_vartype(const QString & vartype)
 {
     if(vartype ==  str_china())
@@ -3237,6 +4018,13 @@ int autoCCode::get_CurrentIndex_comboBox_vartype(const QString & vartype)
         return 0;
 }
 
+/*============================================
+* FuncName    : autoCCode::get_aspect_list_index
+* Description :
+* @index_str  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int autoCCode::get_aspect_list_index(const QString &index_str)
 {
 
@@ -3253,12 +4041,26 @@ int autoCCode::get_aspect_list_index(const QString &index_str)
     return 0;
 }
 
+/*============================================
+* FuncName    : autoCCode::rightTextShowClear_oncheched
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::rightTextShowClear_oncheched()
 {
     if(ui->checkBox_rightTextClean->isChecked())//右边清空内容
         rightClear_textedit();
 }
 
+/*============================================
+* FuncName    : autoCCode::getText_FromRight
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::getText_FromRight(void)
 {
     self_print(getText_FromRight);
@@ -3269,6 +4071,13 @@ void autoCCode::getText_FromRight(void)
     clipboard->setText(str,QClipboard::Clipboard);
 }
 
+/*============================================
+* FuncName    : autoCCode::on_pushbtn_autoindb_clicked_self
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushbtn_autoindb_clicked_self()
 {
     self_print(on_pushbtn_autoindb_clicked_self);
@@ -3279,11 +4088,25 @@ void autoCCode::on_pushbtn_autoindb_clicked_self()
     }
 
 }
+/*============================================
+* FuncName    : autoCCode::on_ui_autoindb_pushBtn_Open_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_ui_autoindb_pushBtn_Open_clicked()
 {
     self_print(on_ui_autoindb_pushBtn_Open_clicked);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    QDesktopServices::storageLocation(QDesktopServices::DesktopLocation),
+/*============================================
+* FuncName    : QDesktopServices::storageLocation
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
+QDesktopServices::storageLocation(QDesktopServices::DesktopLocation),
                                                     tr("Txt (*.txt)"
                                                        ";;Ctype (*.c *.C *.cc *.h)"
                                                        ";;Cpptype(*.cpp *.CPP *.h)"
@@ -3309,6 +4132,13 @@ void autoCCode::on_ui_autoindb_pushBtn_Open_clicked()
 
     file.close();
 }
+/*============================================
+* FuncName    : autoCCode::on_ui_autoindb_pushBtn_process_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_ui_autoindb_pushBtn_process_clicked()
 {
     self_print(on_ui_autoindb_pushBtn_process_clicked);
@@ -3351,6 +4181,13 @@ void autoCCode::on_ui_autoindb_pushBtn_process_clicked()
 #endif
     }
 }
+/*============================================
+* FuncName    : autoCCode::get_autoindb_textedit_cursor_postion
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::get_autoindb_textedit_cursor_postion()
 {
     //    self_print(get_autoindb_textedit_cursor_postion);
@@ -3396,6 +4233,15 @@ void autoCCode::get_autoindb_textedit_cursor_postion()
         linenumber_old = linenumber;
     }
 }
+/*============================================
+* FuncName    : autoCCode::ok_btn_dia_clicked_self_autoindb
+* Description :
+* @begintext   :
+* @combinetext  :
+* @ret         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combinetext,int *ret)
 {
     self_print(ok_btn_dia_clicked_self_autoindb);
@@ -3559,6 +4405,13 @@ void autoCCode::ok_btn_dia_clicked_self_autoindb(QString begintext,QString combi
     //    update_show_after_insert();
 }
 
+/*============================================
+* FuncName    : autoCCode::pushdb_checkbox_if_selected
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::pushdb_checkbox_if_selected()
 {
     //    self_print(pushdb_checkbox_if_selected);
@@ -3587,6 +4440,13 @@ void autoCCode::pushdb_checkbox_if_selected()
 
 }
 
+/*============================================
+* FuncName    : autoCCode::pasteClicpTextToSearchEdit
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::pasteClicpTextToSearchEdit()
 {
     //    self_print(pasteClicpTextToSearchEdit);
@@ -3601,6 +4461,13 @@ void autoCCode::pasteClicpTextToSearchEdit()
         ui->lineEdit_search->setText(cliptext);
 }
 
+/*============================================
+* FuncName    : autoCCode::isCheckBox_cliptext_checked
+* Description :
+* @checked    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::isCheckBox_cliptext_checked(bool checked)
 {
     self_print(pasteClicpTextToSearchEdit);
@@ -3615,6 +4482,13 @@ void autoCCode::isCheckBox_cliptext_checked(bool checked)
 
 
 }
+/*============================================
+* FuncName    : autoCCode::ui_dialog_AutoGetCon
+* Description :
+* @checked    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ui_dialog_AutoGetCon(bool checked)
 {
     self_print(ui_dialog_AutoGetCon);
@@ -3628,6 +4502,13 @@ void autoCCode::ui_dialog_AutoGetCon(bool checked)
     //        ui_dialog->content_textEdit_dia->setText("");
 
 }
+/*============================================
+* FuncName    : autoCCode::pasteClicpTextToAutoGetCon_UiDialog
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::pasteClicpTextToAutoGetCon_UiDialog()
 {
     //    self_print(pasteClicpTextToAutoGetCon_UiDialog);
@@ -3642,6 +4523,13 @@ void autoCCode::pasteClicpTextToAutoGetCon_UiDialog()
         ui_dialog->content_textEdit_dia->setText(cliptext);
 }
 
+/*============================================
+* FuncName    : autoCCode::IsClipboardChanged
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 quint8 autoCCode::IsClipboardChanged()
 {
     static QString text;
@@ -3655,6 +4543,13 @@ quint8 autoCCode::IsClipboardChanged()
     }
 }
 
+/*============================================
+* FuncName    : autoCCode::PopInDbUi
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::PopInDbUi()
 {
     static uint8_t firstin = FLAG_YES;
@@ -3710,11 +4605,25 @@ void autoCCode::PopInDbUi()
     }
 }
 
+/*============================================
+* FuncName    : autoCCode::getLimitNum
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int autoCCode::getLimitNum()
 {
     return ui_autoindb->spinBox_notenumber->text().toInt()?ui_autoindb->spinBox_notenumber->text().toInt():10;
 }
 //是否显示界面左侧的内容了
+/*============================================
+* FuncName    : autoCCode::showcode_textEdit_AtBotton
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int autoCCode::showcode_textEdit_AtBotton()
 {
     //codeshow_textEdit
@@ -3732,6 +4641,13 @@ int autoCCode::showcode_textEdit_AtBotton()
 //}
 
 
+/*============================================
+* FuncName    : autoCCode::wheelEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::wheelEvent(QWheelEvent *event)
 {
     int numDegrees = event->delta() / 8;//滚动的角度，*8就是鼠标滚动的距离
@@ -3809,6 +4725,14 @@ void autoCCode::wheelEvent(QWheelEvent *event)
     event->accept();      //接收该事件
 }
 //入库界面里的数据库列表弹出
+/*============================================
+* FuncName    : autoCCode::eventFilter_ui_dialog_langtype_comboBox
+* Description :
+* @watched    :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool autoCCode::eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent *event)
 {
     if(!ui_setup->checkBox_indb_shortkey->isChecked())
@@ -3841,6 +4765,14 @@ bool autoCCode::eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent
     }
 }
 
+/*============================================
+* FuncName    : autoCCode::eventFilter_ui_setup
+* Description :
+* @watched    :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool autoCCode::eventFilter_ui_setup(QObject *watched, QEvent *event)
 {
     //    if(!ui_setup->checkBox_SeverFlag->isChecked())
@@ -3860,6 +4792,14 @@ bool autoCCode::eventFilter_ui_setup(QObject *watched, QEvent *event)
 
 //}
 
+/*============================================
+* FuncName    : autoCCode::eventFilter_ui_dialog
+* Description :
+* @watched    :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
 {
     if(!ui_setup->checkBox_indb_shortkey->isChecked())
@@ -3948,6 +4888,14 @@ bool autoCCode::eventFilter_ui_dialog(QObject *watched, QEvent *event)
 }
 
 //combox产生下拉事件，弹出内容
+/*============================================
+* FuncName    : autoCCode::eventFilter_ui_dia_selectdb_comboBox_selectdb
+* Description :
+* @watched    :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool autoCCode::eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, QEvent *event)
 {
     if(watched == ui_dia_selectdb->comboBox_selectdb)
@@ -3976,6 +4924,14 @@ bool autoCCode::eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, 
 }
 
 
+/*============================================
+* FuncName    : autoCCode::eventFilter_ui_choseCodeDB_btn
+* Description :
+* @watched    :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool autoCCode::eventFilter_ui_choseCodeDB_btn(QObject *watched, QEvent *event)
 {
     if(watched == ui->choseCodeDB_btn)
@@ -3994,6 +4950,14 @@ bool autoCCode::eventFilter_ui_choseCodeDB_btn(QObject *watched, QEvent *event)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::eventFilter
+* Description :
+* @obj        :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 {
     //    qDebug() << "eventFilter";
@@ -4169,6 +5133,13 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::keyPressEvent
+* Description :
+* @k          :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::keyPressEvent(QKeyEvent *k)
 {
     //    if(k->key() == Qt::Key_A)
@@ -4194,22 +5165,50 @@ void autoCCode::keyPressEvent(QKeyEvent *k)
     return;
 }
 
+/*============================================
+* FuncName    :
+* Description :
+* @e          :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::mouseMoveEvent ( QMouseEvent * e )
 {
     //    qDebug() << "mouseMoveEvent" << endl;
     //    setMouseTracking(false);
 }
+/*============================================
+* FuncName    :
+* Description :
+* @e          :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::mousePressEvent ( QMouseEvent * e )
 {
     qDebug() << "mousePressEvent" << endl;
 
 
 }
+/*============================================
+* FuncName    :
+* Description :
+* @e          :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::mouseReleaseEvent ( QMouseEvent * e )
 {
     qDebug() << "mouseReleaseEvent" << endl;
 
 }
+/*============================================
+* FuncName    : autoCCode::mouseDoubleClickEvent
+* Description :
+* @e          :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::mouseDoubleClickEvent( QMouseEvent * e )
 {
     qDebug() << "mouseDoubleClickEvent" << endl;
@@ -4226,6 +5225,13 @@ void autoCCode::mouseDoubleClickEvent( QMouseEvent * e )
 
 //}
 
+/*============================================
+* FuncName    : autoCCode::on_lineEdit_search_MouseButtonDblClick
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 {
     qDebug() << "on_lineEdit_search_MouseButtonDblClick";
@@ -4299,12 +5305,26 @@ void autoCCode::on_lineEdit_search_MouseButtonDblClick()
 }
 
 //隐藏双击出来的listView列表框
+/*============================================
+* FuncName    : autoCCode::on_lineEdit_search_Key_Escape
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_lineEdit_search_Key_Escape()
 {
     if(listView->isVisible())
         listView->hide();
 }
 
+/*============================================
+* FuncName    : autoCCode::completeText
+* Description :
+* @index      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::completeText(QModelIndex index)
 {
     qDebug() << "completeText";
@@ -4320,6 +5340,13 @@ void autoCCode::completeText(QModelIndex index)
 }
 
 //当前是否有选中库，如果没有则直接返回，可当作一个函数接口。
+/*============================================
+* FuncName    : autoCCode::currentDbHaved
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool autoCCode::currentDbHaved(void)
 {
     str_print(CurrentIndex_comboBox_langtype);
@@ -4333,6 +5360,13 @@ bool autoCCode::currentDbHaved(void)
 }
 
 //ui->listWidget_codeview->addItems(s1); 显示内容缩短优化
+/*============================================
+* FuncName    : autoCCode::listWidget_codeview_subShow
+* Description :
+* @strlist    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QStringList autoCCode::listWidget_codeview_subShow(QStringList &strlist)
 {
 #define SHOW_MAX_CHARS 60
@@ -4356,11 +5390,25 @@ QStringList autoCCode::listWidget_codeview_subShow(QStringList &strlist)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::CharFormat
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::CharFormat(void)
 {
     defcharfmt = ui->genshow_textEdit->currentCharFormat();
 }
 
+/*============================================
+* FuncName    : autoCCode::setWindowTitle_Main
+* Description :
+* @arg1       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setWindowTitle_Main(const QString &arg1)
 {
     setWindowTitle(arg1);
@@ -4373,6 +5421,13 @@ void autoCCode::setWindowTitle_Main(const QString &arg1)
 //    QDesktopServices::storageLocation(QDesktopServices::HomeLocation)
 //    QDesktopServices::storageLocation(QDesktopServices::ApplicationsLocation)
 //    QDesktopServices::storageLocation(QDesktopServices::TempLocation)
+/*============================================
+* FuncName    : autoCCode::getCurrentDateTimeTxt
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString autoCCode::getCurrentDateTimeTxt()
 {
     QDate date;
@@ -4388,24 +5443,52 @@ QString autoCCode::getCurrentDateTimeTxt()
     return logfilename;
 }
 
+/*============================================
+* FuncName    : autoCCode::MainSetUp
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::MainSetUp()
 {
     self_print(MainSetUp);
     SetUp_Dialog->show();
 }
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_foreColor_clicked2
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_foreColor_clicked2()
 {
     self_print(on_pushButton_foreColor_clicked);
     setforegroudColor();
 }
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_backColor_clicked2
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_backColor_clicked2()
 {
     self_print(on_pushButton_backColor_clicked);
     setbackgroudColor();
 }
 //颜色对话框设置-前景色
+/*============================================
+* FuncName    : autoCCode::setforegroudColor
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setforegroudColor()
 {
     QPalette palette    = ui->genshow_textEdit->palette();
@@ -4423,6 +5506,13 @@ void autoCCode::setforegroudColor()
     update();
 }
 //颜色对话框设置-背景色
+/*============================================
+* FuncName    : autoCCode::setbackgroudColor
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setbackgroudColor()
 {
     QPalette palette=ui->genshow_textEdit->palette();
@@ -4437,6 +5527,13 @@ void autoCCode::setbackgroudColor()
 
 }
 //setup 界面，默认设置的前景色和背景色
+/*============================================
+* FuncName    : autoCCode::setDefaultColor
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setDefaultColor()
 {
     QPalette palette=ui->genshow_textEdit->palette();
@@ -4453,6 +5550,13 @@ void autoCCode::setDefaultColor()
     ui_setup->pushButton_font->setText("Times");
 }
 //设置字体对话框
+/*============================================
+* FuncName    : autoCCode::setFont
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::setFont()
 {
     bool ok;
@@ -4467,6 +5571,13 @@ void autoCCode::setFont()
 }
 #define MAXFONTSIZE 72
 #define MINFONTSIZE 1
+/*============================================
+* FuncName    : autoCCode::ZoomInFont
+* Description :
+* @watched    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ZoomInFont(QObject *watched)
 {
     QWidget *pwnd =(QWidget *)watched;
@@ -4482,6 +5593,13 @@ void autoCCode::ZoomInFont(QObject *watched)
     pwnd->setFont(QFont(font.family(),fontsize,font.weight()));
 }
 
+/*============================================
+* FuncName    : autoCCode::ZoomOutFont
+* Description :
+* @watched    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ZoomOutFont(QObject *watched)
 {
     QWidget *pwnd =(QWidget *)watched;
@@ -4497,6 +5615,13 @@ void autoCCode::ZoomOutFont(QObject *watched)
     pwnd->setFont(QFont(font.family(),fontsize,font.weight()));
 }
 
+/*============================================
+* FuncName    : autoCCode::IsCursorInGenShowUi
+* Description :
+* @watched    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int autoCCode::IsCursorInGenShowUi(QObject *watched)
 {
     QWidget *pwdn = (QWidget *)watched;
@@ -4528,6 +5653,13 @@ int autoCCode::IsCursorInGenShowUi(QObject *watched)
 }
 
 /* 右键菜单 */
+/*============================================
+* FuncName    : autoCCode::contextMenuEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::contextMenuEvent(QContextMenuEvent *event)
 {
     QCursor cur=this->cursor();
@@ -4540,6 +5672,13 @@ void autoCCode::contextMenuEvent(QContextMenuEvent *event)
 
 //右选入库 按钮按下时
 //实现自动入库功能
+/*============================================
+* FuncName    : autoCCode::on_pushButton_rightTextSelectIndb_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_rightTextSelectIndb_clicked()
 {
     QString str_firstline;
@@ -4574,6 +5713,14 @@ void autoCCode::on_pushButton_rightTextSelectIndb_clicked()
     ok_btn_dia_clicked_self_another(cotext, str_selected);
 }
 //根据定义的数据，直接入库并显示
+/*============================================
+* FuncName    : autoCCode::ok_btn_dia_clicked_self_another
+* Description :
+* @con        :
+* @str_sel    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
 {
     self_print(ok_btn_dia_clicked_self_another);
@@ -4708,6 +5855,13 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
 
 
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_toolsSets_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_toolsSets_clicked()
 {
     WidgetXYsetDesktop_center(toolsTabWidget);//居XY中间
@@ -4715,6 +5869,13 @@ void autoCCode::on_pushButton_toolsSets_clicked()
     toolsTabWidget->show();
 }
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_notepad_exe_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_notepad_exe_clicked()
 {
     //调用记事本
@@ -4723,12 +5884,26 @@ void autoCCode::on_pushButton_notepad_exe_clicked()
     //    toolsTabWidget->hide();
 }
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_calc_exe_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_calc_exe_clicked()
 {
     //调用计算器
     ShellExecuteA(NULL,"open","calc.exe",NULL,NULL,SW_SHOWNORMAL);
 }
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_notepadplus_exe_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_notepadplus_exe_clicked()
 {
     //notepad++.exe
@@ -4738,6 +5913,13 @@ void autoCCode::on_pushButton_notepadplus_exe_clicked()
 }
 
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_python_exe_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_python_exe_clicked()
 {
     //python.exe
@@ -4745,6 +5927,13 @@ void autoCCode::on_pushButton_python_exe_clicked()
     ShellExecuteA(NULL,"open", exepath,NULL,NULL,SW_SHOWNORMAL);
 }
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_python_Dpathtestfile_exe_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_python_Dpathtestfile_exe_clicked()
 {
     QString headerPython =
@@ -4786,6 +5975,13 @@ void autoCCode::on_pushButton_python_Dpathtestfile_exe_clicked()
 }
 
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_show_calender_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_show_calender_clicked()
 {
     qDebug() << "on_pushButton_show_calender_clicked";
@@ -4799,6 +5995,13 @@ void autoCCode::on_pushButton_show_calender_clicked()
 }
 
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_sourceinsight_exe_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_sourceinsight_exe_clicked()
 {
     //    Insight3.exe
@@ -4810,6 +6013,13 @@ void autoCCode::on_pushButton_sourceinsight_exe_clicked()
 }
 
 
+/*============================================
+* FuncName    : autoCCode::on_pushButton_cmd_exe_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pushButton_cmd_exe_clicked()
 {
     //cmd.exe
@@ -4820,17 +6030,38 @@ void autoCCode::on_pushButton_cmd_exe_clicked()
 
 }
 
+/*============================================
+* FuncName    : autoCCode::on_selectionChanged
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_selectionChanged()
 {
     qDebug()  << "on_selectionChanged " << endl;
 }
 
+/*============================================
+* FuncName    : autoCCode::on_pUdpdialog_okBtn_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_pUdpdialog_okBtn_clicked()
 {
     qDebug() << "on_pUdpdialog_okBtn_clicked" ;
     //    qDebug() << "Ip Addr:" << pUdp_ui->lineEdit->text();
 }
 
+/*============================================
+* FuncName    : autoCCode::getLstIp
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QStringList autoCCode::getLstIp()
 {
     QStringList lstIP;
@@ -4858,12 +6089,26 @@ QStringList autoCCode::getLstIp()
 }
 
 
+/*============================================
+* FuncName    : QTabWidget::event
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool QTabWidget::event(QEvent *)
 {
 
 }
 
 
+/*============================================
+* FuncName    : QTabWidget::keyPressEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void QTabWidget::keyPressEvent(QKeyEvent *event)
 {
     //按键处理
@@ -5039,12 +6284,26 @@ void QTabWidget::keyPressEvent(QKeyEvent *event)
 //    return QObject::eventFilter(obj, event);
 //}
 
+/*============================================
+* FuncName    : autoCCode::on_textEdit_main_content_textChanged
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_textEdit_main_content_textChanged()
 {
     textEdit_main_uitools = ui_toolsets->textEdit_main_content->toPlainText();
     qDebug() <<"textEdit_main:" << textEdit_main_uitools;
 }
 
+/*============================================
+* FuncName    : autoCCode::on_textEdit_suffix_textChanged
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_textEdit_suffix_textChanged()
 {
     textEdit_suff_uitools = ui_toolsets->textEdit_suffix->toPlainText();
@@ -5062,6 +6321,13 @@ void autoCCode::on_textEdit_suffix_textChanged()
 /*version:1.0                                    */
 /*时 间:2015.8.17                                 */
 /*************************************************/
+/*============================================
+* FuncName    : autoCCode::ReadContent
+* Description :
+* @filename   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString autoCCode::ReadContent(QString filename)
 {
     QFile file(filename);
@@ -5098,6 +6364,14 @@ QString autoCCode::ReadContent(QString filename)
 /*version:1.0                                    */
 /*时 间:2015.8.17                                 */
 /*************************************************/
+/*============================================
+* FuncName    : autoCCode::SaveContent
+* Description :
+* @filename   :
+* @ipaddr     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SaveContent(QString filename, QString ipaddr)
 {
     QFile file(filename);
@@ -5110,26 +6384,61 @@ void autoCCode::SaveContent(QString filename, QString ipaddr)
     }
 }
 
+/*============================================
+* FuncName    : autoCCode::ReadLocalIpAddr
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString autoCCode::ReadLocalIpAddr()
 {
     return ReadContent("./serverip.conf");
 }
 
+/*============================================
+* FuncName    : autoCCode::SaveLocalIpaddr
+* Description :
+* @ipaddr     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SaveLocalIpaddr(QString ipaddr)
 {
     SaveContent("./serverip.conf", ipaddr);
 }
 
+/*============================================
+* FuncName    : autoCCode::ReadRemoteIpAddr
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString autoCCode::ReadRemoteIpAddr()
 {
     return ReadContent("./remoteip.conf");
 }
 
+/*============================================
+* FuncName    : autoCCode::SaveRemoteIpaddr
+* Description :
+* @rip        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SaveRemoteIpaddr(QString rip)
 {
     SaveContent("./remoteip.conf", rip);
 }
 
+/*============================================
+* FuncName    : autoCCode::saveRemoteIP
+* Description :
+* @rip        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::saveRemoteIP(QString rip)
 {
     remoteip = rip;
@@ -5137,6 +6446,13 @@ void autoCCode::saveRemoteIP(QString rip)
     SaveRemoteIpaddr(remoteip);
 }
 
+/*============================================
+* FuncName    : autoCCode::saveBindLocalIP
+* Description :
+* @lip        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::saveBindLocalIP(QString lip)
 {
     localip = lip;
@@ -5236,6 +6552,13 @@ void autoCCode::saveBindLocalIP(QString lip)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::hellosocket
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::hellosocket()
 {
     //    QString page = " you addr";
@@ -5245,6 +6568,13 @@ void autoCCode::hellosocket()
     ShowTipsInfo(QString::fromLocal8Bit("版本!! 连接远端成功！！"));
 }
 
+/*============================================
+* FuncName    : autoCCode::timerwritemsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::timerwritemsg()
 {
     static QString oldmsg;
@@ -5299,6 +6629,13 @@ void autoCCode::timerwritemsg()
 
 
 //检测IP地址错误
+/*============================================
+* FuncName    : autoCCode::CheckIPAddr
+* Description :
+* @ipaddr     :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 int autoCCode::CheckIPAddr(QString ipaddr)
 {
     QRegExp regExp("\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b");
@@ -5312,6 +6649,13 @@ int autoCCode::CheckIPAddr(QString ipaddr)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::readfromremote
+* Description :
+* @recvBigMsg  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::readfromremote(QString recvBigMsg)
 {
     //    static bool readdone = READ_DONE;
@@ -5366,6 +6710,13 @@ void autoCCode::readfromremote(QString recvBigMsg)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::recvClientMsg
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::recvClientMsg()
 {
     clientConnection = tcpserver->nextPendingConnection();
@@ -5377,6 +6728,13 @@ void autoCCode::recvClientMsg()
     pthreadsock->start();
 }
 
+/*============================================
+* FuncName    : autoCCode::checkSupportRemote
+* Description :
+* @flag       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::checkSupportRemote(bool flag)
 {
     if(!flag)
@@ -5385,11 +6743,25 @@ void autoCCode::checkSupportRemote(bool flag)
     saveBindLocalIP(localip);
 }
 
+/*============================================
+* FuncName    : autoCCode::isMainServer
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 bool autoCCode::isMainServer()
 {
     return ui_setup->checkBox_SeverFlag->isChecked();
 }
 
+/*============================================
+* FuncName    : autoCCode::ifSeverUi
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ifSeverUi()
 {
     bool isserverflag = isMainServer();
@@ -5404,6 +6776,13 @@ void autoCCode::ifSeverUi()
         ui->indb_btn->setEnabled(true);
     }
 }
+/*============================================
+* FuncName    : autoCCode::displayErr
+* Description :
+* @socketError  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::displayErr(QAbstractSocket::SocketError socketError)
 {
     if(socketError == QTcpSocket::RemoteHostClosedError)
@@ -5421,6 +6800,13 @@ void autoCCode::displayErr(QAbstractSocket::SocketError socketError)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::updateClientProgress
+* Description :
+* @numBytes   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::updateClientProgress(qint64 numBytes)
 {
     qDebug() << "numBytes:--------->>"<<numBytes;
@@ -5541,6 +6927,13 @@ QSet<quint32> autoCCode::getAllMatchPosResults(const QString text, const QString
     return resultPosSet;
 }
 
+/*============================================
+* FuncName    : autoCCode::on_btn_find_down_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_btn_find_down_clicked()
 {
     if (ui->lineEdit_search->text().isEmpty())
@@ -5603,6 +6996,13 @@ void autoCCode::on_btn_find_down_clicked()
 //    }
 }
 
+/*============================================
+* FuncName    : autoCCode::on_btn_find_up_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_btn_find_up_clicked()
 {
     if (ui->lineEdit_search->text().isEmpty())
@@ -5659,6 +7059,13 @@ void autoCCode::on_btn_find_up_clicked()
 
 }
 
+/*============================================
+* FuncName    : autoCCode::ShowTipsInfo
+* Description :
+* @s          :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ShowTipsInfo(QString s)
 {
     MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL);
@@ -5666,6 +7073,14 @@ void autoCCode::ShowTipsInfo(QString s)
     tipsinfo->show();
 }
 
+/*============================================
+* FuncName    : autoCCode::ShowTipsInfoWithShowTime
+* Description :
+* @s          :
+* @ultimeout  :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ShowTipsInfoWithShowTime(QString s, quint32 ultimeout)
 {
     MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL, ultimeout);
@@ -5673,6 +7088,13 @@ void autoCCode::ShowTipsInfoWithShowTime(QString s, quint32 ultimeout)
     tipsinfo->show();
 }
 
+/*============================================
+* FuncName    : autoCCode::on_showlarger_btn_clicked
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_showlarger_btn_clicked()
 {
     static quint32 cout = 0;
@@ -5700,6 +7122,13 @@ void autoCCode::on_showlarger_btn_clicked()
 
 }
 
+/*============================================
+* FuncName    : autoCCode::check_genshow_textEdit_is_append
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::check_genshow_textEdit_is_append()
 {
     qDebug() << "check_genshow_textEdit_is_append";
@@ -5713,12 +7142,26 @@ void autoCCode::check_genshow_textEdit_is_append()
     ui->genshow_textEdit->setPlainText(text);
 }
 
+/*============================================
+* FuncName    : autoCCode::get_clipboard_data
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 QString autoCCode::get_clipboard_data()
 {
     QClipboard *clip = QApplication::clipboard();
     return clip->text();
 }
 
+/*============================================
+* FuncName    : autoCCode::ReadHistorySettings
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::ReadHistorySettings()
 {
     QSettings m_settings("weilaidb.com.cn", "autoccode");
@@ -5768,6 +7211,13 @@ void autoCCode::ReadHistorySettings()
 //        goBirthday->setEnabled(false);
 }
 
+/*============================================
+* FuncName    : autoCCode::WriteCurrentSettings
+* Description :
+* @           :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::WriteCurrentSettings()
 {
     QSettings m_settings("weilaidb.com.cn", "autoccode");
@@ -5809,6 +7259,13 @@ void autoCCode::WriteCurrentSettings()
 
 }
 
+/*============================================
+* FuncName    : autoCCode::closeEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::closeEvent(QCloseEvent *event)
 {
     qDebug() << "closeEvent";
@@ -5817,6 +7274,13 @@ void autoCCode::closeEvent(QCloseEvent *event)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::on_checkBox_query_exact_stateChanged
+* Description :
+* @arg1       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_checkBox_query_exact_stateChanged(int arg1)
 {
     qDebug() << "on_checkBox_query_exact_stateChanged arg1 :" <<arg1;
@@ -5827,6 +7291,13 @@ void autoCCode::on_checkBox_query_exact_stateChanged(int arg1)
 }
 
 
+/*============================================
+* FuncName    : autoCCode::updateHelloMsg
+* Description :
+* @--         :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::updateHelloMsg(void)
 {
     qDebug() << "update Hello Msg and updat!!!!!!!!!!!!!!" << endl;
@@ -5835,6 +7306,13 @@ void autoCCode::updateHelloMsg(void)
     SendParent2ChildUI(0);
 }
 
+/*============================================
+* FuncName    : autoCCode::on_checkBox_codeshortcut_stateChanged
+* Description :
+* @arg1       :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_checkBox_codeshortcut_stateChanged(int arg1)
 {
     qDebug() << "CodeShortCut Ui:"<< arg1;
@@ -5844,6 +7322,13 @@ void autoCCode::on_checkBox_codeshortcut_stateChanged(int arg1)
         woUi->hide();
 }
 
+/*============================================
+* FuncName    : autoCCode::on_checkBox_codecutf8_toggled
+* Description :
+* @checked    :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::on_checkBox_codecutf8_toggled(bool checked)
 {
 //    if(checked)
@@ -5852,6 +7337,13 @@ void autoCCode::on_checkBox_codecutf8_toggled(bool checked)
 //    }
 }
 
+/*============================================
+* FuncName    : autoCCode::SendParent2ChildUI
+* Description :
+* @state      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
 void autoCCode::SendParent2ChildUI(int state)
 {
 //    if(!state)
@@ -5864,3 +7356,4 @@ void autoCCode::SendParent2ChildUI(int state)
 //    woUi->setChildUI(QString("abc"));
     isDropFileEnd = true;
 }
+
