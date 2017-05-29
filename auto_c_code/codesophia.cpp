@@ -834,21 +834,72 @@ void CodeSophia::Proc_C_Header(QStringList &lst)
     QString rightsign;
     QString header = "#include ";
 
-    QString combotext = ui->comboBox_keytips->currentText();
-    if(combotext.contains("<"))
+//    QString combotext = ui->comboBox_keytips->currentText();
+    quint32 comboindex = ui->comboBox_keytips->currentIndex();
+//    if(combotext.contains("<"))
+//    {
+//        leftsign = "<";
+//        rightsign = ">";
+//    }
+//    else if (combotext.contains("\""))
+//    {
+//        leftsign = "\"";
+//        rightsign = "\"";
+//    }
+//    else
+//    {
+//        return;
+//    }
+
+    switch( comboindex )
     {
+    case 0: //"#include <>
         leftsign = "<";
         rightsign = ">";
-    }
-    else if (combotext.contains("\""))
-    {
+        break;
+    case 1: //"#include ""
         leftsign = "\"";
         rightsign = "\"";
-    }
-    else
+        break;
+    case 2: //"#ifdef _cplusplus extern \"C\""
     {
-        return;
+        if(lst.size() == 0 )
+            return;
+        quint32 cnt = 0;
+        foreach (QString string, lst) {
+            if(string.isEmpty())
+                continue;
+            cnt++;
+        }
+        if(cnt == 0)
+            return;
+
+        leftsign = "#ifdef __cplusplus " + enter + "extern \"C\" {" + enter + "#endif" + enter;
+        rightsign = "#ifdef __cplusplus " + enter + "}" + enter  + "#endif" + enter;;
+        result += leftsign;
+        foreach (QString string, lst) {
+            if(string.isEmpty())
+                continue;
+            result += string + enter;
+        }
+        result += rightsign;
     }
+        goto end;
+
+        break;
+    case 3:
+
+        break;
+    case 4:
+
+        break;
+    default:
+
+        break;
+    }
+
+
+
 
     foreach (QString string, lst) {
         if(string.isEmpty())
@@ -857,11 +908,7 @@ void CodeSophia::Proc_C_Header(QStringList &lst)
         qDebug() << "result str :" << result;
     }
 
-
-
-
-
-
+end:
     SetTextEditResult(result);
 
 }
@@ -2184,8 +2231,8 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
 
             if(isendflag)
             {
-                result += tabsign + bindedstrlast +  enter + unitnote4 + enter + enter;
-                allbindedstrlast += tabsign + bindedstrlast+ enter + unitnote4 + enter ;
+                result += tabsign + bindedstrlast + semisign  +  enter + unitnote4 + enter + enter;
+                allbindedstrlast += tabsign + bindedstrlast + semisign  + enter + unitnote4 + enter ;
                 isendflag = false;
                 hasdouhao = false;
                 bindedstr ="";
@@ -3806,6 +3853,7 @@ void CodeSophia::FillStringList()
     StrLst_KEYC_HEADER
             << "#include <>"
             << "#include \"\""
+            << "#ifdef _cplusplus extern \"C\""
                ;
     //    QStringList StrLst_KEYC_DECLARE;
     StrLst_KEYC_DECLARE
