@@ -1326,7 +1326,7 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
                 hasdouhao = false;
                 bindedstr = "";
 
-                lastfuncname = funcname.split(" ").last().replace("*","").replace("&","");
+                lastfuncname = funcname.simplified().split(" ").last().replace("*","").replace("&","");
                 qDebug() << "funcname :" << lastfuncname;
                 //寻找最大长度
                 bool continueflag = false;
@@ -2115,7 +2115,7 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
                 hasdouhao = false;
                 bindedstr = "";
 
-                lastfuncname = funcname.split(" ").last().replace("*","").replace("&","");
+                lastfuncname = funcname.simplified().split(" ").last().replace("*","").replace("&","");
                 //add unit test function name begin,注释部分添加
                 lastfuncname = "ut_" + lastfuncname;
                 paralist.clear();

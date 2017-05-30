@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'dialog_select_database.ui'
 **
-** Created: Sat Sep 12 23:52:30 2015
+** Created: Tue May 30 18:08:58 2017
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
