@@ -1445,8 +1445,17 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
 
             if(isendflag)
             {
-                result += bindedstrlast + enter + enter + enter;
-                allbindedstrlast += bindedstrlast + enter ;
+                if(ui->checkBox_showAllText->isChecked())
+                {
+                    result += bindedstrlast + enter + enter + enter;
+                    allbindedstrlast += bindedstrlast + enter ;
+                }
+                else
+                {
+                    result += bindedstrlast + semisign + enter + enter + enter;
+                    allbindedstrlast += bindedstrlast  + semisign + enter ;
+                }
+
                 isendflag = false;
                 hasdouhao = false;
                 bindedstr ="";
@@ -1455,8 +1464,17 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
             }
             else
             {
-                result += string + enter + enter + enter;
-                allbindedstrlast += string + enter;
+                if(ui->checkBox_showAllText->isChecked())
+                {
+                    result += string + enter + enter + enter;
+                    allbindedstrlast += string + enter;
+
+                }
+                else
+                {
+                    result += string + semisign + enter + enter + enter;
+                    allbindedstrlast += string + semisign + enter;
+                }
             }
             qApp->processEvents();
 
