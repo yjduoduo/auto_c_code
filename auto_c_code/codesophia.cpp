@@ -1121,7 +1121,7 @@ bool CodeSophia::Proc_C_Note_IsSpecialSign(QString &str,QString &funcname,QStrin
             || str.contains("-")
             || str.contains(">")
             || str.contains("#")
-            || str.contains("=")
+//            || str.contains("=")
             || str.contains("<")
             || str.contains("/")
 //            || str.contains(QRegExp("\\)[\\s]*[\\S]+"))
