@@ -110,6 +110,19 @@ CodeSophia::CodeSophia(QWidget *parent) :
     pythonexecdir ="D:";
 
 
+
+
+    //combox_print
+    QStringList printlst;
+    printlst<<""
+           <<"mlog_byfunc"
+          <<"mlog_msgbyfunc"
+         <<"showmlog_byfunc"
+           ;
+    ui->comboBox_print->addItems(printlst);
+
+
+
     msgsametimer->setInterval(1000);
     connect(msgsametimer,SIGNAL(timeout()), this,SLOT(writemsg()));
     LogInitLog();
@@ -189,6 +202,7 @@ void CodeSophia::ComboBoxSets()
 {
     connect(ui->comboBox_keytips,SIGNAL(clicked()), this, SLOT(on_comboBox_keytips_clicked()));
     connect(ui->comboBox_keytips,SIGNAL(currentIndexChanged(int)), this, SLOT(on_pushButton_gen_clicked()));
+    connect(ui->comboBox_print,SIGNAL(currentIndexChanged(int)), this, SLOT(on_pushButton_gen_clicked()));
 
 }
 /*============================================
@@ -753,6 +767,7 @@ void CodeSophia::ReadHistorySettings()
     ui->checkBox_showFunc->setChecked(m_settings.value("showFunc").toBool());
     ui->checkBox_showAllText->setChecked(m_settings.value("showAllText").toBool());
     ui->comboBox_keytips->setCurrentIndex(m_settings.value("comboBox_keytips").toInt());
+    ui->comboBox_print->setCurrentIndex(m_settings.value("comboBox_print").toInt());
     qDebug() <<  "reading from history settings, of comboBox_keytips :" << m_settings.value("comboBox_keytips").toInt();
 
     this->restoreGeometry(m_settings.value("CodeSophia_Geometry").toByteArray());
@@ -777,6 +792,7 @@ void CodeSophia::WriteCurrentSettings()
     m_settings.setValue("showFunc", ui->checkBox_showFunc->isChecked());
     m_settings.setValue("showAllText", ui->checkBox_showAllText->isChecked());
     m_settings.setValue("comboBox_keytips", ui->comboBox_keytips->currentIndex());
+    m_settings.setValue("comboBox_print", ui->comboBox_print->currentIndex());
     qDebug() <<  "writing from history settings, of comboBox_keytips :" << ui->comboBox_keytips->currentIndex();
 
     m_settings.setValue("CodeSophia_Geometry", this->saveGeometry());
@@ -2486,11 +2502,16 @@ void CodeSophia::Proc_C_COMMONPRINT_LOOPS(QStringList &lst)
 }
 
 
+void CodeSophia::Proc_C_COMMONPRINT_ComboPrint(QStringList &lst)
+{
+    QString result;
+    result.clear();
+}
 
 
 /*============================================
 * FuncName    : CodeSophia::Proc_C_COMMONPRINT
-* Description :
+* Description : deal with common print
 * @lst        :
 * Author      :
 * Time        : 2017-05-28
@@ -2510,6 +2531,7 @@ void CodeSophia::Proc_C_COMMONPRINT(QStringList &lst)
     QString structinfo;
     QString var_name;
     bool havedouhao = false;
+    bool havecomboprint = false; //combobox print flag
 
 
 
@@ -2522,6 +2544,11 @@ void CodeSophia::Proc_C_COMMONPRINT(QStringList &lst)
     }
     else if(!lineEditText.isEmpty())
         header = ui->lineEdit_print->text().trimmed();
+    else if(!ui->comboBox_print->currentText().isEmpty())
+    {
+        header = ui->comboBox_print->currentText().trimmed();
+        havecomboprint = true;
+    }
     else
         header = "printf";
 
@@ -2637,6 +2664,13 @@ void CodeSophia::Proc_C_COMMONPRINT(QStringList &lst)
     if(header.isEmpty())
         return;
 
+//    if(!ui->comboBox_print->currentText().isEmpty()) //comboxprint不为空时，处理其它内容
+//    {
+
+//        Proc_C_COMMONPRINT_ComboPrint(lst);
+//        return;
+//    }
+
 
 //    foreach (QString string, lst) {
 //        string = string.simplified();
@@ -2683,16 +2717,18 @@ void CodeSophia::Proc_C_COMMONPRINT(QStringList &lst)
     //过滤元素
     foreach(QString string, lst) {
         string = string.simplified();
-        if(!string.contains(";"))
-            continue;
-        if(string.length() < 2)
-            continue;
-        if(string.left(1) == "*")
-            continue;
-        if(string.left(1) == "/" && string.left(2) == "/")
-            continue;
-        if(string.left(1) == "/" && string.left(2) == "*")
-            continue;
+//        if(!string.contains(";"))
+//            continue;
+        if(string.length() >= 2)
+        {
+            if(string.left(1) == "*")
+                continue;
+            if(string.left(1) == "/" && string.left(2) == "/")
+                continue;
+            if(string.left(1) == "/" && string.left(2) == "*")
+                continue;
+        }
+
         if(string.contains("{") || string.contains("}"))
             continue;
         //        string = string.replace(QRegExp("(\\d+)"),"");
@@ -2782,6 +2818,15 @@ void CodeSophia::Proc_C_COMMONPRINT(QStringList &lst)
                 }
             }
         }
+        else if(havecomboprint && ui->comboBox_print->currentText().contains("msg"))
+        {
+            single.stringlst = string.split(" ");
+            single.string.clear();
+            single.stringright = m_name.simplified().replace(QRegExp("(\\[.*\\])"),"") ;
+            needqudizhi(single);
+            m_nameLst << single;
+
+        }
         else
         {
 
@@ -2825,13 +2870,39 @@ void CodeSophia::Proc_C_COMMONPRINT(QStringList &lst)
         result += header ;
         if(!havedouhao)
             result += leftkuohaosin ;
-        result += yinhaomsign ;
-        result += el.string ;
+        if(el.string.isEmpty() && el.stringlst.size())
+        {
+            var_name = el.stringlst.last();
+            int seq = 0;
+            foreach (QString tmpstr, el.stringlst) {
+                if( seq == 0)
+                    result += "&" +tmpstr + douhaosign + " sizeof(" + tmpstr + ")" + douhaosign ;
+                else if(seq == el.stringlst.size()  - 1)
+                    break;
+                else
+                    result += tmpstr + douhaosign;
+
+                seq++;
+            }
+            result += yinhaomsign ;
+            result += var_name ;
+        }else
+        {
+            result += yinhaomsign ;
+            result += el.string ;
+        }
         result += spacesign ;
         result += maohaosign ;
         result += tabsign ;
         result += el.format ;
-        result += entersign ;
+        if(havecomboprint)
+        {
+
+        }
+        else
+        {
+            result += entersign ;
+        }
         result += yinhaomsign ;
         result += douhaosign ;
         result += spacesign ;

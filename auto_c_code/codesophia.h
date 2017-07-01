@@ -50,6 +50,7 @@ enum OPTYPE
 
 typedef struct T_DataFormat
 {
+    QStringList stringlst;
     QString string;
     QString stringright; //替换掉[.*]里面的数据
     QString format;
@@ -171,6 +172,7 @@ private:
     void Proc_C_LOOP(QStringList &lst);
     void Proc_C_COMMONPRINT(QStringList &lst);
     void Proc_C_COMMONPRINT_LOOPS(QStringList &lst);
+    void Proc_C_COMMONPRINT_ComboPrint(QStringList &lst);
     void FormatLst(QStringList &inlst, QString &header, bool &havedouhao, QString &result, QString fmt);
     QString Proc_C_Function_SetGet(QStringList &lst, bool Local);
     QString Proc_C_Function_GenFunc(QStringList &lst, bool Local);
