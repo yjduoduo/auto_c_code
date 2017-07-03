@@ -159,6 +159,7 @@ private:
 //    void readTextFileAppend(const QString &fileName);
     void closeEvent(QCloseEvent *event);
     void SetTextEditResult(QString &str);
+    void SetTextEditKey(QString &str);
 
 
     void Proc_C_Header(QStringList &lst);

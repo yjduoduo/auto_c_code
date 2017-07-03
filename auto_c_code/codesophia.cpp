@@ -832,6 +832,21 @@ void CodeSophia::SetTextEditResult(QString &str)
     ui->textEdit_result->setTextCursor(cursor);
 }
 
+/*============================================
+* FuncName    : CodeSophia::SetTextEditKey
+* Description :
+* @str        :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
+void CodeSophia::SetTextEditKey(QString &str)
+{
+    ui->textEdit_key->setText(str);
+    QTextCursor cursor = ui->textEdit_key->textCursor();
+    cursor.movePosition(QTextCursor::Start);
+    ui->textEdit_key->setTextCursor(cursor);
+}
+
 
 
 /*============================================
@@ -1822,6 +1837,10 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
     /*  make unittest test end  */
 
 
+    QString functype;
+    QString funname = "ut_xxx";
+//    QStringList funcresult;
+//    QString
 
     quint32 index = ui->comboBox_keytips->currentIndex();
     qDebug() << "---index "<< index;
@@ -2295,6 +2314,48 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
         return;
 
     }
+        break;
+
+    case 10:
+    {
+        if(ui->lineEdit_print->text().isEmpty())
+        {
+            functype = "unsigned int";
+        }
+        else
+        {
+            functype = ui->lineEdit_print->text();
+        }
+        if(ui->comboBox_print->currentText().isEmpty())
+        {
+            funcnum = 1;
+        }
+        else
+        {
+            funcnum = ui->comboBox_print->currentText().toInt();
+        }
+
+        if(ui->lineEdit_dataprint->text().isEmpty())
+        {
+            funname = "ut_name1";
+        }
+        else
+        {
+            funname = ui->lineEdit_dataprint->text();
+        }
+
+        quint32 loop  =  0;
+        for( loop  =  0 ; loop < funcnum; loop++ )
+        {
+            result += QString("%1 %2%3(void);").arg(functype).arg(funname).arg(loop+1) + enter;
+        }
+
+    }
+        ui->lineEdit_print->show();
+        ui->comboBox_print->show();
+        ui->lineEdit_dataprint->show();
+        SetTextEditKey(result);
+        return;
         break;
     default:
         return;
@@ -3972,6 +4033,7 @@ void CodeSophia::FillStringList()
             << "malloc free"
             << "new delete"
             << "make unittest"
+            << "make func much"
                ;
     //    QStringList StrLst_KEYC_STRUCT;
     StrLst_KEYC_STRUCT
