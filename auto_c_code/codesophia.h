@@ -152,6 +152,8 @@ private slots:
 
     void on_checkBox_showAllText_toggled(bool checked);
 
+    void on_comboBox_print_editTextChanged(const QString &arg1);
+
 private:
 //    void dragEnterEvent(QDragEnterEvent *event);
 //    void dropEvent(QDropEvent *event);

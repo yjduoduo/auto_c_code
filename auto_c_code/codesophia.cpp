@@ -2318,6 +2318,12 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
 
     case 10:
     {
+        ui->comboBox_print->show();
+        ui->label_dataprint->show();
+        ui->label_print->show();
+        ui->lineEdit_dataprint->show();
+        ui->lineEdit_print->show();
+
         if(ui->lineEdit_print->text().isEmpty())
         {
             functype = "unsigned int";
@@ -2351,10 +2357,9 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
         }
 
     }
-        ui->lineEdit_print->show();
-        ui->comboBox_print->show();
-        ui->lineEdit_dataprint->show();
-        SetTextEditKey(result);
+
+//        SetTextEditKey(result);
+        SetTextEditResult(result);
         return;
         break;
     default:
@@ -2417,10 +2422,32 @@ void CodeSophia::FormatLst(QStringList &inlst, QString &header,bool &havedouhao,
     }
     format += entersign + yinhaomsign;
     format += spacesign + douhaosign + enter + tabsign;
+    quint32 lpnum = 0;
     foreach (QString f, inlst) {
-        if(f == inlst.at(0))
+        if(inlst.size() - 1 == lpnum)
+        {
+            if(!ui->lineEdit_dataprint->text().isEmpty())
+            {
+                format += ui->lineEdit_dataprint->text() + f + spacesign;
+            }
+            else
+            {
+                format += spacesign;
+            }
             continue;
-        format += douhaosign + spacesign;
+        }
+//        if(f == inlst.at(0))
+//            continue;
+        if(!ui->lineEdit_dataprint->text().isEmpty())
+        {
+            format += ui->lineEdit_dataprint->text() + f + douhaosign + spacesign;
+//            result += ui->lineEdit_dataprint->text() + var_name ;
+        }
+        else
+        {
+            format += douhaosign + spacesign;
+        }
+        lpnum++;
     }
 
     format += rightkuohaosign  + semisign;
@@ -2481,7 +2508,7 @@ void CodeSophia::Proc_C_COMMONPRINT_LOOPS(QStringList &lst)
         FormatLst(inlst, header, havedouhao,  result, "%-0%1f ");
         FormatLst(inlst, header, havedouhao,  result, "%-0%1p ");
         FormatLst(inlst, header, havedouhao,  result, "%-0%1s ");
-//        FormatLst(inlst, header, havedouhao,  result, "%p ");
+        FormatLst(inlst, header, havedouhao,  result, "%p ");
 
         result += enter;
         result += enter;
@@ -4902,3 +4929,8 @@ void CodeSophia::on_checkBox_showAllText_toggled(bool checked)
     on_pushButton_gen_clicked();
 }
 
+
+void CodeSophia::on_comboBox_print_editTextChanged(const QString &arg1)
+{
+    on_pushButton_gen_clicked();
+}
