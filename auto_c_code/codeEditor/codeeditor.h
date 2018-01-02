@@ -3,6 +3,7 @@
 
 #include <QtGui/QWidget>
 #include <QPlainTextEdit>
+#include <QTextEdit>
 
 class codeEditor : public QPlainTextEdit
 {
@@ -13,6 +14,7 @@ public:
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
+
 
 protected:
     void resizeEvent(QResizeEvent *event);

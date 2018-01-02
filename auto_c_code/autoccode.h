@@ -326,6 +326,8 @@ public slots:
 
     void updateHelloMsg(void);
 
+    void showbeautycontent(QString str, bool selfContained);
+
 
 private:
     void close_indb_dialog();

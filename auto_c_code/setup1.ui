@@ -351,6 +351,25 @@
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox_contentbeauty">
+   <property name="geometry">
+    <rect>
+     <x>203</x>
+     <y>205</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>入库按钮鼠标移动即弹出，且确定和取消也一样效果</string>
+   </property>
+   <property name="text">
+    <string>内容富</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>

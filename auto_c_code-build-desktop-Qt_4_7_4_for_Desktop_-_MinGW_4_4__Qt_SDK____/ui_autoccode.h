@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Tue May 30 18:08:58 2017
+** Created: Sun Dec 17 21:43:37 2017
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -83,13 +83,14 @@ public:
     QPushButton *btn_find_down;
     QPushButton *btn_find_up;
     QPushButton *gencode_btn;
+    QTextEdit *textEdit_right_beauty;
     codeEditor *genshow_textEdit;
 
     void setupUi(QWidget *autoCCode)
     {
         if (autoCCode->objectName().isEmpty())
             autoCCode->setObjectName(QString::fromUtf8("autoCCode"));
-        autoCCode->resize(1162, 541);
+        autoCCode->resize(1162, 552);
         autoCCode->setWindowOpacity(1);
         autoCCode->setAutoFillBackground(false);
         autoCCode->setStyleSheet(QString::fromUtf8(""));
@@ -356,6 +357,11 @@ public:
 
 
         verticalLayout_2->addLayout(horizontalLayout);
+
+        textEdit_right_beauty = new QTextEdit(autoCCode);
+        textEdit_right_beauty->setObjectName(QString::fromUtf8("textEdit_right_beauty"));
+
+        verticalLayout_2->addWidget(textEdit_right_beauty);
 
         genshow_textEdit = new codeEditor(autoCCode);
         genshow_textEdit->setObjectName(QString::fromUtf8("genshow_textEdit"));

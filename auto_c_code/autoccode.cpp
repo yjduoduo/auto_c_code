@@ -87,8 +87,13 @@ using namespace std;
 //ui genshow_textedit设置文本，另外需要设置到子层的数据。可能传递的数据存在问题，双击了。
 #define UI_GENSHOW_TEXTEDIT_SETTEXT(string)\
 do{\
-ui->genshow_textEdit->setPlainText(string);\
+SWITCH_genshow_textEdit_SetText(string);\
  SendParent2ChildUI(0);\
+}while(0)
+
+#define SWITCH_genshow_textEdit_SetText(string)\
+do{\
+    showbeautycontent(string, 1);\
 }while(0)
 
 //ui tools界面下Ctrl按键是否按下
@@ -1593,8 +1598,7 @@ void autoCCode::on_gencode_btn_clicked(void)
         ui->codeshow_textEdit->setText(text_china);
     }
     //code Editor设置读取文本
-    ui->genshow_textEdit->setPlainText(text_china);
-
+    SWITCH_genshow_textEdit_SetText(text_china);
 
     //    QTextStream out(&file);
     //    out << "Thomas M. Disch: " << 334 << endl;
@@ -2125,7 +2129,7 @@ void autoCCode::add_to_gen_code_textedit_by_keyword(QListWidgetItem* item)
     GenCode_str+="\n";
 
 
-    ui->genshow_textEdit->setPlainText(GenCode_str);
+    SWITCH_genshow_textEdit_SetText(GenCode_str);
     SearchTextResWithColor2(GenCode_str);
     ui->genshow_textEdit->moveCursor(QTextCursor::End);
     ui->listWidget_codeview->setFocus();
@@ -2168,7 +2172,7 @@ void autoCCode::add_to_gen_code_textedit_by_note(QListWidgetItem* item)
     GenCode_str+="\n";
 
 
-    ui->genshow_textEdit->setPlainText(GenCode_str);
+    SWITCH_genshow_textEdit_SetText(GenCode_str);
     SearchTextResWithColor2(GenCode_str);
     //    update();
 }
@@ -3178,7 +3182,7 @@ void autoCCode::readTextFile(const QString &fileName)
             text_china += stream.readAll();
         }
         //        ui->codeshow_textEdit->setText(stream.readAll());
-        ui->genshow_textEdit->setPlainText(text_china);
+        SWITCH_genshow_textEdit_SetText(text_china);
         //        qDebug() << "content:" << stream.readAll();
     }
     else
@@ -3229,7 +3233,7 @@ void autoCCode::readTextFileAppend(const QString &fileName)
             text_china += stream.readAll();
         }
         //        ui->codeshow_textEdit->setText(stream.readAll());
-        ui->genshow_textEdit->setPlainText(text_china);
+        SWITCH_genshow_textEdit_SetText(text_china);
         //        qDebug() << "content:" << stream.readAll();
     }
     else
@@ -3324,7 +3328,7 @@ void autoCCode::listWidget_note_with_currentRowChanged(int row)
         GenCode_str+="\n";
         GenCode_str+="\n";
 
-        ui->genshow_textEdit->setPlainText(GenCode_str);
+        SWITCH_genshow_textEdit_SetText(GenCode_str);
         SearchTextResWithColor2(GenCode_str);
         //    setCharColor(10);
         //    ui->genshow_textEdit->setHtml(GenCode_str);
@@ -3911,7 +3915,7 @@ void autoCCode::listWidget_note_with_enter(const QModelIndex &modelindex)
 
 
 
-    ui->genshow_textEdit->setPlainText(GenCode_str);
+    SWITCH_genshow_textEdit_SetText(GenCode_str);
     SearchTextResWithColor2(GenCode_str);
 
     //    setCharColor(10);
@@ -6703,7 +6707,7 @@ void autoCCode::readfromremote(QString recvBigMsg)
 
     qDebug() << "i can read somethig:\n" << recvBigMsg.toLocal8Bit();
     ui->genshow_textEdit->clear();
-    ui->genshow_textEdit->setPlainText(QString::fromLocal8Bit(recvBigMsg.toAscii()));
+    SWITCH_genshow_textEdit_SetText(QString::fromLocal8Bit(recvBigMsg.toAscii()));
 
 
     on_pushButton_rightTextSelectIndb_clicked();
@@ -7139,7 +7143,7 @@ void autoCCode::check_genshow_textEdit_is_append()
     QString text;
     text = ui->genshow_textEdit->toPlainText();
     text += get_clipboard_data();
-    ui->genshow_textEdit->setPlainText(text);
+    SWITCH_genshow_textEdit_SetText(text);
 }
 
 /*============================================
@@ -7178,6 +7182,7 @@ void autoCCode::ReadHistorySettings()
     ui->checkBox_query_exact->setChecked(m_settings.value("QueryExact").toBool());
     ui_setup->checkBox_content_withheader->setChecked(m_settings.value("ContentWithHeader").toBool());
     ui_setup->checkBox_codeshortcut->setChecked(m_settings.value("codeshortcut").toBool());
+    ui_setup->checkBox_contentbeauty->setChecked(m_settings.value("contentbeauty").toBool());
     ui->checkBox_codecutf8->setChecked(m_settings.value("codecutf8").toBool());
     ui->checkBox_senddata2subui->setChecked(m_settings.value("senddata2subui").toBool());
 //    QPalette palettebtn ;
@@ -7233,6 +7238,7 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("QueryExact", ui->checkBox_query_exact->isChecked());
     m_settings.setValue("ContentWithHeader", ui_setup->checkBox_content_withheader->isChecked());
     m_settings.setValue("codeshortcut", ui_setup->checkBox_codeshortcut->isChecked());
+    m_settings.setValue("contentbeauty", ui_setup->checkBox_contentbeauty->isChecked());
     m_settings.setValue("codecutf8", ui->checkBox_codecutf8->isChecked());
     m_settings.setValue("senddata2subui", ui->checkBox_senddata2subui->isChecked());
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
@@ -7286,7 +7292,7 @@ void autoCCode::on_checkBox_query_exact_stateChanged(int arg1)
     qDebug() << "on_checkBox_query_exact_stateChanged arg1 :" <<arg1;
 
     setStringColor(0, 0);
-    ui->genshow_textEdit->setPlainText(GenCode_str);
+    SWITCH_genshow_textEdit_SetText(GenCode_str);
     SearchTextResWithColor2(GenCode_str);
 }
 
@@ -7357,3 +7363,40 @@ void autoCCode::SendParent2ChildUI(int state)
     isDropFileEnd = true;
 }
 
+
+void autoCCode::showbeautycontent(QString str, bool selfContained)
+{
+    if(ui_setup->checkBox_contentbeauty->isChecked())
+    {
+        if(ui->textEdit_right_beauty->isHidden())
+            ui->textEdit_right_beauty->show();
+        if(!ui->genshow_textEdit->isHidden())
+            ui->genshow_textEdit->hide();
+
+        QString html;
+        if(selfContained)
+            html += "<html>\n<body>\n";
+
+
+
+        html += str;
+
+        if(selfContained)
+            html += "</body>\n</html>\n";
+
+        if(!ui->genshow_textEdit->isHidden())
+            ui->genshow_textEdit->hide();
+
+        ui->textEdit_right_beauty->setText(html);
+    }
+    else
+    {
+        if(!ui->textEdit_right_beauty->isHidden())
+            ui->textEdit_right_beauty->hide();
+        if(ui->genshow_textEdit->isHidden())
+            ui->genshow_textEdit->show();
+
+        ui->genshow_textEdit->setPlainText(str);
+    }
+
+}
