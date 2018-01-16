@@ -228,7 +228,11 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QComboBox" name="langtype_comboBox"/>
+          <widget class="QComboBox" name="langtype_comboBox">
+           <property name="maxVisibleItems">
+            <number>50</number>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_5">
