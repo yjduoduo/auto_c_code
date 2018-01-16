@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>719</width>
-    <height>300</height>
+    <width>307</width>
+    <height>120</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>220</y>
+     <x>-80</x>
+     <y>70</y>
      <width>371</width>
      <height>61</height>
     </rect>
@@ -32,10 +32,10 @@
   <widget class="QComboBox" name="comboBox_selectdb">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>90</y>
-     <width>291</width>
-     <height>101</height>
+     <x>30</x>
+     <y>40</y>
+     <width>261</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -44,14 +44,17 @@
      <pointsize>26</pointsize>
     </font>
    </property>
+   <property name="maxVisibleItems">
+    <number>50</number>
+   </property>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>30</y>
+     <x>20</x>
+     <y>10</y>
      <width>301</width>
-     <height>61</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -80,16 +83,16 @@
     </font>
    </property>
    <property name="text">
-    <string>请选择范围</string>
+    <string/>
    </property>
   </widget>
   <widget class="QComboBox" name="comboBox_aspect">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>90</y>
-     <width>291</width>
-     <height>101</height>
+     <x>70</x>
+     <y>40</y>
+     <width>16</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -99,6 +102,11 @@
     </font>
    </property>
   </widget>
+  <zorder>comboBox_aspect</zorder>
+  <zorder>label_2</zorder>
+  <zorder>buttonBox</zorder>
+  <zorder>comboBox_selectdb</zorder>
+  <zorder>label</zorder>
  </widget>
  <resources/>
  <connections>

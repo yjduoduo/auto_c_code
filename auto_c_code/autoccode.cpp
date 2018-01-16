@@ -1521,7 +1521,9 @@ void autoCCode::db_comboBox_activated(const QString &arg1)
 void autoCCode::on_choseCodeDB_btn_clicked(void)
 {
     self_print(on_choseCodeDB_btn_clicked);
+    dialog_selectdb->move(ui->choseCodeDB_btn->x(), ui->choseCodeDB_btn->y());
     dialog_selectdb->show();
+    update();
 
 }
 //Éú³É´úÂë¿â
@@ -4943,7 +4945,9 @@ bool autoCCode::eventFilter_ui_choseCodeDB_btn(QObject *watched, QEvent *event)
         if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
         {
             //            qDebug() << "chose codedb btn focus in,coming here!!";
+            dialog_selectdb->move(ui->choseCodeDB_btn->x(), ui->choseCodeDB_btn->y());
             dialog_selectdb->show();
+            update();
         }
         else if (event->type()==QEvent::Leave)    // mouse leaves widget
         {

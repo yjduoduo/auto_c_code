@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PushDbdialog.ui'
 **
-** Created: Tue May 30 18:08:58 2017
+** Created: Tue Jan 16 20:41:39 2018
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -194,6 +194,7 @@ public:
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         langtype_comboBox = new QComboBox(Dialog);
         langtype_comboBox->setObjectName(QString::fromUtf8("langtype_comboBox"));
+        langtype_comboBox->setMaxVisibleItems(50);
 
         verticalLayout->addWidget(langtype_comboBox);
 

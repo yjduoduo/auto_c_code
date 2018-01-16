@@ -199,9 +199,6 @@ void CodeSophia::ButtonSets()
 ============================================*/
 void CodeSophia::ComboBoxSets()
 {
-    ui->comboBox_keytips->setMaxVisibleItems(30);
-
-
     connect(ui->comboBox_keytips,SIGNAL(clicked()), this, SLOT(on_comboBox_keytips_clicked()));
     connect(ui->comboBox_keytips,SIGNAL(currentIndexChanged(int)), this, SLOT(on_pushButton_gen_clicked()));
     connect(ui->comboBox_print,SIGNAL(currentIndexChanged(int)), this, SLOT(on_pushButton_gen_clicked()));
