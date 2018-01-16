@@ -167,9 +167,12 @@ autoCCode::autoCCode(QWidget *parent) :
     /* tools sets menu */  //独立的
     toolsTabWidget = new QTabWidget();
     ui_toolsets->setupUi(toolsTabWidget);
+    ui_toolsets->comboBox_path->installEventFilter(NULL);
+
     //    ui_toolsets->textEdit_main_content->installEventFilter(NULL);
     //    ui_toolsets->textEdit_suffix->installEventFilter(NULL);
     toolsTabWidget->hide();
+
 
     codetool = new QWizardPage();
     ui_codetool->setupUi(codetool);
@@ -221,6 +224,10 @@ autoCCode::autoCCode(QWidget *parent) :
             Qt::DirectConnection);
 
     helloworldNet->start();
+
+
+    pathlist.clear();
+
 
     QTimerSet();
     pushButtonSet();
@@ -929,6 +936,17 @@ void autoCCode::pushButtonSet(void)
 
     //命令行CMD
     QObject::connect(ui_toolsets->pushButton_cmd,SIGNAL(clicked()),this,SLOT(on_pushButton_cmd_exe_clicked()));
+    //添加路径
+    QObject::connect(ui_toolsets->pushButton_addpath,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_addpath_clicked()));
+
+    QObject::connect(ui_toolsets->pushButton_open,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_openpath_clicked()));
+
+    QObject::connect(ui_toolsets->pushButton_delpath,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_delpath_clicked()));
+
+    QObject::connect(ui_toolsets->pushButton_opendir,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_opendir_clicked()));
+
+
+
 }
 /*============================================
 * FuncName    : autoCCode::set_search_text
@@ -7189,6 +7207,8 @@ void autoCCode::ReadHistorySettings()
     ui_setup->checkBox_contentbeauty->setChecked(m_settings.value("contentbeauty").toBool());
     ui->checkBox_codecutf8->setChecked(m_settings.value("codecutf8").toBool());
     ui->checkBox_senddata2subui->setChecked(m_settings.value("senddata2subui").toBool());
+    ui_toolsets->comboBox_path->addItems(m_settings.value("comboBox_path").toStringList());
+    pathlist = m_settings.value("comboBox_path").toStringList();
 //    QPalette palettebtn ;
 //    QColor color= m_settings.value("ForeColor").Color;
 //    palettebtn.setColor(QPalette::Button, color);
@@ -7245,6 +7265,7 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("contentbeauty", ui_setup->checkBox_contentbeauty->isChecked());
     m_settings.setValue("codecutf8", ui->checkBox_codecutf8->isChecked());
     m_settings.setValue("senddata2subui", ui->checkBox_senddata2subui->isChecked());
+    m_settings.setValue("comboBox_path", pathlist);
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
 
@@ -7404,3 +7425,95 @@ void autoCCode::showbeautycontent(QString str, bool selfContained)
     }
 
 }
+
+//添加路径
+void autoCCode::on_tools_pushButton_addpath_clicked()
+{
+    qDebug() << "on_tools_pushButton_addpath_clicked";
+    QString currentpath = ui_toolsets->comboBox_path->currentText();
+//    toolsTabWidget->co
+    qDebug() << "currentpath:" << currentpath;
+    if(currentpath.simplified().length() == 0)
+    {
+        return;
+    }
+    currentpath = currentpath.simplified();
+    if(!currentpath.contains(":"))
+    {
+        currentpath += ":";
+    }
+    foreach (QString path, pathlist) {
+        if(path == currentpath)
+        {
+            return;
+        }
+    }
+    pathlist.append(currentpath);
+    qDebug() << "pathlist size:" << pathlist.size();
+//更新items
+    ui_toolsets->comboBox_path->clear();
+    pathlist.sort();
+    ui_toolsets->comboBox_path->addItems(pathlist);
+
+}
+
+
+void autoCCode::on_tools_pushButton_openpath_clicked()
+{
+    qDebug() << "on_tools_pushButton_openpath_clicked";
+    QString currentpath = ui_toolsets->comboBox_path->currentText();
+//    toolsTabWidget->co
+    currentpath = currentpath.simplified();
+    qDebug() << "currentpath:" << currentpath;
+    qDebug() << "pathlist size:" << pathlist.size();
+
+    //python.exe
+    LPCSTR exepath = "explorer.exe";
+    LPCSTR filepath = currentpath.toAscii().data();
+
+    ShellExecuteA(NULL,"open", exepath,filepath,NULL,SW_SHOWNORMAL);
+
+
+}
+
+void autoCCode::on_tools_pushButton_delpath_clicked()
+{
+    qDebug() << "on_tools_pushButton_delpath_clicked";
+    QString currentpath = ui_toolsets->comboBox_path->currentText();
+//    toolsTabWidget->co
+    qDebug() << "currentpath:" << currentpath;
+    if(currentpath.simplified().length() == 0)
+    {
+        return;
+    }
+    currentpath = currentpath.simplified();
+    if(!currentpath.contains(":"))
+    {
+        currentpath += ":";
+    }
+    pathlist.removeOne(currentpath);
+
+    qDebug() << "pathlist size:" << pathlist.size();
+//更新items
+    ui_toolsets->comboBox_path->clear();
+    pathlist.sort();
+    ui_toolsets->comboBox_path->addItems(pathlist);
+
+}
+void autoCCode::on_tools_pushButton_opendir_clicked()
+{
+    qDebug() << "on_tools_pushButton_opendir_clicked";
+//    QString currentpath = ui_toolsets->comboBox_path->currentText();
+
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+        "/home",
+        QFileDialog::ShowDirsOnly
+        | QFileDialog::DontResolveSymlinks);
+
+    ui_toolsets->comboBox_path->setEditText(dir.simplified());
+    on_tools_pushButton_addpath_clicked();
+    toolsTabWidget->raise(); //到上层
+    toolsTabWidget->show();
+}
+
+

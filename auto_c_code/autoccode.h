@@ -516,6 +516,10 @@ private slots:
     void on_pushButton_sourceinsight_exe_clicked();
     void on_pushButton_cmd_exe_clicked();
     void on_pushButton_show_calender_clicked();
+    void on_tools_pushButton_addpath_clicked(); //添加路径
+    void on_tools_pushButton_openpath_clicked();
+    void on_tools_pushButton_delpath_clicked();
+    void on_tools_pushButton_opendir_clicked();
 
 
 private slots://ui tools
@@ -592,6 +596,10 @@ private:
     Window *window_calender;
 
     NetThings *helloworldNet;
+
+private: //页面添加路径
+    QStringList pathlist;
+
 };
 
 

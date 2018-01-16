@@ -18,8 +18,15 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+    void ReadHistorySettings();
+
+    void WriteCurrentSettings();
+    void on_pushButton_close_clicked();
+
 private:
     Ui::ToolsTabWidget *ui;
+
+
 };
 
 #endif // TOOLSTABWIDGET_H

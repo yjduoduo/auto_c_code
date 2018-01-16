@@ -9,6 +9,6 @@
 #define DEBUG_V
 #endif
 
-const char version_autoccode[]="v2.7.7\n(sqlite:"SQLITE_VERSION")";
+const char version_autoccode[]="v2.7.8\n(sqlite:"SQLITE_VERSION")";
 
 #endif // VERSION_H
