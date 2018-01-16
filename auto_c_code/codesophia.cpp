@@ -76,14 +76,13 @@ CodeSophia::CodeSophia(QWidget *parent) :
     title_org = this->windowTitle();
     splitsign = " -- ";
     current_subtype = "";
-
     current_lan.clear(); //当前语言
-    current_lan_num = 0;
     current_subtype.clear(); //sub class
-    current_subtype_num = 0;
     current_optype.clear(); //op class
-    current_optype_num = 0;
     showtitle.clear(); //sub class
+    current_lan_num = 0;
+    current_subtype_num = 0;
+    current_optype_num = 0;
 
     enter = "\n";
     semisign = ";";
@@ -200,6 +199,9 @@ void CodeSophia::ButtonSets()
 ============================================*/
 void CodeSophia::ComboBoxSets()
 {
+    ui->comboBox_keytips->setMaxVisibleItems(30);
+
+
     connect(ui->comboBox_keytips,SIGNAL(clicked()), this, SLOT(on_comboBox_keytips_clicked()));
     connect(ui->comboBox_keytips,SIGNAL(currentIndexChanged(int)), this, SLOT(on_pushButton_gen_clicked()));
     connect(ui->comboBox_print,SIGNAL(currentIndexChanged(int)), this, SLOT(on_pushButton_gen_clicked()));
@@ -658,15 +660,6 @@ QString CodeSophia::getKeyClass(KeyClass cls)
     }
     return "";
 }
-
-
-
-
-
-
-
-
-
 /*============================================
 * FuncName    : CodeSophia::FillComBoxKeyTips
 * Description :
@@ -1179,26 +1172,13 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
     QString result;
     result.clear();
 
-    QString leftsign;
-    QString rightsign;
-    QString header;
-    QString xinghaosign;
-    bool hassplit = true;
-    bool ignorelst = false;
-    bool hasenter = true;
-
-    bool hasdouhao = false;
-    bool firstcome = false;
-    bool isendflag = false;
-    QString bindedstr("");
-    QString bindedstrlast("");
-    QString allbindedstrlast("");//所有数据显示在一个文本里了
+    QString leftsign, rightsign, header, xinghaosign;
+    bool hassplit = true, ignorelst = false, hasenter = true, hasdouhao = false;
+    bool firstcome = false, isendflag = false;
+    QString bindedstr(""), bindedstrlast(""), allbindedstrlast("");//所有数据显示在一个文本里了
 ///add tip
     QProgressBar *tipProgress = NULL;
-    quint32 currentnum = 0;
-    quint32 funcnum = 0;
-    quint32 totalnum = lst.size();
-
+    quint32 currentnum = 0, funcnum = 0, totalnum = lst.size();
     quint32 index = ui->comboBox_keytips->currentIndex();
     switch(index)
     {
@@ -1804,25 +1784,17 @@ QString CodeSophia::Proc_C_Function_GenFunc(QStringList &lst, bool Local)
 ============================================*/
 void CodeSophia::Proc_C_Function(QStringList &lst)
 {
-    QString result;
-    result.clear();
-
-    QString header;
-    QString end;
+    QString result, header, end;
     //    QRegExp regExp("\{([^{]*?)\}");
     QRegExp regExp("\s*#include.*");
     QString veryimport_note = QString::fromLocal8Bit("  /* 长度判断非常重要 */");
-
+    result.clear();
 
     /*  make unittest test begin  */
-
-    QString leftsign;
-    QString rightsign;
-    QString xinghaosign;
+    QString leftsign, rightsign, xinghaosign;
     bool hassplit = true;
     bool ignorelst = false;
     bool hasenter = true;
-
     bool hasdouhao = false;
     bool firstcome = false;
     bool isendflag = false;

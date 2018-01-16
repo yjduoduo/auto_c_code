@@ -164,15 +164,15 @@ private:
     void SetTextEditKey(QString &str);
 
 
-    void Proc_C_Header(QStringList &lst);
-    void Proc_C_Declare(QStringList &lst);
-    void Proc_C_Note(QStringList &lst);
-    void Proc_C_Function(QStringList &lst);
-    void Proc_C_StructPrint(QStringList &lst);
-    void Proc_C_Struct(QStringList &lst);
-    void Proc_C_Define(QStringList &lst);
-    void Proc_C_IFCONDITION(QStringList &lst);
-    void Proc_C_LOOP(QStringList &lst);
+    void Proc_C_Header(QStringList &lst);//处理头文件
+    void Proc_C_Declare(QStringList &lst); //声明
+    void Proc_C_Note(QStringList &lst); //注释
+    void Proc_C_Function(QStringList &lst) ;//函数
+    void Proc_C_StructPrint(QStringList &lst); //结构体打印
+    void Proc_C_Struct(QStringList &lst);// 结构体
+    void Proc_C_Define(QStringList &lst); //宏定义
+    void Proc_C_IFCONDITION(QStringList &lst); // IF
+    void Proc_C_LOOP(QStringList &lst); //循环
     void Proc_C_COMMONPRINT(QStringList &lst);
     void Proc_C_COMMONPRINT_LOOPS(QStringList &lst);
     void Proc_C_COMMONPRINT_ComboPrint(QStringList &lst);
