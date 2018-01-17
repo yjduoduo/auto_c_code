@@ -7504,9 +7504,10 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
 {
     qDebug() << "on_tools_pushButton_opendir_clicked";
 //    QString currentpath = ui_toolsets->comboBox_path->currentText();
+    static QString orgdir = "";
 
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-        "/home",
+        orgdir,
         QFileDialog::ShowDirsOnly
         | QFileDialog::DontResolveSymlinks);
 
@@ -7514,6 +7515,8 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
     on_tools_pushButton_addpath_clicked();
     toolsTabWidget->raise(); //µ½ÉÏ²ã
     toolsTabWidget->show();
+
+    orgdir = dir;
 }
 
 
