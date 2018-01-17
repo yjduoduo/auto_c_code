@@ -12,8 +12,8 @@
   </property>
   <property name="font">
    <font>
-    <family>Fixedsys</family>
-    <pointsize>16</pointsize>
+    <family>宋体</family>
+    <pointsize>10</pointsize>
     <weight>50</weight>
     <bold>false</bold>
    </font>
@@ -237,8 +237,8 @@
           <font>
            <family>楷体</family>
            <pointsize>14</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="maxVisibleItems">

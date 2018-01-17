@@ -5890,9 +5890,12 @@ void autoCCode::ok_btn_dia_clicked_self_another(QString con,QString str_sel)
 ============================================*/
 void autoCCode::on_pushButton_toolsSets_clicked()
 {
-    WidgetXYsetDesktop_center(toolsTabWidget);//居XY中间
-    toolsTabWidget->raise(); //到上层
-    toolsTabWidget->show();
+    if(toolsTabWidget->isHidden())
+    {
+        WidgetXYsetDesktop_center(toolsTabWidget);//居XY中间
+        toolsTabWidget->raise(); //到上层
+        toolsTabWidget->show();
+    }
 }
 
 /*============================================
@@ -7437,7 +7440,7 @@ void autoCCode::on_tools_pushButton_addpath_clicked()
     {
         return;
     }
-    currentpath = currentpath.simplified();
+//    currentpath = currentpath.simplified();
     if(!currentpath.contains(":"))
     {
         currentpath += ":";
@@ -7463,7 +7466,7 @@ void autoCCode::on_tools_pushButton_openpath_clicked()
     qDebug() << "on_tools_pushButton_openpath_clicked";
     QString currentpath = ui_toolsets->comboBox_path->currentText();
 //    toolsTabWidget->co
-    currentpath = currentpath.simplified();
+//    currentpath = currentpath.simplified();
     qDebug() << "currentpath:" << currentpath;
     qDebug() << "pathlist size:" << pathlist.size();
 
@@ -7486,7 +7489,7 @@ void autoCCode::on_tools_pushButton_delpath_clicked()
     {
         return;
     }
-    currentpath = currentpath.simplified();
+//    currentpath = currentpath.simplified();
     if(!currentpath.contains(":"))
     {
         currentpath += ":";
@@ -7517,6 +7520,8 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
     toolsTabWidget->show();
 
     orgdir = dir;
+
+//    qDebug("\033[32m123\033[33m456\n");
 }
 
 
