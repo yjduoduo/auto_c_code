@@ -7211,6 +7211,7 @@ void autoCCode::ReadHistorySettings()
     ui->checkBox_codecutf8->setChecked(m_settings.value("codecutf8").toBool());
     ui->checkBox_senddata2subui->setChecked(m_settings.value("senddata2subui").toBool());
     ui_toolsets->comboBox_path->addItems(m_settings.value("comboBox_path").toStringList());
+    ui_toolsets->checkBox_isfile->setChecked(m_settings.value("checkBox_isfile").toBool());
     pathlist = m_settings.value("comboBox_path").toStringList();
 //    QPalette palettebtn ;
 //    QColor color= m_settings.value("ForeColor").Color;
@@ -7269,6 +7270,7 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("codecutf8", ui->checkBox_codecutf8->isChecked());
     m_settings.setValue("senddata2subui", ui->checkBox_senddata2subui->isChecked());
     m_settings.setValue("comboBox_path", pathlist);
+    m_settings.setValue("checkBox_isfile", ui_toolsets->checkBox_isfile->isChecked());
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
 
@@ -7509,12 +7511,44 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
 //    QString currentpath = ui_toolsets->comboBox_path->currentText();
     static QString orgdir = "";
 
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+    QString dir ;
+
+    if(!ui_toolsets->checkBox_isfile->isChecked())
+    {
+        dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
         orgdir,
         QFileDialog::ShowDirsOnly
         | QFileDialog::DontResolveSymlinks);
+        if (!dir.isNull())
+        {
+            //fileName是文件夹名
 
-    ui_toolsets->comboBox_path->setEditText(dir.simplified());
+        }
+        else{
+            //点的是取消
+           return;
+        }
+    }
+    else
+    {
+        dir = QFileDialog::getOpenFileName(this,
+                tr("Open File"),
+                "",
+                "",
+                0);
+            if (!dir.isNull())
+            {
+                //fileName是文件名
+
+            }
+            else{
+                //点的是取消
+               return;
+            }
+    }
+
+    dir = dir.replace("\/","\\");
+    ui_toolsets->comboBox_path->setEditText(dir);
     on_tools_pushButton_addpath_clicked();
     toolsTabWidget->raise(); //到上层
     toolsTabWidget->show();
