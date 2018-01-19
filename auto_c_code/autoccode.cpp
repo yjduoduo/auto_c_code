@@ -945,6 +945,11 @@ void autoCCode::pushButtonSet(void)
 
     QObject::connect(ui_toolsets->pushButton_opendir,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_opendir_clicked()));
 
+    QObject::connect(ui_toolsets->comboBox_path,SIGNAL(currentIndexChanged(int)),this,SLOT(on_tools_pushButton_openpath_auto(int)));
+
+
+
+
 
 
 }
@@ -7213,6 +7218,7 @@ void autoCCode::ReadHistorySettings()
     ui_toolsets->comboBox_path->addItems(m_settings.value("comboBox_path").toStringList());
     ui_toolsets->checkBox_isfile->setChecked(m_settings.value("checkBox_isfile").toBool());
     pathlist = m_settings.value("comboBox_path").toStringList();
+    ui_toolsets->checkBox_autoopen->setChecked(m_settings.value("checkBox_autoopen").toBool());
 //    QPalette palettebtn ;
 //    QColor color= m_settings.value("ForeColor").Color;
 //    palettebtn.setColor(QPalette::Button, color);
@@ -7271,6 +7277,7 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("senddata2subui", ui->checkBox_senddata2subui->isChecked());
     m_settings.setValue("comboBox_path", pathlist);
     m_settings.setValue("checkBox_isfile", ui_toolsets->checkBox_isfile->isChecked());
+    m_settings.setValue("checkBox_autoopen", ui_toolsets->checkBox_autoopen->isChecked());
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
 
@@ -7505,6 +7512,7 @@ void autoCCode::on_tools_pushButton_delpath_clicked()
     ui_toolsets->comboBox_path->addItems(pathlist);
 
 }
+
 void autoCCode::on_tools_pushButton_opendir_clicked()
 {
     qDebug() << "on_tools_pushButton_opendir_clicked";
@@ -7556,6 +7564,21 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
     orgdir = dir;
 
 //    qDebug("\033[32m123\033[33m456\n");
+}
+
+void autoCCode::on_tools_pushButton_openpath_auto(int index)
+{
+    qDebug() << "path combox changed:" << index;
+    if(!ui_toolsets->checkBox_autoopen->isChecked())
+        return;
+    static int saveindex = 0xffff;
+    if(saveindex != index)
+    {
+        qDebug() << "path combox changed:" << index << ", saveindex:" << saveindex;
+        on_tools_pushButton_openpath_clicked();
+        saveindex = index;
+    }
+
 }
 
 

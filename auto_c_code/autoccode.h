@@ -520,6 +520,7 @@ private slots:
     void on_tools_pushButton_openpath_clicked();
     void on_tools_pushButton_delpath_clicked();
     void on_tools_pushButton_opendir_clicked();
+    void on_tools_pushButton_openpath_auto(int index);
 
 
 private slots://ui tools
