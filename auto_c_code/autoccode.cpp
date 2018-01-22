@@ -7506,10 +7506,17 @@ void autoCCode::on_tools_pushButton_delpath_clicked()
     pathlist.removeOne(currentpath);
 
     qDebug() << "pathlist size:" << pathlist.size();
+
+    bool checkedstate = ui_toolsets->checkBox_autoopen->isChecked();
+    ui_toolsets->checkBox_autoopen->setChecked(false);
+
+
+
 //¸üÐÂitems
     ui_toolsets->comboBox_path->clear();
     pathlist.sort();
     ui_toolsets->comboBox_path->addItems(pathlist);
+    ui_toolsets->checkBox_autoopen->setChecked(checkedstate);
 
 }
 
@@ -7518,6 +7525,23 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
     qDebug() << "on_tools_pushButton_opendir_clicked";
 //    QString currentpath = ui_toolsets->comboBox_path->currentText();
     static QString orgdir = "";
+
+    if(!ui_toolsets->comboBox_path->currentText().isEmpty())
+    {
+        QString usetext = ui_toolsets->comboBox_path->currentText();
+        QFileInfo fileInfo(usetext);
+        orgdir = fileInfo.path();
+        if(fileInfo.isDir())
+        {
+            orgdir = usetext;
+        }
+        else
+        {
+            orgdir = fileInfo.path();
+        }
+        qDebug() << "comboBox_path current text:" << usetext;
+        qDebug() << "orgdir:" << orgdir;
+    }
 
     QString dir ;
 
@@ -7541,7 +7565,7 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
     {
         dir = QFileDialog::getOpenFileName(this,
                 tr("Open File"),
-                "",
+                orgdir,
                 "",
                 0);
             if (!dir.isNull())
@@ -7555,6 +7579,9 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
             }
     }
 
+    bool checkedstate = ui_toolsets->checkBox_autoopen->isChecked();
+    ui_toolsets->checkBox_autoopen->setChecked(false);
+
     dir = dir.replace("\/","\\");
     ui_toolsets->comboBox_path->setEditText(dir);
     on_tools_pushButton_addpath_clicked();
@@ -7562,6 +7589,8 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
     toolsTabWidget->show();
 
     orgdir = dir;
+
+    ui_toolsets->checkBox_autoopen->setChecked(checkedstate);
 
 //    qDebug("\033[32m123\033[33m456\n");
 }

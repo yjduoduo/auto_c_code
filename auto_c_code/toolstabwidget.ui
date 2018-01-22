@@ -264,7 +264,7 @@
         <property name="font">
          <font>
           <family>SimSun-ExtB</family>
-          <pointsize>16</pointsize>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="editable">
