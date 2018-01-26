@@ -91,6 +91,7 @@ protected://function declared
     bool eventFilter_ui_dialog(QObject *watched, QEvent *event);
     bool eventFilter_ui_dialog_langtype_comboBox(QObject *watched, QEvent *event);
     bool eventFilter_ui_setup(QObject *watched, QEvent *event);
+    bool eventFilter_ui_tools(QObject *watched, QEvent *event);
 //    bool eventFilter_ui_toolsets(QObject *watched, QEvent *event);
 
 

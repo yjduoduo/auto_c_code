@@ -960,7 +960,10 @@ void autoCCode::pushButtonSet(void)
     mymenu->addAction(opendir);
     mymenu->addAction(openfile);
     ui_toolsets->pushButton_opendir->setMenu(mymenu);
+    ui_toolsets->pushButton_opendir->setStyleSheet("QPushButton::menu-indicator{image:none}");
+    ui_toolsets->pushButton_opendir->installEventFilter(this);
 
+    ui_toolsets->comboBox_path->installEventFilter(this);
 }
 /*============================================
 * FuncName    : autoCCode::set_search_text
@@ -4961,6 +4964,46 @@ bool autoCCode::eventFilter_ui_dia_selectdb_comboBox_selectdb(QObject *watched, 
 
 }
 
+bool autoCCode::eventFilter_ui_tools(QObject *watched, QEvent *event)
+{
+    if(watched == ui_toolsets->pushButton_opendir)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+            qDebug() << "pushButton_opendir,coming here!!";
+            //            dialog_selectdb->show();
+            ui_toolsets->pushButton_opendir->showMenu();
+//            emit ui_toolsets->pushButton_opendir->clicked();
+//            ui_dia_selectdb->comboBox_selectdb->showPopup();//combox下拉事件
+        }
+        else if (event->type()==QEvent::Leave)    // mouse leaves widget
+        {
+            ui_toolsets->pushButton_opendir->menu()->hide();
+            qDebug() << "pushButton_opendir,leave now!!";
+            //            ui_dia_selectdb->comboBox_selectdb->showNormal();
+            //            dialog_selectdb->hide();
+        }
+        else if (event->type()==QEvent::WindowDeactivate)    // window was deactivated
+        {
+            //            qDebug() << "comboBox_selectdb,WindowDeactivate!!";
+            //            ui_dia_selectdb
+//            dialog_selectdb->hide();
+        }
+        //        qDebug() << "comboBox_selectdb, event type:" << event->type();
+    }
+
+
+    if(watched == ui_toolsets->comboBox_path)
+    {
+        if (event->type()==QEvent::Enter)     //Event:enter // mouse enters widget
+        {
+            qDebug() << "comboBox_path,coming here!!";
+            ui_toolsets->comboBox_path->showPopup();
+        }
+    }
+
+}
+
 
 /*============================================
 * FuncName    : autoCCode::eventFilter_ui_choseCodeDB_btn
@@ -5167,6 +5210,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
     eventFilter_ui_dialog(obj, event);
     eventFilter_ui_dialog_langtype_comboBox(obj, event);
     eventFilter_ui_setup(obj, event);
+    eventFilter_ui_tools(obj, event);
     //    eventFilter_ui_toolsets(obj, event);
 
     return QObject::eventFilter(obj, event);
