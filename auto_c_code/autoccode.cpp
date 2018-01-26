@@ -943,14 +943,23 @@ void autoCCode::pushButtonSet(void)
 
     QObject::connect(ui_toolsets->pushButton_delpath,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_delpath_clicked()));
 
-    QObject::connect(ui_toolsets->pushButton_opendir,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_opendir_clicked()));
+//    QObject::connect(ui_toolsets->pushButton_opendir,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_opendir_clicked()));
 
     QObject::connect(ui_toolsets->comboBox_path,SIGNAL(currentIndexChanged(int)),this,SLOT(on_tools_pushButton_openpath_auto(int)));
 
 
 
 
+//
+    QMenu *mymenu=new QMenu;
+    QAction *opendir=new QAction("打开文件夹",this);
+    QAction *openfile=new QAction("打开文件",this);
+    QObject::connect(opendir,SIGNAL(triggered()),this,SLOT(on_tools_pushButton_opendir_clicked()));
+    QObject::connect(openfile,SIGNAL(triggered()),this,SLOT(on_tools_pushButton_openfile_clicked()));
 
+    mymenu->addAction(opendir);
+    mymenu->addAction(openfile);
+    ui_toolsets->pushButton_opendir->setMenu(mymenu);
 
 }
 /*============================================
@@ -7216,7 +7225,7 @@ void autoCCode::ReadHistorySettings()
     ui->checkBox_codecutf8->setChecked(m_settings.value("codecutf8").toBool());
     ui->checkBox_senddata2subui->setChecked(m_settings.value("senddata2subui").toBool());
     ui_toolsets->comboBox_path->addItems(m_settings.value("comboBox_path").toStringList());
-    ui_toolsets->checkBox_isfile->setChecked(m_settings.value("checkBox_isfile").toBool());
+//    ui_toolsets->checkBox_isfile->setChecked(m_settings.value("checkBox_isfile").toBool());
     pathlist = m_settings.value("comboBox_path").toStringList();
     ui_toolsets->checkBox_autoopen->setChecked(m_settings.value("checkBox_autoopen").toBool());
 //    QPalette palettebtn ;
@@ -7276,7 +7285,7 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("codecutf8", ui->checkBox_codecutf8->isChecked());
     m_settings.setValue("senddata2subui", ui->checkBox_senddata2subui->isChecked());
     m_settings.setValue("comboBox_path", pathlist);
-    m_settings.setValue("checkBox_isfile", ui_toolsets->checkBox_isfile->isChecked());
+//    m_settings.setValue("checkBox_isfile", ui_toolsets->checkBox_isfile->isChecked());
     m_settings.setValue("checkBox_autoopen", ui_toolsets->checkBox_autoopen->isChecked());
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
@@ -7520,6 +7529,63 @@ void autoCCode::on_tools_pushButton_delpath_clicked()
 
 }
 
+void autoCCode::on_tools_pushButton_openfile_clicked()
+{
+    qDebug() << "on_tools_pushButton_openfile_clicked";
+//    QString currentpath = ui_toolsets->comboBox_path->currentText();
+    static QString orgdir = "";
+
+    if(!ui_toolsets->comboBox_path->currentText().isEmpty())
+    {
+        QString usetext = ui_toolsets->comboBox_path->currentText();
+        QFileInfo fileInfo(usetext);
+        orgdir = fileInfo.path();
+        if(fileInfo.isDir())
+        {
+            orgdir = usetext;
+        }
+        else
+        {
+            orgdir = fileInfo.path();
+        }
+        qDebug() << "comboBox_path current text:" << usetext;
+        qDebug() << "orgdir:" << orgdir;
+    }
+
+    QString dir ;
+
+    dir = QFileDialog::getOpenFileName(this,
+            tr("Open File"),
+            orgdir,
+            "",
+            0);
+        if (!dir.isNull())
+        {
+            //fileName是文件名
+
+        }
+        else{
+            //点的是取消
+           return;
+        }
+
+    bool checkedstate = ui_toolsets->checkBox_autoopen->isChecked();
+    ui_toolsets->checkBox_autoopen->setChecked(false);
+
+    dir = dir.replace("\/","\\");
+    ui_toolsets->comboBox_path->setEditText(dir);
+    on_tools_pushButton_addpath_clicked();
+    toolsTabWidget->raise(); //到上层
+    toolsTabWidget->show();
+
+    orgdir = dir;
+    Sleep(200);
+
+    ui_toolsets->checkBox_autoopen->setChecked(checkedstate);
+
+//    qDebug("\033[32m123\033[33m456\n");
+}
+
 void autoCCode::on_tools_pushButton_opendir_clicked()
 {
     qDebug() << "on_tools_pushButton_opendir_clicked";
@@ -7545,38 +7611,18 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
 
     QString dir ;
 
-    if(!ui_toolsets->checkBox_isfile->isChecked())
+    dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+    orgdir,
+    QFileDialog::ShowDirsOnly
+    | QFileDialog::DontResolveSymlinks);
+    if (!dir.isNull())
     {
-        dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-        orgdir,
-        QFileDialog::ShowDirsOnly
-        | QFileDialog::DontResolveSymlinks);
-        if (!dir.isNull())
-        {
-            //fileName是文件夹名
+        //fileName是文件夹名
 
-        }
-        else{
-            //点的是取消
-           return;
-        }
     }
-    else
-    {
-        dir = QFileDialog::getOpenFileName(this,
-                tr("Open File"),
-                orgdir,
-                "",
-                0);
-            if (!dir.isNull())
-            {
-                //fileName是文件名
-
-            }
-            else{
-                //点的是取消
-               return;
-            }
+    else{
+        //点的是取消
+       return;
     }
 
     bool checkedstate = ui_toolsets->checkBox_autoopen->isChecked();
@@ -7589,6 +7635,7 @@ void autoCCode::on_tools_pushButton_opendir_clicked()
     toolsTabWidget->show();
 
     orgdir = dir;
+    Sleep(200);
 
     ui_toolsets->checkBox_autoopen->setChecked(checkedstate);
 
