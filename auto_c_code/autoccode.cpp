@@ -7513,6 +7513,12 @@ void autoCCode::on_tools_pushButton_addpath_clicked()
             return;
         }
     }
+
+    bool checkedstate = ui_toolsets->checkBox_autoopen->isChecked();
+    ui_toolsets->checkBox_autoopen->setChecked(false);
+
+
+
     pathlist.append(currentpath);
     qDebug() << "pathlist size:" << pathlist.size();
 //¸üĞÂitems
@@ -7520,6 +7526,7 @@ void autoCCode::on_tools_pushButton_addpath_clicked()
     pathlist.sort();
     ui_toolsets->comboBox_path->addItems(pathlist);
 
+    ui_toolsets->checkBox_autoopen->setChecked(checkedstate);
 }
 
 
