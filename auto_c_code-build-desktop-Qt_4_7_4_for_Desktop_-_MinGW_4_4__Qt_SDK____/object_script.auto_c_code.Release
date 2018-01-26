@@ -24,6 +24,7 @@ INPUT(
 ./release\netthings.o
 ./release\codesophia.o
 ./release\msgtips.o
+./release\ssh2_forut.o
 ./release\moc_autoccode.o
 ./release\moc_dialog_select_database.o
 ./release\moc_qxtglobalshortcut.o

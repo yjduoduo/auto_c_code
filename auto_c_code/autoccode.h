@@ -524,6 +524,7 @@ private slots:
     void on_tools_pushButton_openfile_clicked();
     void on_tools_pushButton_openpath_auto(int index);
 
+    void on_tools_pushButton_connectssh_clicked();
 
 private slots://ui tools
     void on_textEdit_main_content_textChanged();

@@ -39,6 +39,7 @@
 #include "window_calender.h"
 #include <QProgressDialog>
 #include <QProgressBar>
+#include "ssh2_forut.h"
 
 
 #define DEFAULT_PORT 22222
@@ -964,6 +965,11 @@ void autoCCode::pushButtonSet(void)
     ui_toolsets->pushButton_opendir->installEventFilter(this);
 
     ui_toolsets->comboBox_path->installEventFilter(this);
+
+    //Á¬½Óssh
+    QObject::connect(ui_toolsets->pushButton_connectssh,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_connectssh_clicked()));
+
+
 }
 /*============================================
 * FuncName    : autoCCode::set_search_text
@@ -7272,6 +7278,8 @@ void autoCCode::ReadHistorySettings()
 //    ui_toolsets->checkBox_isfile->setChecked(m_settings.value("checkBox_isfile").toBool());
     pathlist = m_settings.value("comboBox_path").toStringList();
     ui_toolsets->checkBox_autoopen->setChecked(m_settings.value("checkBox_autoopen").toBool());
+    ui_toolsets->lineEdit_hostip->setText(m_settings.value("lineEdit_hostip").toByteArray());
+
 //    QPalette palettebtn ;
 //    QColor color= m_settings.value("ForeColor").Color;
 //    palettebtn.setColor(QPalette::Button, color);
@@ -7331,6 +7339,8 @@ void autoCCode::WriteCurrentSettings()
     m_settings.setValue("comboBox_path", pathlist);
 //    m_settings.setValue("checkBox_isfile", ui_toolsets->checkBox_isfile->isChecked());
     m_settings.setValue("checkBox_autoopen", ui_toolsets->checkBox_autoopen->isChecked());
+    m_settings.setValue("lineEdit_hostip", ui_toolsets->lineEdit_hostip->text());
+
 //    m_settings.setValue("ForeColor", ui_setup->pushButton_foreColor->palette());
 
 
@@ -7709,3 +7719,15 @@ void autoCCode::on_tools_pushButton_openpath_auto(int index)
 }
 
 
+
+void autoCCode::on_tools_pushButton_connectssh_clicked()
+{
+    ui_toolsets->textEdit_showresult->clear();
+    QString ipaddr = ui_toolsets->lineEdit_hostip->text().trimmed();
+    ssh2_forut *sshtest = new ssh2_forut(ipaddr.toAscii().data(), ui_toolsets->textEdit_showresult);
+
+    sshtest->whenconnected();
+    delete sshtest;
+
+
+}

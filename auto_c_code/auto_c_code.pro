@@ -35,7 +35,8 @@ SOURCES += main.cpp\
     calender/window_calender.cpp \
     netthings.cpp \
     codesophia.cpp \
-    msgtips.cpp
+    msgtips.cpp \
+    ssh2_forut.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \
@@ -66,7 +67,8 @@ HEADERS  += autoccode.h \
     netthings.h \
     codesophia.h \
     comon.h \
-    msgtips.h
+    msgtips.h \
+    ssh2_forut.h
 
 FORMS    += autoccode.ui \
     PushDbdialog.ui \
@@ -85,9 +87,11 @@ INCLUDEPATH +=\
 ./calender\
 ./zeromq\include \
 ./zeromq\
+./libssh-0.7.1\include\
+
 
 LIBS += -lpthread
-LIBS += -L$$PWD/zeromq/lib  -lzmq
+LIBS += -L$$PWD/zeromq/lib  -lzmq -L$$PWD/libssh-0.7.1/bin  -lssh
 
 RC_FILE = autoapp.rc
 
