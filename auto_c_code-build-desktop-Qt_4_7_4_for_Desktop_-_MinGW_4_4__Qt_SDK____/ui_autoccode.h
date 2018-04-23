@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Wed Jan 17 01:05:47 2018
+** Created: Tue Apr 24 06:49:12 2018
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -41,6 +41,7 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QLabel *get_listlabel;
     QLineEdit *lineEdit_search;
+    QPushButton *pushButton_search;
     QPushButton *pushButton_clean;
     QPushButton *pushButton_search_fromClip;
     QCheckBox *checkBox_autogetclipboxtext;
@@ -118,6 +119,11 @@ public:
         lineEdit_search->setMinimumSize(QSize(50, 0));
 
         horizontalLayout_2->addWidget(lineEdit_search);
+
+        pushButton_search = new QPushButton(autoCCode);
+        pushButton_search->setObjectName(QString::fromUtf8("pushButton_search"));
+
+        horizontalLayout_2->addWidget(pushButton_search);
 
         pushButton_clean = new QPushButton(autoCCode);
         pushButton_clean->setObjectName(QString::fromUtf8("pushButton_clean"));
@@ -384,6 +390,7 @@ public:
     {
         autoCCode->setWindowTitle(QApplication::translate("autoCCode", "autoCCode", 0, QApplication::UnicodeUTF8));
         get_listlabel->setText(QApplication::translate("autoCCode", "GetList", 0, QApplication::UnicodeUTF8));
+        pushButton_search->setText(QApplication::translate("autoCCode", "search", 0, QApplication::UnicodeUTF8));
         pushButton_clean->setText(QApplication::translate("autoCCode", "clean", 0, QApplication::UnicodeUTF8));
         pushButton_search_fromClip->setText(QApplication::translate("autoCCode", "GetClipD", 0, QApplication::UnicodeUTF8));
         checkBox_autogetclipboxtext->setText(QApplication::translate("autoCCode", "AG", 0, QApplication::UnicodeUTF8));

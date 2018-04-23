@@ -40,6 +40,7 @@
 #include <QProgressDialog>
 #include <QProgressBar>
 #include "ssh2_forut.h"
+#include <QShortcut>
 
 
 #define DEFAULT_PORT 22222
@@ -99,6 +100,8 @@ do{\
 
 //ui tools界面下Ctrl按键是否按下
 static bool isCTRLKeyPressed_uitools = FALSE;
+static bool isFKeyPressed_uitools = FALSE;
+static bool isCKeyPressed_uitools = FALSE;
 
 
 
@@ -313,8 +316,34 @@ void autoCCode::shortCutSet(void)
     QxtGlobalShortcut * search_paste = new QxtGlobalShortcut(QKeySequence("Shift+Alt+V"), this);
     QObject::connect(search_paste, SIGNAL(activated()),this, SLOT(set_search_text()));
 
-    QxtGlobalShortcut * search_clean = new QxtGlobalShortcut(QKeySequence("Shift+Alt+C"), this);
+    QxtGlobalShortcut * search_clean = new QxtGlobalShortcut(QKeySequence("Ctrl+C"), this);
     QObject::connect(search_clean, SIGNAL(activated()),this, SLOT(search_text_clear()));
+
+    QxtGlobalShortcut * search_text = new QxtGlobalShortcut(QKeySequence("Ctrl+F"), this);
+    QObject::connect(search_text, SIGNAL(activated()),this, SLOT(procFindShortCut()));
+
+    /**
+      **
+快捷键
+Ctrl +F 查找
+Ctrl +C 清空
+Shift+Alt+V 粘贴查找
+
+      **/
+
+//    QShortcut *findShortCut = new QShortcut(this);
+////    ui->lineEdit_search->setKey(tr("Ctrl+F"));
+//    ui->pushButton_search->setShortcut(Qt::CTRL&&Qt::Key_F);
+
+////    ui->lineEdit_search->setPlaceholderText("请输入查找的数据");
+//    ProcShowText("");
+
+//    connect(findShortCut, SIGNAL(activated()),this,SLOT(procFindShortCut()));
+
+//    QShortcut *clearcontShortCut = new QShortcut(this);
+////    ui->lineEdit_search->setKey(tr("Ctrl+C"));
+//    ui->pushButton_clean->setShortcut(Qt::CTRL&&Qt::Key_C);
+//    connect(clearcontShortCut, SIGNAL(activated()),this,SLOT(procClearShortCut()));
 
 }
 
@@ -773,6 +802,9 @@ void autoCCode::set_note_textEdit_firstline()
 ============================================*/
 void autoCCode::lineTextEditSet(void)
 {
+    QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
+                     this,SLOT(ProcShowText(QString)));
+
 #if 0//文本改变搜索
     QObject::connect(ui->lineEdit_search,SIGNAL(textChanged(QString)),
                      this,SLOT(SearchText(QString)));
@@ -2098,7 +2130,15 @@ void autoCCode::aboutVersion(void)
 ============================================*/
 QString autoCCode::GetVersion(void)
 {
+    QString shortcuttips = str_china("快捷键 ") +
+            str_china("Ctrl +F 查找") +
+            str_china("Ctrl +C 清空") +
+            str_china("Shift+Alt+V 粘贴查找");
+
+
     return str_china(自动生成代码)
+            +"\n"
+            + shortcuttips
             +"\n"
             +str_china(by小魏莱)
             +"\n"
@@ -5198,7 +5238,7 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         int key = keyEvent->key();
         if (Qt::Key_Control == key){
-            qDebug()<<"Key_Control   Pressed";
+            qDebug()<<"Key_Control   Pressed!!";
             isCTRLKeyPressed = TRUE;
         }
         else {
@@ -6209,12 +6249,20 @@ void QTabWidget::keyPressEvent(QKeyEvent *event)
     //按键处理
     if(event->type() == QEvent::KeyPress)
     {
-        //qDebug()<<"KeyPress ed!!";
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         int key = keyEvent->key();
+        qDebug()<<key <<"  KeyPress ed!!";
         if (Qt::Key_Control == key){
-            qDebug()<<"Key_Control   Pressed";
+            qDebug()<<"Key_Control   Pressed!!!!!!!!!!";
             isCTRLKeyPressed_uitools = TRUE;
+        }
+        if (Qt::Key_F == key) {
+            qDebug()<<"Key_F   Pressed!!!!!!!!!!";
+            isFKeyPressed_uitools = TRUE;
+        }
+        if (Qt::Key_C == key) {
+            qDebug()<<"Key_C   Pressed!!!!!!!!!!";
+            isCKeyPressed_uitools = TRUE;
         }
         else {
             //qDebug()<<"else Key !!";
@@ -6222,7 +6270,24 @@ void QTabWidget::keyPressEvent(QKeyEvent *event)
     }
     else if(event->type() == QEvent::KeyRelease)
     {
-        isCTRLKeyPressed_uitools = FALSE;
+//        isCTRLKeyPressed_uitools = FALSE;
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        int key = keyEvent->key();
+        if (Qt::Key_Control == key){
+            qDebug()<<"Key_Control   KeyRelease!!!!!!!!!!";
+            isCTRLKeyPressed_uitools = FALSE;
+        }
+        else if (Qt::Key_F == key) {
+            qDebug()<<"Key_F   KeyRelease!!!!!!!!!!";
+            isFKeyPressed_uitools = FALSE;
+        }
+        else if (Qt::Key_C == key) {
+            qDebug()<<"Key_C   KeyRelease!!!!!!!!!!";
+            isCKeyPressed_uitools = FALSE;
+        }
+        else {
+            //qDebug()<<"else Key !!";
+        }
     }
 
     return ;
@@ -7730,4 +7795,25 @@ void autoCCode::on_tools_pushButton_connectssh_clicked()
     delete sshtest;
 
 
+}
+
+
+void autoCCode::procFindShortCut()
+{
+    qDebug() << "procFindShortCut";
+    ui->lineEdit_search->setFocus();
+}
+void autoCCode::procClearShortCut()
+{
+    qDebug() << "procClearShortCut";
+    ui->lineEdit_search->setText("");
+    ui->lineEdit_search->setFocus();
+}
+
+void autoCCode::ProcShowText(QString searchtext)
+{
+    if(ui->lineEdit_search->text().simplified().isEmpty())
+    {
+        ui->lineEdit_search->setPlaceholderText("请输入查找的数据");
+    }
 }

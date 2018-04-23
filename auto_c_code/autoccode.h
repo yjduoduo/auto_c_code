@@ -525,6 +525,10 @@ private slots:
     void on_tools_pushButton_openpath_auto(int index);
 
     void on_tools_pushButton_connectssh_clicked();
+    //add shortcut
+    void procFindShortCut();
+    void procClearShortCut();
+    void ProcShowText(QString searchtext);
 
 private slots://ui tools
     void on_textEdit_main_content_textChanged();

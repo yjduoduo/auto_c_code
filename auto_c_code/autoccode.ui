@@ -50,6 +50,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="pushButton_search">
+           <property name="text">
+            <string>search</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="pushButton_clean">
            <property name="text">
             <string>clean</string>
