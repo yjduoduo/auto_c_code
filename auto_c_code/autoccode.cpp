@@ -1948,7 +1948,7 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     self_print(ok_btn_dia_clicked_self);
 
     //获取内容
-    QString content = ui_dialog->content_textEdit_dia->toPlainText().trimmed();
+    QString content = ui_dialog->content_textEdit_dia->toPlainText().trimmed().replace('\'','\'\'');
     QString lanaugetype = ui_dialog->langtype_comboBox->currentText();
     QString index_keyword   = ui_dialog->index_textEdit_dia->toPlainText().trimmed();
     index_keyword = index_keyword.replace("\n"," ");
@@ -2117,7 +2117,8 @@ void autoCCode::cancel_btn_dia_clicked_self(void)
 ============================================*/
 void autoCCode::aboutVersion(void)
 {
-    ShowTipsInfo(QString::fromLocal8Bit("版本 %1").arg(GetVersion()));
+    ShowTipsInfoWithShowTime(QString::fromLocal8Bit("版本 %1").arg(GetVersion()),
+                             1000);
 //    QMessageBox::information(NULL, str_china(版本), GetVersion(),NULL,NULL);
     return;
 }
