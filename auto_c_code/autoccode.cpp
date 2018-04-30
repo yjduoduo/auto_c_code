@@ -1948,7 +1948,9 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     self_print(ok_btn_dia_clicked_self);
 
     //»ñÈ¡ÄÚÈÝ
-    QString content = ui_dialog->content_textEdit_dia->toPlainText().trimmed().replace('\'','\'\'');
+    QString content = ui_dialog->content_textEdit_dia->toPlainText().trimmed();
+    QString content_after = content.replace("'","''");
+    content_after = content_after.replace("\"","\"\"");
     QString lanaugetype = ui_dialog->langtype_comboBox->currentText();
     QString index_keyword   = ui_dialog->index_textEdit_dia->toPlainText().trimmed();
     index_keyword = index_keyword.replace("\n"," ");
@@ -1960,6 +1962,7 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     {
         note = "nokey!";
     }
+    qDebug()<<"deal content:"<< content;
 
     note += "\t\t\t\t";
     note += QDateTime::currentDateTime().toString("yyyy MMM d ddd,hh:mm:ss");
@@ -1990,12 +1993,14 @@ void autoCCode::ok_btn_dia_clicked_self(void)
     if(!sets)
         return;
 
-    QString select_express = QString("select content from %1 where lantype='%2' and content='%3' and vartype='%4' and delflag=0 order by ID desc")
+    QString select_express = QString("select content from %1 where lantype='%2' and content=\"%3\" and vartype='%4' and delflag=0 order by ID desc")
             .arg(sets->talbename)
             .arg(lanaugetype)
-            .arg(content)
+            .arg(content_after)
             .arg(vartype);
     save_before_ops();
+
+    qDebug()<< "select_express:" << select_express;
 
     clr_selectresult(selectresult);
     str_print(select_express);
