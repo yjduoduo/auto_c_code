@@ -62,6 +62,7 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
                            {LANTY_JOIN(Swift_),"swift_table",DB_NAME,CREATTABLE(swift_table),},
                            {LANTY_JOIN(Android_),"android_table",DB_NAME,CREATTABLE(android_table),},
                            {LANTY_JOIN(Rust_),"rust_table",DB_NAME,CREATTABLE(rust_table),},
+                           {LANTY_JOIN(Redis_),"redis_table",DB_NAME,CREATTABLE(redis_table),},
 
                            //范围,存储哪方面的内容
                            {LANTY_JOIN(Aspect_),"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
@@ -71,6 +72,35 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
 #endif
 
 
+
+
+#define LANGUAGETYPE_ALLCASE\
+    case    languagetype_C_:\
+    case    languagetype_Cpp_:\
+    case    languagetype_Erlang_:\
+    case    languagetype_Qt_:\
+    case    languagetype_Python_:\
+    case    languagetype_Jave_:\
+    case    languagetype_Shell_:\
+    case    languagetype_Aspect_:\
+    case    languagetype_LookTextHis_:\
+    case    languagetype_Oracle_:\
+    case    languagetype_Qtquick_:\
+    case    languagetype_Php_:\
+    case    languagetype_Mysql_:\
+    case    languagetype_Sqlite3_:\
+    case    languagetype_Postgresql_:\
+    case    languagetype_Patchs_:\
+    case    languagetype_Perl_:\
+    case    languagetype_Hadoop_:\
+    case    languagetype_Go_:\
+    case    languagetype_Unittest_:\
+    case    languagetype_Swift_:\
+    case    languagetype_Rust_:\
+    case    languagetype_Android_:\
+    case    languagetype_JavaScript_:\
+    case    languagetype_Debug_:\
+    case    languagetype_Redis_:\
 
 
 /*============================================
@@ -1025,31 +1055,7 @@ void GenCodeDatabase::creatable(InsertCon *cont)
     str_print(sets->talbename);
     switch(cont->languagetype)
     {
-    case    languagetype_C_:
-    case    languagetype_Cpp_:
-    case    languagetype_Erlang_:
-    case    languagetype_Qt_:
-    case    languagetype_Python_:
-    case    languagetype_Jave_:
-    case    languagetype_Shell_:
-    case    languagetype_Aspect_:
-    case    languagetype_LookTextHis_:
-    case    languagetype_Oracle_:
-    case    languagetype_Qtquick_:
-    case    languagetype_Php_:
-    case    languagetype_Mysql_:
-    case    languagetype_Sqlite3_:
-    case    languagetype_Postgresql_:
-    case    languagetype_Patchs_:
-    case    languagetype_Perl_:
-    case    languagetype_Hadoop_:
-    case    languagetype_Go_:
-    case    languagetype_Unittest_:
-    case    languagetype_Swift_:
-    case    languagetype_Rust_:
-    case    languagetype_Android_:
-    case    languagetype_JavaScript_:
-    case    languagetype_Debug_:
+    LANGUAGETYPE_ALLCASE
 
         opendatabase(sets->databasename,sets->creat_table_express);
     default:
@@ -1150,31 +1156,7 @@ void GenCodeDatabase::inserttable(InsertCon *cont)
 
     switch(cont->languagetype)
     {
-    case    languagetype_C_:
-    case    languagetype_Cpp_:
-    case    languagetype_Erlang_:
-    case    languagetype_Qt_:
-    case    languagetype_Python_:
-    case    languagetype_Jave_:
-    case    languagetype_Shell_:
-    case    languagetype_Aspect_:
-    case    languagetype_LookTextHis_:
-    case    languagetype_Oracle_:
-    case    languagetype_Qtquick_:
-    case    languagetype_Php_:
-    case    languagetype_Mysql_:
-    case    languagetype_Sqlite3_:
-    case    languagetype_Postgresql_:
-    case    languagetype_Patchs_:
-    case    languagetype_Perl_:
-    case    languagetype_Hadoop_:
-    case    languagetype_Go_:
-    case    languagetype_Unittest_:
-    case    languagetype_Swift_:
-    case    languagetype_Rust_:
-    case    languagetype_Android_:
-    case    languagetype_JavaScript_:
-    case    languagetype_Debug_:
+    LANGUAGETYPE_ALLCASE
 
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
         break;
@@ -1203,31 +1185,7 @@ void GenCodeDatabase::updatetable(LanguageType languagetype,QString &insertexpre
 
     switch(languagetype)
     {
-    case    languagetype_C_:
-    case    languagetype_Cpp_:
-    case    languagetype_Erlang_:
-    case    languagetype_Qt_:
-    case    languagetype_Python_:
-    case    languagetype_Jave_:
-    case    languagetype_Shell_:
-    case    languagetype_Aspect_:
-    case    languagetype_LookTextHis_:
-    case    languagetype_Oracle_:
-    case    languagetype_Qtquick_:
-    case    languagetype_Php_:
-    case    languagetype_Mysql_:
-    case    languagetype_Sqlite3_:
-    case    languagetype_Postgresql_:
-    case    languagetype_Patchs_:
-    case    languagetype_Perl_:
-    case    languagetype_Hadoop_:
-    case    languagetype_Go_:
-    case    languagetype_Unittest_:
-    case    languagetype_Swift_:
-    case    languagetype_Rust_:
-    case    languagetype_Android_:
-    case    languagetype_JavaScript_:
-    case    languagetype_Debug_:
+    LANGUAGETYPE_ALLCASE
 
         insertdatabase(sets->databasename,insertexpress.toUtf8().data());
         break;
@@ -1296,6 +1254,9 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
         return "JavaScript";
     case    languagetype_Debug_:
         return "Debug";
+
+    case    languagetype_Redis_:
+        return "Redis";
 
     default:
         return "Err";

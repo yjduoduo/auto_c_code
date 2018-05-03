@@ -1470,6 +1470,7 @@ void autoCCode::addstr_comboBox(void)
     <<str_china(Python)
     <<str_china(Qt)
     <<str_china(Qtquick)
+    <<str_china(Redis)
     <<str_china(Rust)
     <<str_china(shell)
     <<str_china(Sqlite3)
@@ -1902,7 +1903,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     {
         return languagetype_Debug_;
     }
-
+    else if(type == "Redis")
+    {
+        return languagetype_Redis_;
+    }
     else{
         return languagetype_Err_;
     }
