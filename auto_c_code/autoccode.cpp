@@ -232,6 +232,8 @@ autoCCode::autoCCode(QWidget *parent) :
 
     pathlist.clear();
 
+    ui->pushButton_search->hide();
+
 
     QTimerSet();
     pushButtonSet();
@@ -316,7 +318,7 @@ void autoCCode::shortCutSet(void)
     QxtGlobalShortcut * search_paste = new QxtGlobalShortcut(QKeySequence("Shift+Alt+V"), this);
     QObject::connect(search_paste, SIGNAL(activated()),this, SLOT(set_search_text()));
 
-    QxtGlobalShortcut * search_clean = new QxtGlobalShortcut(QKeySequence("Ctrl+C"), this);
+    QxtGlobalShortcut * search_clean = new QxtGlobalShortcut(QKeySequence("Alt+C"), this);
     QObject::connect(search_clean, SIGNAL(activated()),this, SLOT(search_text_clear()));
 
     QxtGlobalShortcut * search_text = new QxtGlobalShortcut(QKeySequence("Ctrl+F"), this);
@@ -2142,7 +2144,7 @@ QString autoCCode::GetVersion(void)
 {
     QString shortcuttips = str_china("快捷键 ") +
             str_china("Ctrl +F 查找") +
-            str_china("Ctrl +C 清空") +
+            str_china("Alt +C 清空") +
             str_china("Shift+Alt+V 粘贴查找");
 
 
