@@ -277,11 +277,11 @@ void CodeSophia::on_pushButton_gen_clicked()
     QString str="";
 
 
-
-    //write to files
-    QString filename = "D:\\funcnames_xxx.txt";
-    LogWriteFile(filename, orgText);
-    orgText = LogReadFile(filename);
+    //路径不存在，导致存储不了，软件不能使用
+//    //write to files
+//    QString filename = "D:\\funcnames_xxx.txt";
+//    LogWriteFile(filename, orgText);
+//    orgText = LogReadFile(filename);
 
     QStringList list = orgText.split("\n");
 
@@ -848,6 +848,7 @@ void CodeSophia::SetTextEditKey(QString &str)
 ============================================*/
 void CodeSophia::Proc_C_Header(QStringList &lst)
 {
+    qDebug() << "Proc_C_Header, lst size:" << lst.size();
     QString result;
     result.clear();
 
@@ -1192,7 +1193,260 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
         SetTextEditResult(result);
         return;
         break;
-    case 1:
+    case 1://function note
+    {
+        hassplit =false;
+        header = "/*============================================";
+        leftsign = "";
+        rightsign = "";
+        hasenter = false;
+        if(lst.isEmpty())
+        {
+            ShowTipsInfo("eg:: void function(struct list_head *new)");
+        }
+
+        if(lst.size() > 2000){
+            tipProgress = new QProgressBar();
+            tipProgress->setRange(1,totalnum);
+        }
+
+        foreach (QString string, lst) {
+            if(string.isEmpty())
+            {
+                allbindedstrlast += enter;
+                continue;
+            }
+            QString orgstring = string;
+
+            if(tipProgress)
+            {
+                ++currentnum;
+                tipProgress->setValue(currentnum);
+                tipProgress->show();
+            }
+
+            if(hasdouhao && !string.contains(")"))
+            {
+                bindedstrlast +=string + enter;
+                bindedstr +=string;
+                continue;
+            }
+            else if(hasdouhao && string.contains(")"))
+            {
+                bindedstr +=string;
+                bindedstrlast +=string;
+                string = bindedstr;
+                isendflag = true;
+
+            }
+
+            string = string.simplified();
+
+            QString funcname = Proc_Note_GetFuncName(string);
+            QString funcpara = Proc_Note_GetFuncPara(string);
+            quint32 funcsize = Proc_Note_GetFuncNameSize(string);
+            QStringList paralist = funcpara.split(",");
+            QString lastfuncname;
+            lastfuncname.clear();
+            QStringList lastparalst;
+            lastparalst.clear();
+            QStringList tmplastparalst;
+            tmplastparalst.clear();
+            qDebug() << "funcname :" << funcname;
+            qDebug() << "funcpara :" << funcpara;
+            qDebug() << "funcsize :" << funcsize;
+            qDebug() << "string.simplified().split(\"(\").size() :" << string.simplified().split("(").size();
+            qDebug() << "Proc_C_Note_IsSpecialSign(string) :" << Proc_C_Note_IsSpecialSign(string, funcname, funcpara);
+
+            if(!funcname.isEmpty()
+                    && (string.simplified().split("(").size() == 2)
+                    && funcsize > 1 &&
+                    !Proc_C_Note_IsSpecialSign(string, funcname, funcpara))
+            {
+//                if(string.endsWith(",") && !firstcome)
+                if(string.contains("(") && !string.contains(")") && !firstcome)
+                {
+                    hasdouhao = true;
+                    firstcome = true;
+                    bindedstr +=string;
+                    bindedstrlast +=string + enter;
+                    continue;
+                }
+                firstcome = false;
+                //proc multi function line
+                hasdouhao = false;
+                bindedstr = "";
+
+                lastfuncname = funcname.simplified().split(" ").last().replace("*","").replace("&","");
+                //add unit test function name begin,注释部分添加
+//                lastfuncname = "ut_" + lastfuncname;
+                paralist.clear();
+                //add unit test function name end
+                qDebug() << "lastfuncname :" << lastfuncname;
+                //寻找最大长度
+                bool continueflag = false;
+                continueflag = false;
+                quint32 maxlen = 0;
+                foreach (QString str, paralist) {
+                    QString tmpstr = str.simplified().split(" ").last().replace("*","").replace("&","");
+                    if(tmpstr.length() > maxlen)
+                        maxlen = tmpstr.length();
+
+                }
+//                if(continueflag)
+//                    continue;
+                foreach (QString str, paralist) {
+                    QString tmpstr = str.simplified().split(" ").last().replace("*","").replace("&","");
+                    quint32 tmplen = tmpstr.length();
+                    QStringList aftersplitlst = str.simplified().split(" ");
+                    qDebug() << "string :" << str << ", aftersplitlst size:" << aftersplitlst.size();
+                    if(!str.simplified().isEmpty() && (aftersplitlst.size() == 1 /*|| aftersplitlst.size() > 3*/))
+                    {
+                        continueflag = true;
+                    }
+                    else
+                    {
+                        continueflag = false;
+                    }
+
+                    if(!continueflag)
+                    {
+                        tmpstr = QString("%1%2").arg(tmpstr).arg(" ", maxlen - tmplen > 0 ? (maxlen - tmplen) : 0 );
+                    }
+                    else
+                    {
+                        tmpstr = QString("--      ");
+                    }
+                    tmplastparalst << tmpstr;
+                    qDebug() << "funcpara :" << tmpstr;
+
+                }
+//                qDebug() << "right function parameter"<< endl;
+            }
+            else
+            {
+                if(firstcome)
+                    allbindedstrlast += bindedstrlast + enter;
+                else
+                    allbindedstrlast += orgstring + enter;
+                firstcome = false;
+                isendflag = false;
+                hasdouhao = false;
+                bindedstr ="";
+                bindedstrlast = "";
+                continue;
+            }
+
+            //寻找最大长度
+            quint32 maxlen = 0;
+            maxlen = QString("* FuncName    ").length();
+
+            foreach (QString tmpstr, tmplastparalst) {
+                if(tmpstr.length() > maxlen)
+                    maxlen = tmpstr.length();
+
+            }
+            foreach (QString str, tmplastparalst) {
+                quint32 tmplen = str.length();
+                if(tmplen + 3 < maxlen)
+                {
+                    str = QString("* @%1%2").arg(str).arg(" ", maxlen - tmplen - 3);
+                }
+                else
+                {
+                    str = QString("* @%1%2").arg(str).arg(" ", 0);
+                }
+                lastparalst << str;
+
+            }
+
+            funcnum++;
+            ui->statusbar->showMessage(QString::fromLocal8Bit("函数个数为:%1").arg(funcnum));
+            if(ui->checkBox_showFunc->isChecked()) //显示函数名
+            {
+                if(isendflag)
+                {
+                    result += bindedstrlast /*+ semisign */+ enter;
+                    allbindedstrlast += bindedstrlast /*+ semisign*/ + enter;
+                    isendflag = false;
+                    hasdouhao = false;
+                    bindedstr ="";
+                    bindedstrlast = "";
+
+                }
+                else
+                {
+                    result += string /*+ semisign*/ + enter;
+                    allbindedstrlast += string /*+ semisign*/ + enter;
+                }
+                continue;
+            }
+
+            /* 添加注释项 */
+            QString allfuncnote = "";
+//            allfuncnote += QString("") + header + enter;
+//            allfuncnote += QString("") + "* FuncName    : " + lastfuncname + enter;
+//            allfuncnote += QString("") + "* Description : " + enter;
+//            foreach (QString para, lastparalst) {
+//                allfuncnote += QString("")  + para +    ": "  + enter;
+//            }
+//            allfuncnote += QString("") + "* Author      : " + enter;
+//            QDateTime time;
+//            allfuncnote += QString("") + "* Time        : " + time.currentDateTime().toString("yyyy-MM-dd") + enter;
+//            allfuncnote += QString("") + "============================================*/" + enter;
+
+            header = "#if PUB_READ_MACRO (\" " + lastfuncname + " \")";
+            allfuncnote += QString("") + header + enter;
+
+            QString unitnote2("");
+            QString unitnote4("");
+//            unitnote2 += QString("") + "void " + lastfuncname + "(void)" + enter;
+//            unitnote2 += QString("") + "{" + enter;
+//            unitnote2 += QString("") + tabsign + enter;
+//            unitnote4 += QString("") + tabsign + enter;
+//            unitnote4 += QString("") + "}" + enter;
+
+//            allfuncnote+=unitnote2;
+//            allfuncnote = AddFuncCommentHeaderWithIfSynax(lastfuncname, allfuncnote);
+
+            result += allfuncnote;
+            allbindedstrlast += allfuncnote;
+
+            QString tail = "#endif" +  enter;
+            if(isendflag)
+            {
+//                allfuncnote += QString("") + tail + enter;
+                result += bindedstrlast /*+ semisign*/  +  enter + unitnote4 + enter + enter + tail;
+                allbindedstrlast += bindedstrlast /*+ semisign*/  + enter + unitnote4 + enter + tail ;
+                isendflag = false;
+                hasdouhao = false ;
+                bindedstr ="";
+                bindedstrlast = "";
+
+
+            }
+            else
+            {
+                result += string /*+ semisign*/ + enter + unitnote4 + enter + tail;
+                allbindedstrlast += string + enter + unitnote4 + tail;
+            }
+            qApp->processEvents();
+
+        }
+
+
+        if(tipProgress)
+        {
+            tipProgress->deleteLater();
+        }
+        if(ui->checkBox_showAllText->isChecked())
+            SetTextEditResult(allbindedstrlast);
+        else
+            SetTextEditResult(result);
+
+        return;
+
+    }
         break;
     case 2:
         hassplit =false;
@@ -4902,4 +5156,14 @@ void CodeSophia::on_checkBox_showAllText_toggled(bool checked)
 void CodeSophia::on_comboBox_print_editTextChanged(const QString &arg1)
 {
     on_pushButton_gen_clicked();
+}
+
+QString CodeSophia::AddFuncCommentHeaderWithIfSynax(QString funcname,QString content)
+{
+    QString str;
+    str += "#if PUB_READ_MACRO (\" " + funcname + " \")\n";
+    str += content;
+    str += "#endif\n";
+
+    return str;
 }

@@ -187,6 +187,8 @@ private:
     QString Proc_Note_GetFuncPara(QString string);
     quint32 Proc_Note_GetFuncNameSize(QString string);
 
+    QString AddFuncCommentHeaderWithIfSynax(QString funcname, QString content);
+
 private:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
