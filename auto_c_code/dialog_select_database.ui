@@ -41,7 +41,7 @@
    <property name="font">
     <font>
      <family>Times New Roman</family>
-     <pointsize>26</pointsize>
+     <pointsize>14</pointsize>
     </font>
    </property>
    <property name="maxVisibleItems">

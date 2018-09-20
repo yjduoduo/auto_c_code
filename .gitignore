@@ -1,0 +1,5 @@
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/*.patch
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/*.o
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/debug/*.o
+*.o
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/*.db

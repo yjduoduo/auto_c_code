@@ -1,15 +1,15 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'dialog_select_database.h'
+** Meta object code from reading C++ file 'displaybutton.h'
 **
-** Created: Thu Sep 20 21:48:42 2018
+** Created: Thu Sep 20 21:48:58 2018
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../auto_c_code/dialog_select_database.h"
+#include "../../auto_c_code/calender/displaybutton.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'dialog_select_database.h' doesn't include <QObject>."
+#error "The header file 'displaybutton.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 62
 #error "This file was generated using the moc from 4.7.4. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -17,7 +17,7 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-static const uint qt_meta_data_Dialog_select_database[] = {
+static const uint qt_meta_data_DisplayButton[] = {
 
  // content:
        5,       // revision
@@ -33,35 +33,35 @@ static const uint qt_meta_data_Dialog_select_database[] = {
        0        // eod
 };
 
-static const char qt_meta_stringdata_Dialog_select_database[] = {
-    "Dialog_select_database\0"
+static const char qt_meta_stringdata_DisplayButton[] = {
+    "DisplayButton\0"
 };
 
-const QMetaObject Dialog_select_database::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_Dialog_select_database,
-      qt_meta_data_Dialog_select_database, 0 }
+const QMetaObject DisplayButton::staticMetaObject = {
+    { &QToolButton::staticMetaObject, qt_meta_stringdata_DisplayButton,
+      qt_meta_data_DisplayButton, 0 }
 };
 
 #ifdef Q_NO_DATA_RELOCATION
-const QMetaObject &Dialog_select_database::getStaticMetaObject() { return staticMetaObject; }
+const QMetaObject &DisplayButton::getStaticMetaObject() { return staticMetaObject; }
 #endif //Q_NO_DATA_RELOCATION
 
-const QMetaObject *Dialog_select_database::metaObject() const
+const QMetaObject *DisplayButton::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
 }
 
-void *Dialog_select_database::qt_metacast(const char *_clname)
+void *DisplayButton::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_Dialog_select_database))
-        return static_cast<void*>(const_cast< Dialog_select_database*>(this));
-    return QDialog::qt_metacast(_clname);
+    if (!strcmp(_clname, qt_meta_stringdata_DisplayButton))
+        return static_cast<void*>(const_cast< DisplayButton*>(this));
+    return QToolButton::qt_metacast(_clname);
 }
 
-int Dialog_select_database::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int DisplayButton::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QDialog::qt_metacall(_c, _id, _a);
+    _id = QToolButton::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     return _id;

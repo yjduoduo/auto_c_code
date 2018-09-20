@@ -1463,6 +1463,7 @@ void autoCCode::addstr_comboBox(void)
      <<str_china(Hadoop)
     <<str_china(Jave)
     <<str_china(JavaScript)
+    <<str_china(Jsp)
     <<str_china(Mysql)
     <<str_china(Oracle)
     <<str_china(Patchs)
@@ -1908,6 +1909,10 @@ LanguageType autoCCode::getLanguageType(QString &type)
     else if(type == "Redis")
     {
         return languagetype_Redis_;
+    }
+    else if(type == "Jsp")
+    {
+        return languagetype_Jsp_;
     }
     else{
         return languagetype_Err_;

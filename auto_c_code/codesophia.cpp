@@ -1698,6 +1698,7 @@ void CodeSophia::Proc_C_Note(QStringList &lst)
                 allfuncnote += QString("")  + para +    ": "  + enter;
             }
             allfuncnote += QString("") + "* Author      : " + enter;
+            allfuncnote += QString("") + "* Return      : " + enter;
             QDateTime time;
             allfuncnote += QString("") + "* Time        : " + time.currentDateTime().toString("yyyy-MM-dd") + enter;
             allfuncnote += QString("") + "============================================*/" + enter;
@@ -2487,6 +2488,7 @@ void CodeSophia::Proc_C_Function(QStringList &lst)
                 allfuncnote += QString("")  + para +    ": "  + enter;
             }
             allfuncnote += QString("") + "* Author      : " + enter;
+            allfuncnote += QString("") + "* Return      : " + enter;
             QDateTime time;
             allfuncnote += QString("") + "* Time        : " + time.currentDateTime().toString("yyyy-MM-dd") + enter;
             allfuncnote += QString("") + "============================================*/" + enter;

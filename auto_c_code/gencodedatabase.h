@@ -31,6 +31,7 @@ enum LanguageType{
     languagetype_JavaScript_,
     languagetype_Debug_,
     languagetype_Redis_,
+    languagetype_Jsp_,
 
     languagetype_Aspect_,
     languagetype_LookTextHis_,

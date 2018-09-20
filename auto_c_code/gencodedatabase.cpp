@@ -63,6 +63,7 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
                            {LANTY_JOIN(Android_),"android_table",DB_NAME,CREATTABLE(android_table),},
                            {LANTY_JOIN(Rust_),"rust_table",DB_NAME,CREATTABLE(rust_table),},
                            {LANTY_JOIN(Redis_),"redis_table",DB_NAME,CREATTABLE(redis_table),},
+                           {LANTY_JOIN(Jsp_),"jsp_table",DB_NAME,CREATTABLE(jsp_table),},
 
                            //范围,存储哪方面的内容
                            {LANTY_JOIN(Aspect_),"aspect_table",DB_NAME,CREATTABLE_ASPECT(aspect_table),},
@@ -101,6 +102,7 @@ codestructSets codesets[]={{LANTY_JOIN(C_),"c_table",DB_NAME,CREATTABLE(c_table)
     case    languagetype_JavaScript_:\
     case    languagetype_Debug_:\
     case    languagetype_Redis_:\
+    case    languagetype_Jsp_:\
 
 
 /*============================================
@@ -1257,6 +1259,11 @@ QString GenCodeDatabase::getLanguageStr(LanguageType type)
 
     case    languagetype_Redis_:
         return "Redis";
+
+    case    languagetype_Jsp_:
+        return "Jsp";
+
+
 
     default:
         return "Err";

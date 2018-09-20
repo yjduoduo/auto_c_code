@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'dialog_select_database.ui'
 **
-** Created: Thu Sep 20 21:43:22 2018
+** Created: Sun Sep 9 12:29:40 2018
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -46,7 +46,7 @@ public:
         comboBox_selectdb->setGeometry(QRect(30, 40, 261, 31));
         QFont font;
         font.setFamily(QString::fromUtf8("Times New Roman"));
-        font.setPointSize(14);
+        font.setPointSize(26);
         comboBox_selectdb->setFont(font);
         comboBox_selectdb->setMaxVisibleItems(50);
         label = new QLabel(Dialog_select_database);
@@ -63,10 +63,7 @@ public:
         comboBox_aspect = new QComboBox(Dialog_select_database);
         comboBox_aspect->setObjectName(QString::fromUtf8("comboBox_aspect"));
         comboBox_aspect->setGeometry(QRect(70, 40, 16, 31));
-        QFont font2;
-        font2.setFamily(QString::fromUtf8("Times New Roman"));
-        font2.setPointSize(26);
-        comboBox_aspect->setFont(font2);
+        comboBox_aspect->setFont(font);
         comboBox_aspect->raise();
         label_2->raise();
         buttonBox->raise();
