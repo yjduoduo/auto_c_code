@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'codesophia.h'
 **
-** Created: Thu Sep 20 21:49:02 2018
+** Created: Sun Nov 4 11:13:06 2018
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!

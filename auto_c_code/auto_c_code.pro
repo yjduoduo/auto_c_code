@@ -35,8 +35,8 @@ SOURCES += main.cpp\
     calender/window_calender.cpp \
     netthings.cpp \
     codesophia.cpp \
-    msgtips.cpp \
-    ssh2_forut.cpp
+    msgtips.cpp
+#    ssh2_forut.cpp
 
 HEADERS  += autoccode.h \
     prefix_string.h \

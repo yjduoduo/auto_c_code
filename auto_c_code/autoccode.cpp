@@ -39,7 +39,7 @@
 #include "window_calender.h"
 #include <QProgressDialog>
 #include <QProgressBar>
-#include "ssh2_forut.h"
+//#include "ssh2_forut.h"
 #include <QShortcut>
 
 
@@ -1000,8 +1000,8 @@ void autoCCode::pushButtonSet(void)
 
     ui_toolsets->comboBox_path->installEventFilter(this);
 
-    //连接ssh
-    QObject::connect(ui_toolsets->pushButton_connectssh,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_connectssh_clicked()));
+//    //连接ssh
+//    QObject::connect(ui_toolsets->pushButton_connectssh,SIGNAL(clicked()),this,SLOT(on_tools_pushButton_connectssh_clicked()));
 
 
 }
@@ -7804,12 +7804,12 @@ void autoCCode::on_tools_pushButton_openpath_auto(int index)
 
 void autoCCode::on_tools_pushButton_connectssh_clicked()
 {
-    ui_toolsets->textEdit_showresult->clear();
-    QString ipaddr = ui_toolsets->lineEdit_hostip->text().trimmed();
-    ssh2_forut *sshtest = new ssh2_forut(ipaddr.toAscii().data(), ui_toolsets->textEdit_showresult);
+//    ui_toolsets->textEdit_showresult->clear();
+//    QString ipaddr = ui_toolsets->lineEdit_hostip->text().trimmed();
+//    ssh2_forut *sshtest = new ssh2_forut(ipaddr.toAscii().data(), ui_toolsets->textEdit_showresult);
 
-    sshtest->whenconnected();
-    delete sshtest;
+//    sshtest->whenconnected();
+//    delete sshtest;
 
 
 }
