@@ -3,3 +3,15 @@
 /auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/debug/*.o
 *.o
 /auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/*.db
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/QtCore4.dll
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/QtGui4.dll
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/QtNetwork4.dll
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/all.db
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/libeay32.dll
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/libgcc_s_dw2-1.dll
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/libssh.dll
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/libzmq.dll
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/mingwm10.dll
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/pthreadGC2.dll
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/remoteip.conf
+/auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____/release/serverip.conf
