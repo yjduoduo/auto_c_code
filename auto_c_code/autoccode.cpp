@@ -252,6 +252,7 @@ autoCCode::autoCCode(QWidget *parent) :
     CharFormat();
     setDefaultColor();
     PopMenu();
+    AddShortCut();
     ThreadSets();
     DebugSets();
     ReadHistorySettings();
@@ -274,8 +275,39 @@ void autoCCode::PopMenu()
     Act_Normal = new QAction(tr("SHOW"), this);
     connect(Act_Maxsize, SIGNAL(triggered()), this, SLOT(ADDChange()));
     connect(Act_Normal, SIGNAL(triggered()), this, SLOT(XMLChange()));
+
+#if 1
+    m_actionSearch = new QAction(tr("Search"), this);
+//    m_actionSearch->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_B)); //这个不好使，不知道咋回事。
+    connect(m_actionSearch, SIGNAL(triggered()), this, SLOT(procFindShortCut()));
+#endif
+
 }
 
+void autoCCode::AddShortCut()
+{
+/**
+  查找
+  **/
+    QShortcut *findShortCut = new QShortcut(this);
+    findShortCut->setKey(tr("Ctrl+F"));
+    connect(findShortCut, SIGNAL(activated()),this,SLOT(procFindShortCut()));
+/**
+  清空搜索内容
+  **/
+    QShortcut *cleanShortCut = new QShortcut(this);
+    cleanShortCut->setKey(tr("Alt+C"));
+    connect(cleanShortCut, SIGNAL(activated()),this,SLOT(procClearShortCut()));
+
+/**
+  从剪切板中复制到搜索栏中
+  **/
+    QShortcut *clipShortCut = new QShortcut(this);
+    clipShortCut->setKey(tr("Alt+V"));
+    connect(clipShortCut, SIGNAL(activated()),this,SLOT(set_search_text()));
+
+
+}
 
 /*============================================
 * FuncName    : autoCCode::shortCutSet
@@ -315,14 +347,14 @@ void autoCCode::shortCutSet(void)
     QxtGlobalShortcut * ruku_paste_left = new QxtGlobalShortcut(QKeySequence("Shift+Alt+P"), this);
     QObject::connect(ruku_paste_left, SIGNAL(activated()),this, SLOT(setCliptext_content()));
 
-    QxtGlobalShortcut * search_paste = new QxtGlobalShortcut(QKeySequence("Shift+Alt+V"), this);
-    QObject::connect(search_paste, SIGNAL(activated()),this, SLOT(set_search_text()));
+//    QxtGlobalShortcut * search_paste = new QxtGlobalShortcut(QKeySequence("Shift+Alt+V"), this);
+//    QObject::connect(search_paste, SIGNAL(activated()),this, SLOT(set_search_text()));
 
-    QxtGlobalShortcut * search_clean = new QxtGlobalShortcut(QKeySequence("Alt+C"), this);
-    QObject::connect(search_clean, SIGNAL(activated()),this, SLOT(search_text_clear()));
+//    QxtGlobalShortcut * search_clean = new QxtGlobalShortcut(QKeySequence("Alt+C"), this);
+//    QObject::connect(search_clean, SIGNAL(activated()),this, SLOT(search_text_clear()));
 
-    QxtGlobalShortcut * search_text = new QxtGlobalShortcut(QKeySequence("Ctrl+F"), this);
-    QObject::connect(search_text, SIGNAL(activated()),this, SLOT(procFindShortCut()));
+//    QxtGlobalShortcut * search_text = new QxtGlobalShortcut(QKeySequence("Ctrl+F"), this);
+//    QObject::connect(search_text, SIGNAL(activated()),this, SLOT(procFindShortCut()));
 
     /**
       **
@@ -5813,6 +5845,7 @@ void autoCCode::contextMenuEvent(QContextMenuEvent *event)
     QMenu *menu=new QMenu(this);
     menu->addAction(Act_Maxsize); //添加菜单项1
     menu->addAction(Act_Normal); //添加菜单项2
+    menu->addAction(m_actionSearch);
     menu->exec(cur.pos()); //关联到光标
 }
 

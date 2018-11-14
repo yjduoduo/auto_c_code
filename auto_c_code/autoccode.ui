@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1162</width>
-    <height>552</height>
+    <width>1243</width>
+    <height>564</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -323,6 +323,13 @@
          </property>
          <property name="flat">
           <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_ShortCut">
+         <property name="text">
+          <string>ShortCut</string>
          </property>
         </widget>
        </item>

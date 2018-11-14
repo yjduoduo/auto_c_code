@@ -342,6 +342,7 @@ private:
 
     void shortCutSet(void);
     void PopMenu(void);/* 右键菜单 */
+    void AddShortCut(void);/* 快捷键 */
     void ProgressBarSet(void);
     //在创建了过滤器之后，下面要做的是安装这个过滤器。安装过滤器需要调用installEventFilter()函数。
     void InstallEventFilterSets(void);
@@ -496,6 +497,8 @@ private:
     void contextMenuEvent(QContextMenuEvent *event);
     QAction* Act_Maxsize;
     QAction* Act_Normal;
+    QAction* m_actionSearch;
+
 
 private slots:
     void ADDChange()

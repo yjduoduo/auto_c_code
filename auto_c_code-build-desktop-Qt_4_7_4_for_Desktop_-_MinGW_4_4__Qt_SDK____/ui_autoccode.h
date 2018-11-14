@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'autoccode.ui'
 **
-** Created: Sun Nov 4 11:12:08 2018
+** Created: Wed Nov 14 21:28:12 2018
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -74,6 +74,7 @@ public:
     QPushButton *delete_btn;
     QPushButton *pushButton_setUp;
     QPushButton *pushButton_toolsSets;
+    QPushButton *pushButton_ShortCut;
     QPushButton *about_btn;
     QPushButton *close_btn;
     QVBoxLayout *verticalLayout_2;
@@ -91,7 +92,7 @@ public:
     {
         if (autoCCode->objectName().isEmpty())
             autoCCode->setObjectName(QString::fromUtf8("autoCCode"));
-        autoCCode->resize(1162, 552);
+        autoCCode->resize(1243, 564);
         autoCCode->setWindowOpacity(1);
         autoCCode->setAutoFillBackground(false);
         autoCCode->setStyleSheet(QString::fromUtf8(""));
@@ -300,6 +301,11 @@ public:
 
         verticalLayout_3->addWidget(pushButton_toolsSets);
 
+        pushButton_ShortCut = new QPushButton(autoCCode);
+        pushButton_ShortCut->setObjectName(QString::fromUtf8("pushButton_ShortCut"));
+
+        verticalLayout_3->addWidget(pushButton_ShortCut);
+
         about_btn = new QPushButton(autoCCode);
         about_btn->setObjectName(QString::fromUtf8("about_btn"));
 
@@ -423,6 +429,7 @@ public:
         pushButton_toolsSets->setToolTip(QApplication::translate("autoCCode", "\345\267\245\345\205\267\351\233\206", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         pushButton_toolsSets->setText(QApplication::translate("autoCCode", "\345\267\245\345\205\267", 0, QApplication::UnicodeUTF8));
+        pushButton_ShortCut->setText(QApplication::translate("autoCCode", "ShortCut", 0, QApplication::UnicodeUTF8));
         about_btn->setText(QApplication::translate("autoCCode", "\345\205\263\344\272\216", 0, QApplication::UnicodeUTF8));
         close_btn->setText(QApplication::translate("autoCCode", "close", 0, QApplication::UnicodeUTF8));
         save_btn->setText(QApplication::translate("autoCCode", "save", 0, QApplication::UnicodeUTF8));
