@@ -1,0 +1,1 @@
+copy /Y "E:\QtExamplenew\auto_c_code\auto_c_code-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____\release\auto_c_code.exe"  "D:\Dropbox\weidb\autoccode\auto_c_code.exe" & pause
