@@ -531,7 +531,7 @@ void autoCCode::QTimerSet(void)
     timer_checkbox_sel->start(500);
 
     lineEdit_search_timer = new QTimer(this);
-    lineEdit_search_timer->start(500);
+    lineEdit_search_timer->start(1000);
 
     checkbox_getcliptext_timer = new QTimer(this);
     checkbox_getcliptext_timer->start(500);
@@ -5165,7 +5165,10 @@ bool autoCCode::eventFilter(QObject *obj, QEvent *event)
         //按键处理
         if(event->type() == QEvent::KeyPress)
         {
-            //qDebug()<<"KeyPress ed!!";
+            //搜索时，有按键时重置定时器，待超时后，直接查询
+            //此为一个好的思路
+            lineEdit_search_timer->start(1000);
+            qDebug()<<"KeyPress ed!! lineEdit_search_timer reset!!!";
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
             int key = keyEvent->key();
             if (Qt::Key_Down == key) {
@@ -5341,6 +5344,7 @@ void autoCCode::keyPressEvent(QKeyEvent *k)
     {
         key_escaple_pressed = false;
     }
+
     return;
 }
 
